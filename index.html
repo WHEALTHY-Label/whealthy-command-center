@@ -1989,6 +1989,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   </div>
 
                   <!-- Task 3 -->
+                  <!-- Task 3 -->
                   <div style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; cursor:pointer;" onclick="toggleCommunityPrayerTask()">
                     <div id="bible_taskCommunityCheck" class="bible-task-checkbox">
                       <!-- checkmark -->
@@ -1996,11 +1997,35 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     <span style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.85);">Community Prayer</span>
                   </div>
                   <div id="bible_communityPrayerDrawer" style="display:none; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.05); padding:16px; border-radius:12px; margin-top:8px;">
-                    <p style="color:rgba(255,255,255,0.7); font-size:12px; line-height:1.5; margin:0 0 12px;">
-                      <strong>Iron Sharpens Iron</strong><br>
-                      Share a prayer request or post encouragement on Skool to build our community rapport.
-                    </p>
-                    <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex; text-decoration:none; padding:8px 16px; font-size:11px; font-weight:700; text-transform:uppercase; border-radius:6px; letter-spacing:0.04em; width:auto; border-color:var(--lime);">Go to Skool Community</a>
+                    <!-- Request Prayer Input -->
+                    <div style="margin-bottom:16px;">
+                      <label style="display:block; font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">Request Prayer</label>
+                      <textarea id="bible_prayerRequestText" placeholder="Write down your prayer request..." style="width:100%; height:60px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 12px; color:#fff; font-size:12px; line-height:1.4; resize:none; outline:none; margin-bottom:12px; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                      <button class="btn-lime" onclick="logPrayerRequest()" style="padding:6px 12px; font-size:11px; border-radius:6px; width:auto; border-color:var(--lime);">Log Request</button>
+                    </div>
+
+                    <!-- Mock Community Prayers Feed -->
+                    <div style="border-top:1px solid rgba(255,255,255,0.05); padding-top:12px;">
+                      <label style="display:block; font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">Pray Over Fellow Stewards</label>
+                      
+                      <!-- Request 1 -->
+                      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                        <div style="flex:1; min-width:0;">
+                          <span style="color:#fff; font-size:11px; font-weight:700; display:block; margin-bottom:2px;">Steward Sarah</span>
+                          <p style="color:rgba(255,255,255,0.6); font-size:11.5px; line-height:1.45; margin:0;">Praying for discipline to eliminate distractions during my morning study hours.</p>
+                        </div>
+                        <button class="btn-ghost" onclick="toggleMockPray(this, 3)" style="padding:6px 10px; font-size:11px; border-radius:6px; width:auto; white-space:nowrap; background:rgba(255,255,255,0.04); border-color:transparent; color:#fff;">🙏 3 Prayed</button>
+                      </div>
+
+                      <!-- Request 2 -->
+                      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                        <div style="flex:1; min-width:0;">
+                          <span style="color:#fff; font-size:11px; font-weight:700; display:block; margin-bottom:2px;">Steward David</span>
+                          <p style="color:rgba(255,255,255,0.6); font-size:11.5px; line-height:1.45; margin:0;">Asking for strength and focus as I lead my household through a 3-day fast.</p>
+                        </div>
+                        <button class="btn-ghost" onclick="toggleMockPray(this, 7)" style="padding:6px 10px; font-size:11px; border-radius:6px; width:auto; white-space:nowrap; background:rgba(255,255,255,0.04); border-color:transparent; color:#fff;">🙏 7 Prayed</button>
+                      </div>
+                    </div>
                   </div>
 
                 </div>
@@ -3912,6 +3937,54 @@ window.toggleCommunityPrayerTask = function() {
   const drawer = document.getElementById('bible_communityPrayerDrawer');
   if (drawer) {
     drawer.style.display = currentVal ? 'block' : 'none';
+  }
+};
+
+window.logPrayerRequest = function() {
+  const text = document.getElementById('bible_prayerRequestText').value.trim();
+  if (!text) return;
+  
+  const userPrayers = JSON.parse(localStorage.getItem('wh_bible_user_prayers') || '[]');
+  userPrayers.push({ text, date: new Date().toISOString() });
+  localStorage.setItem('wh_bible_user_prayers', JSON.stringify(userPrayers));
+  
+  document.getElementById('bible_prayerRequestText').value = '';
+  speak('Prayer request logged');
+  
+  // Complete Sanctuary Task
+  const prayersDone = JSON.parse(localStorage.getItem('wh_bible_prayers_completed') || '{}');
+  prayersDone[currentDay] = true;
+  localStorage.setItem('wh_bible_prayers_completed', JSON.stringify(prayersDone));
+  
+  const chk = document.getElementById('bible_taskCommunityCheck');
+  if (chk) chk.classList.add('checked');
+};
+
+window.toggleMockPray = function(btn, baseCount) {
+  const isActive = btn.classList.contains('btn-lime');
+  if (isActive) {
+    btn.classList.remove('btn-lime');
+    btn.classList.add('btn-ghost');
+    btn.style.background = 'rgba(255,255,255,0.04)';
+    btn.style.color = '#fff';
+    btn.style.borderColor = 'transparent';
+    btn.textContent = '🙏 ' + baseCount + ' Prayed';
+  } else {
+    btn.classList.remove('btn-ghost');
+    btn.classList.add('btn-lime');
+    btn.style.background = 'var(--lime)';
+    btn.style.color = '#000';
+    btn.style.borderColor = 'var(--lime)';
+    btn.textContent = '🙏 ' + (baseCount + 1) + ' Prayed';
+    speak('Prayed over');
+    
+    // Complete Sanctuary Task
+    const prayersDone = JSON.parse(localStorage.getItem('wh_bible_prayers_completed') || '{}');
+    prayersDone[currentDay] = true;
+    localStorage.setItem('wh_bible_prayers_completed', JSON.stringify(prayersDone));
+    
+    const chk = document.getElementById('bible_taskCommunityCheck');
+    if (chk) chk.classList.add('checked');
   }
 };
 
