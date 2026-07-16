@@ -1133,6 +1133,134 @@ textarea,input,select{font-size:16px}
 .chip__dot{width:5px;height:5px;border-radius:50%;background:var(--lime)}
 .btn-primary--arc{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:var(--lime);color:#000;font-family:var(--font-display);font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:none;border-radius:14px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 0 30px rgba(204,255,0,0.15)}
 .btn-primary--arc:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.25)}
+
+/* View Title Block matching screenshot */
+.view-header-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(204, 255, 0, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(204, 255, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: visible; /* Let confetti overflow */
+  transition: all 0.3s ease;
+}
+
+.view-header-block:hover {
+  border-color: rgba(204, 255, 0, 0.15);
+  background: linear-gradient(135deg, rgba(204, 255, 0, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+.view-header-icon-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(204, 255, 0, 0.15);
+  background: rgba(204, 255, 0, 0.03);
+  color: var(--lime);
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.view-header-block:hover .view-header-icon-box {
+  transform: scale(1.05) rotate(3deg);
+}
+
+.view-header-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  text-align: left;
+  z-index: 2;
+}
+
+.view-header-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 4px 0 0 0;
+  text-align: left;
+  z-index: 2;
+}
+
+/* Dynamic Welcome Header specific animations */
+@keyframes slideDownFade {
+  0% { transform: translateY(-10px); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
+@keyframes slideRightFade {
+  0% { transform: translateX(-15px); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
+.dynamic-welcome-header {
+  animation: slideDownFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.welcome-icon-wrapper {
+  box-shadow: 0 0 15px rgba(204, 255, 0, 0.1);
+  position: relative;
+}
+
+.welcome-pulse {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 12px;
+  border: 2px solid var(--lime);
+  opacity: 0;
+  animation: welcome-glow-pulse 2s cubic-bezier(0.24, 0, 0.38, 1) 3;
+  pointer-events: none;
+}
+
+@keyframes welcome-glow-pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+.welcome-greeting-title {
+  animation: slideRightFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.welcome-greeting-subtitle {
+  animation: slideRightFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+/* Value stack neon glow */
+.value-stack {
+  position: relative;
+  background: rgba(15, 16, 18, 0.7);
+  border: 1px solid rgba(204, 255, 0, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(204, 255, 0, 0.08);
+  padding: 24px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: value-glow 3s ease-in-out infinite alternate;
+}
+@keyframes value-glow {
+  0% {
+    box-shadow: 0 0 15px rgba(204, 255, 0, 0.04);
+    border-color: rgba(204, 255, 0, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(204, 255, 0, 0.18);
+    border-color: rgba(204, 255, 0, 0.45);
+  }
+}
 </style>
 </head>
 <body>
@@ -1151,22 +1279,32 @@ textarea,input,select{font-size:16px}
   </style>
   <div class="bl-logo">W<span>HEAL</span>THY</div>
   <div class="bl-ring"></div>
-  <div class="bl-text" id="blText">Opening the Command Center&#8230;</div>
+  <div class="bl-text" id="blText">Booting Steward's OS&#8230;</div>
   <script>
     // Storage-safe helpers: sandboxed embeds can block localStorage entirely.
     window.__lsGet=function(k){try{return localStorage.getItem(k)}catch(e){return null}};
     window.__lsSet=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
     window.__lsDel=function(k){try{localStorage.removeItem(k)}catch(e){}};
-    window.hideBootLoader=function(){var b=document.getElementById('bootLoader');if(b){b.classList.add('hide');setTimeout(function(){try{b.remove()}catch(e){}},600);}};
+    window.hideBootLoader=function(){
+      var b=document.getElementById('bootLoader');
+      if(b){
+        var el=document.getElementById('blText');
+        if(el) el.innerHTML = '<span style="color:#ccff00;font-weight:700;">[ OK ] Steward\'s OS: Access Approved</span>';
+        setTimeout(function(){
+          b.classList.add('hide');
+          setTimeout(function(){try{b.remove()}catch(e){}},600);
+        },1200);
+      }
+    };
     (function(){
-      var msgs=['Opening the Command Center\u2026','Reading the record\u2026','Holding the standard\u2026'];
+      var msgs=['Booting Steward\'s OS\u2026','Connecting to core engine\u2026','Decrypting local records\u2026','Synchronizing neural metrics\u2026'];
       var i=0;
       var iv=setInterval(function(){
         var el=document.getElementById('blText');
         var b=document.getElementById('bootLoader');
         if(!el||!b||b.classList.contains('hide')){clearInterval(iv);return;}
         i=(i+1)%msgs.length;el.textContent=msgs[i];
-      },1800);
+      },1200);
       setTimeout(function(){window.hideBootLoader();},12000);
     })();
   </script>
@@ -1413,19 +1551,20 @@ textarea,input,select{font-size:16px}
   <aside class="dash-sidebar" id="sidebar">
     <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">&#10005;</button>
     <div class="sidebar-brand">
-      <div class="sidebar-brand-title">Command Center</div>
-      <div class="sidebar-brand-sub">WHEALTHY Stewards</div>
+      <div class="sidebar-brand-title" style="font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:#fff;">W<span style="color:#ccff00;">HEAL</span>THY</div>
+      <div class="sidebar-brand-sub" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">Steward's OS</div>
     </div>
     <nav style="display:flex;flex-direction:column;gap:4px;flex:1">
-      <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Dashboard</button>
+      <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
+      <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
       <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> The Record</button>
       <button class="sidebar-item" id="navFast" onclick="go('fast',this)"><span class="si-dot"></span> The Fast <span class="si-day" id="navDayBadge" style="display:none"></span></button>
       <div class="side-divider"></div>
       <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Bible 365</button>
+      <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
       <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> Leaderboard</button>
-      <button class="sidebar-item" id="navClaim" onclick="go('claim',this)"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
     </nav>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">S</div>
@@ -1455,18 +1594,28 @@ textarea,input,select{font-size:16px}
 
       <!-- ============ DASHBOARD ============ -->
       <div id="dashView">
-        <div class="view-head">
-          <div class="view-icon">&#9638;</div>
-          <div><h1 class="view-title">Steward Command Center</h1><p class="view-sub">Welcome back. Access your daily focus and OS controls.</p></div>
+        <div class="view-header-block dynamic-welcome-header" style="overflow:visible;position:relative;">
+          <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
+          <div class="view-header-icon-box welcome-icon-wrapper">
+            <span class="welcome-pulse"></span>
+            &#9638;
+          </div>
+          <div style="z-index:2">
+            <h1 class="view-header-title welcome-greeting-title" id="dashTitle">Steward Command Center</h1>
+            <p class="view-header-subtitle welcome-greeting-subtitle" id="dashSubtitle">Welcome back. Access your daily focus and OS controls.</p>
+          </div>
         </div>
         <div id="dashRoot"></div>
       </div>
 
       <!-- ============ BIBLE 365 ============ -->
       <div id="bibleView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">&#128214;</div>
-          <div><h1 class="view-title">Bible 365</h1><p class="view-sub">Daily scriptural reading &amp; study tracker.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128214;</div>
+          <div>
+            <h1 class="view-header-title" id="bibleTitle">Bible 365</h1>
+            <p class="view-header-subtitle" id="bibleSubtitle">Daily scriptural reading &amp; study tracker.</p>
+          </div>
         </div>
         <div id="bible365Root">
           <div class="g-card" style="text-align:center;padding:32px 24px" id="bible_heroCard">
@@ -1532,11 +1681,31 @@ textarea,input,select{font-size:16px}
         </div>
       </div>
 
+      <!-- ============ PRODUCT PORTAL ============ -->
+      <div id="portalView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128230;</div>
+          <div>
+            <h1 class="view-header-title" id="portalTitle">Product Portal</h1>
+            <p class="view-header-subtitle" id="portalSubtitle">Manage subscriptions, billing, and orders.</p>
+          </div>
+        </div>
+        <div class="g-card" style="text-align:center;padding:48px 24px">
+          <div style="font-size:48px;margin-bottom:16px">&#128230;</div>
+          <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#f0f1f3;margin-bottom:8px">Billing &amp; Subscriptions</h2>
+          <p class="g-body" style="max-width:420px;margin:0 auto 24px;color:rgba(255,255,255,0.5);line-height:1.6;">Access your secure billing portal to view active subscriptions, download invoices, update payment methods, and manage delivery schedules.</p>
+          <a href="https://whealthylabel.com/member" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;align-items:center;gap:8px;">Launch Product Portal &rarr;</a>
+        </div>
+      </div>
+
       <!-- ============ AFFILIATE LINKS ============ -->
       <div id="affiliateView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">&#128279;</div>
-          <div><h1 class="view-title">Affiliate Command</h1><p class="view-sub">Share your referral invite links and track your progress.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128279;</div>
+          <div>
+            <h1 class="view-header-title" id="affiliateTitle">Affiliate Command</h1>
+            <p class="view-header-subtitle" id="affiliateSubtitle">Share your referral invite links and track your progress.</p>
+          </div>
         </div>
         <div class="g-card">
           <div style="padding:24px">
@@ -1561,9 +1730,12 @@ textarea,input,select{font-size:16px}
 
       <!-- ============ COMMUNITY ============ -->
       <div id="communityView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">&#9876;</div>
-          <div><h1 class="view-title">Community</h1><p class="view-sub">Iron sharpens iron.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#9876;</div>
+          <div>
+            <h1 class="view-header-title" id="communityTitle">Community</h1>
+            <p class="view-header-subtitle" id="communitySubtitle">Iron sharpens iron.</p>
+          </div>
         </div>
         <div class="g-card" style="text-align:center;padding:48px 24px">
           <div style="font-size:48px;margin-bottom:16px">&#129309;</div>
@@ -1575,9 +1747,12 @@ textarea,input,select{font-size:16px}
 
       <!-- ============ LEADERBOARD ============ -->
       <div id="leaderboardView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">&#127942;</div>
-          <div><h1 class="view-title">Steward Leaderboard</h1><p class="view-sub">Top performing Stewards in the community.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#127942;</div>
+          <div>
+            <h1 class="view-header-title" id="leaderboardTitle">Steward Leaderboard</h1>
+            <p class="view-header-subtitle" id="leaderboardSubtitle">Top performing Stewards in the community.</p>
+          </div>
         </div>
         <div class="g-card">
           <div style="padding:0">
@@ -1596,9 +1771,12 @@ textarea,input,select{font-size:16px}
 
       <!-- ============ CLAIM BUNDLE ============ -->
       <div id="claimView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">&#128230;</div>
-          <div><h1 class="view-title">Claim Bundle</h1><p class="view-sub">Redeem your Steward monthly supply or select custom blends.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128230;</div>
+          <div>
+            <h1 class="view-header-title" id="claimTitle">Claim Bundle</h1>
+            <p class="view-header-subtitle" id="claimSubtitle">Redeem your Steward monthly supply or select custom blends.</p>
+          </div>
         </div>
         <!-- Claimed Banner (populated by JS) -->
         <div id="claimedBanner" style="display:none"></div>
@@ -1664,9 +1842,12 @@ textarea,input,select{font-size:16px}
 
       <!-- ============ THE RECORD ============ -->
       <div id="recordView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">R</div>
-          <div><h1 class="view-title">The Record</h1><p class="view-sub">Your words, kept.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">R</div>
+          <div>
+            <h1 class="view-header-title" id="recordTitle">The Record</h1>
+            <p class="view-header-subtitle" id="recordSubtitle">Your words, kept.</p>
+          </div>
         </div>
 
         <div class="g-card">
@@ -1721,9 +1902,12 @@ textarea,input,select{font-size:16px}
 
       <!-- ============ THE FAST ============ -->
       <div id="fastView" style="display:none">
-        <div class="view-head">
-          <div class="view-icon">F</div>
-          <div><h1 class="view-title">The Fast</h1><p class="view-sub">Scripture chooses the pattern. You carry it.</p></div>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">F</div>
+          <div>
+            <h1 class="view-header-title" id="fastTitle">The Fast</h1>
+            <p class="view-header-subtitle" id="fastSubtitle">Scripture chooses the pattern. You carry it.</p>
+          </div>
         </div>
         <div id="fastRoot"></div>
 
@@ -2174,8 +2358,10 @@ function loadLocal(){
   return false;
 }
 
-function saveLocal(){
-  state.lastSaved=new Date().toISOString();
+function saveLocal(updateTime){
+  if(updateTime!==false){
+    state.lastSaved=new Date().toISOString();
+  }
   try{
     __lsSet(LS_KEY,JSON.stringify(state));
   }catch(e){console.warn('localStorage write error',e)}
@@ -2192,13 +2378,13 @@ async function syncFromSupabase(sess){
     if(data){
       const remoteTime=new Date(data.updated_at).getTime();
       const localTime=state.lastSaved?new Date(state.lastSaved).getTime():0;
-      if(remoteTime>localTime && data.start_date){
+      if(data.start_date && (!state.startDate || remoteTime > localTime)){
         state.startDate=data.start_date;
         state.completed=Array.isArray(data.completed_days)?data.completed_days:[];
         state.streak=data.streak||0;
         state.lastSaved=data.updated_at;
-        saveLocal();
-      }else{
+        saveLocal(false);
+      }else if(state.startDate && (!data.start_date || localTime > remoteTime)){
         await pushToSupabase(sess);
       }
     }else if(state.startDate){
@@ -2884,7 +3070,7 @@ window.initBible365 = async function() {
   if (dashEmail) {
     state.email = dashEmail;
   }
-  saveLocal();
+  saveLocal(false);
 
   // 2. Check auth / session
   if (sb) {
@@ -4039,11 +4225,16 @@ const WHY_LABEL={freedom:'breaking what owns you',direction:'seeking direction',
 /* ================== NAV ================== */
 function go(view,el,label){
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+  if(!el && view) {
+    var btnId = 'nav' + view.charAt(0).toUpperCase() + view.slice(1);
+    el = document.getElementById(btnId);
+  }
   if(el)el.classList.add('active');
+  try { personalizePageHeader(view); } catch(e) {}
   if(view==='claim'){
     renderClaimPage();
     document.getElementById('headerLine').textContent='Claim Bundle';
@@ -4053,8 +4244,8 @@ function go(view,el,label){
   } else if(view==='bible'){
     document.getElementById('headerLine').textContent='Bible 365';
     if(typeof initBible365==='function'&&!window._bibleInited){window._bibleInited=true;initBible365();}
-  } else if(['affiliate','community'].indexOf(view)>=0){
-    const labels={affiliate:'Affiliate Links',community:'Community'};
+  } else if(['affiliate','community','portal'].indexOf(view)>=0){
+    const labels={affiliate:'Affiliate Links',community:'Community',portal:'Product Portal'};
     document.getElementById('headerLine').textContent=labels[view]||'Module';
   } else {
     setHeaderFocus(view);
@@ -4062,7 +4253,13 @@ function go(view,el,label){
   closeSidebar();
   if(view==='fast')renderFast();
   if(view==='record'){renderJournalContext();renderWall();renderMapDefault();}
-  if(view==='dash')renderDash();
+  if(view==='dash'){
+    renderDash();
+    if(typeof triggerWelcomeCelebration === 'function') {
+      var archName = window.REC && (window.REC.archetype_name || window.REC.archetype);
+      triggerWelcomeCelebration(window.MEMBER_NAME, archName);
+    }
+  }
   window.scrollTo({top:0});
 }
 window.go=go;
@@ -5189,13 +5386,6 @@ function renderDash(){
   }
   h+='</div></div>';
 
-  /* ── QUICK LINKS (dashboard-style: Affiliate Links, Product Portal, Community, Classroom) ── */
-  h+='<div class="quick-links">';
-  h+='<button class="quick-link" onclick="go(\'affiliate\',document.getElementById(\'navAffiliate\'))"><div class="quick-link__icon">&#128279;</div><div class="quick-link__text">Affiliate Links</div></button>';
-  h+='<a href="https://whealthylabel.com/member" target="_blank" class="quick-link"><div class="quick-link__icon">&#128230;</div><div class="quick-link__text">Product Portal</div></a>';
-  h+='<a href="https://www.skool.com/bakndcreator" target="_blank" class="quick-link"><div class="quick-link__icon">&#128101;</div><div class="quick-link__text">Community</div></a>';
-  h+='<a href="https://www.skool.com/bakndcreator/classroom" target="_blank" class="quick-link"><div class="quick-link__icon">&#127891;</div><div class="quick-link__text">Classroom</div></a>';
-  h+='</div>';
 
   /* ── YOUR BUNDLE (matching dashboard bundleCard) ── */
   h+='<div class="g-card" style="margin-top:24px">';
@@ -6357,7 +6547,7 @@ function renderClaimPage(){
 
   // ===== VALUE STACK =====
   salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:24px">';
-  salesHtml += '<div class="value-stack" style="margin-bottom:40px">';
+  salesHtml += '<div id="stewardsBundleOffer" class="value-stack" style="margin-bottom:40px">';
   salesHtml += '<div class="value-stack__title">What You\'re Probably Spending Now</div>';
   salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Daily coffee habit</strong><br>2-3 cups, cafe or home brew beans</div><div class="value-stack__price value-stack__price--strike">$120/mo</div></div>';
   salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Energy drinks</strong><br>The afternoon fix that crashes you by 4pm</div><div class="value-stack__price value-stack__price--strike">$75/mo</div></div>';
@@ -6454,6 +6644,16 @@ window.toggleAlts=function(){
   if(arrow)arrow.style.transform=list&&list.classList.contains('open')?'rotate(180deg)':'';
 };
 
+window.scrollToStewardsBundle=function(){
+  var target=document.getElementById('stewardsBundleOffer');
+  if(target){
+    target.scrollIntoView({behavior:'smooth',block:'start'});
+  }else{
+    var fb=document.getElementById('claimSalesContent');
+    if(fb)fb.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+};
+
 window.confirmClaim=async function(){
   var activeB = CC_BUNDLES.find(function(b){return b.key===selectedBundle})||CC_BUNDLES[3];
   var url = activeB.url || 'https://whealthylabel.com/charge-powder-hydration';
@@ -6547,13 +6747,14 @@ async function loadAndInit(){
   
   // Persist Page Routing via Location Hash
   const hash = window.location.hash.replace('#', '');
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView'};
   if (hash && map[hash]) {
     const btnMap = {
       dash: 'navDash',
       record: 'navRecord',
       fast: 'navFast',
       bible: 'navBible',
+      portal: 'navPortal',
       affiliate: 'navAffiliate',
       community: 'navCommunity',
       leaderboard: 'navLeaderboard',
@@ -6639,6 +6840,189 @@ async function loadAndInit(){
       }
     })();
   }
+
+  function personalizePageHeader(view) {
+    var name = (window.MEMBER_NAME || (window.MEMBER_EMAIL || '').split('@')[0] || 'Steward').split(' ')[0];
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    var archetype = (window.REC && window.REC.archetype_name) || (window.REC && window.REC.archetype) || '';
+    if (archetype) {
+      archetype = archetype.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c){return c.toUpperCase();});
+    }
+
+    var personalMap = {
+      dash: {
+        title: 'Welcome back, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">' + name + '</span>! 👋',
+        sub: archetype ? 'Your Command Center is active. Governing energy focus: ' + archetype + '.' : 'Your Command Center is active. Access your daily focus and OS controls.'
+      },
+      claim: {
+        title: name + '\'s Governance Bundle',
+        sub: archetype ? 'Your personal blend is ready. Matched to archetype: ' + archetype + '.' : 'Your personal blend is ready.'
+      },
+      record: {
+        title: name + '\'s Daily Scribe',
+        sub: 'Write your thoughts, log your rules, and keep the standard.'
+      },
+      fast: {
+        title: name + '\'s Fast Protocol',
+        sub: 'Track your fasting days, daily directives, and physical sync status.'
+      },
+      bible: {
+        title: name + '\'s Bible 365',
+        sub: 'Your daily scriptural study tracker and path of stewardship.'
+      },
+      portal: {
+        title: name + '\'s Product Portal',
+        sub: 'Manage subscriptions, update payment methods, and edit delivery cycles.'
+      },
+      affiliate: {
+        title: name + '\'s Affiliate Command',
+        sub: 'Spread your stewardship. Share invite links and unlock free months.'
+      },
+      community: {
+        title: name + '\'s Steward Circle',
+        sub: 'Discuss routines, share insights, and connect with fellow creators.'
+      },
+      leaderboard: {
+        title: name + '\'s Steward Ranking',
+        sub: 'Monitor progress, track points, and rise in the Steward community.'
+      }
+    };
+
+    var data = personalMap[view] || personalMap.dash;
+    var tId = view + 'Title';
+    var sId = view + 'Subtitle';
+    var tEl = document.getElementById(tId);
+    var sEl = document.getElementById(sId);
+    if (tEl) tEl.innerHTML = data.title;
+    if (sEl) sEl.textContent = data.sub;
+  }
+  window.personalizePageHeader = personalizePageHeader;
+
+  function triggerWelcomeCelebration(memberName, archetype) {
+    const titleEl = document.getElementById('dashTitle');
+    const subtitleEl = document.getElementById('dashSubtitle');
+    if (!titleEl || !subtitleEl) return;
+
+    const hours = new Date().getHours();
+    let timeGreeting = "Welcome back";
+    if (hours >= 5 && hours < 12) {
+      timeGreeting = "Good morning";
+    } else if (hours >= 12 && hours < 17) {
+      timeGreeting = "Good afternoon";
+    } else if (hours >= 17 && hours < 22) {
+      timeGreeting = "Good evening";
+    } else {
+      timeGreeting = "Welcome back";
+    }
+
+    const displayName = memberName ? memberName.split(' ')[0] : 'Steward';
+    titleEl.innerHTML = `${timeGreeting}, <span style="color: var(--lime); font-weight: 800; text-shadow: 0 0 10px rgba(204,255,0,0.2);">${displayName}</span>! 👋`;
+
+    if (archetype) {
+      var archClean = archetype.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c){return c.toUpperCase();});
+      subtitleEl.textContent = `Your Command Center is active. Governing energy focus: ${archClean}.`;
+    } else {
+      subtitleEl.textContent = "Your Command Center is active. Access your daily focus and OS controls.";
+    }
+
+    const canvas = document.getElementById('welcomeConfettiCanvas');
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.scale(dpr, dpr);
+
+    const particles = [];
+    const numParticles = 80;
+    
+    const iconBox = document.querySelector('.welcome-icon-wrapper');
+    let startX = 40;
+    let startY = rect.height / 2;
+    if (iconBox) {
+      const iconRect = iconBox.getBoundingClientRect();
+      const headerRect = canvas.getBoundingClientRect();
+      startX = (iconRect.left - headerRect.left) + iconRect.width / 2;
+      startY = (iconRect.top - headerRect.top) + iconRect.height / 2;
+    }
+
+    const colors = [
+      'rgba(204, 255, 0, 1)',
+      'rgba(204, 255, 0, 0.6)',
+      'rgba(255, 215, 0, 1)',
+      'rgba(255, 255, 255, 1)',
+      'rgba(0, 230, 118, 1)',
+    ];
+
+    for (let i = 0; i < numParticles; i++) {
+      const angle = (Math.random() * 0.7 - 0.35) * Math.PI - (Math.random() * 0.3 * Math.PI);
+      const speed = 2 + Math.random() * 6;
+      particles.push({
+        x: startX,
+        y: startY,
+        vx: Math.cos(angle) * speed + (Math.random() - 0.5) * 2,
+        vy: Math.sin(angle) * speed - 1 - Math.random() * 3,
+        size: 3 + Math.random() * 5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        gravity: 0.12 + Math.random() * 0.1,
+        drag: 0.98,
+        rotation: Math.random() * Math.PI * 2,
+        spinSpeed: (Math.random() - 0.5) * 0.2,
+        shape: Math.random() > 0.4 ? 'circle' : 'square'
+      });
+    }
+
+    let animationFrameId;
+    function updateAndDraw() {
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      let activeParticles = 0;
+
+      particles.forEach(p => {
+        if (p.alpha <= 0) return;
+        activeParticles++;
+
+        p.vx *= p.drag;
+        p.vy *= p.drag;
+        p.vy += p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.015;
+        p.rotation += p.spinSpeed;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.fillStyle = p.color;
+
+        if (p.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        }
+        ctx.restore();
+      });
+
+      if (activeParticles > 0) {
+        animationFrameId = requestAnimationFrame(updateAndDraw);
+      } else {
+        ctx.clearRect(0, 0, rect.width, rect.height);
+      }
+    }
+
+    if (canvas.animationFrameId) {
+      cancelAnimationFrame(canvas.animationFrameId);
+    }
+    updateAndDraw();
+    canvas.animationFrameId = animationFrameId;
+  }
+  window.triggerWelcomeCelebration = triggerWelcomeCelebration;
 
 })();
 </script>
