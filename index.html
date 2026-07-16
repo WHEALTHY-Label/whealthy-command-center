@@ -76,6 +76,52 @@ textarea,input,select{font-size:16px}
 .claim-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .claim-modal-close:hover{background:rgba(255,255,255,0.1);color:#fff}
 @media(max-width:480px){.claim-modal{margin:0 12px}.claim-modal-body{padding:28px 24px 24px}.claim-modal-title{font-size:19px}}
+
+/* ── Dashboard Quick-Links Grid ── */
+.quick-links{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:768px){.quick-links{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.quick-links{grid-template-columns:1fr}}
+.quick-link{display:flex;align-items:center;gap:12px;padding:16px 20px;background:linear-gradient(145deg, rgba(22,24,28,0.7), rgba(12,13,15,0.85));border:1px solid rgba(255,255,255,0.06);border-top:1px solid rgba(255,255,255,0.1);border-radius:16px;text-decoration:none;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);color:#fff;cursor:pointer}
+.quick-link:hover{border-color:rgba(204,255,0,0.2);transform:translateY(-2px);background:linear-gradient(145deg, rgba(30,32,36,0.8), rgba(16,17,19,0.9))}
+.quick-link__icon{width:36px;height:36px;border-radius:10px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--lime)}
+.quick-link__text{font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── Dashboard Bundle Start CTA ── */
+.start-cta{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(204,255,0,0.10) 0%,rgba(15,16,18,0.7) 62%);border:1px solid rgba(204,255,0,0.5);border-radius:14px;padding:clamp(18px,3.5vw,26px);margin-bottom:20px;box-shadow:0 0 40px rgba(204,255,0,0.10);animation:start-breathe 3.4s ease-in-out infinite}
+@keyframes start-breathe{0%,100%{box-shadow:0 0 40px rgba(204,255,0,0.10);border-color:rgba(204,255,0,0.5)}50%{box-shadow:0 0 62px rgba(204,255,0,0.22);border-color:rgba(204,255,0,0.85)}}
+.start-cta::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(204,255,0,0.10),transparent);transform:skewX(-18deg);animation:start-sweep 1.5s ease-out .35s 1 both}
+@keyframes start-sweep{to{left:130%}}
+.start-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);flex:0 0 8px;animation:start-ping 2s ease-out infinite}
+@keyframes start-ping{0%{box-shadow:0 0 0 0 rgba(204,255,0,0.55)}70%{box-shadow:0 0 0 9px rgba(204,255,0,0)}100%{box-shadow:0 0 0 0 rgba(204,255,0,0)}}
+.start-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 clamp(18px,3.5vw,26px);border-radius:10px;cursor:pointer;background:var(--lime);color:#080809;border:0;text-decoration:none;font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:13px;box-shadow:0 0 26px rgba(204,255,0,0.24);transition:transform .18s ease,box-shadow .18s ease}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.45),0 8px 30px rgba(0,0,0,0.4)}
+@media(prefers-reduced-motion:reduce){.start-cta{animation:none}.start-cta::after{display:none}.start-dot{animation:none}.start-btn{transition:none}}
+
+/* ── Dashboard Bundle Grid Items ── */
+.bundle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.bundle-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px}
+.bundle-item__label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.35);margin-bottom:4px}
+.bundle-item__value{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75)}
+.bundle-item__value--lime{color:var(--lime)}
+.dash-card__head{display:flex;align-items:center;gap:12px;padding:16px 20px 0}
+.dash-card__icon{font-size:20px}
+.dash-card__title{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+.dash-card__body{padding:16px 20px 20px}
+
+/* ── Dashboard Directive Banner (lime accent) ── */
+.directive-banner{background:rgba(204,255,0,0.04);border:1px solid rgba(204,255,0,0.15);border-radius:16px;padding:16px 24px;display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.directive-banner__icon{width:36px;height:36px;border-radius:10px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--lime);flex-shrink:0}
+.directive-banner__label{color:var(--lime);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.directive-banner__text{color:#fff;font-size:15px;font-weight:500}
+
+/* ── Header Controls (right side) ── */
+.header-controls{display:flex;align-items:center;gap:12px}
+.header-cta-btn{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:100px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.2);text-decoration:none;color:#fff;transition:all .3s}
+.header-cta-btn:hover{background:rgba(204,255,0,0.12);border-color:rgba(204,255,0,0.35)}
+.header-cta-avatar{width:32px;height:32px;border-radius:50%;background:rgba(204,255,0,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--lime)}
+.header-cta-title{display:block;font-size:11px;font-weight:700;color:var(--lime);letter-spacing:.06em}
+.header-cta-subtitle{display:block;font-size:10px;color:rgba(255,255,255,0.4)}
+
 .sidebar-user{margin-top:auto;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px}
 .sidebar-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--lime-dim),var(--lime-soft));border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--lime);flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 0 10px rgba(204,255,0,0.1)}
 .wh-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
@@ -1393,7 +1439,16 @@ textarea,input,select{font-size:16px}
 
   <main class="dash-content">
     <header class="content-header">
-      <div class="header-pill"><span id="headerLine">The Record and The Fast</span><span class="header-pill-tag">Steward</span></div>
+      <div class="header-pill"><span id="headerLine">Daily Focus: Govern the day</span><span class="header-pill-tag">Steward</span></div>
+      <div class="header-controls">
+        <a href="https://www.skool.com/bakndcreator" class="header-cta-btn" target="_blank">
+          <div class="header-cta-avatar">W</div>
+          <div>
+            <span class="header-cta-title">Active Steward</span>
+            <span class="header-cta-subtitle">Go to Community</span>
+          </div>
+        </a>
+      </div>
     </header>
 
     <div class="content-body">
@@ -5114,50 +5169,107 @@ function renderFast(){
 
 /* ================== DASHBOARD HOME ================== */
 function renderDash(){
-  const root=document.getElementById('dashRoot');
-  const d=activeFastDay();
-  let h='<div class="fade">';
+  var root=document.getElementById('dashRoot');
+  var d=activeFastDay();
+  var h='<div class="fade">';
 
-  /* Daily Directive banner, fast-aware */
-  h+='<div class="g-card"><div class="g-eyebrow">Daily Directive</div>';
+  /* ── DAILY DIRECTIVE (lime-bordered banner like dashboard) ── */
+  h+='<div class="directive-banner">';
+  h+='<div class="directive-banner__icon">&#127919;</div>';
+  h+='<div>';
+  h+='<div class="directive-banner__label">Daily Directive</div>';
   if(d&&S.fast.plan){
-    const ph=fastPhaseFor(d);
-    const focusArr=(S.fast.plan.focus&&ph&&S.fast.plan.focus[ph.name])||['Full routine. No exceptions.'];
-    const br=brokenRule();
-    const focus=br?('Today has one target: '+br.rule.replace(/\.$/,'')+'.'):focusArr[(d-1)%focusArr.length];
-    h+='<div class="g-title">Day '+d+' of '+S.fast.duration+' \u00b7 '+S.fast.plan.fast_name+'</div>'+
-       '<p class="g-body" style="font-size:15px;color:#fff;margin-bottom:16px">'+focus+'</p>'+
-       '<div class="g-actions"><button class="btn-lime" onclick="go(\'fast\',document.getElementById(\'navFast\'))">Open The Fast</button></div>';
-  } else if(S.fast&&S.fast.status==='revealed'){
-    h+='<div class="g-title">Your fast is forged</div>'+
-       '<p class="g-body" style="margin-bottom:16px">'+(S.fast.plan.model_line||S.fast.plan.fast_name)+' The plan is set. Day 1 is a hold away.</p>'+
-       '<div class="g-actions"><button class="btn-lime" onclick="go(\'fast\',document.getElementById(\'navFast\'))">Review and Begin</button></div>';
+    var ph=fastPhaseFor(d);
+    var focusArr=(S.fast.plan.focus&&ph&&S.fast.plan.focus[ph.name])||['Full routine. No exceptions.'];
+    var br=brokenRule();
+    var focus=br?('Today has one target: '+br.rule.replace(/\.$/,'')+'.'):focusArr[(d-1)%focusArr.length];
+    h+='<div class="directive-banner__text">Day '+d+' of '+S.fast.duration+' &middot; '+focus+'</div>';
   } else {
-    h+='<div class="g-title">Govern the day</div>'+
-       '<p class="g-body" style="margin-bottom:16px">No fast on the books. What are you carrying that you need to lay down? Scripture will choose the pattern.</p>'+
-       '<div class="g-actions"><button class="btn-lime" onclick="go(\'fast\',document.getElementById(\'navFast\'))">Build Your Fast</button></div>';
+    h+='<div class="directive-banner__text">Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.</div>';
   }
+  h+='</div></div>';
+
+  /* ── QUICK LINKS (dashboard-style: Affiliate Links, Product Portal, Community, Classroom) ── */
+  h+='<div class="quick-links">';
+  h+='<button class="quick-link" onclick="go(\'affiliate\',document.getElementById(\'navAffiliate\'))"><div class="quick-link__icon">&#128279;</div><div class="quick-link__text">Affiliate Links</div></button>';
+  h+='<a href="https://whealthylabel.com/member" target="_blank" class="quick-link"><div class="quick-link__icon">&#128230;</div><div class="quick-link__text">Product Portal</div></a>';
+  h+='<a href="https://www.skool.com/bakndcreator" target="_blank" class="quick-link"><div class="quick-link__icon">&#128101;</div><div class="quick-link__text">Community</div></a>';
+  h+='<a href="https://www.skool.com/bakndcreator/classroom" target="_blank" class="quick-link"><div class="quick-link__icon">&#127891;</div><div class="quick-link__text">Classroom</div></a>';
   h+='</div>';
 
-  /* Quick actions */
-  h+='<div class="g-card"><div class="qa-grid">'+
-     '<button class="qa-btn" onclick="go(\'record\',document.getElementById(\'navRecord\'))"><span class="qa-ic">&#9998;</span>The Record</button>'+
-     '<button class="qa-btn" onclick="go(\'fast\',document.getElementById(\'navFast\'))"><span class="qa-ic">&#9733;</span>The Fast'+(d?'<span class="qa-day">DAY '+d+'</span>':'')+'</button>'+
-     '<button class="qa-btn" onclick="go(\'stub\',null,\'Community\')"><span class="qa-ic">&#9776;</span>Community</button>'+
-     '<button class="qa-btn" onclick="go(\'stub\',null,\'Bible 365\')"><span class="qa-ic">&#10013;</span>Bible 365</button>'+
-     '</div></div>';
+  /* ── YOUR BUNDLE (matching dashboard bundleCard) ── */
+  h+='<div class="g-card" style="margin-top:24px">';
+  h+='<div class="dash-card__head"><div class="dash-card__icon">&#128230;</div><div class="dash-card__title">Your Bundle</div></div>';
+  h+='<div class="dash-card__body">';
+  h+='<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between">';
 
-  /* Tonight, state-aware */
+  // Left column: start-cta + bundle meta
+  h+='<div style="flex:1.2;min-width:280px;display:flex;flex-direction:column;gap:16px">';
+
+  // Start CTA (shown when no bundle claimed yet)
+  if(productState!=='equipped'&&!window._bundleClaimed){
+    var recBundleName='your routine';
+    var recBundleKey=(window.REC&&window.REC.bundle_key)||'charge-hydration';
+    var recB=CC_BUNDLES.find(function(b){return b.key===recBundleKey;});
+    if(recB) recBundleName=recB.name;
+    var memberName=(window.MEMBER_NAME||(window.MEMBER_EMAIL||'').split('@')[0]||'Steward').split(' ')[0];
+    memberName=memberName.charAt(0).toUpperCase()+memberName.slice(1);
+
+    h+='<div class="start-cta">';
+    h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><span class="start-dot"></span><span style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:var(--lime)">Not running yet</span></div>';
+    h+='<div style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:clamp(18px,3vw,24px);color:var(--text);line-height:1.15;margin-bottom:8px">Start your governed day, '+memberName+'</div>';
+    h+='<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:16px;max-width:520px">Your quiz pointed at <strong style="color:var(--lime);font-weight:600">'+recBundleName+'</strong>. Nothing ships until you say so. When you are ready it is $54.00/mo at your member price.</div>';
+    h+='<div><button type="button" class="start-btn" onclick="go(\'claim\',document.getElementById(\'navClaim\'))">See your personalized plan &rarr;</button></div>';
+    h+='</div>';
+  }
+
+  // Bundle meta
+  h+='<div class="bundle-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))!important;gap:12px!important;margin:0!important">';
+  var bundleName2=window._bundleName||'Not selected';
+  var bundleStatus=productState==='equipped'?'Active':'Pending';
+  h+='<div class="bundle-item"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Next Eligible Date</div><div class="bundle-item__value">'+(window._nextEligible||'Not scheduled')+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value">'+bundleStatus+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value">'+(productState==='equipped'?'On':'Off')+'</div></div>';
+  h+='</div>';
+
+  h+='<div style="margin-top:8px"><button onclick="go(\'claim\',document.getElementById(\'navClaim\'))" class="btn-ghost" style="width:auto;padding:12px 20px;font-size:13px;min-height:40px">'+(productState==='equipped'?'Manage My Routine':'Start My Routine')+'</button></div>';
+  h+='</div>'; // end left column
+
+  // Right column: recommended product images
+  h+='<div style="flex:1;min-width:280px">';
+  var recKey2=(window.REC&&window.REC.bundle_key)||'charge-hydration';
+  var recBundle2=CC_BUNDLES.find(function(b){return b.key===recKey2;});
+  if(recBundle2&&recBundle2.products&&recBundle2.products.length>0){
+    h+='<div style="margin-bottom:24px">';
+    h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Recommended Protocol</div>';
+    h+='<div style="display:flex;gap:16px;flex-wrap:wrap">';
+    recBundle2.products.forEach(function(p){
+      h+='<div style="flex:1;min-width:140px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:24px;text-align:center">';
+      h+='<img src="'+p.img+'" alt="'+p.name+'" style="height:160px;object-fit:contain;margin-bottom:20px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5))">';
+      h+='<div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:8px">'+p.name+'</div>';
+      h+='<div style="font-size:13px;color:rgba(255,255,255,0.4)">'+p.role+'</div>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+  h+='</div>'; // end right column
+
+  h+='</div>'; // end flex layout
+  h+='</div>'; // end card body
+  h+='</div>'; // end card
+
+  /* ── TONIGHT'S ENTRY (mic wiring PRESERVED — all IDs intact) ── */
   h+='<div class="g-card" style="text-align: center;"><div class="plan-sec-title" style="text-align: left;">Tonight\'s Entry</div>';
-  const filedToday=S.entries.some(e=>!e.burned&&e.date===realToday());
+  var filedToday=S.entries.some(function(e){return !e.burned&&e.date===realToday();});
   if(filedToday){
     h+='<p class="g-body" style="text-align: left;">Report filed, day governed. Tomorrow\u2019s directive already knows what today showed.</p>';
   } else {
-    let sub = 'Two minutes, spoken, before the day fades. Edit anything before filing.';
+    var sub2 = 'Two minutes, spoken, before the day fades. Edit anything before filing.';
     if(d&&S.fast.plan){
-      sub = 'Day ' + d + ' of your fast. Close the day while it is still honest in your memory.';
+      sub2 = 'Day ' + d + ' of your fast. Close the day while it is still honest in your memory.';
     }
-    h+='<p class="g-body" style="text-align: left; margin-bottom: 24px;">'+sub+'</p>'+
+    h+='<p class="g-body" style="text-align: left; margin-bottom: 24px;">'+sub2+'</p>'+
        '<div class="recorder" style="margin: 24px auto; display: flex; flex-direction: column; align-items: center; justify-content: center;">'+
        '  <div class="mic-wrap" id="dashMicWrap" style="margin: 0 auto;">'+
        '    <div class="mic-ring" id="dashRing1"></div>'+
@@ -5174,9 +5286,9 @@ function renderDash(){
   }
   h+='</div>';
 
-  /* Record snapshot */
-  const live=S.entries.filter(e=>!e.burned);
-  const last=live[live.length-1];
+  /* ── RECORD SNAPSHOT ── */
+  var live=S.entries.filter(function(e){return !e.burned;});
+  var last=live[live.length-1];
   h+='<div class="g-card"><div class="plan-sec-title">The Record</div>'+
      '<p class="g-body">'+live.length+' entries on the wall'+(last?', last laid '+weeksAgo(last.date):'')+'. At year end, it becomes a printed book.</p></div>';
 
