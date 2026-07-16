@@ -6384,19 +6384,23 @@ window.renderGlancePage = function() {
   var habitStreak = (window.memberDataCache && window.memberDataCache.member && window.memberDataCache.member.current_streak) || 0;
 
   // 2. Fasting state
-  var fastTitle = 'Fasting Protocol';
-  var fastBody = 'No active fast. Ready to govern the pattern.';
+  var fastTitle = 'Fasting';
+  var fastBody = 'System baseline is normal. Ready to initiate fast.';
   var fastPct = 0;
   var fastCta = 'Start Fast';
+  var fastLabel = 'Inactive';
+  var fastStatusColor = '#ffb300';
   if (window.S && window.S.fast && window.S.fast.active) {
     var fastStart = new Date(window.S.fast.start_time);
     var diffMs = Date.now() - fastStart;
     var hours = Math.floor(diffMs / (1000 * 60 * 60));
     var target = window.S.fast.duration || 24;
     fastPct = Math.min((hours / target) * 100, 100);
-    fastTitle = 'Fasting Protocol · Active';
-    fastBody = 'Day governed: <strong>' + hours + ' hours</strong> fasted of your <strong>' + target + ' hour</strong> target. Phase: <strong>' + (window.S.fast.current_phase || 'Stewardship') + '</strong>.';
+    fastTitle = 'Fasting';
+    fastBody = 'Active fast: <strong>' + hours + '</strong> of <strong>' + target + ' hours</strong> completed. Phase: <strong>' + (window.S.fast.current_phase || 'Stewardship') + '</strong>.';
     fastCta = 'View Fast';
+    fastLabel = hours + ' hrs';
+    fastStatusColor = 'var(--lime)';
   }
 
   // 3. Bible state
@@ -6405,88 +6409,130 @@ window.renderGlancePage = function() {
   var todayDate = new Date().getDate();
   var bibleCompleted = window.whBibleState && window.whBibleState.completed_days && window.whBibleState.completed_days.indexOf(todayDate) >= 0;
   var bibleBody = bibleCompleted 
-    ? 'Today\'s study completed! Current streak: <strong>' + bibleStreak + ' Days</strong>.'
-    : 'Today\'s study is pending. Keep your <strong>' + bibleStreak + ' Day Streak</strong> alive!';
+    ? 'Today\'s study completed. Excellent momentum.'
+    : 'Study pending. Keep your daily momentum alive.';
+  var bibleStatusLabel = bibleCompleted ? 'Complete' : 'Pending';
+  var bibleStatusColor = bibleCompleted ? 'var(--lime)' : '#ffb300';
   
   // 4. Scribe Journal
   var journalCount = (window.S && window.S.entries && window.S.entries.length) || 0;
   var nonBurnedCount = (window.S && window.S.entries && window.S.entries.filter(function(e){return !e.burned}).length) || 0;
-  var journalBody = 'You have logged <strong>' + journalCount + '</strong> total scribe entries. <strong>' + nonBurnedCount + '</strong> are shared, and the rest are private.';
+  var journalBody = '<strong>' + journalCount + '</strong> entries committed to Scribe. <strong>' + nonBurnedCount + '</strong> active in your system graph.';
 
-  // 5. Affiliate Command
+  // 5. Subscription State / Product Portal
+  var subStatus = (productState === 'equipped' || window._bundleClaimed) ? 'Active' : 'Not Claimed';
+  var subPlanName = window._bundleName || (window.BUNDLE && window.BUNDLE.name) || 'No Plan Selected';
+  var subStatusColor = (subStatus === 'Active') ? 'var(--lime)' : '#ffb300';
+  var subBody = 'Subscription is <strong>' + subStatus + '</strong>. Current tier: <strong>' + subPlanName + '</strong>.';
+
+  // 6. Affiliate Command
   var refCount = (window.memberDataCache && window.memberDataCache.referral_count) || 0;
   var refCode = (window.memberDataCache && window.memberDataCache.affiliate_ref_id) || '';
-  var affiliateBody = 'Active referrals: <strong>' + refCount + ' / 3</strong>. ' + (refCode ? 'Your code is active.' : 'Generate your link to start unlocking rewards.');
+  var affiliateBody = refCode 
+    ? 'Referral code active. Share to unlock founding steward rewards.'
+    : 'Referral link not initialized. Activate your code to share.';
 
   grid.innerHTML = `
     <!-- CARD 1: DIRECTIVES LEDGER -->
-    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">🎯</div>
-          <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 8px; background: rgba(204,255,0,0.06); border-radius: 12px; border: 1px solid rgba(204,255,0,0.15);">${habitStreak} Day Streak</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">🎯</div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(204,255,0,0.08); border-radius: 100px; border: 1px solid rgba(204,255,0,0.25);">${habitStreak} Day Streak</span>
         </div>
-        <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em;">Directives Ledger</h3>
-        <p style="color: rgba(255,255,255,0.6); font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">Today's Directives: <strong>${loggedToday} of ${totalHabits}</strong> governed.</p>
+        <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">Directives Ledger</h3>
+        <p style="color: #b5b7bc; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">Today's Directives: <strong style="color:#fff">${loggedToday} of ${totalHabits}</strong> completed.</p>
         
-        <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-bottom: 24px;">
-          <div style="height: 100%; width: ${habitPct}%; background: var(--lime); box-shadow: 0 0 10px rgba(204,255,0,0.5); transition: width 0.4s ease;"></div>
+        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.02)">
+          <div style="height: 100%; width: ${habitPct}%; background: var(--lime); box-shadow: 0 0 12px rgba(204,255,0,0.4); transition: width 0.4s ease;"></div>
         </div>
       </div>
-      <button class="btn-lime" style="width: 100%; margin-top: auto; font-size: 12px; padding: 10px;" onclick="go('record', document.getElementById('navRecord'))">Manage Directives</button>
+      <button class="g-card-btn" onclick="go('record', document.getElementById('navRecord'))">Manage Directives</button>
     </div>
 
     <!-- CARD 2: FASTING PROTOCOL -->
-    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">⏱️</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">⏱️</div>
+          <span style="font-size: 11px; font-weight: 700; color: ${fastStatusColor}; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(255,255,255,0.03); border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);">${fastLabel}</span>
         </div>
-        <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em;">${fastTitle}</h3>
-        <p style="color: rgba(255,255,255,0.6); font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">${fastBody}</p>
+        <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">Fasting Protocol</h3>
+        <p style="color: #b5b7bc; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">${fastBody}</p>
         
-        <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-bottom: 24px;">
-          <div style="height: 100%; width: ${fastPct}%; background: var(--lime); box-shadow: 0 0 10px rgba(204,255,0,0.5); transition: width 0.4s ease;"></div>
+        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.02)">
+          <div style="height: 100%; width: ${fastPct}%; background: var(--lime); box-shadow: 0 0 12px rgba(204,255,0,0.4); transition: width 0.4s ease;"></div>
         </div>
       </div>
-      <button class="btn-lime" style="width: 100%; margin-top: auto; font-size: 12px; padding: 10px;" onclick="go('fast', document.getElementById('navFast'))">${fastCta}</button>
+      <button class="g-card-btn" onclick="go('fast', document.getElementById('navFast'))">${fastCta}</button>
     </div>
 
     <!-- CARD 3: BIBLE 365 -->
-    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">📖</div>
-          <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 8px; background: rgba(204,255,0,0.06); border-radius: 12px; border: 1px solid rgba(204,255,0,0.15);">${bibleStreak} Day Streak</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">📖</div>
+          <span style="font-size: 11px; font-weight: 700; color: ${bibleStatusColor}; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(255,255,255,0.03); border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);">${bibleStatusLabel}</span>
         </div>
-        <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em;">Bible 365</h3>
-        <p style="color: rgba(255,255,255,0.6); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">${bibleBody}</p>
+        <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">Bible 365</h3>
+        <p style="color: #b5b7bc; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">${bibleBody}</p>
+        
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); display: flex; align-items: center; gap: 4px; margin-bottom: 24px;">
+          🔥 Current Streak: <strong style="color: var(--lime)">${bibleStreak} Days</strong>
+        </div>
       </div>
-      <button class="btn-lime" style="width: 100%; margin-top: auto; font-size: 12px; padding: 10px;" onclick="go('bible', document.getElementById('navBible'))">Study Today</button>
+      <button class="g-card-btn" onclick="go('bible', document.getElementById('navBible'))">Study Today</button>
     </div>
 
     <!-- CARD 4: SCRIBE JOURNAL -->
-    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">📝</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">📝</div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(204,255,0,0.08); border-radius: 100px; border: 1px solid rgba(204,255,0,0.25);">Active</span>
         </div>
-        <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em;">Scribe Journal</h3>
-        <p style="color: rgba(255,255,255,0.6); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">${journalBody}</p>
+        <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">Scribe Journal</h3>
+        <p style="color: #b5b7bc; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">${journalBody}</p>
+        
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); display: flex; align-items: center; gap: 4px; margin-bottom: 24px;">
+          📊 Total Entries: <strong style="color: #fff">${journalCount}</strong>
+        </div>
       </div>
-      <button class="btn-lime" style="width: 100%; margin-top: auto; font-size: 12px; padding: 10px;" onclick="go('record', document.getElementById('navRecord'))">Write Entry</button>
+      <button class="g-card-btn" onclick="go('record', document.getElementById('navRecord'))">Write Entry</button>
     </div>
 
-    <!-- CARD 5: AFFILIATE COMMAND -->
-    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+    <!-- CARD 5: PRODUCT PORTAL -->
+    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">🔗</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">📦</div>
+          <span style="font-size: 11px; font-weight: 700; color: ${subStatusColor}; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(255,255,255,0.03); border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);">${subStatus}</span>
         </div>
-        <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em;">Affiliate Command</h3>
-        <p style="color: rgba(255,255,255,0.6); font-size: 13.5px; line-height: 1.5; margin-bottom: 24px;">${affiliateBody}</p>
+        <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">Product Portal</h3>
+        <p style="color: #b5b7bc; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">${subBody}</p>
+        
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); display: flex; align-items: center; gap: 4px; margin-bottom: 24px;">
+          🛡️ Account Status: <strong style="color: var(--lime)">Verified</strong>
+        </div>
       </div>
-      <button class="btn-lime" style="width: 100%; margin-top: auto; font-size: 12px; padding: 10px;" onclick="go('affiliate', document.getElementById('navAffiliate'))">Share Invite Link</button>
+      <button class="g-card-btn" onclick="go('claim', document.getElementById('navClaim'))">Manage Subscription</button>
+    </div>
+
+    <!-- CARD 6: AFFILIATE COMMAND -->
+    <div class="g-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="background: rgba(204,255,0,0.06); border: 1px solid rgba(204,255,0,0.15); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--lime);">🔗</div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(204,255,0,0.08); border-radius: 100px; border: 1px solid rgba(204,255,0,0.25);">${refCount} / 3 Referrals</span>
+        </div>
+        <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">Affiliate Command</h3>
+        <p style="color: #b5b7bc; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">${affiliateBody}</p>
+        
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); display: flex; align-items: center; gap: 4px; margin-bottom: 24px;">
+          🔑 Referral Code: <strong style="color: #fff">${refCode || 'Inactive'}</strong>
+        </div>
+      </div>
+      <button class="g-card-btn" onclick="go('affiliate', document.getElementById('navAffiliate'))">Share Invite Link</button>
     </div>
   `;
 };
