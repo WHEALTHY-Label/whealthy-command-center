@@ -1019,6 +1019,73 @@ textarea,input,select{font-size:16px}
     box-sizing: border-box !important;
   }
 }
+
+/* ── CLAIM BUNDLE: VALUE STACK ── */
+.value-stack{max-width:560px;margin:0 auto;padding:0 24px}
+.value-stack__title{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);text-align:center;margin-bottom:20px}
+.value-stack__item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.value-stack__name{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.5}
+.value-stack__price{font-family:var(--font-display);font-size:16px;font-weight:700;color:rgba(255,255,255,0.4);flex-shrink:0}
+.value-stack__price--strike{text-decoration:line-through}
+.value-stack__total{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:2px solid rgba(255,255,255,0.1);margin-top:8px}
+.value-stack__total-label{font-size:14px;font-weight:700;color:rgba(255,255,255,0.6)}
+.value-stack__total-price{font-family:var(--font-display);font-size:20px;font-weight:700;color:rgba(255,255,255,0.5)}
+.value-stack__your-price{text-align:center;padding:24px 0 0;margin-top:20px;border-top:1px solid rgba(204,255,0,0.15)}
+.value-stack__your-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:10px}
+.value-stack__your-amount{font-family:var(--font-display);font-size:42px;font-weight:700;color:var(--lime);line-height:1}
+.value-stack__per-day{font-size:13px;color:rgba(255,255,255,0.5);margin-top:8px}
+.value-stack__savings{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:12px}
+
+/* ── CLAIM BUNDLE: GUARANTEES ── */
+.guarantee-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:680px;margin:0 auto;padding:0 24px 40px}
+@media(max-width:640px){.guarantee-row{grid-template-columns:1fr}}
+.guarantee-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;text-align:center}
+.guarantee-item__icon{font-size:28px;margin-bottom:10px}
+.guarantee-item__title{font-family:var(--font-display);font-size:14px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:6px}
+.guarantee-item__desc{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5}
+
+/* ── CLAIM BUNDLE: SOCIAL PROOF ── */
+.result-proof{max-width:560px;margin:0 auto;padding:0 24px}
+.result-proof__card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px 24px}
+.result-proof__quote{font-size:15px;color:rgba(255,255,255,0.8);line-height:1.7;font-style:italic;margin:0 0 20px}
+.result-proof__meta{display:flex;align-items:center;gap:12px}
+.result-proof__avatar{width:40px;height:40px;border-radius:50%;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.result-proof__name{font-size:13px;font-weight:700;color:#fff}
+.result-proof__role{font-size:11px;color:rgba(255,255,255,0.4)}
+
+/* ── CLAIM BUNDLE: GOVERNED DAY ── */
+.routine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:680px;margin:0 auto;padding:0 24px}
+@media(max-width:640px){.routine-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.routine-grid{grid-template-columns:1fr}}
+.routine-block{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;text-align:center;transition:all 0.3s ease}
+.routine-block:hover{border-color:rgba(204,255,0,0.2);transform:translateY(-2px)}
+.routine-block__time{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+.routine-block__icon{font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px;margin-bottom:6px}
+.routine-block__title{font-family:var(--font-display);font-size:14px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:6px}
+.routine-block__desc{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.4;margin-bottom:8px}
+.routine-block__product{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(204,255,0,0.6);background:rgba(204,255,0,0.05);padding:4px 10px;border-radius:6px}
+
+/* ── CLAIM BUNDLE: COMMUNITY INVITE ── */
+.skool-invite{max-width:560px;margin:0 auto;padding:0 24px}
+.skool-invite__card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:32px 28px;text-align:center}
+.skool-invite__emoji{margin-bottom:14px}
+.skool-invite__title{font-family:var(--font-display);font-size:20px;font-weight:700;text-transform:uppercase;color:#fff;line-height:1.2;margin-bottom:14px}
+.skool-invite__desc{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:20px}
+.skool-invite__btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.25);border-radius:12px;color:var(--lime);font-size:13px;font-weight:700;text-decoration:none;transition:all 0.3s ease}
+.skool-invite__btn:hover{background:rgba(204,255,0,0.15)}
+
+/* ── CLAIM BUNDLE: FINAL CTA ── */
+.result-final-cta{position:relative;padding:72px 24px;text-align:center;overflow:hidden}
+.result-final-cta__bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(204,255,0,0.06) 0%,transparent 100%);z-index:0}
+.result-final-cta__content{position:relative;z-index:1;max-width:560px;margin:0 auto}
+.result-final-cta__headline{font-family:var(--font-display);font-size:clamp(28px,5vw,42px);font-weight:700;text-transform:uppercase;color:#fff;line-height:1.0;margin-bottom:16px}
+.result-final-cta__headline em{color:var(--lime);font-style:normal}
+.result-final-cta__sub{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:28px;max-width:460px;margin-left:auto;margin-right:auto}
+.result-final-cta__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:6px 14px}
+.chip__dot{width:5px;height:5px;border-radius:50%;background:var(--lime)}
+.btn-primary--arc{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:var(--lime);color:#000;font-family:var(--font-display);font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:none;border-radius:14px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 0 30px rgba(204,255,0,0.15)}
+.btn-primary--arc:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.25)}
 </style>
 </head>
 <body>
@@ -1518,8 +1585,13 @@ textarea,input,select{font-size:16px}
 
         <div class="g-card" style="padding:24px" id="claimActionCard">
           <button class="btn-lime" id="claimConfirmBtn" onclick="confirmClaim()" style="width:100%">Claim This Bundle</button>
-          <p style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;line-height:1.6;margin-top:14px">Your bundle ships with your active Stewards membership. No additional charge.</p>
+          <p style="font-size:13px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.6;margin-top:14px">
+            Covered by your monthly membership ($79/mo) &#8212; just pay $9.95 shipping.
+          </p>
         </div>
+
+        <!-- Rich Sales Content: Value Stack, Guarantees, Proof, Routine, Community, Final CTA -->
+        <div id="claimSalesContent" style="margin-top:24px"></div>
 
         <!-- Checkout Popup Modal -->
         <div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
@@ -6070,6 +6142,7 @@ function renderClaimPage(){
     actionCard.style.display='none';
     document.getElementById('claimProductGrid').style.display='none';
     document.getElementById('claimMixingCard').style.display='none';
+    var salesContent=document.getElementById('claimSalesContent');if(salesContent)salesContent.innerHTML='';
     return;
   }
 
@@ -6150,6 +6223,93 @@ function renderClaimPage(){
   var mixingCard = document.getElementById('claimMixingCard');
   mixingCard.style.display = 'flex';
   mixingCard.innerHTML = '<span class="mixing-card__icon">&#127866;</span><div class="mixing-card__text"><strong>Mixing Instruction:</strong> '+activeB.mixing+'</div>';
+
+  // ── RICH SALES CONTENT ──
+  var salesEl = document.getElementById('claimSalesContent');
+  if(!salesEl) return;
+
+  // Archetype-matched social proof
+  var PROOF_MAP = {
+    'owned-by-caffeine': {quote:'I didn\'t feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup.',name:'Marcus T.',role:'Sales Director, Father of 3',emoji:'&#128104;'},
+    'wired-but-scattered': {quote:'I still had energy but it finally had <strong>direction.</strong> I stopped spinning and started finishing things.',name:'Chris M.',role:'Builder, Father',emoji:'&#127959;&#65039;'},
+    'sharp-until-2pm': {quote:'I still had energy at <strong>4pm without the crash.</strong> I didn\'t realize how normalized the afternoon drop was.',name:'Daniel R.',role:'Founder, Husband',emoji:'&#128104;&#8205;&#128188;'},
+    'running-on-fumes': {quote:'I noticed I was <strong>more patient after work.</strong> That\'s not a supplement effect. That\'s a rhythm shift.',name:'Pastor Jerome W.',role:'Ministry Leader, Dad',emoji:'&#9962;'},
+    'skeptical-steward': {quote:'I\'ve tried everything. This is the first time I could actually <strong>name what changed.</strong> Day 5 was real.',name:'Kevin W.',role:'Operations Manager, Dad of 2',emoji:'&#128737;&#65039;'}
+  };
+  var archKey2 = (window.REC && window.REC.archetype) || 'owned-by-caffeine';
+  var proof = PROOF_MAP[archKey2] || PROOF_MAP['owned-by-caffeine'];
+  var archData = ARCHETYPE_COPY[archKey2] || ARCHETYPE_COPY['owned-by-caffeine'];
+
+  var salesHtml = '';
+
+  // ===== VALUE STACK =====
+  salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:24px">';
+  salesHtml += '<div class="value-stack" style="margin-bottom:40px">';
+  salesHtml += '<div class="value-stack__title">What You\'re Probably Spending Now</div>';
+  salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Daily coffee habit</strong><br>2-3 cups, cafe or home brew beans</div><div class="value-stack__price value-stack__price--strike">$120/mo</div></div>';
+  salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Energy drinks</strong><br>The afternoon fix that crashes you by 4pm</div><div class="value-stack__price value-stack__price--strike">$75/mo</div></div>';
+  salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Supplements that ghost you</strong><br>The ones you stopped buying after 60 days</div><div class="value-stack__price value-stack__price--strike">$45/mo</div></div>';
+  salesHtml += '<div class="value-stack__total"><div class="value-stack__total-label">Total Broken Pattern Cost</div><div class="value-stack__total-price">$240/mo</div></div>';
+  salesHtml += '<div class="value-stack__your-price">';
+  salesHtml += '<div class="value-stack__your-label">Your Stewards Membership Covers This</div>';
+  salesHtml += '<div class="value-stack__your-amount">$9.95<sub style="font-size:12px;font-weight:500;text-transform:none">/shipping</sub></div>';
+  salesHtml += '<p class="value-stack__per-day">Covered by your monthly membership ($79/mo) &#8212; just pay $9.95 shipping.</p>';
+  salesHtml += '<div class="value-stack__savings">Less than what the broken pattern already costs you</div>';
+  salesHtml += '</div></div>';
+
+  // ===== GUARANTEES =====
+  salesHtml += '<div class="guarantee-row">';
+  salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128666;</div><div class="guarantee-item__title">Ships for $9.95</div><div class="guarantee-item__desc">Your system ships every month with zero delivery fees.</div></div>';
+  salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128260;</div><div class="guarantee-item__title">Cancel Anytime</div><div class="guarantee-item__desc">No commitments. Adjust, pause, or cancel whenever you need.</div></div>';
+  salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#9889;</div><div class="guarantee-item__title">Feel It In 14 Days</div><div class="guarantee-item__desc">Noticeable, stable clarity or your money back.</div></div>';
+  salesHtml += '</div>';
+  salesHtml += '</div>'; // end bg section
+
+  // ===== SOCIAL PROOF =====
+  salesHtml += '<div style="padding:48px 0">';
+  salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:20px;text-align:center">Same Pattern. Real Result.</p>';
+  salesHtml += '<div class="result-proof"><div class="result-proof__card">';
+  salesHtml += '<p class="result-proof__quote">"'+proof.quote+'"</p>';
+  salesHtml += '<div class="result-proof__meta"><div class="result-proof__avatar">'+proof.emoji+'</div><div><div class="result-proof__name">'+proof.name+'</div><div class="result-proof__role">'+proof.role+'</div></div></div>';
+  salesHtml += '</div></div></div>';
+
+  // ===== GOVERNED DAY (DAILY ROUTINE) =====
+  salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">';
+  salesHtml += '<div style="text-align:center;margin-bottom:32px;padding:0 24px">';
+  salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px">Your Governed Day</p>';
+  salesHtml += '<h2 style="font-family:var(--font-display);font-size:clamp(24px,4.5vw,40px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.0">Every Part of Your Day.<br><span style="color:var(--lime)">Protected.</span></h2>';
+  salesHtml += '</div>';
+  salesHtml += '<div class="routine-grid" style="max-width:800px;grid-template-columns:repeat(3,1fr)">';
+  salesHtml += '<div class="routine-block"><div class="routine-block__time">Morning</div><div class="routine-block__icon">01</div><h3 class="routine-block__title">Start Clear</h3><p class="routine-block__desc">No fog. No desperation. You start as yourself.</p><span class="routine-block__product">Functional Coffee</span></div>';
+  salesHtml += '<div class="routine-block"><div class="routine-block__time">Midday</div><div class="routine-block__icon">02</div><h3 class="routine-block__title">Stay Stable</h3><p class="routine-block__desc">Sharp for the decisions that matter.</p><span class="routine-block__product">Performance Capsules</span></div>';
+  salesHtml += '<div class="routine-block"><div class="routine-block__time">Afternoon</div><div class="routine-block__icon">03</div><h3 class="routine-block__title">Think Again</h3><p class="routine-block__desc">Focus without evening caffeine.</p><span class="routine-block__product">Genius Guice</span></div>';
+  salesHtml += '<div class="routine-block"><div class="routine-block__time">Anytime</div><div class="routine-block__icon">04</div><h3 class="routine-block__title">Stay Charged</h3><p class="routine-block__desc">On-demand. No crash. Repeatable.</p><span class="routine-block__product">Charge Powder</span></div>';
+  salesHtml += '<div class="routine-block"><div class="routine-block__time">All Day</div><div class="routine-block__icon">05</div><h3 class="routine-block__title">Stay Flowing</h3><p class="routine-block__desc">The baseline that makes everything else work better.</p><span class="routine-block__product">Hydration Powder</span></div>';
+  salesHtml += '<div class="routine-block"><div class="routine-block__time">Evening</div><div class="routine-block__icon">06</div><h3 class="routine-block__title">Still Here</h3><p class="routine-block__desc">Come home with something left.</p><span class="routine-block__product">Governed Day</span></div>';
+  salesHtml += '</div></div>';
+
+  // ===== COMMUNITY BONUS =====
+  salesHtml += '<div style="padding:48px 0">';
+  salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px;text-align:center">Part of Your Membership</p>';
+  salesHtml += '<div class="skool-invite"><div class="skool-invite__card">';
+  salesHtml += '<div class="skool-invite__emoji" style="font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--lime)">S</div>';
+  salesHtml += '<h3 class="skool-invite__title">The Products Govern Your Energy.<br><span style="color:var(--lime)">The Community Governs Your Growth.</span></h3>';
+  salesHtml += '<p class="skool-invite__desc">$79 a month. Your governance system delivered to your door, and a community of stewards who carry the same weight standing beside you. Bible, body, and business. The bundle is the system. The Stewards are the reason you stay.</p>';
+  salesHtml += '<a href="https://www.skool.com/bakndcreator/about" target="_blank" rel="noopener" class="skool-invite__btn">Preview the Community &#8594;</a>';
+  salesHtml += '</div></div></div>';
+
+  // ===== FINAL CTA =====
+  salesHtml += '<div class="result-final-cta"><div class="result-final-cta__bg"></div><div class="result-final-cta__content">';
+  salesHtml += '<h2 class="result-final-cta__headline">The Pattern<br>Has a Name.<br><em>You\'re Not Alone in It.</em></h2>';
+  salesHtml += '<p class="result-final-cta__sub">One membership. Your '+archData.title+' system delivered every month, and people who carry the same weight standing with you. Claim your bundle and protect your day.</p>';
+  salesHtml += '<button class="btn-primary--arc" onclick="confirmClaim()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center;margin:0 auto">Claim My '+activeB.name+' Bundle &#8212; $9.95 Shipping</button>';
+  salesHtml += '<div class="result-final-cta__chips">';
+  salesHtml += '<span class="chip"><span class="chip__dot"></span>Cancel Anytime</span>';
+  salesHtml += '<span class="chip"><span class="chip__dot"></span>$9.95 Shipping</span>';
+  salesHtml += '<span class="chip"><span class="chip__dot"></span>Matched to '+archData.title+'</span>';
+  salesHtml += '</div></div></div>';
+
+  salesEl.innerHTML = salesHtml;
 }
  
 window.toggleIngred=function(e, btn, pIdx){
