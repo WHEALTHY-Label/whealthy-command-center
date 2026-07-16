@@ -99,7 +99,8 @@ textarea,input,select{font-size:16px}
 
 /* ── Dashboard Bundle Grid Items ── */
 .bundle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
-.bundle-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px}
+.bundle-item{background:rgba(204,255,0,0.02);border:1px solid rgba(204,255,0,0.08);border-radius:12px;padding:14px 16px;transition:all .25s cubic-bezier(.4,0,.2,1)}
+.bundle-item:hover{background:rgba(204,255,0,0.05);border-color:rgba(204,255,0,0.25);box-shadow:0 0 15px rgba(204,255,0,0.08);transform:translateY(-1px)}
 .bundle-item__label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.35);margin-bottom:4px}
 .bundle-item__value{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75)}
 .bundle-item__value--lime{color:var(--lime)}
@@ -5596,15 +5597,19 @@ function renderDash(){
 
   // Bundle meta
   h+='<div class="bundle-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))!important;gap:12px!important;margin:0!important">';
-  var bundleName2=window._bundleName||'Not selected';
-  var bundleStatus=productState==='equipped'?'Active':'Pending';
-  h+='<div class="bundle-item"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Next Eligible Date</div><div class="bundle-item__value">'+(window._nextEligible||'Not scheduled')+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value">'+bundleStatus+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value">'+(productState==='equipped'?'On':'Off')+'</div></div>';
-  h+='</div>';
+  var recKey = (window.REC && window.REC.bundle_key) || 'charge-hydration';
+  var recBundle = CC_BUNDLES.find(function(b){return b.key===recKey}) || CC_BUNDLES[3];
+  var bundleName2 = window._bundleName || (recBundle ? recBundle.name : 'Not selected');
+  var bundleStatus = productState==='equipped'?'Active':'Pending';
+  var statusColor = productState==='equipped'?'color:var(--lime)':'color:#ffb700;font-weight:700';
+  var autoColor = productState==='equipped'?'color:var(--lime)':'color:rgba(255,255,255,0.4)';
+  var nextDateColor = window._nextEligible ? 'color:#fff':'color:rgba(255,255,255,0.4)';
 
-  h+='<div style="margin-top:8px"><button onclick="go(\'claim\',document.getElementById(\'navClaim\'))" class="btn-ghost" style="width:auto;padding:12px 20px;font-size:13px;min-height:40px">'+(productState==='equipped'?'Manage My Routine':'Start My Routine')+'</button></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Next Eligible Date</div><div class="bundle-item__value" style="'+nextDateColor+'">'+(window._nextEligible||'Not scheduled')+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value" style="'+statusColor+'">'+bundleStatus+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(productState==='equipped'?'On':'Off')+'</div></div>';
+  h+='</div>';
   h+='</div>'; // end left column
 
   // Right column: recommended product images
