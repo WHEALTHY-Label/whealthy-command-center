@@ -6417,11 +6417,32 @@ window.generateAffiliateLink=async function(){
   var val=input.value.trim();
   if(!val){alertEl.style.display='block';alertEl.style.background='rgba(255,77,77,0.1)';alertEl.style.border='1px solid rgba(255,77,77,0.2)';alertEl.style.color='#ff8a8a';alertEl.innerHTML='Please paste your Skool link first.';return}
   var refId='';
-  try{var url=new URL(val);refId=url.searchParams.get('ref')}catch(e){var match=val.match(/ref=([a-zA-Z0-9]+)/);if(match)refId=match[1];else if(val.length===32&&val.indexOf('/')===-1)refId=val}
+  if (val.startsWith('http://') || val.startsWith('https://') || val.includes('.com') || val.includes('/')) {
+    try {
+      var url = new URL(val.startsWith('http') ? val : 'https://' + val);
+      refId = url.searchParams.get('ref');
+    } catch(e) {}
+    if (!refId) {
+      var match = val.match(/ref=([a-zA-Z0-9_-]+)/);
+      if (match) refId = match[1];
+    }
+  } else {
+    if (!val.includes('/') && !val.includes(' ')) {
+      refId = val;
+    }
+  }
   if(!refId){alertEl.style.display='block';alertEl.style.background='rgba(255,77,77,0.1)';alertEl.style.border='1px solid rgba(255,77,77,0.2)';alertEl.style.color='#ff8a8a';alertEl.innerHTML='Invalid Skool link. Make sure it contains ?ref=...';return}
   btn.disabled=true;
   try{
-    var res=await fetch(FN_BASE+'/register-affiliate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:MEMBER_EMAIL?MEMBER_EMAIL.split('@')[0]:'Member',email:MEMBER_EMAIL,ref_id:refId})});
+    var email = MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || '';
+    if (!email) {
+      try {
+        const { data: sessData } = await sb.auth.getSession();
+        email = sessData?.session?.user?.email || '';
+      } catch(e) {}
+    }
+    var name = MEMBER_NAME || (email ? email.split('@')[0] : 'Member');
+    var res=await fetch(FN_BASE+'/register-affiliate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email||'member@whealthylabel.com',ref_id:refId})});
     var data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
     renderAffiliateLinks(refId);
     alertEl.style.display='block';alertEl.style.background='rgba(204,255,0,0.08)';alertEl.style.border='1px solid rgba(204,255,0,0.15)';alertEl.style.color='#ccff00';alertEl.innerHTML='Links generated successfully!';
@@ -6588,30 +6609,35 @@ var claimRedirectUrl = '';
 var ARCHETYPE_COPY = {
   'owned-by-caffeine': {
     title: 'Owned by Caffeine',
+    icon: '☕',
     header: "You're Not Just Tired. You're Dependency-Bound.",
     body: "Your morning ritual isn't preference anymore—it's dependency. You've built your entire day around something that owns the first hour of it, and every hour after is a negotiation. The Genius Joe bundle is designed to replace this dependency loop with smooth, governed focus.",
     stats: "73% of high-responsibility stewards show this exact pattern."
   },
   'wired-but-scattered': {
     title: 'Wired but Scattered',
+    icon: '🧠',
     header: "You're Not Lazy. You're Scattered.",
     body: "You have energy, but it goes everywhere. You start the day alert and end it exhausted, but nothing landed. The Boss Bundle provides a cognitive governance structure, helping you direct that energy rather than diffusing it.",
     stats: "68% of stewards report energy that feels 'busy but unproductive.'"
   },
   'sharp-until-2pm': {
     title: 'Sharp Until 2PM',
+    icon: '⚡',
     header: "You're Not Broken. You're Spiking and Crashing.",
     body: "Mornings are strong, then the collapse hits. The afternoon becomes a write-off and evenings are about surviving, not being present. The Genius Guice bundle sustains your second half, ensuring cognitive clarity without the crash.",
     stats: "81% of stewards in this pattern report 'faking it' through the afternoon."
   },
   'running-on-fumes': {
     title: 'Running on Fumes',
+    icon: '🔋',
     header: "You're Not Fine. You're Depleted.",
     body: "You're not crashing, just never fully on. You've gotten so good at performing at 60% that nobody can tell, but you can. The Charge Bundle is designed to lift your baseline, closing the gap between functional and fully alive.",
     stats: "77% of functional stewards describe themselves as 'always at 60%'."
   },
   'skeptical-steward': {
     title: 'Skeptical Steward',
+    icon: '⚖️',
     header: "You're Not Cynical. You're Intelligent.",
     body: "Most products make promises they can't keep, relying on you forgetting to cancel. Your guard is up because the wellness industry earned your distrust. We encourage you to test the Hydration baseline—no magic, just clean governance.",
     stats: "4 is the average number of wellness products tried and abandoned before finding WHEALTHY."
@@ -6651,7 +6677,14 @@ function renderClaimPage(){
   var archKey = (window.REC && window.REC.archetype) || null;
   if(archKey && ARCHETYPE_COPY[archKey]) {
     var match = ARCHETYPE_COPY[archKey];
-    intro.innerHTML = '<div style="margin-bottom:16px;"><span class="draft-chip" style="color:var(--lime);border-color:rgba(204,255,0,0.3);text-transform:uppercase;font-size:11px;font-weight:700;letter-spacing:0.05em">Matched Archetype: '+match.title+'</span></div><h2 style="color:var(--lime);font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px">'+match.header+'</h2><p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin:0 auto 16px;max-width:540px;">'+match.body+'</p><div style="display:inline-block;padding:8px 16px;background:rgba(204,255,0,0.05);border:1px solid rgba(204,255,0,0.1);border-radius:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4;">&#128202; <strong>Steward Stat:</strong> '+match.stats+'</div>';
+    intro.innerHTML = '<div style="font-family:\'Outfit\', -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 0;">' +
+      '<div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(204,255,0,0.06); border: 2px solid var(--lime); display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(204,255,0,0.25);">' + (match.icon || '📦') + '</div>' +
+      '<div style="margin-bottom:16px;"><span class="draft-chip" style="color:var(--lime);border-color:rgba(204,255,0,0.3);text-transform:uppercase;font-size:11px;font-weight:700;letter-spacing:0.05em">Matched Archetype: '+match.title+'</span></div>' +
+      '<h2 style="color:var(--lime);font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px; font-family:\'Outfit\', -apple-system, sans-serif;">'+match.header+'</h2>' +
+      '<p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.6;margin:0 auto 16px;max-width:540px; font-family:\'Outfit\', -apple-system, sans-serif;">'+match.body+'</p>' +
+      '<div style="display:inline-block;padding:8px 16px;background:rgba(204,255,0,0.05);border:1px solid rgba(204,255,0,0.1);border-radius:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4; font-family:\'Outfit\', -apple-system, sans-serif; margin-bottom: 24px;">&#128202; <strong>Steward Stat:</strong> '+match.stats+'</div>' +
+      '<div><button class="btn-lime" style="width:auto; padding: 12px 28px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 0 15px rgba(204,255,0,0.3);" onclick="document.getElementById(\'bundleSwitcherWrap\').scrollIntoView({ behavior: \'smooth\' });" onmouseover="this.style.transform=\'scale(1.02)\'; this.style.boxShadow=\'0 0 25px rgba(204,255,0,0.5)\';" onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 0 15px rgba(204,255,0,0.3)\';">Claim Your Recommended Bundle &darr;</button></div>' +
+      '</div>';
   } else {
     intro.innerHTML = '<h2 style="color:var(--lime);font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px">Your Bundle is Ready</h2><p style="color:rgba(255,255,255,0.45);font-size:15px;line-height:1.6;margin:0">As a verified Steward, your governance bundle is unlocked and waiting. <strong style="color:#fff">Select your bundle below to complete your activation.</strong></p>';
   }
