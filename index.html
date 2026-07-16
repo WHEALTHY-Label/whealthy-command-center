@@ -1929,6 +1929,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <div id="bible_reflectionContainer" style="display:none; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.08);">
                 <label style="display:block; font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Daily Reflection Journal</label>
                 <textarea id="bible_reflectionText" placeholder="Write down your thoughts, prayers, or insights from today's scripture..." style="width:100%; height:120px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:#fff; font-size:14px; line-height:1.5; resize:none; outline:none; margin-bottom:12px; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                <div style="display:flex; align-items:flex-start; gap:8px; margin:0 0 12px; user-select:none;">
+                  <input type="checkbox" checked id="bible_sharePersonalization" style="accent-color:var(--lime); margin-top:2px; cursor:pointer;">
+                  <label for="bible_sharePersonalization" style="color:rgba(255,255,255,0.6); font-size:11px; line-height:1.4; cursor:pointer;">Share reflections privately with WHEALTHY to customize my OS experience.</label>
+                </div>
                 <div style="display:flex; justify-content:flex-end; gap:8px;">
                   <button class="btn-ghost" onclick="toggleReflectionInput()" style="padding:8px 16px; font-size:12px; border-radius:8px;">Cancel</button>
                   <button class="btn-lime" onclick="saveReflectionJournal()" style="padding:8px 16px; font-size:12px; border-radius:8px; width:auto;">Save Reflection</button>
@@ -1985,12 +1989,19 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   </div>
 
                   <!-- Task 3 -->
-                  <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; text-decoration:none; color:inherit;">
-                    <div style="width:20px; height:20px; border-radius:6px; border:2px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;">
-                      <!-- checkmark icon or indicator -->
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; cursor:pointer;" onclick="toggleCommunityPrayerTask()">
+                    <div id="bible_taskCommunityCheck" class="bible-task-checkbox">
+                      <!-- checkmark -->
                     </div>
                     <span style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.85);">Community Prayer</span>
-                  </a>
+                  </div>
+                  <div id="bible_communityPrayerDrawer" style="display:none; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.05); padding:16px; border-radius:12px; margin-top:8px;">
+                    <p style="color:rgba(255,255,255,0.7); font-size:12px; line-height:1.5; margin:0 0 12px;">
+                      <strong>Iron Sharpens Iron</strong><br>
+                      Share a prayer request or post encouragement on Skool to build our community rapport.
+                    </p>
+                    <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex; text-decoration:none; padding:8px 16px; font-size:11px; font-weight:700; text-transform:uppercase; border-radius:6px; letter-spacing:0.04em; width:auto; border-color:var(--lime);">Go to Skool Community</a>
+                  </div>
 
                 </div>
               </div>
@@ -3833,8 +3844,11 @@ window.toggleReflectionInput = function() {
 window.saveReflectionJournal = function() {
   const text = document.getElementById('bible_reflectionText').value.trim();
   const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
+  const shareCheckbox = document.getElementById('bible_sharePersonalization');
+  const share = shareCheckbox ? shareCheckbox.checked : true;
+
   if (text) {
-    reflections[currentDay] = text;
+    reflections[currentDay] = { text: text, share: share };
     speak('Reflection saved');
   } else {
     delete reflections[currentDay];
@@ -3847,7 +3861,7 @@ window.saveReflectionJournal = function() {
   
   // Append to daily journal draft if appropriate
   const recordTa = document.getElementById('transcript') || document.getElementById('dashTranscript');
-  if (recordTa && !recordTa.value.includes(text)) {
+  if (recordTa && text && !recordTa.value.includes(text)) {
     if (recordTa.value.trim()) {
       recordTa.value += '\n\nReflection: ' + text;
     } else {
@@ -3857,10 +3871,48 @@ window.saveReflectionJournal = function() {
     const fileBtn = document.getElementById('fileBtn') || document.getElementById('dashFileBtn');
     if (fileBtn) fileBtn.style.display = 'inline-flex';
   }
+
+  // Send to Supabase API
+  if (MEMBER_EMAIL && text) {
+    const scriptureRef = document.getElementById('bible_heroRef') ? document.getElementById('bible_heroRef').textContent : '';
+    try {
+      fetch(FN_BASE + '/governor-state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'save_reflection',
+          email: MEMBER_EMAIL,
+          day_number: currentDay,
+          scripture_ref: scriptureRef,
+          text: text,
+          share_personalization: share
+        })
+      });
+    } catch(e) {
+      console.warn("Failed to sync reflection to database", e);
+    }
+  }
   
   // Close container
   const container = document.getElementById('bible_reflectionContainer');
   if (container) container.style.display = 'none';
+};
+
+window.toggleCommunityPrayerTask = function() {
+  const prayersDone = JSON.parse(localStorage.getItem('wh_bible_prayers_completed') || '{}');
+  const currentVal = !prayersDone[currentDay];
+  prayersDone[currentDay] = currentVal;
+  localStorage.setItem('wh_bible_prayers_completed', JSON.stringify(prayersDone));
+
+  // Update checkbox UI
+  const chk = document.getElementById('bible_taskCommunityCheck');
+  if (chk) chk.classList.toggle('checked', currentVal);
+
+  // Show / hide the prompt drawer
+  const drawer = document.getElementById('bible_communityPrayerDrawer');
+  if (drawer) {
+    drawer.style.display = currentVal ? 'block' : 'none';
+  }
 };
 
 function renderHero(){
@@ -3893,13 +3945,30 @@ function renderHero(){
 
   // Checkbox: Reflection Journaling
   const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
-  const reflectionText = reflections[currentDay] || '';
+  const reflectionVal = reflections[currentDay] || '';
+  const reflectionText = typeof reflectionVal === 'object' ? (reflectionVal.text || '') : reflectionVal;
+  const reflectionShare = typeof reflectionVal === 'object' ? (reflectionVal.share !== false) : true;
+
   const taskReflectCheck = document.getElementById('bible_taskReflectCheck');
   if (taskReflectCheck) {
     taskReflectCheck.classList.toggle('checked', !!reflectionText);
   }
   const reflectInput = document.getElementById('bible_reflectionText');
   if (reflectInput) reflectInput.value = reflectionText;
+  const reflectShare = document.getElementById('bible_sharePersonalization');
+  if (reflectShare) reflectShare.checked = reflectionShare;
+
+  // Checkbox: Community Prayer
+  const prayersDone = JSON.parse(localStorage.getItem('wh_bible_prayers_completed') || '{}');
+  const isPrayerDone = !!prayersDone[currentDay];
+  const taskCommunityCheck = document.getElementById('bible_taskCommunityCheck');
+  if (taskCommunityCheck) {
+    taskCommunityCheck.classList.toggle('checked', isPrayerDone);
+  }
+  const drawer = document.getElementById('bible_communityPrayerDrawer');
+  if (drawer) {
+    drawer.style.display = isPrayerDone ? 'block' : 'none';
+  }
 
   // Update navigation buttons
   const btnPrev = document.getElementById('bible_btnPrev');
@@ -5650,6 +5719,13 @@ async function load(){
       S.profile = d.profile || null;
       window.REC = d.recommendation || null;
       S.equipDismissed = __lsGet('wh_equip_dismissed') === 'true';
+      if (d.reflections) {
+        const refs = {};
+        d.reflections.forEach(r => {
+          refs[r.day_number] = { text: r.text, share: r.share_personalization };
+        });
+        localStorage.setItem('wh_bible_reflections', JSON.stringify(refs));
+      }
       if(S.fast) {
         S.fast.kept = {};
         (d.fast_days || []).forEach(row => {
