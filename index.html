@@ -1635,7 +1635,7 @@ textarea,input,select{font-size:16px}
       <div id="dashView">
         <div class="view-header-block dynamic-welcome-header" style="overflow:visible;position:relative;">
           <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
-          <div class="view-header-icon-box welcome-icon-wrapper">
+          <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden;position:relative;">
             <span class="welcome-pulse"></span>
             &#9638;
           </div>
@@ -3614,6 +3614,32 @@ function waPaintAvatar(el, initials){
   el.appendChild(img);
 }
 window.waPaintAvatar = waPaintAvatar;
+
+function waPaintWelcomeAvatar(el, initials){
+  if (!el) return;
+  var pulse = el.querySelector('.welcome-pulse');
+  el.innerHTML = '';
+  if (pulse) el.appendChild(pulse);
+  else {
+    pulse = document.createElement('span');
+    pulse.className = 'welcome-pulse';
+    el.appendChild(pulse);
+  }
+  var textNode = document.createTextNode(initials);
+  el.appendChild(textNode);
+
+  const url = waSafeAvatarUrl(waProfileMeta && waProfileMeta.skool_avatar_url);
+  if (!url) return;
+
+  const img = document.createElement('img');
+  img.className = 'wh-avatar-photo';
+  img.alt = '';
+  img.setAttribute('referrerpolicy','no-referrer');
+  img.addEventListener('error', () => { try { img.remove(); } catch(e){} });
+  img.src = url;
+  el.appendChild(img);
+}
+window.waPaintWelcomeAvatar = waPaintWelcomeAvatar;
 
 function waSetMode(mode){
   waState.mode = mode;
@@ -6758,6 +6784,10 @@ function initSidebarUser(){
   if(el) {
     waPaintAvatar(el, initials);
   }
+  const welcomeEl=document.getElementById('welcomeAvatarSlot');
+  if(welcomeEl) {
+    waPaintWelcomeAvatar(welcomeEl, initials);
+  }
   const nm=document.getElementById('sidebarName');if(nm)nm.textContent=name;
   const em=document.getElementById('sidebarEmail');if(em)em.textContent='Member';
 }
@@ -6801,6 +6831,23 @@ async function loadAndInit(){
     };
     const el = document.getElementById(btnMap[hash]);
     go(hash, el);
+  } else {
+    // Default: trigger welcome header personalization
+    const initials = (window.MEMBER_NAME || 'S').charAt(0).toUpperCase();
+    const welcomeEl = document.getElementById('welcomeAvatarSlot');
+    if (welcomeEl) {
+      if (typeof waPaintWelcomeAvatar === 'function') {
+        waPaintWelcomeAvatar(welcomeEl, initials);
+      }
+    }
+    // Retrieve recommendation archetype to personalize subtitle
+    var archetype = '';
+    if (window.memberDataCache && window.memberDataCache.recommendation) {
+      archetype = window.memberDataCache.recommendation.archetype || '';
+    }
+    if (typeof triggerWelcomeCelebration === 'function') {
+      triggerWelcomeCelebration(window.MEMBER_NAME, archetype);
+    }
   }
 
 
@@ -6954,7 +7001,13 @@ async function loadAndInit(){
       timeGreeting = "Welcome back";
     }
 
-    const displayName = memberName ? memberName.split(' ')[0] : 'Steward';
+    var displayName = memberName;
+    if (!displayName) {
+      var email = window.MEMBER_EMAIL || '';
+      displayName = email.split('@')[0] || 'Steward';
+    }
+    displayName = displayName.split(' ')[0];
+    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
     titleEl.innerHTML = `${timeGreeting}, <span style="color: var(--lime); font-weight: 800; text-shadow: 0 0 10px rgba(204,255,0,0.2);">${displayName}</span>! 👋`;
 
     if (archetype) {
