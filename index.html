@@ -1267,19 +1267,28 @@ textarea,input,select{font-size:16px}
 <!-- ===== BOOT LOADER: self-contained, paints immediately, no dependencies ===== -->
 <div id="bootLoader">
   <style>
-    #bootLoader{position:fixed;inset:0;z-index:2147483600;background:#080809;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .45s ease}
+    #bootLoader{position:fixed;inset:0;z-index:2147483600;background:#080809;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .45s ease}
     #bootLoader.hide{opacity:0;pointer-events:none}
-    #bootLoader .bl-logo{font-family:'Oswald',Impact,'Arial Narrow',sans-serif;font-weight:700;font-size:26px;letter-spacing:.14em;color:#f0f1f3;animation:blPulse 1.6s ease-in-out infinite}
+    #bootLoader .bl-logo{font-family:'Oswald',Impact,'Arial Narrow',sans-serif;font-weight:700;font-size:32px;letter-spacing:.18em;color:#f0f1f3;animation:blPulse 1.6s ease-in-out infinite}
     #bootLoader .bl-logo span{color:#ccff00}
-    #bootLoader .bl-ring{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,0.12);border-top-color:#ccff00;animation:blSpin .8s linear infinite}
-    #bootLoader .bl-text{font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:rgba(240,241,243,0.55);letter-spacing:.04em;min-height:18px}
+    #bootLoader .bl-ring-container{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center}
+    #bootLoader .bl-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,0.06);border-top-color:#ccff00;animation:blSpin .8s cubic-bezier(0.4, 0, 0.2, 1) infinite}
+    #bootLoader .bl-ring-inner{width:36px;height:36px;border-radius:50%;border:2px solid rgba(204,255,0,0.05);border-bottom-color:#ccff00;animation:blSpinReverse 1.2s linear infinite}
+    #bootLoader .bl-text{font-family:'DM Sans',Arial,sans-serif;font-size:14px;color:rgba(240,241,243,0.6);letter-spacing:.04em;min-height:22px;text-align:center;max-width:300px;font-weight:500}
+    #bootLoader .bl-console{font-family:'Courier New',Courier,monospace;font-size:10px;color:rgba(204,255,0,0.45);margin-top:2px;letter-spacing:0.05em;text-transform:uppercase}
     @keyframes blSpin{to{transform:rotate(360deg)}}
-    @keyframes blPulse{0%,100%{opacity:1}50%{opacity:.55}}
-    @media (prefers-reduced-motion:reduce){#bootLoader .bl-logo{animation:none}#bootLoader .bl-ring{animation-duration:1.6s}}
+    @keyframes blSpinReverse{to{transform:rotate(-360deg)}}
+    @keyframes blPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.75;transform:scale(0.98)}}
   </style>
   <div class="bl-logo">W<span>HEAL</span>THY</div>
-  <div class="bl-ring"></div>
-  <div class="bl-text" id="blText">Booting Steward's OS&#8230;</div>
+  <div class="bl-ring-container">
+    <div class="bl-ring"></div>
+    <div class="bl-ring-inner"></div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+    <div class="bl-text" id="blText">Booting Steward's OS...</div>
+    <div class="bl-console" id="blConsole">SYS_BOOT // OK</div>
+  </div>
   <script>
     // Storage-safe helpers: sandboxed embeds can block localStorage entirely.
     window.__lsGet=function(k){try{return localStorage.getItem(k)}catch(e){return null}};
@@ -1289,7 +1298,9 @@ textarea,input,select{font-size:16px}
       var b=document.getElementById('bootLoader');
       if(b){
         var el=document.getElementById('blText');
+        var c=document.getElementById('blConsole');
         if(el) el.innerHTML = '<span style="color:#ccff00;font-weight:700;">[ OK ] Steward\'s OS: Access Approved</span>';
+        if(c) c.textContent = "SYS_READY // DEPLOYED";
         setTimeout(function(){
           b.classList.add('hide');
           setTimeout(function(){try{b.remove()}catch(e){}},600);
@@ -1297,14 +1308,42 @@ textarea,input,select{font-size:16px}
       }
     };
     (function(){
-      var msgs=['Booting Steward\'s OS\u2026','Connecting to core engine\u2026','Decrypting local records\u2026','Synchronizing neural metrics\u2026'];
+      var msgs=[
+        "Initializing Steward's OS...",
+        "Calibrating high-performance bio-matrix...",
+        "Synthesizing caffeine-free adrenaline...",
+        "Decoupling cortisol stress pathways...",
+        "Overclocking willpower reserves...",
+        "Locating missing dopamine cells...",
+        "Tuning hydration and electrolyte sync...",
+        "Pre-heating cold shower protocols...",
+        "Relentless focus module loaded...",
+        "Aligning 365 study tracks...",
+        "Optimizing daily directive sync..."
+      ];
+      var codes=[
+        "SYS_BOOT // OK",
+        "BIO_CALIBRATING // ACTIVE",
+        "CHEM_SYNTHESIS // IN_PROGRESS",
+        "NEURAL_REDUCTION // RESET",
+        "WILLPOWER_OVERCLOCK // MAX",
+        "DOPAMINE_SCAN // SEEKING",
+        "HYDRATION_CHECK // TUNING",
+        "THERMAL_STRESS // ACTIVE",
+        "FOCUS_MODULE // LOADED",
+        "SCRIPTURE_SYNC // OK",
+        "DIRECTIVE_SYNC // ACTIVE"
+      ];
       var i=0;
       var iv=setInterval(function(){
         var el=document.getElementById('blText');
+        var c=document.getElementById('blConsole');
         var b=document.getElementById('bootLoader');
         if(!el||!b||b.classList.contains('hide')){clearInterval(iv);return;}
-        i=(i+1)%msgs.length;el.textContent=msgs[i];
-      },1200);
+        i=(i+1)%msgs.length;
+        el.textContent=msgs[i];
+        if(c) c.textContent=codes[i];
+      },1000);
       setTimeout(function(){window.hideBootLoader();},12000);
     })();
   </script>
