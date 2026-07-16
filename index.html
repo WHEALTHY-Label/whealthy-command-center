@@ -3692,6 +3692,15 @@ async function waFetchAIPersonalization() {
       }
     }
 
+    // Journal/Scribe entries (only if not empty)
+    let journalContext = 'No accessible journal entries (or all entries are private/burned).';
+    if (typeof entriesBlock === 'function') {
+      const eb = entriesBlock();
+      if (eb) {
+        journalContext = `Steward's recent non-burned journal entries:\n${eb}`;
+      }
+    }
+
     const systemPrompt = `You are personalizing the WHEALTHY dashboard for a steward.
 Generate custom, brief title greetings and subtitles for each main view of the app:
 1. Home (dashTitle/dashSubtitle)
@@ -3707,14 +3716,22 @@ Steward Context:
 - Fast status: ${fastInfo}
 - Bible reading status: ${bibleInfo}
 - Directives logged: ${habitsInfo}
+- Journal entries: ${journalContext}
 
 Voice Guidelines for Time of Day:
 - Since the current local time greeting is "${timeGreeting}", make sure the dashTitle starts exactly with "${timeGreeting}, [Name]" or similar, and the dashSubtitle matches the energy focus of this time of day (e.g. if afternoon, focus on maintaining alignment or avoiding crashes, if evening, focus on laying down the record). Do not reference the morning window unless it is actually morning.
+
+Daily Directive Guidelines:
+- Generate a dynamic, actionable 1-sentence focus for the day to return in "dailyDirective".
+- If journal entries are provided, use them to personalize the directive (e.g., addressing topics or patterns they mentioned, reflecting their own idiom, or tailoring focus to their described wins/burdens).
+- If no journal entries are available (or marked private/burned), personalize the directive based on their archetype, fast phase, and Bible reading progress.
+- Keep the directive brief (1 sentence), actionable, and WHEALTHY-aligned (no health claims, focus on stewardship/routine).
 
 Return ONLY a valid JSON object matching this schema exactly (no preamble, no markdown blocks):
 {
   "dashTitle": "Good [morning/afternoon/evening], [Name]",
   "dashSubtitle": "[A brief dynamic 1-sentence focus message based on their active fast/habits/archetype/time of day]",
+  "dailyDirective": "[Dynamic, personalized actionable daily directive]",
   "bibleTitle": "Bible 365",
   "bibleSubtitle": "[Dynamic message encouraging them based on their Bible streak/status]",
   "fastTitle": "The Fast",
@@ -3731,6 +3748,12 @@ Return ONLY a valid JSON object matching this schema exactly (no preamble, no ma
       // Re-personalize current view to apply AI changes instantly
       const hash = window.location.hash.replace('#', '') || 'dash';
       personalizePageHeader(hash);
+
+      // Update daily directive banner text immediately if present
+      const directiveEl = document.getElementById('dashDirectiveText');
+      if (directiveEl && res.dailyDirective) {
+        directiveEl.textContent = res.dailyDirective;
+      }
     }
   } catch (e) {
     console.warn('[AI Personalization] failed:', e);
@@ -5547,9 +5570,10 @@ function renderDash(){
     var focusArr=(S.fast.plan.focus&&ph&&S.fast.plan.focus[ph.name])||['Full routine. No exceptions.'];
     var br=brokenRule();
     var focus=br?('Today has one target: '+br.rule.replace(/\.$/,'')+'.'):focusArr[(d-1)%focusArr.length];
-    h+='<div class="directive-banner__text">Day '+d+' of '+S.fast.duration+' &middot; '+focus+'</div>';
+    h+='<div class="directive-banner__text" id="dashDirectiveText">Day '+d+' of '+S.fast.duration+' &middot; '+focus+'</div>';
   } else {
-    h+='<div class="directive-banner__text">Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.</div>';
+    var directiveText = (window.aiPersonalizations && window.aiPersonalizations.dailyDirective) || 'Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.';
+    h+='<div class="directive-banner__text" id="dashDirectiveText">'+directiveText+'</div>';
   }
   h+='</div></div>';
 
