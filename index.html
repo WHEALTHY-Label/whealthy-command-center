@@ -13,7 +13,7 @@
   --black:#080809;--border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
   --glass:rgba(255,255,255,0.04);
   --lime:#ccff00;--lime-dim:rgba(204,255,0,0.15);--lime-soft:rgba(204,255,0,0.08);
-  --text:#f0f1f3;--text-muted:rgba(240,241,243,0.75);--text-dim:rgba(240,241,243,0.58);
+  --text:#f0f1f3;--text-muted:#b5b7bc;--text-dim:#909296;
   --font-display:'Oswald',sans-serif;--font-body:'DM Sans',sans-serif;
   --transition:0.3s cubic-bezier(0.23,1,0.32,1);
   --green:#00e676;--green-soft:rgba(0,230,118,0.12);
@@ -37,11 +37,11 @@ textarea,input,select{font-size:16px}
 .sidebar-brand{padding:8px 12px;margin-bottom:24px}
 .sidebar-brand-title{font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff}
 .sidebar-brand-sub{font-size:11px;color:rgba(255,255,255,0.55);margin-top:2px}
-.sidebar-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;background:transparent;border-radius:8px;color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;text-align:left;transition:all .2s}
+.sidebar-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;background:transparent;border-radius:8px;color:#b5b7bc;font-size:13px;font-weight:500;text-align:left;transition:all .2s}
 .sidebar-item:hover{background:rgba(255,255,255,0.03);color:#fff}
 .sidebar-item.active{background:#1f2023;color:#fff}
 .sidebar-item.active .si-dot{background:var(--lime);box-shadow:0 0 8px rgba(204,255,0,0.5)}
-.si-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);flex-shrink:0}
+.si-dot{width:7px;height:7px;border-radius:50%;background:#5c5e63;flex-shrink:0}
 .si-day{margin-left:auto;font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--lime);background:rgba(204,255,0,0.1);border:1px solid rgba(204,255,0,0.25);padding:2px 8px;border-radius:99px}
 .si-claim{margin-left:auto;display:flex;align-items:center;gap:6px}
 .si-claim-dot{width:8px;height:8px;background:var(--lime);border-radius:50%;box-shadow:0 0 8px rgba(204,255,0,0.6);animation:claim-pulse 2s ease-in-out infinite}
@@ -1261,6 +1261,11 @@ textarea,input,select{font-size:16px}
     box-shadow: 0 0 35px rgba(204, 255, 0, 0.18);
     border-color: rgba(204, 255, 0, 0.45);
   }
+}
+/* Guarantee solid high-visibility for all subtexts and small elements */
+small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed-banner__meta-label, .aff-card__pitch, .guarantee-item__desc, .result-proof__role, .routine-block__desc, .footer-copy, .footer-copy a, .plan-dates, .grp-label, .sig, .demo-note, .skel-note, .mic-state, .burn, .keep-count, .gate-count, .covenant-box, .alt-toggle, .header-cta-subtitle, .sidebar-brand-sub, .si-claim-label {
+  color: #b5b7bc !important;
+  opacity: 1 !important;
 }
 </style>
 </head>
