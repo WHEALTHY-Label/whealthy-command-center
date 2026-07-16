@@ -77,7 +77,8 @@ textarea,input,select{font-size:16px}
 .claim-modal-close:hover{background:rgba(255,255,255,0.1);color:#fff}
 @media(max-width:480px){.claim-modal{margin:0 12px}.claim-modal-body{padding:28px 24px 24px}.claim-modal-title{font-size:19px}}
 .sidebar-user{margin-top:auto;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px}
-.sidebar-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--lime-dim),var(--lime-soft));border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--lime);flex-shrink:0}
+.sidebar-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--lime-dim),var(--lime-soft));border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--lime);flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 0 10px rgba(204,255,0,0.1)}
+.wh-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 .sidebar-close{display:none;position:absolute;top:16px;right:12px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:18px;align-items:center;justify-content:center}
 .dash-content{flex:1;margin-left:260px;min-width:0}
 .content-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 32px;border-bottom:1px solid rgba(255,255,255,0.04);position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);min-height:72px}
@@ -1384,7 +1385,7 @@ textarea,input,select{font-size:16px}
       <div class="sidebar-avatar" id="sidebarAvatar">S</div>
       <div>
         <div style="font-size:12px;font-weight:600;color:#fff" id="sidebarName">Steward</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4)" id="sidebarEmail"></div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4)" id="sidebarEmail">Member</div>
       </div>
     </div>
     <button class="logout-btn" onclick="handleLogout()">&#10140; Log Out</button>
@@ -6407,7 +6408,7 @@ function initSidebarUser(){
     waPaintAvatar(el, initials);
   }
   const nm=document.getElementById('sidebarName');if(nm)nm.textContent=name;
-  const em=document.getElementById('sidebarEmail');if(em)em.textContent=email;
+  const em=document.getElementById('sidebarEmail');if(em)em.textContent='Member';
 }
 function updateClaimBadge(){
   const btn=document.getElementById('navClaim');
