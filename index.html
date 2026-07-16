@@ -3712,7 +3712,7 @@ Generate custom, brief title greetings and subtitles for each main view of the a
 2. Bible 365 (bibleTitle/bibleSubtitle)
 3. The Fast (fastTitle/fastSubtitle)
 4. The Record (recordTitle/recordSubtitle)
-5. Leaderboard (leaderboardTitle/leaderboardSubtitle)
+5. At a Glance (leaderboardTitle/leaderboardSubtitle)
 
 Steward Context:
 - Name: ${name}
@@ -3743,8 +3743,8 @@ Return ONLY a valid JSON object matching this schema exactly (no preamble, no ma
   "fastSubtitle": "[Dynamic message based on their active fast duration or setup stage]",
   "recordTitle": "The Record",
   "recordSubtitle": "[Dynamic message summarizing their progress/directives today]",
-  "leaderboardTitle": "Leaderboard",
-  "leaderboardSubtitle": "[Dynamic message showing their level or encouraging them in the rankings]"
+  "leaderboardTitle": "At a Glance",
+  "leaderboardSubtitle": "[A brief dynamic 1-sentence summary of their active streaks and overall OS momentum]"
 }`;
 
     const res = await ask('synthesis', systemPrompt);
