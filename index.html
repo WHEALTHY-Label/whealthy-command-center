@@ -1868,9 +1868,9 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
 
         <div class="g-card" style="padding:24px" id="claimActionCard">
-          <button class="btn-lime" id="claimConfirmBtn" onclick="confirmClaim()" style="width:100%">Claim This Bundle</button>
+          <button class="btn-lime" id="claimConfirmBtn" onclick="confirmClaim()" style="width:100%">Start My Routine</button>
           <p style="font-size:13px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.6;margin-top:14px">
-            Covered by your monthly membership ($79/mo) &#8212; just pay $9.95 shipping.
+            Member pricing. Your 10% code WHSBGN applies at checkout.
           </p>
         </div>
 
@@ -6917,7 +6917,7 @@ function renderClaimPage(){
     var nextDate=window._nextEligible?new Date(window._nextEligible+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Pending';
     var bName=window._bundleName||BUNDLE.name||'Your Bundle';
     banner.style.display='block';
-    banner.innerHTML='<div class="claimed-banner"><div class="claimed-banner__icon">&#10003;</div><h2 class="claimed-banner__title">Your '+bName+' Bundle Has Been Claimed</h2><p class="claimed-banner__sub">Your current order is active and included with your Stewards membership. Your next bundle ships automatically.</p><div class="claimed-banner__meta"><div class="claimed-banner__meta-item"><div class="claimed-banner__meta-label">Current Bundle</div><div class="claimed-banner__meta-value">'+bName+'</div></div><div class="claimed-banner__meta-item"><div class="claimed-banner__meta-label">Next Shipment</div><div class="claimed-banner__meta-value">'+nextDate+'</div></div><div class="claimed-banner__meta-item"><div class="claimed-banner__meta-label">Status</div><div class="claimed-banner__meta-value"><span class="status-pill status-pill--on">Active</span></div></div></div></div>';
+    banner.innerHTML='<div class="claimed-banner"><div class="claimed-banner__icon">&#10003;</div><h2 class="claimed-banner__title">Your '+bName+' Routine is Active</h2><p class="claimed-banner__sub">Your routine is active. Manage your routine, shipping, and next order here.</p><div class="claimed-banner__meta"><div class="claimed-banner__meta-item"><div class="claimed-banner__meta-label">Current Routine</div><div class="claimed-banner__meta-value">'+bName+'</div></div><div class="claimed-banner__meta-item"><div class="claimed-banner__meta-label">Next Shipment</div><div class="claimed-banner__meta-value">'+nextDate+'</div></div><div class="claimed-banner__meta-item"><div class="claimed-banner__meta-label">Status</div><div class="claimed-banner__meta-value"><span class="status-pill status-pill--on">Active</span></div></div></div></div>';
     intro.style.display='none';
     switcher.style.display='none';
     actionCard.style.display='none';
@@ -7034,6 +7034,22 @@ function renderClaimPage(){
 
   // Dynamic Product Cards Grid Update
   var activeB = CC_BUNDLES.find(function(b){return b.key===selectedBundle})||CC_BUNDLES[3];
+  var BUNDLE_PRICES = {
+    'genius-joe': { tryPrice: 64.00, retail: 84.98, member: 57.60 },
+    'boss': { tryPrice: 55.00, retail: 84.98, member: 49.50 },
+    'genius-guice': { tryPrice: 60.00, retail: 84.98, member: 54.00 },
+    'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 }
+  };
+  var bp = BUNDLE_PRICES[selectedBundle] || BUNDLE_PRICES['charge'];
+  var money = function(val) { return '$' + val.toFixed(2); };
+
+  if(actionCard) {
+    actionCard.innerHTML = '<button class="btn-lime" id="claimConfirmBtn" onclick="confirmClaim()" style="width:100%">Start My ' + activeB.name.replace(' + Hydration', '') + ' Routine</button>' +
+      '<p style="font-size:13px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.6;margin-top:14px">' +
+        money(bp.member) + '/mo &middot; 10% off the ' + money(bp.tryPrice) + ' try price &middot; + $9.95 shipping &middot; use code <span class="mcode mcode--inline">WHSBGN</span> at checkout.' +
+      '</p>';
+  }
+
   var gridHtml = '';
   activeB.products.forEach(function(p, pIdx){
     var bulletItems = '';
@@ -7085,22 +7101,22 @@ function renderClaimPage(){
 
   // ===== VALUE STACK =====
   salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:24px">';
-  salesHtml += '<div id="stewardsBundleOffer" class="value-stack" style="margin-bottom:40px">';
+  salesHtml += '<div class="value-stack" style="margin-bottom:40px">';
   salesHtml += '<div class="value-stack__title">What You\'re Probably Spending Now</div>';
   salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Daily coffee habit</strong><br>2-3 cups, cafe or home brew beans</div><div class="value-stack__price value-stack__price--strike">$120/mo</div></div>';
   salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Energy drinks</strong><br>The afternoon fix that crashes you by 4pm</div><div class="value-stack__price value-stack__price--strike">$75/mo</div></div>';
   salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Supplements that ghost you</strong><br>The ones you stopped buying after 60 days</div><div class="value-stack__price value-stack__price--strike">$45/mo</div></div>';
   salesHtml += '<div class="value-stack__total"><div class="value-stack__total-label">Total Broken Pattern Cost</div><div class="value-stack__total-price">$240/mo</div></div>';
   salesHtml += '<div class="value-stack__your-price">';
-  salesHtml += '<div class="value-stack__your-label">Your Stewards Membership Covers This</div>';
-  salesHtml += '<div class="value-stack__your-amount">$9.95<sub style="font-size:12px;font-weight:500;text-transform:none">/shipping</sub></div>';
-  salesHtml += '<p class="value-stack__per-day">Covered by your monthly membership ($79/mo) &#8212; just pay $9.95 shipping.</p>';
+  salesHtml += '<div class="value-stack__your-label">Member Price &middot; 10% Off The Try Price</div>';
+  salesHtml += '<div class="value-stack__your-amount"><span class="price-strike" style="font-size:20px;margin-right:10px">' + money(bp.tryPrice) + '</span>' + money(bp.member) + '<sub style="font-size:12px;font-weight:500;text-transform:none">&nbsp;/mo</sub></div>';
+  salesHtml += '<p class="value-stack__per-day">Non-members pay ' + money(bp.tryPrice) + '. You pay ' + money(bp.member) + ', that\'s ' + money(bp.retail - bp.member) + ' under the ' + money(bp.retail) + ' retail value. Use code WHSBGN at checkout.</p>';
   salesHtml += '<div class="value-stack__savings">Less than what the broken pattern already costs you</div>';
   salesHtml += '</div></div>';
 
   // ===== GUARANTEES =====
   salesHtml += '<div class="guarantee-row">';
-  salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128666;</div><div class="guarantee-item__title">Ships for $9.95</div><div class="guarantee-item__desc">Your system ships every month with zero delivery fees.</div></div>';
+  salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128666;</div><div class="guarantee-item__title">Ships for $9.95</div><div class="guarantee-item__desc">Flat $9.95 shipping on every monthly delivery. No surprises.</div></div>';
   salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128260;</div><div class="guarantee-item__title">Cancel Anytime</div><div class="guarantee-item__desc">No commitments. Adjust, pause, or cancel whenever you need.</div></div>';
   salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#9889;</div><div class="guarantee-item__title">Feel It In 14 Days</div><div class="guarantee-item__desc">Noticeable, stable clarity or your money back.</div></div>';
   salesHtml += '</div>';
@@ -7131,22 +7147,23 @@ function renderClaimPage(){
 
   // ===== COMMUNITY BONUS =====
   salesHtml += '<div style="padding:48px 0">';
-  salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px;text-align:center">Part of Your Membership</p>';
+  salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px;text-align:center">The Stewards Community</p>';
   salesHtml += '<div class="skool-invite"><div class="skool-invite__card">';
   salesHtml += '<div class="skool-invite__emoji" style="font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--lime)">S</div>';
   salesHtml += '<h3 class="skool-invite__title">The Products Govern Your Energy.<br><span style="color:var(--lime)">The Community Governs Your Growth.</span></h3>';
-  salesHtml += '<p class="skool-invite__desc">$79 a month. Your governance system delivered to your door, and a community of stewards who carry the same weight standing beside you. Bible, body, and business. The bundle is the system. The Stewards are the reason you stay.</p>';
+  salesHtml += '<p class="skool-invite__desc">Free to join the community. Your matched routine is delivered at your member price, and a community of stewards who carry the same weight standing beside you. Bible, body, and business. The routine is the tool. The Stewards are the reason you stay.</p>';
   salesHtml += '<a href="https://www.skool.com/bakndcreator/about" target="_blank" rel="noopener" class="skool-invite__btn">Preview the Community &#8594;</a>';
   salesHtml += '</div></div></div>';
 
   // ===== FINAL CTA =====
   salesHtml += '<div class="result-final-cta"><div class="result-final-cta__bg"></div><div class="result-final-cta__content">';
   salesHtml += '<h2 class="result-final-cta__headline">The Pattern<br>Has a Name.<br><em>You\'re Not Alone in It.</em></h2>';
-  salesHtml += '<p class="result-final-cta__sub">One membership. Your '+archData.title+' system delivered every month, and people who carry the same weight standing with you. Claim your bundle and protect your day.</p>';
-  salesHtml += '<button class="btn-primary--arc" onclick="confirmClaim()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center;margin:0 auto">Claim My '+activeB.name+' Bundle &#8212; $9.95 Shipping</button>';
+  salesHtml += '<p class="result-final-cta__sub">Member pricing applies at checkout. Your '+archData.title+' routine delivered every month, and people who carry the same weight standing with you. Protect your day.</p>';
+  salesHtml += '<button class="btn-primary--arc" onclick="confirmClaim()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center;margin:0 auto">Start My '+activeB.name+' Routine</button>';
   salesHtml += '<div class="result-final-cta__chips">';
   salesHtml += '<span class="chip"><span class="chip__dot"></span>Cancel Anytime</span>';
-  salesHtml += '<span class="chip"><span class="chip__dot"></span>$9.95 Shipping</span>';
+  salesHtml += '<span class="chip"><span class="chip__dot"></span>+ $9.95 Shipping</span>';
+  salesHtml += '<span class="chip"><span class="chip__dot"></span>10% Member Discount</span>';
   salesHtml += '<span class="chip"><span class="chip__dot"></span>Matched to '+archData.title+'</span>';
   salesHtml += '</div></div></div>';
 
