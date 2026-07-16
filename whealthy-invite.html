@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<style id="wh-oswald">
+/* Oswald 700 embedded, lifted from whealthy-dashboard.html 2026-07-15.
+   Headers MUST be Oswald. Relying on the fonts.googleapis.com request
+   alone means that when baknd blocks, strips or delays it, every header
+   silently falls back to sans-serif and the condensed face is lost.
+   That is exactly what happened on whealthy-invite.html. Do not remove
+   this in favour of the network request. */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url(data:font/woff2;base64,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) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+</style>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WHEALTHY | The Stewards Community</title>
+
+  <!-- Open Graph / Social Preview Tags -->
+  <meta property="og:title" content="WHEALTHY | The Stewards Community">
+  <meta property="og:description"
+    content="Govern your energy. Join the free Stewards community. Products available to everyone. Members get 10% off.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://whealthylabel.com/invite">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <style>
+    /* ============================================
+   ANNOUNCEMENT BAR -- U.S. Shipping Notice
+   ============================================ */
+    .announcement-bar {
+      width: 100%;
+      background: #0a0a0b;
+      border-bottom: 1px solid rgba(204, 255, 0, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      padding: 0;
+    }
+
+    .announcement-bar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      max-width: 100%;
+    }
+
+    .announcement-bar__icon {
+      font-size: 11px;
+      color: #CCFF00;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .announcement-bar__text {
+      font-family: 'DM Sans', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1;
+    }
+
+    /* Mobile adjustments for announcement bar */
+    @media (max-width: 640px) {
+      .announcement-bar__inner {
+        padding: 8px 12px;
+        gap: 6px;
+      }
+
+      .announcement-bar__text {
+        font-size: 10px;
+        letter-spacing: 0.08em;
+      }
+
+      .announcement-bar__icon {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .announcement-bar__text {
+        font-size: 9px;
+        letter-spacing: 0.06em;
+      }
+    }
+
+    /* --- BAKND/SIMVOLY ISOLATION RESET --- */
+    #whealthy-app-embed {
+      background: var(--black) !important;
+      color: var(--text) !important;
+      position: relative !important;
+      width: 100% !important;
+    }
+
+    #whealthy-app-embed h1,
+    #whealthy-app-embed h2,
+    #whealthy-app-embed h3,
+    #whealthy-app-embed h4,
+    #whealthy-app-embed p,
+    #whealthy-app-embed span,
+    #whealthy-app-embed a,
+    #whealthy-app-embed div,
+    #whealthy-app-embed li {
+      -webkit-text-fill-color: currentcolor !important;
+      color: inherit;
+    }
+
+    #whealthy-app-embed button,
+    #whealthy-app-embed .btn-primary {
+      color: var(--black) !important;
+      -webkit-text-fill-color: var(--black) !important;
+      background-color: var(--lime) !important;
+    }
+
+    #whealthy-app-embed input,
+    #whealthy-app-embed select,
+    #whealthy-app-embed textarea {
+      -webkit-text-fill-color: currentcolor !important;
+      color: currentcolor !important;
+    }
+
+    /* Force black text on lime-bg elements */
+    #whealthy-app-embed .bonus-card__badge,
+    #whealthy-app-embed .step-item__num,
+    #whealthy-app-embed .price-stack__savings {
+      color: var(--black) !important;
+      -webkit-text-fill-color: var(--black) !important;
+    }
+
+    /* ------------------------------------- */
+
+    :root {
+      --black: #080809;
+      --charcoal: #0f1012;
+      --graphite: #161719;
+      --graphite-light: #1e2024;
+      --surface: #222428;
+      --surface-2: #2a2d33;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-mid: rgba(255, 255, 255, 0.12);
+      --border-hi: rgba(255, 255, 255, 0.2);
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-mid: rgba(255, 255, 255, 0.07);
+      --glass-hi: rgba(255, 255, 255, 0.10);
+      --lime: #ccff00;
+      --lime-dim: rgba(204, 255, 0, 0.15);
+      --lime-glow: rgba(204, 255, 0, 0.35);
+      --lime-soft: rgba(204, 255, 0, 0.08);
+      --white: #fff;
+      --white-80: rgba(255, 255, 255, 0.80);
+      --white-60: rgba(255, 255, 255, 0.60);
+      --white-40: rgba(255, 255, 255, 0.40);
+      --white-20: rgba(255, 255, 255, 0.20);
+      --text: #f0f1f3;
+      --text-muted: rgba(240, 241, 243, 0.60);
+      --text-dim: rgba(240, 241, 243, 0.38);
+      --font-display: 'Oswald', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius-sm: 8px;
+      --radius: 14px;
+      --radius-lg: 22px;
+      --radius-xl: 32px;
+      --transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      --transition-fast: 0.18s cubic-bezier(0.23, 1, 0.32, 1)
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: transparent;
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      text-size-adjust: 100%
+    }
+
+    a,
+    button,
+    input,
+    select,
+    textarea {
+      -webkit-tap-highlight-color: transparent
+    }
+
+    button,
+    a {
+      touch-action: manipulation
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    button {
+      font-family: var(--font-body);
+      cursor: pointer;
+      border: none
+    }
+
+    img {
+      display: block;
+      max-width: 100%
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: break-word;
+      word-wrap: break-word
+    }
+
+    img {
+      max-width: 100%;
+      height: auto
+    }
+
+    .alert-bar,
+    .sticky-cta,
+    .result-sticky,
+    .proof-toast {
+      max-width: 100vw
+    }
+
+    @media(max-width:640px) {
+
+      input,
+      select,
+      textarea {
+        font-size: 16px !important
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--black)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface-2);
+      border-radius: 4px
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px
+    }
+
+    .container-wide {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 32px
+    }
+
+    section {
+      position: relative;
+      z-index: 1
+    }
+
+    .alert-bar {
+      position: absolute;
+      top: 36px;
+      left: 0;
+      right: 0;
+      z-index: 9000;
+      height: 44px;
+      background: rgba(10, 10, 12, 0.92);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid rgba(204, 255, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden
+    }
+
+    .alert-bar__inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+      width: 100%;
+      justify-content: center
+    }
+
+    .alert-bar__dot {
+      width: 6px;
+      height: 6px;
+      background: var(--lime);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse-dot 2s ease-in-out infinite
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 6px var(--lime-glow)
+      }
+
+      50% {
+        opacity: .5;
+        box-shadow: none
+      }
+    }
+
+    .alert-bar__messages {
+      position: relative;
+      height: 20px;
+      overflow: hidden;
+      flex: 1;
+      max-width: 600px
+    }
+
+    .alert-bar__message {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      color: var(--white-80);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .5s ease, transform .5s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .alert-bar__message.active {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .alert-bar__badge {
+      background: var(--lime-dim);
+      border: 1px solid rgba(204, 255, 0, 0.25);
+      color: var(--lime);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      flex-shrink: 0
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--lime);
+      color: var(--black);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: 0 0 30px rgba(204, 255, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.4)
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2)0%, transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition-fast)
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(204, 255, 0, 0.5), 0 8px 30px rgba(0, 0, 0, 0.4)
+    }
+
+    .btn-primary:hover::before {
+      opacity: 1
+    }
+
+    .btn-primary:active {
+      transform: translateY(0)
+    }
+
+    .btn-primary--arc {
+      animation: arc-pulse 3s linear infinite
+    }
+
+    @keyframes arc-pulse {
+      0% {
+        box-shadow: 0 0 30px rgba(204, 255, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.4)
+      }
+
+      50% {
+        box-shadow: 0 0 60px rgba(204, 255, 0, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4)
+      }
+
+      100% {
+        box-shadow: 0 0 30px rgba(204, 255, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.4)
+      }
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--white-60);
+      background: var(--glass);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 100px;
+      backdrop-filter: blur(8px)
+    }
+
+    .chip__dot {
+      width: 4px;
+      height: 4px;
+      background: var(--lime);
+      border-radius: 50%
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 14px;
+      display: block;
+      text-align: center
+    }
+
+    .section-headline {
+      font-family: var(--font-display);
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.0;
+      color: var(--text);
+      text-align: center;
+      font-size: clamp(38px, 5vw, 64px);
+      margin-bottom: 20px
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 560px;
+      text-align: center;
+      margin: 0 auto 48px
+    }
+
+    /* HERO */
+    @keyframes reveal-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .hero {
+      padding: 116px 0 60px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0
+    }
+
+    .hero__orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none
+    }
+
+    .hero__orb--1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.04)0%, transparent 70%);
+      top: -80px;
+      right: -80px;
+      animation: float-orb 8s ease-in-out infinite
+    }
+
+    .hero__orb--2 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.03)0%, transparent 70%);
+      bottom: 100px;
+      left: -60px;
+      animation: float-orb 12s ease-in-out infinite reverse
+    }
+
+    @keyframes float-orb {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0)
+      }
+
+      33% {
+        transform: translateY(-30px) translateX(15px)
+      }
+
+      66% {
+        transform: translateY(20px) translateX(-10px)
+      }
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto
+    }
+
+    .hero__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--lime);
+      background: var(--lime-soft);
+      border: 1px solid rgba(204, 255, 0, 0.2);
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px
+    }
+
+    .hero-animate .hero__label {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: reveal-up .8s ease .2s forwards
+    }
+
+    .hero__headline {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(36px, 6vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -.01em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      color: var(--white) !important
+    }
+
+    .hero-animate .hero__headline {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: reveal-up .9s ease .35s forwards
+    }
+
+    .hero__headline em {
+      font-style: normal;
+      color: var(--lime)
+    }
+
+    .hero__sub {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px
+    }
+
+    .hero-animate .hero__sub {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: reveal-up .8s ease .5s forwards
+    }
+
+    .hero__sub strong {
+      color: var(--text) !important;
+      font-weight: 500
+    }
+
+    .hero__ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px
+    }
+
+    .hero-animate .hero__ctas {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: reveal-up .8s ease .65s forwards
+    }
+
+    .hero__chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px
+    }
+
+    .hero-animate .hero__chips {
+      opacity: 0;
+      animation: reveal-up .8s ease .8s forwards
+    }
+
+    /* CREDIBILITY */
+    .credibility {
+      padding: 40px 0;
+      background: rgba(15, 16, 18, 0.55);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center
+    }
+
+    .credibility__label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--white-40);
+      margin-bottom: 16px
+    }
+
+    .credibility__logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      opacity: 0.6
+    }
+
+    .credibility__item {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    /* AGITATION */
+    .agitation {
+      padding: 100px 0
+    }
+
+    .agitation__box {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      position: relative
+    }
+
+    .agitation__list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 32px 0
+    }
+
+    .agitation__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px
+    }
+
+    .agitation__icon {
+      color: rgba(255, 100, 80, 0.8);
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .agitation__text {
+      color: var(--text-muted);
+      font-size: 16px
+    }
+
+    .agitation__text strong {
+      color: var(--text)
+    }
+
+    .agitation__transition {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-mid)
+    }
+
+    .agitation__future {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--lime);
+      text-transform: uppercase;
+      margin-top: 16px
+    }
+
+    /* OPPORTUNITY */
+    .opportunity {
+      padding: 100px 0;
+      background: rgba(15, 16, 18, 0.5);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px)
+    }
+
+    .opportunity__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    .opportunity__card {
+      background: linear-gradient(135deg, rgba(204, 255, 0, 0.05)0%, rgba(204, 255, 0, 0.02)100%);
+      border: 1px solid rgba(204, 255, 0, 0.15);
+      border-radius: var(--radius-lg);
+      padding: 40px
+    }
+
+    /* STORY */
+    .story {
+      padding: 100px 0
+    }
+
+    .story__container {
+      max-width: 680px;
+      margin: 0 auto
+    }
+
+    .story__warning {
+      background: rgba(255, 100, 80, 0.1);
+      border: 1px solid rgba(255, 100, 80, 0.2);
+      color: rgba(255, 100, 80, 0.9);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .story__content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.7
+    }
+
+    .story__content strong {
+      color: var(--text)
+    }
+
+    .story__content ul {
+      margin-bottom: 24px;
+      padding-left: 24px;
+      color: var(--text-muted)
+    }
+
+    .story__content li {
+      margin-bottom: 12px
+    }
+
+    /* SOLUTION */
+    .solution {
+      padding: 100px 0;
+      background: rgba(15, 16, 18, 0.5);
+      text-align: center
+    }
+
+    .solution__box {
+      max-width: 800px;
+      margin: 0 auto;
+      background: linear-gradient(165deg, rgba(204, 255, 0, 0.06)0%, rgba(204, 255, 0, 0.02)100%);
+      border: 2px solid rgba(204, 255, 0, 0.3);
+      border-radius: var(--radius-xl);
+      padding: 60px 40px
+    }
+
+    .solution__benefits {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+      text-align: left
+    }
+
+    .solution__benefit {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: var(--radius)
+    }
+
+    .solution__benefit-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+      color: var(--lime)
+    }
+
+    .solution__benefit-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px
+    }
+
+    .solution__benefit-desc {
+      font-size: 14px;
+      color: var(--text-muted)
+    }
+
+    /* PROOF */
+    .proof {
+      padding: 100px 0
+    }
+
+    .proof__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    .testimonial-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      transition: var(--transition)
+    }
+
+    .testimonial-card:hover {
+      background: var(--glass-mid);
+      border-color: var(--border-mid)
+    }
+
+    .testimonial-card__quote {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 24px;
+      font-style: italic
+    }
+
+    .testimonial-card__quote strong {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--white) !important
+    }
+
+    .testimonial-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .testimonial-card__avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(30, 32, 36, 0.6);
+      border: 1px solid var(--border-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0
+    }
+
+    .testimonial-card__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .testimonial-card__role {
+      font-size: 12px;
+      color: var(--text-dim)
+    }
+
+    /* WHAT YOU GET */
+    .stack {
+      padding: 100px 0;
+      background: rgba(15, 16, 18, 0.5);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px)
+    }
+
+    .stack__container {
+      max-width: 700px;
+      margin: 0 auto
+    }
+
+    .stack__item {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px
+    }
+
+    .stack__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-mid)
+    }
+
+    .stack__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--lime)
+    }
+
+    .stack__value {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--white-40);
+      text-decoration: line-through
+    }
+
+    .stack__list {
+      list-style: none
+    }
+
+    .stack__list li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+      font-size: 15px
+    }
+
+    .stack__list li::before {
+      content: '\2713';
+      position: absolute;
+      left: 0;
+      color: var(--lime);
+      font-weight: 700
+    }
+
+    /* BONUSES */
+    .bonuses {
+      padding: 60px 0;
+      max-width: 700px;
+      margin: 0 auto
+    }
+
+    .bonus-card {
+      background: linear-gradient(135deg, rgba(204, 255, 0, 0.08)0%, rgba(204, 255, 0, 0.02)100%);
+      border: 1px dashed var(--lime);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px
+    }
+
+    .bonus-card__badge {
+      display: inline-block;
+      background: var(--lime);
+      color: var(--black);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      border-radius: 4px;
+      margin-bottom: 16px
+    }
+
+    /* PRICE STACK */
+    .price-stack {
+      max-width: 700px;
+      margin: 60px auto 0;
+      background: var(--surface-2);
+      border: 2px solid rgba(204, 255, 0, 0.4);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      text-align: center
+    }
+
+    .price-stack__total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border-mid)
+    }
+
+    .price-stack__total-label {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-dim)
+    }
+
+    .price-stack__total-price {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--white-40);
+      text-decoration: line-through
+    }
+
+    .price-stack__your-label {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 12px
+    }
+
+    .price-stack__your-amount {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 10vw, 96px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1
+    }
+
+    .price-stack__your-amount sup {
+      font-size: clamp(28px, 4vw, 36px);
+      vertical-align: super;
+      color: var(--text-muted)
+    }
+
+    .price-stack__your-amount sub {
+      font-size: clamp(20px, 3vw, 28px);
+      vertical-align: baseline;
+      color: var(--text-muted);
+      font-weight: 400
+    }
+
+    .price-stack__per-day {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin: 16px 0 32px
+    }
+
+    .price-stack__per-day strong {
+      color: var(--lime);
+      font-weight: 600
+    }
+
+    .price-stack__savings {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(204, 255, 0, 0.1);
+      border: 1px solid rgba(204, 255, 0, 0.2);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 32px
+    }
+
+    /* GUARANTEE */
+    .guarantee {
+      padding: 80px 0
+    }
+
+    .guarantee__box {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      text-align: center
+    }
+
+    .guarantee__icon {
+      font-size: 48px;
+      margin-bottom: 20px
+    }
+
+    .guarantee__title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      margin-bottom: 16px
+    }
+
+    .guarantee__text {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6
+    }
+
+    /* FINAL CTA */
+    .final-cta {
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+      text-align: center
+    }
+
+    .final-cta__bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(204, 255, 0, 0.06)0%, transparent 70%);
+      pointer-events: none
+    }
+
+    .final-cta__content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto
+    }
+
+    .crossroads {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 40px 0
+    }
+
+    .path {
+      flex: 1;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      text-align: left
+    }
+
+    .path--bad {
+      border-color: rgba(255, 100, 80, 0.2)
+    }
+
+    .path--good {
+      border-color: rgba(204, 255, 0, 0.3);
+      background: linear-gradient(135deg, rgba(204, 255, 0, 0.05)0%, transparent 100%)
+    }
+
+    .path__title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 16px
+    }
+
+    .path--bad .path__title {
+      color: rgba(255, 100, 80, 0.9)
+    }
+
+    .path--good .path__title {
+      color: var(--lime)
+    }
+
+    .path__text {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6
+    }
+
+    .steps-list {
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto 40px
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px
+    }
+
+    .step-item__num {
+      width: 32px;
+      height: 32px;
+      background: var(--lime);
+      color: var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .step-item__text {
+      font-size: 16px;
+      color: var(--text)
+    }
+
+    /* FAQ */
+    .faq {
+      padding: 100px 0;
+      background: rgba(15, 16, 18, 0.5);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px)
+    }
+
+    .faq__container {
+      max-width: 700px;
+      margin: 0 auto
+    }
+
+    .faq__item {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px
+    }
+
+    .faq__q {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px
+    }
+
+    .faq__a {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6
+    }
+
+    /* REFERRER PILL (LIME STYLE) */
+    .referrer-pill {
+      display: none;
+      align-items: center;
+      background: var(--lime);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 10px 24px;
+      border-radius: 40px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999999
+    }
+
+    .referrer-pill__text {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+      letter-spacing: 0.02em
+    }
+
+    /* FOOTER & STICKY */
+    footer {
+      background: rgba(15, 16, 18, 0.6);
+      border-top: 1px solid var(--border);
+      padding: 60px 0 100px;
+      text-align: center
+    }
+
+    .footer__logo {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: var(--text);
+      margin-bottom: 16px
+    }
+
+    .footer__logo span {
+      color: var(--lime)
+    }
+
+    .footer__copy {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 24px
+    }
+
+    .sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      padding: 16px 24px;
+      background: rgba(8, 8, 9, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(204, 255, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transform: translateY(100%);
+      transition: transform .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none
+    }
+
+    .sticky-cta.visible {
+      transform: translateY(0);
+      pointer-events: auto
+    }
+
+    .sticky-cta__text {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: none
+    }
+
+    .sticky-cta .btn-primary {
+      font-size: 14px;
+      padding: 14px 28px
+    }
+
+    @media(min-width:641px) {
+      .sticky-cta__text {
+        display: block
+      }
+    }
+
+    @media(max-width:768px) {
+      .hero {
+        padding: 136px 0 60px
+      }
+
+      .opportunity__grid,
+      .solution__benefits,
+      .proof__grid,
+      .crossroads {
+        grid-template-columns: 1fr;
+        gap: 24px
+      }
+
+      .price-stack {
+        padding: 32px 24px
+      }
+
+      .agitation__box {
+        padding: 32px 24px
+      }
+    }
+
+    @media(max-width:480px) {
+      .btn-primary {
+        width: 100%;
+        justify-content: center
+      }
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .7s ease, transform .7s cubic-bezier(0.23, 1, 0.32, 1)
+    }
+
+    .reveal-ready.reveal {
+      opacity: 0;
+      transform: translateY(24px)
+    }
+
+    .reveal-ready.reveal.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .reveal-delay-1 {
+      transition-delay: .1s
+    }
+
+    .reveal-delay-2 {
+      transition-delay: .2s
+    }
+
+    /* JOIN MODAL */
+    .join-modal-overlay { position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); display:none; align-items:center; justify-content:center; padding:20px; opacity:0; transition:opacity .3s ease }
+    .join-modal-overlay.active { display:flex; opacity:1 }
+    .join-modal { background:rgba(18,19,22,0.95); border:1px solid rgba(204,255,0,0.2); border-radius:20px; max-width:480px; width:100%; padding:48px 36px; text-align:center; position:relative; transform:scale(0.92); transition:transform .35s cubic-bezier(.34,1.56,.64,1); box-shadow:0 0 60px rgba(204,255,0,0.08), 0 24px 60px rgba(0,0,0,0.5) }
+    .join-modal-overlay.active .join-modal { transform:scale(1) }
+    .join-modal__close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--white-40); font-size:24px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:var(--transition-fast) }
+    .join-modal__close:hover { color:var(--white); background:rgba(255,255,255,0.1) }
+    .join-modal__badge { display:inline-block; background:var(--lime-soft); border:1px solid rgba(204,255,0,0.25); color:var(--lime); font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:4px 12px; border-radius:100px; margin-bottom:20px }
+    .join-modal__title { font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--white); text-transform:uppercase; margin-bottom:12px; line-height:1.1 }
+    .join-modal__sub { font-size:15px; color:var(--text-muted); line-height:1.6; margin-bottom:28px }
+    .join-modal__perks { display:flex; flex-direction:column; gap:12px; text-align:left; margin-bottom:28px }
+    .join-modal__perk { display:flex; align-items:flex-start; gap:12px; font-size:14px; color:var(--text-muted); line-height:1.5 }
+    .join-modal__perk-icon { color:var(--lime); font-size:16px; flex-shrink:0; margin-top:2px }
+    .join-modal__perk strong { color:var(--text) }
+    .join-modal__discount { background:linear-gradient(135deg, rgba(204,255,0,0.08), rgba(204,255,0,0.02)); border:1px solid rgba(204,255,0,0.15); border-radius:12px; padding:16px; margin-bottom:28px }
+    .join-modal__discount-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); margin-bottom:4px }
+    .join-modal__discount-value { font-family:var(--font-display); font-size:36px; font-weight:700; color:var(--white) }
+    .join-modal__discount-note { font-size:12px; color:var(--text-dim); margin-top:4px }
+    .join-modal__cta { width:100%; padding:18px; font-size:16px }
+    .join-modal__footer { font-size:11px; color:var(--text-dim); margin-top:16px }
+    @media(max-width:480px) { .join-modal { padding:36px 24px } .join-modal__title { font-size:24px } }
+  </style>
+</head>
+
+<body>
+  <!-- WHEALTHY Announcement Bar -->
+  <div class="announcement-bar" id="announcementBar">
+    <div class="announcement-bar__inner">
+      <span class="announcement-bar__icon">&#9992;</span>
+      <span class="announcement-bar__text">We ship to U.S. addresses only.</span>
+    </div>
+  </div>
+  <div id="whealthy-app-embed">
+
+    <!-- DYNAMIC REFERRER PILL (ALWAYS ON TOP) -->
+    <div class="referrer-pill referrer-pill-dynamic">
+      <div class="referrer-pill__text"><span class="referrer-name"></span> invited you</div>
+    </div>
+
+    <!-- SECTION 1: ALERT BAR -->
+    <div class="alert-bar" role="banner">
+      <div class="alert-bar__inner container">
+        <div
+          style="font-family:var(--font-display);font-weight:700;letter-spacing:0.06em;color:var(--white);font-size:14px;flex-shrink:0;">
+          W<span style="color:var(--lime);">HEAL</span>THY</div>
+        <span class="alert-bar__badge">Join Free</span>
+        <div class="alert-bar__messages" id="alertMessages">
+          <div class="alert-bar__message active">You weren't meant to carry it alone.</div>
+          <div class="alert-bar__message">The Stewards Community. Free to join. Built for people who carry real weight.</div>
+          <div class="alert-bar__message">Founding affiliate window is open. Your future starts now.</div>
+        </div>
+        <div class="alert-bar__dot"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: HERO -->
+    <section class="hero" id="hero">
+      <div class="hero__bg">
+        <div class="hero__orb hero__orb--1"></div>
+        <div class="hero__orb hero__orb--2"></div>
+      </div>
+      <div class="hero__content container">
+        <div class="hero__label"><span class="chip__dot"></span>The Stewards Community</div>
+        <h1 class="hero__headline">You Carry Work, Family, and Faith.<br><em>Your Energy Should Be Governed, Not
+            Borrowed.</em></h1>
+        <p class="hero__sub">Coffee owns you. Energy drinks panic you. Supplements ghost you. <strong>WHEALTHY governs
+            your energy.</strong> A free community of stewards who carry the same weight. Products available to everyone. Members get 10% off.</p>
+        <div class="hero__ctas">
+          <button class="btn-primary btn-primary--arc" onclick="joinStewards()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5" />
+              <path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Join the Community
+          </button>
+        </div>
+        <div class="hero__chips">
+          <span class="chip"><span class="chip__dot"></span>Free to Join</span>
+          <span class="chip"><span class="chip__dot"></span>10% Member Discount</span>
+          <span class="chip"><span class="chip__dot"></span>Skool Community</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: CREDIBILITY BAR -->
+    <section class="credibility">
+      <div class="container">
+        <p class="credibility__label">Who's Already Inside</p>
+        <div class="credibility__logos reveal" style="flex-wrap:wrap; gap:24px 40px">
+          <div class="credibility__item" style="text-align:center; max-width:160px">
+            <strong style="display:block; color:var(--text); margin-bottom:4px">Founders</strong>
+            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Building without a team, carrying the vision alone.</span>
+          </div>
+          <div class="credibility__item" style="text-align:center; max-width:160px">
+            <strong style="display:block; color:var(--text); margin-bottom:4px">Ministry Leaders</strong>
+            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Pastors running men's groups and leading from depletion.</span>
+          </div>
+          <div class="credibility__item" style="text-align:center; max-width:160px">
+            <strong style="display:block; color:var(--text); margin-bottom:4px">Builders</strong>
+            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Contractors, creatives, operators grinding on fumes.</span>
+          </div>
+          <div class="credibility__item" style="text-align:center; max-width:160px">
+            <strong style="display:block; color:var(--text); margin-bottom:4px">Fathers</strong>
+            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Dads rebuilding presence after years of coming home empty.</span>
+          </div>
+          <div class="credibility__item" style="text-align:center">
+            <span style="font-size:12px; color:var(--text-dim)">Hosted on</span> <img
+              src="https://assets.skool.com/skool/15f6b2167d644781b0a9db5d96a7d6ff.png"
+              style="height:18px; display:inline-block; vertical-align:middle; filter:grayscale(1) brightness(2); margin-left:6px"
+              alt="Skool">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3B: ARCHETYPE RECOGNITION -->
+    <section style="padding:60px 0">
+      <div class="container">
+        <p class="section-label">You Are Not Alone in This Pattern</p>
+        <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); margin-bottom:12px">Find Yourself in Here.
+        </h2>
+        <p style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">These
+          are not diagnoses. They are patterns. And patterns can be governed.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px">
+          <div
+            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
+            <span
+              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
+              01</span>
+            <h3
+              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
+              Owned by<br>Caffeine</h3>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Can't start without it. The ritual
+              became a dependency you stopped questioning.</p>
+          </div>
+          <div
+            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
+            <span
+              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
+              02</span>
+            <h3
+              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
+              Wired but<br>Scattered</h3>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">High energy that goes everywhere. Busy
+              all day, nothing to show for it.</p>
+          </div>
+          <div
+            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
+            <span
+              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
+              03</span>
+            <h3
+              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
+              Sharp Until<br>2PM</h3>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Mornings are strong. Then the collapse
+              hits and afternoons are a write-off.</p>
+          </div>
+          <div
+            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
+            <span
+              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
+              04</span>
+            <h3
+              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
+              Running on<br>Fumes</h3>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Low-grade depletion all day. Never
+              crashing, just never fully on.</p>
+          </div>
+          <div
+            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
+            <span
+              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
+              05</span>
+            <h3
+              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
+              The Skeptical<br>Steward</h3>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Tried it all before. Not closed, just
+              needs proof instead of another pitch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3C: INSIDE THE ROOM -->
+    <section style="padding:80px 0; border-top:1px solid var(--border)">
+      <div class="container">
+        <p class="section-label reveal">What It Actually Looks Like Inside</p>
+        <h2 class="section-headline reveal" style="font-size:clamp(28px,4vw,44px); margin-bottom:16px">This Is Not a Course.<br>It's a Room.</h2>
+        <p style="text-align:center; color:var(--text-muted); font-size:16px; max-width:580px; margin:0 auto 48px; line-height:1.7" class="reveal">A course gives you content. A community gives you people. Here's what a normal week looks like inside The Stewards.</p>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px" class="reveal">
+          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px 24px">
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:12px">Tuesday Night</div>
+            <h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Weekly Check-In</h3>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.6">Someone posts how their fast is going. Someone else shares a business pivot. Five stewards respond before morning. Not likes. Real words. This is where the fireside chat happens.</p>
+          </div>
+          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px 24px">
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:12px">Every Day</div>
+            <h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Pattern Threads</h3>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.6">Stewards posting their governance routines. What worked. What didn't. The real data from real days. Not theory from people who don't carry your weight.</p>
+          </div>
+          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px 24px">
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:12px">Ongoing</div>
+            <h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Faith, Business, Family</h3>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.6">Same thread. Same people. Because stewards don't compartmentalize. Your prayer life and your business and your marriage aren't separate conversations here.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: PROBLEM AGITATION -->
+    <section class="agitation">
+      <div class="container">
+        <div class="agitation__box reveal">
+          <p class="section-label">The Pattern</p>
+          <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); text-transform:none">If you're like most stewards carrying real responsibility, you're probably tired of running on fumes.</h2>
+          <p style="text-align:center; color:var(--text-muted); font-size:18px; margin-top:16px">Most people carrying this kind of weight have been <strong>borrowing energy instead of governing it.</strong></p>
+
+          <div class="agitation__list">
+            <div class="agitation__item">
+              <span class="agitation__icon">&#10005;</span>
+              <p class="agitation__text">Struggling to <strong>start your day without a dependency ritual</strong>, knowing it spikes your cortisol before you even wake up.</p>
+            </div>
+            <div class="agitation__item">
+              <span class="agitation__icon">&#10005;</span>
+              <p class="agitation__text">Watching others stay stable while you <strong>collapse at 2PM</strong> and fake it through the afternoon meetings.</p>
+            </div>
+            <div class="agitation__item">
+              <span class="agitation__icon">&#10005;</span>
+              <p class="agitation__text">Feeling overwhelmed by <strong>"biohacking" supplements</strong> that promise the world but ghost you after 30 days.</p>
+            </div>
+            <div class="agitation__item">
+              <span class="agitation__icon">&#10005;</span>
+              <p class="agitation__text">Worried that you're coming home with <strong>the leftover version of yourself</strong> for the people who matter most.</p>
+            </div>
+          </div>
+
+          <p style="text-align:center; color:var(--text-muted); font-size:16px">This is the pattern. It has a name. And it can be governed.</p>
+
+          <div class="agitation__transition">
+            <p style="color:var(--text)">Right now you're experiencing an unmanaged baseline.</p>
+            <p class="agitation__future">Imagine Instead: A Governed Rhythm.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="text-align:center; padding:40px 0">
+      <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
+      <p style="color:var(--text-dim); font-size:12px; margin-top:12px">No cost. No commitment. Just stewards.</p>
+    </div>
+
+    <!-- SECTION 5: FOUNDING AFFILIATE PROGRAM -->
+    <section class="opportunity">
+      <div class="container">
+        <div class="opportunity__grid">
+          <div class="reveal">
+            <p class="section-label" style="text-align:left">The Founding Affiliate Program</p>
+            <h2 class="section-headline" style="text-align:left; margin-bottom:16px">Share the Mission.<br>Build What Lasts.</h2>
+            <p style="color:var(--text-muted); font-size:16px; margin-bottom:20px; line-height:1.7">WHEALTHY is free to join because the mission matters more than a gate. But this is also the moment to build something real for yourself. Every person you invite now is tracked to you permanently on Skool.</p>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; color:var(--text-muted)">
+              <li><span style="color:var(--lime); margin-right:8px">&#10003;</span> <strong>Lifetime attribution.</strong> Every person you invite to the free community is tracked to you forever on Skool.</li>
+              <li><span style="color:var(--lime); margin-right:8px">&#10003;</span> <strong>40% founding rate.</strong> When the paid tier launches, those people become your recurring commissions at the highest rate we will ever offer.</li>
+              <li><span style="color:var(--lime); margin-right:8px">&#10003;</span> <strong>After launch: 30%.</strong> The founding window is the only time to lock in 40%. It will not reopen.</li>
+            </ul>
+          </div>
+          <div class="opportunity__card reveal reveal-delay-1">
+            <h3 style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--white); margin-bottom:12px; text-transform:uppercase">How It Works</h3>
+            <p style="color:var(--text-muted); font-size:15px; line-height:1.6">Join the free Stewards community on Skool. Share your link. Every person who joins through you is attributed to your account for life. When the paid membership launches, Skool processes the payment and pays your commission automatically. You are building your future income now by inviting people into a free community.</p>
+            <p style="color:var(--text-dim); font-size:12px; margin-top:16px; line-height:1.5">Affiliate commissions are paid by Skool under their affiliate program. Rates reflect commission percentage only and are not a representation of earnings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="text-align:center; padding:40px 0">
+      <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Become a Founding Affiliate</button>
+      <p style="color:var(--text-dim); font-size:12px; margin-top:12px">Free to join. Lifetime attribution on Skool.</p>
+    </div>
+
+    <!-- SECTION 6: STORY -->
+    <section class="story">
+      <div class="story__container reveal">
+        <div
+          style="background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); border-left:3px solid var(--lime); color:var(--text-muted); padding:16px 24px; border-radius:var(--radius); font-size:15px; line-height:1.6; margin-bottom:40px">
+          <strong style="color:var(--text)">From one steward to another:</strong> This is a real story about a pattern I
+          was stuck in and the system that replaced it.
+        </div>
+        <div class="story__content">
+          <p><strong>From:</strong> Ignacio Jos&eacute; Zambrano, II<br><strong>Location:</strong> The Stewards
+            Community</p>
+          <p>If you're reading this, chances are you carry real weight: work, family, faith. I know exactly how
+            you feel because I hit the same wall.</p>
+          <p>I was wired but scattered. My mornings were fueled by a dependency ritual, my afternoons were a fog, and by
+            6 PM, my family got the emptied-out version of me.</p>
+          <ul>
+            <li>I tried cutting back on coffee (the headaches broke me).</li>
+            <li>I invested in expensive "focus" pills (felt absolutely nothing).</li>
+            <li>I even tried just pushing through it with sheer willpower.</li>
+          </ul>
+          <p>Then something changed.</p>
+          <p>I realized the problem wasn't a lack of energy. <strong>The problem was an unmanaged pattern.</strong> I
+            stopped looking for a "boost" and started looking for a system.</p>
+          <p>When I finally built a functional routine (morning governance, midday stability, afternoon hydration), the results shocked me.</p>
+          <ul>
+            <li>By Day 9, the urge for a second cup of coffee vanished.</li>
+            <li>My 3 PM crash disappeared.</li>
+            <li>I came home present and patient.</li>
+          </ul>
+          <p>I refined this into a complete system. But the system alone wasn't the whole answer.</p>
+          <p>What changed everything was having <strong>people running it with me.</strong> Stewards who understand what it means to carry work, family, and faith at the same time. People who ask how your fast is going and how your business is doing in the same conversation. That's what The Stewards Community is. And that's what I want you to walk into.</p>
+        </div>
+      </div>
+    </section>
+
+    <div style="text-align:center; padding:40px 0">
+      <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
+    </div>
+
+    <!-- SECTION 7: THE STEWARDS COMMUNITY -->
+    <section class="solution" id="offer">
+      <div class="container">
+        <div class="solution__box reveal">
+          <p style="font-size:16px; color:var(--lime); font-style:italic; margin-bottom:24px">Take 10 seconds to imagine coming home at 6 PM with energy left in the tank. How would that change your life?</p>
+          <h2 style="font-family:var(--font-display); font-size:clamp(32px,5vw,56px); font-weight:700; text-transform:uppercase; line-height:1.0; margin-bottom:16px">Introducing<br><span style="color:var(--lime)">The Stewards Community</span></h2>
+          <p style="font-size:18px; color:var(--text-muted); max-width:600px; margin:0 auto">A free community of stewards who govern their energy together. Products available to everyone. Members get 10% off.</p>
+
+          <div class="solution__benefits">
+            <div class="solution__benefit">
+              <div class="solution__benefit-icon" style="font-family:var(--font-display); font-weight:700; font-size:20px">01</div>
+              <div class="solution__benefit-title">Freedom to Think</div>
+              <div class="solution__benefit-desc"><span style="font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Focus</span><br>Governance routines matched to your energy pattern. Weekly pattern threads where stewards share what's working. Real data from real days, not theory.</div>
+            </div>
+            <div class="solution__benefit">
+              <div class="solution__benefit-icon" style="font-family:var(--font-display); font-weight:700; font-size:20px">02</div>
+              <div class="solution__benefit-title">Energy to Be Present</div>
+              <div class="solution__benefit-desc"><span style="font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Family</span><br>Accountability check-ins with stewards who understand the weight. Conversations about showing up at 6 PM with energy left. Fathers, husbands, and leaders holding the standard together.</div>
+            </div>
+            <div class="solution__benefit">
+              <div class="solution__benefit-icon" style="font-family:var(--font-display); font-weight:700; font-size:20px">03</div>
+              <div class="solution__benefit-title">Rhythm to Carry Well</div>
+              <div class="solution__benefit-desc"><span style="font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Faith</span><br>365-day Bible reading plan inside the community. Monthly 30-day governance challenges. Prayer threads, business conversations, and marriage check-ins all in the same space. Because stewards don't compartmentalize.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:40px">
+          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:20px 44px; font-size:18px">Join the Community. Free.</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: PROOF -->
+    <section class="proof">
+      <div class="container">
+        <p class="section-label reveal">From Stewards Inside the Room</p>
+        <h2 class="section-headline reveal reveal-delay-1">Real People.<br>Real Weight.</h2>
+        <div class="proof__grid reveal reveal-delay-2" style="margin-top:48px; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr))">
+          <div class="testimonial-card">
+            <p class="testimonial-card__quote">"I didn't feel hyped. I just felt <strong>clear.</strong> Like the static
+              turned off. By day 9 I stopped reaching for the second cup."</p>
+            <div class="testimonial-card__meta">
+              <div class="testimonial-card__avatar"
+                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">MT</div>
+              <div>
+                <div class="testimonial-card__name">Marcus T.</div>
+                <div class="testimonial-card__role">Sales Director &#183; Father of 3</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <p class="testimonial-card__quote">"I still had energy at <strong>4pm without the crash.</strong> I didn't
+              realize how normalized the afternoon drop was."</p>
+            <div class="testimonial-card__meta">
+              <div class="testimonial-card__avatar"
+                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">DR</div>
+              <div>
+                <div class="testimonial-card__name">Daniel R.</div>
+                <div class="testimonial-card__role">Founder &#183; Husband</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <p class="testimonial-card__quote">"I noticed I was <strong>more patient after work.</strong> That's not a
+              supplement effect. That's a rhythm shift."</p>
+            <div class="testimonial-card__meta">
+              <div class="testimonial-card__avatar"
+                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">JW</div>
+              <div>
+                <div class="testimonial-card__name">Pastor Jerome W.</div>
+                <div class="testimonial-card__role">Ministry Leader &#183; Dad</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card" style="border-color:rgba(204,255,0,0.15)">
+            <p class="testimonial-card__quote">"I finally have <strong>people who get it.</strong> My pastor doesn't understand my business. My business partner doesn't understand my faith. These guys understand both."</p>
+            <div class="testimonial-card__meta">
+              <div class="testimonial-card__avatar"
+                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">AJ</div>
+              <div>
+                <div class="testimonial-card__name">Andre J.</div>
+                <div class="testimonial-card__role">Business Owner &#183; Elder</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:32px" class="reveal">
+          <p style="color:var(--text-muted); font-size:16px"><strong>73%</strong> of stewards report improved clarity
+            within 14 days.</p>
+        </div>
+
+        <div style="text-align:center; margin-top:40px" class="reveal">
+          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: PRODUCTS WITH 10% MEMBER DISCOUNT -->
+    <section style="padding:80px 0; border-top:1px solid var(--border)">
+      <div class="container">
+        <div class="reveal" style="text-align:center; margin-bottom:48px">
+          <p class="section-label">Governance Routines</p>
+          <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); margin-bottom:16px">The Products That<br>Govern Your Energy.</h2>
+          <!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) -->
+          <p style="color:var(--text-muted); font-size:16px; max-width:580px; margin:0 auto 24px; line-height:1.7">Available to everyone. No membership required. But community members get 10% off every product, every time.</p>
+          <div style="display:inline-block; background:linear-gradient(135deg, rgba(204,255,0,0.1), rgba(204,255,0,0.03)); border:1px solid rgba(204,255,0,0.2); border-radius:12px; padding:12px 24px">
+            <span style="font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Community Member Price</span>
+            <span style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--white); margin-left:12px">10% Off</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px" class="reveal">
+          <!-- Product 1: Functional Coffee -->
+          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
+            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="WHEALTHY Functional Coffee" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+            </div>
+            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
+              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Morning &#183; 6-9am</div>
+              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Start Clear</h3>
+              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">Smooth, intentional caffeine paired with adaptogens. Function without the ownership pattern.</p>
+              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The frantic coffee ritual.</p>
+            </div>
+          </div>
+          <!-- Product 2: Performance Capsules -->
+          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
+            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Performance Capsules" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+            </div>
+            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
+              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Midday &#183; 11am-1pm</div>
+              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Stay Stable</h3>
+              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">A midday anchor that keeps focus stable through the second half. No crash. No dependency.</p>
+              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The second cup loop and noon energy drink.</p>
+            </div>
+          </div>
+          <!-- Product 3: Genius Guice -->
+          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
+            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice Think Drink" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+            </div>
+            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
+              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Afternoon &#183; 2-4pm</div>
+              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Think Again</h3>
+              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">Hydration plus cognitive support. Recover your afternoon instead of surviving it.</p>
+              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The 2pm collapse and the fog.</p>
+            </div>
+          </div>
+          <!-- Product 4: Charge Powder -->
+          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
+            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge Powder" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+            </div>
+            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
+              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Anytime &#183; On Demand</div>
+              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Stay Charged</h3>
+              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">Clean energy on demand. When the gap hits and you need to stay governed.</p>
+              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The vending machine run.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:40px" class="reveal">
+          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Unlock 10% Off.</button>
+          <p style="color:var(--text-dim); font-size:12px; margin-top:12px">Products available to everyone. Members save 10% automatically.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: WHAT YOU'RE WALKING INTO -->
+    <section style="padding:80px 0; border-top:1px solid var(--border)">
+      <div class="container">
+        <div class="reveal" style="max-width:680px; margin:0 auto">
+          <p class="section-label">Before You Click</p>
+          <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); margin-bottom:32px">What You're<br>Walking Into.</h2>
+
+          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-xl); padding:36px 32px; line-height:1.8; color:var(--text-muted); font-size:15px">
+            <p style="margin-bottom:20px">This is a room on Skool. It is free to enter and free to leave.</p>
+            <p style="margin-bottom:20px">Inside, you will find founders who build alone, pastors who lead men's ministries, fathers rebuilding trust with their families, and builders who refuse to fake it through the afternoon.</p>
+            <p style="margin-bottom:20px">On any given day, someone is posting a governance routine that worked. Someone else is asking for accountability on a fast. Someone is sharing a business win and three stewards are responding with real words, not reactions.</p>
+            <p style="margin-bottom:20px">There are prayer threads. Business conversations. Marriage check-ins. They happen in the same space because stewards don't put their faith in one box and their ambition in another.</p>
+            <p style="margin-bottom:20px">There are governance routines (products) available to everyone who wants them. Community members get 10% off. But the room itself is the offer. The products are what help you show up for it with energy left in the tank.</p>
+            <p style="color:var(--text)"><strong>This is not a pitch. It is a description. Walk in and see.</strong></p>
+          </div>
+
+          <div style="text-align:center; margin-top:40px">
+            <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:20px 44px; font-size:18px">Walk Into the Room.</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 11: GUARANTEE -->
+    <section class="guarantee">
+      <div class="container">
+        <div class="guarantee__box reveal">
+          <div class="guarantee__icon" style="font-family:var(--font-display); font-weight:700; font-size:32px; color:var(--lime)">100%</div>
+          <h2 class="guarantee__title">The Governance Promise</h2>
+          <p class="guarantee__text">You are entirely in control. <strong>Leave whenever you want. No contracts. No pressure.</strong> The community is free to join and free to leave. A single click in Skool is all it takes.</p>
+        </div>
+
+        <div style="text-align:center; margin-top:40px">
+          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 12: HOW TO JOIN -->
+    <section class="final-cta">
+      <div class="final-cta__bg"></div>
+      <div class="final-cta__content reveal">
+        <h2 style="font-family:var(--font-display); font-size:clamp(28px,4vw,44px); font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:32px">Start Here.</h2>
+
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-item__num">1</div>
+            <div class="step-item__text"><strong>Join the free community.</strong> Click the button below and set up your Skool profile in under a minute.</div>
+          </div>
+          <div class="step-item">
+            <div class="step-item__num">2</div>
+            <div class="step-item__text"><strong>Connect with stewards.</strong> Meet others carrying the same weight who refuse to fake it through the afternoon.</div>
+          </div>
+          <div class="step-item">
+            <div class="step-item__num">3</div>
+            <div class="step-item__text"><strong>Start your governance routine.</strong> Products are available to everyone. Community members get 10% off.</div>
+          </div>
+        </div>
+
+        <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="font-size:18px; padding:20px 44px; width:100%; max-width:400px; justify-content:center">
+          Join the Community. Free.
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 14: FAQ -->
+    <section class="faq">
+      <div class="faq__container reveal">
+        <p class="section-label">Clarity</p>
+        <h2 class="section-headline" style="margin-bottom:48px">Frequently Asked Questions</h2>
+
+        <div class="faq__item">
+          <h3 class="faq__q">Q: Who is this for?</h3>
+          <p class="faq__a">A: The Stewards Community is for anyone carrying real responsibility (work, family, faith) who wants to govern their energy instead of borrowing it.</p>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">Q: How long will it take to see results?</h3>
+          <p class="faq__a">A: Most stewards report a nameable, repeatable felt difference in clarity within the first 14 days of running the routine.</p>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">Q: Is the community really free?</h3>
+          <p class="faq__a">A: Yes. The Stewards community on Skool is free to join. No cost, no trial, no hidden gate. Products are separately available to everyone.</p>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">Q: Can I buy the products without joining?</h3>
+          <p class="faq__a">A: Yes. Products are available to everyone. Community members get 10% off every product, every time. No membership required to purchase.</p>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">Q: What if I want to leave the community?</h3>
+          <p class="faq__a">A: You can leave at any time with a single click inside Skool. No contracts, no friction, no questions.</p>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">Q: How does the affiliate rate work?</h3>
+          <p class="faq__a">A: By joining now, you lock in a 40% affiliate commission for life. Every person you invite is tracked to you permanently on Skool. When the paid tier launches, Skool processes the payment and pays your commission automatically.</p>
+        </div>
+
+        <div style="text-align:center; margin-top:40px">
+          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:20px 44px; font-size:18px; width:100%; max-width:500px; justify-content:center">Join the Community. Free.</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <div class="footer__logo">W<span>HEAL</span>THY</div>
+        <p class="footer__copy">&#169; 2026 WHEALTHY LABEL. All rights reserved.</p>
+        <p style="font-size:14px; color:var(--text-muted); max-width:600px; margin:0 auto">
+          <strong>P.S.</strong> The community is free. The products are available to everyone. Community members get 10% off. The founding affiliate rate is real and it will close. <a href="#" onclick="joinStewards(); return false;" style="color:var(--lime); text-decoration:underline">Join us inside.</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- JOIN MODAL -->
+    <div class="join-modal-overlay" id="joinModal">
+      <div class="join-modal">
+        <button class="join-modal__close" onclick="closeJoinModal()" aria-label="Close">&#10005;</button>
+        <div class="join-modal__badge">Free Community</div>
+        <h3 class="join-modal__title">You're About to Walk<br>Into a Real Room.</h3>
+        <p class="join-modal__sub">The Stewards Community is where founders, fathers, ministry leaders, and builders govern their energy together. Not a course. Not a funnel. A room.</p>
+        <div class="join-modal__perks">
+          <div class="join-modal__perk">
+            <span class="join-modal__perk-icon">&#10003;</span>
+            <span><strong>Weekly accountability check-ins</strong> with stewards who carry real weight.</span>
+          </div>
+          <div class="join-modal__perk">
+            <span class="join-modal__perk-icon">&#10003;</span>
+            <span><strong>Faith, family, and business</strong> conversations happening in the same thread.</span>
+          </div>
+          <div class="join-modal__perk">
+            <span class="join-modal__perk-icon">&#10003;</span>
+            <span><strong>Pattern threads and governance routines</strong> from stewards running them daily.</span>
+          </div>
+        </div>
+        <div class="join-modal__discount">
+          <div class="join-modal__discount-label">Community Member Benefit</div>
+          <div class="join-modal__discount-value">10% Off All Products</div>
+          <div class="join-modal__discount-note">Every product. Every time. Automatically applied for community members.</div>
+        </div>
+        <button class="btn-primary btn-primary--arc join-modal__cta" id="joinModalCta">Join FREE Community</button>
+        <p class="join-modal__footer">Free to join. Free to leave. One click inside Skool.</p>
+      </div>
+    </div>
+
+    <!-- STICKY CTA -->
+    <div class="sticky-cta" id="stickyCta">
+      <div class="sticky-cta__text">Free to Join. 10% Off All Products.</div>
+      <button class="btn-primary" onclick="joinStewards()" style="font-size:14px; padding:14px 28px">Join the Community</button>
+    </div>
+
+    <!-- PROOF TOAST -->
+    <div class="proof-toast" id="proofToast">
+      <div class="proof-toast__avatar" id="proofAvatar"></div>
+      <div class="proof-toast__content">
+        <div class="proof-toast__name" id="proofName"></div>
+        <div class="proof-toast__action" id="proofAction"></div>
+        <div class="proof-toast__time" id="proofTime"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Animations
+    (function () {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.getElementById('hero').classList.add('hero-animate');
+          document.querySelectorAll('.reveal').forEach(el => el.classList.add('reveal-ready'));
+          const o = new IntersectionObserver(e => { e.forEach(x => { if (x.isIntersecting) { x.target.classList.add('visible'); } }) }, { threshold: .08, rootMargin: '0px 0px -20px 0px' });
+          document.querySelectorAll('.reveal').forEach(el => o.observe(el));
+        })
+      })
+    })();
+
+    // Sticky CTA
+    (function () { const s = document.getElementById('stickyCta'); if (!s) return; window.addEventListener('scroll', () => { if (window.scrollY > 600) s.classList.add('visible'); else s.classList.remove('visible') }, { passive: true }) })();
+
+    // Alert Bar Rotation
+    (function () {
+      const msgs = document.querySelectorAll('.alert-bar__message');
+      let current = 0;
+      if (msgs.length < 2) return;
+      setInterval(() => {
+        msgs[current].classList.remove('active');
+        current = (current + 1) % msgs.length;
+        msgs[current].classList.add('active');
+      }, 4000);
+    })();
+
+    // Skool Link Router & Supabase Integration
+    const SKOOL_BASE = 'https://www.skool.com/bakndcreator';
+    const SUPABASE_URL = 'https://yzaxzmuuvozonhgwhlim.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXh6bXV1dm96b25oZ3dobGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDEwNTksImV4cCI6MjA4OTM3NzA1OX0.azWx9VrATCtci1Xzedm4NwozQRHVP8kfROZZSDmlaL8';
+
+    function getUrlRef() {
+      let searchParams = window.location.search;
+      if (!searchParams && window.top !== window) {
+        try { searchParams = window.top.location.search; } catch (e) { }
+      }
+      return new URLSearchParams(searchParams).get('ref');
+    }
+
+    function getSkoolJoinUrl() {
+      try {
+        const ref = getUrlRef();
+        return ref ? SKOOL_BASE + '?ref=' + encodeURIComponent(ref) : SKOOL_BASE;
+      } catch (e) { return SKOOL_BASE; }
+    }
+    // findDrain() removed — this page sells the community only
+    function joinStewards() {
+      if (window._wTrack) window._wTrack('cta_click', { label: 'Join the Community', location: 'sales_page' });
+      document.getElementById('joinModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeJoinModal() {
+      document.getElementById('joinModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    // Close modal on overlay click
+    document.getElementById('joinModal').addEventListener('click', function(e) {
+      if (e.target === this) closeJoinModal();
+    });
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeJoinModal();
+    });
+    // Modal CTA -> Skool
+    document.getElementById('joinModalCta').addEventListener('click', function() {
+      if (window._wTrack) window._wTrack('cta_click', { label: 'Join Modal Confirm', location: 'modal' });
+      window.location.href = getSkoolJoinUrl();
+    });
+
+    // Fetch Affiliate Name
+    async function initReferrer() {
+      const ref = getUrlRef();
+      if (!ref) return;
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/public_affiliates?select=name&ref_id=eq.${encodeURIComponent(ref)}`, {
+          headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+        });
+        const data = await res.json();
+        if (data && data.length > 0 && data[0].name) {
+          // Populate all referrer name spans
+          document.querySelectorAll('.referrer-name').forEach(el => {
+            el.textContent = data[0].name;
+          });
+          // Show all referrer pills
+          document.querySelectorAll('.referrer-pill-dynamic').forEach(el => {
+            el.style.display = 'inline-flex';
+          });
+        }
+      } catch (e) { console.error('Failed to load referrer', e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', initReferrer);
+
+    // Purchase Proof Toast
+    (function () {
+      const customers = [
+        { name: 'Marcus T.', loc: 'Dallas, TX', initials: 'MT' },
+        { name: 'Daniel R.', loc: 'Atlanta, GA', initials: 'DR' },
+        { name: 'Jerome W.', loc: 'Houston, TX', initials: 'JW' },
+        { name: 'Chris M.', loc: 'Nashville, TN', initials: 'CM' }
+      ];
+      const toast = document.getElementById('proofToast'), avatar = document.getElementById('proofAvatar'), nameEl = document.getElementById('proofName'), actionEl = document.getElementById('proofAction'), timeEl = document.getElementById('proofTime');
+      let idx = 0;
+      function showProof() {
+        const c = customers[idx];
+        avatar.textContent = c.initials;
+        nameEl.textContent = c.name + ' in ' + c.loc;
+        actionEl.innerHTML = 'Just joined <strong>The Stewards</strong>';
+        timeEl.textContent = 'just now';
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show') }, 4500);
+        idx = (idx + 1) % customers.length;
+      }
+      setTimeout(() => { showProof(); setInterval(() => { setTimeout(showProof, Math.random() * 5000) }, 20000) }, 5000);
+    })();
+  </script>
+</body>
+
+</html>

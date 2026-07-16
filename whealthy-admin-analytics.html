@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="wh-oswald">
+/* Oswald 700 embedded, lifted from whealthy-dashboard.html 2026-07-15.
+   Headers MUST be Oswald. Relying on the fonts.googleapis.com request
+   alone means that when baknd blocks, strips or delays it, every header
+   silently falls back to sans-serif and the condensed face is lost.
+   That is exactly what happened on whealthy-invite.html. Do not remove
+   this in favour of the network request. */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url(data:font/woff2;base64,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) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+</style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WHEALTHY — Admin Analytics</title>
+<!--
+  WHEALTHY ADMIN ANALYTICS — standalone page, no changes to any other file.
+  DATA MODE: LIVE ONLY. All numbers come from the admin-stats edge function
+  (read-only aggregates). Admin key is entered once and checked server-side
+  as a SHA-256 hash. No keys, names, or emails ever live in this file.
+  Expected live endpoint: POST https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats
+  Body: { "range": "7d" | "30d" | "90d" | "all", "admin_key": "<checked server-side>" }
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Chart.js is the primary renderer. If the CDN is blocked, inline SVG fallback kicks in automatically. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* Font fallback for widget embeds that strip <link> tags (baknd HTML paste) */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{
+  --black:#080809;--panel:#0e0f11;--border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --glass:rgba(255,255,255,0.04);--glass-hi:rgba(255,255,255,0.07);
+  --lime:#ccff00;--lime-dim:rgba(204,255,0,0.15);--lime-soft:rgba(204,255,0,0.08);
+  --text:#f0f1f3;--text-muted:rgba(240,241,243,0.60);--text-dim:rgba(240,241,243,0.52);
+  --font-display:'Oswald',sans-serif;--font-body:'DM Sans',sans-serif;
+  --transition:0.3s cubic-bezier(0.23,1,0.32,1);
+  --green:#00e676;--green-soft:rgba(0,230,118,0.12);
+  --amber:#ffb300;--amber-soft:rgba(255,179,0,0.10);
+  --red:#ff5252;--red-soft:rgba(255,82,82,0.10);
+  --r:20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font-body);background:var(--black);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100svh}
+button{font-family:var(--font-body);cursor:pointer;border:none;background:none;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--lime) !important;
+  outline-offset: 2px !important;
+}
+.btn:active, .side-btn:active, .tab:active {
+  transform: scale(0.96) !important;
+  transition: transform 0.1s ease !important;
+}
+.refresh-btn:active {
+  transform: rotate(45deg) scale(0.96) !important;
+  transition: transform 0.1s ease !important;
+}
+h1,h2,h3{font-family:var(--font-display);text-transform:uppercase;letter-spacing:0.02em}
+
+/* ===== BAKND / SIMVOLY WIDGET ISOLATION =====
+   The page carries its own solid background and forces its
+   colors + fonts so the host theme cannot bleed through or
+   override headings, paragraphs, buttons, or inputs. */
+#whealthy-admin{background:var(--black)!important;color:var(--text)!important;font-family:var(--font-body)!important;line-height:1.5;min-height:100svh}
+#whealthy-admin *{box-sizing:border-box;text-shadow:none!important}
+#whealthy-admin h1,#whealthy-admin h2,#whealthy-admin h3,#whealthy-admin h4{color:var(--text)!important;font-family:var(--font-display)!important;text-transform:uppercase;letter-spacing:0.02em;margin:0!important;background:none!important;opacity:1!important}
+#whealthy-admin p{margin:0!important;color:var(--text-muted)}
+#whealthy-admin a{text-decoration:none!important}
+#whealthy-admin button{font-family:var(--font-body)!important;text-transform:none;letter-spacing:normal}
+#whealthy-admin input{font-family:var(--font-body)!important;color:var(--text)!important;background:none!important;border:none!important;box-shadow:none!important}
+#whealthy-admin .kicker{color:var(--lime)!important}
+#whealthy-admin .hero-stat .v,#whealthy-admin .card .pct{color:var(--lime)!important}
+#whealthy-admin .btn-lime{background:var(--lime)!important;color:#0a0a0a!important}
+#whealthy-admin img{max-width:none}
+
+/* ===== SHELL ===== */
+.shell{display:grid;grid-template-columns:76px 1fr;gap:24px;max-width:1560px;margin:0 auto;padding:20px}
+@media(max-width:760px){.shell{grid-template-columns:1fr;padding:12px}.sidebar{flex-direction:row;height:auto;width:100%;position:static;padding:10px}.sidebar .logo{margin:0 10px 0 4px}.side-spacer{display:none}}
+
+/* ===== SIDEBAR ===== */
+.sidebar{position:sticky;top:20px;height:calc(100svh - 40px);background:var(--panel);border:1px solid var(--border);border-radius:24px;display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:8px}
+.sidebar .logo{font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:22px;margin-bottom:24px}
+.side-btn{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:all var(--transition);border:1px solid transparent}
+.side-btn:hover{color:var(--text);background:var(--glass)}
+.side-btn.active{background:var(--lime-dim);color:var(--lime);border-color:rgba(204,255,0,0.35)}
+.side-btn svg{width:20px;height:20px}
+.side-spacer{flex:1}
+
+/* ===== MAIN ===== */
+.main{display:flex;flex-direction:column;gap:24px;min-width:0}
+.view{display:none;flex-direction:column;gap:24px}
+.view.active{display:flex}
+
+/* topbar */
+.topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.page-title{font-family:var(--font-display);font-size:22px;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;white-space:nowrap}
+.search{flex:1;min-width:180px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 16px}
+.search input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font-body);font-size:14px}
+.search input::placeholder{color:var(--text-dim)}
+.search svg{width:16px;height:16px;color:var(--text-dim);flex:none}
+.tabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:4px}
+.tab{font-size:13px;color:var(--text-dim);padding:8px 14px;border-radius:10px;font-weight:600;transition:all var(--transition);min-height:0}
+.tab:hover{color:var(--text-muted)}
+.tab.active{color:#0a0a0a;background:var(--lime)}
+.refresh{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:6px 6px 6px 14px}
+.refresh .ago{font-size:12px;color:var(--text-dim);white-space:nowrap}
+.refresh .ago b{color:var(--text-muted);font-weight:600}
+.refresh-btn{width:36px;height:36px;min-height:36px;border-radius:10px;background:var(--lime);color:#0a0a0a;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.refresh-btn:hover{transform:rotate(45deg)}
+.refresh-btn svg{width:16px;height:16px}
+.refresh-btn.spinning svg{animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hello{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted)}
+.hello .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--lime),#5c7a00);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:#0a0a0a}
+.hello b{color:var(--text)}
+
+/* hero */
+.hero{position:relative;border-radius:24px;padding:34px 36px;overflow:hidden;background:
+  radial-gradient(120% 160% at 85% 0%,rgba(204,255,0,0.22),transparent 55%),
+  radial-gradient(90% 140% at 0% 100%,rgba(0,230,118,0.10),transparent 60%),
+  linear-gradient(135deg,#15170f 0%,#0e0f11 60%);
+  border:1px solid var(--border-mid)}
+.hero .kicker{font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--lime);font-weight:700;margin-bottom:8px}
+.hero h1{font-size:clamp(22px,3vw,34px);line-height:1.12;max-width:560px}
+.hero p{color:var(--text-muted);margin-top:8px;max-width:460px;font-size:14px}
+.hero-stats{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap}
+.hero-stat .v{font-family:var(--font-display);font-size:30px;font-weight:600;color:var(--lime)}
+.hero-stat .l{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em}
+.btn{border-radius:12px;padding:12px 20px;font-weight:600;font-size:14px;min-height:44px;transition:all var(--transition)}
+.btn-lime{background:var(--lime);color:#0a0a0a}
+.btn-lime:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(204,255,0,0.25)}
+.btn-ghost{border:1px solid var(--border-mid);color:var(--text)}
+.btn-ghost:hover{background:var(--glass)}
+
+/* section heads */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sec-head h2{font-size:19px}
+.sec-head .sub{font-size:13px;color:var(--text-dim)}
+
+/* funnel */
+.funnel{display:flex;align-items:center;gap:10px;overflow-x:auto;padding:6px 0}
+.f-stage{flex:1;min-width:118px;text-align:center;padding:16px 8px;background:var(--panel);border:1px solid var(--border);border-radius:16px}
+.f-conn{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;font-size:12px;color:var(--lime);font-weight:700;white-space:nowrap;line-height:1.2}
+.f-conn span{color:var(--text-dim);font-weight:400;font-size:14px}
+.f-stage .n{font-family:var(--font-display);font-size:26px;font-weight:600}
+.f-stage .t{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+
+/* KPI grid */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.kpi{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.kpi .l{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em}
+.kpi .v{font-family:var(--font-display);font-size:30px;font-weight:600;margin-top:4px}
+.kpi .d{font-size:12px;margin-top:4px;font-weight:600}
+.up{color:var(--green)}.down{color:var(--red)}.flat{color:var(--text-dim)}
+
+/* fast type cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:18px;transition:all var(--transition)}
+.card:hover{border-color:var(--border-mid);transform:translateY(-2px)}
+.card .fig{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.25);border-radius:999px;padding:4px 10px}
+.card h3{font-size:17px;margin-top:10px}
+.card .row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-muted);margin-top:10px}
+.card .row b{color:var(--text)}
+.bar{height:8px;border-radius:999px;background:var(--glass);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#8fb800,var(--lime))}
+.card .pct{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--lime);margin-top:8px}
+.card .pct span{font-family:var(--font-body);font-size:12px;color:var(--text-dim);text-transform:none;letter-spacing:0;font-weight:400}
+
+/* charts */
+.charts{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media(max-width:900px){.charts{grid-template-columns:1fr}}
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:20px;min-width:0}
+.chart-card h3{font-size:15px;margin-bottom:14px;color:var(--text-muted)}
+.chart-wrap{position:relative;height:250px}
+.chart-tall .chart-wrap{height:300px}
+
+/* record strip */
+.record{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.record .l{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em}
+.record .v{font-family:var(--font-display);font-size:24px;font-weight:600;margin-top:2px}
+.tonebar{display:flex;height:8px;border-radius:999px;overflow:hidden;margin-top:8px}
+.tonebar i{display:block;height:100%}
+
+/* ===== RIGHT RAIL ===== */
+.rail{display:flex;flex-direction:column;gap:20px}
+.spotlight{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.spot-art{position:relative;border-radius:18px;height:200px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:
+  radial-gradient(110% 130% at 80% 10%,rgba(204,255,0,0.35),transparent 55%),
+  radial-gradient(100% 120% at 10% 90%,rgba(0,230,118,0.20),transparent 60%),
+  linear-gradient(150deg,#1a1d10,#0c0d0a)}
+.spot-art::before{content:"";position:absolute;inset:10px;border-radius:14px;border:1px dashed rgba(204,255,0,0.25)}
+.spot-art .mark{font-family:var(--font-display);font-weight:700;font-size:42px;color:var(--lime);text-transform:uppercase;letter-spacing:0.04em;text-align:center;line-height:1.1;padding:0 18px}
+.spot-title{display:flex;align-items:center;gap:12px;margin-top:16px}
+.spot-title .avatar{width:40px;height:40px;border-radius:50%;background:var(--lime-dim);display:flex;align-items:center;justify-content:center;color:var(--lime);font-family:var(--font-display);font-weight:700}
+.spot-title h3{font-size:18px}
+.spot-title p{font-size:12px;color:var(--text-dim)}
+.spot-sec{margin-top:18px}
+.spot-sec .l{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em}
+.spot-sec .big{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
+.spot-sec .big .a{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--lime)}
+.spot-sec .big .b{font-size:14px;color:var(--text-muted);font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.tile{background:var(--glass);border:1px solid var(--border);border-radius:12px;text-align:center;padding:14px 6px}
+.tile .v{font-family:var(--font-display);font-size:20px;font-weight:600}
+.tile .l{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+.spot-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.mini-list{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:20px}
+.mini-list h3{font-size:15px;color:var(--text-muted);margin-bottom:12px}
+.mini-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border);font-size:13px}
+.mini-row:first-of-type{border-top:none}
+.mini-row b{font-family:var(--font-display);font-size:16px}
+.note{font-size:11px;color:var(--text-dim);text-align:center;margin-top:6px}
+.mock-badge{position:fixed;bottom:14px;right:14px;z-index:50;background:var(--amber-soft);border:1px solid rgba(255,179,0,0.4);color:var(--amber);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+
+/* ===== STEWARD LOG ===== */
+.st-layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.st-layout{grid-template-columns:1fr}}
+.st-search{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.st-search input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font-body);font-size:13px}
+.st-search input::placeholder{color:var(--text-dim)}
+.st-list{display:flex;flex-direction:column;gap:10px;max-height:640px;overflow-y:auto;padding-right:4px}
+.st-card{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;transition:all var(--transition)}
+.st-card:hover{border-color:var(--border-mid);transform:translateX(2px)}
+.st-card.selected{border-color:rgba(204,255,0,0.45);background:var(--lime-soft)}
+.st-avatar{width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:15px;background:var(--lime-dim);color:var(--lime)}
+.st-card .who{flex:1;min-width:0}
+.st-card .who b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-card .who span{font-size:11px;color:var(--text-dim)}
+.st-nums{display:flex;gap:10px;flex:none}
+.st-nums div{text-align:center}
+.st-nums .n{font-family:var(--font-display);font-size:16px;font-weight:600;line-height:1}
+.st-nums .t{font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em}
+.st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex:none;box-shadow:0 0 8px var(--green)}
+.st-detail{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:20px;min-height:400px}
+.st-detail-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.st-detail-head .who{flex:1;min-width:140px}
+.st-detail-head h3{font-size:19px}
+.st-detail-head p{font-size:12px;color:var(--text-dim)}
+.st-totals{display:flex;gap:10px}
+.st-totals .tile{padding:10px 14px}
+.log-rows{margin-top:6px}
+.log-row{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid var(--border);font-size:13px}
+.log-row:last-child{border-bottom:none}
+.log-row .fastname{flex:1;min-width:0}
+.log-row .fastname b{display:block;font-size:14px}
+.log-row .fastname span{font-size:11px;color:var(--text-dim)}
+.log-row .prog{color:var(--text-muted);white-space:nowrap}
+.log-row .when{color:var(--text-dim);font-size:12px;white-space:nowrap;min-width:52px;text-align:right}
+.chip{border:none}
+.status-chip{flex:none;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.status-chip.active{background:var(--lime-dim);color:var(--lime);border:1px solid rgba(204,255,0,0.35)}
+.status-chip.completed{background:var(--green-soft);color:var(--green);border:1px solid rgba(0,230,118,0.35)}
+.status-chip.ended{background:var(--amber-soft);color:var(--amber);border:1px solid rgba(255,179,0,0.35)}
+.st-back{font-size:12px;color:var(--lime);cursor:pointer;background:none;border:none;padding:4px 0;min-height:0}
+
+/* ===== PDF REPORT (print) ===== */
+.print-head{display:none}
+@media print{
+  body{background:var(--black);print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .sidebar,.search,.tabs,.refresh,.hello,.mock-badge,.spot-actions,.hero-actions{display:none!important}
+  .shell{display:block;padding:0;max-width:none}
+  .main{gap:16px}
+  .view{display:flex!important;break-after:page}
+  .view:last-of-type{break-after:auto}
+  .rail{margin-top:16px}
+  .chart-card,.kpi,.card,.funnel,.record,.mini-list,.spotlight{break-inside:avoid}
+  .print-head{display:block;border:1px solid var(--border-mid);border-radius:16px;padding:16px 20px;margin-bottom:8px}
+  .print-head h1{font-size:20px;color:var(--lime)}
+  .print-head p{font-size:12px;color:var(--text-muted)}
+}
+</style>
+</head>
+<body>
+<div id="whealthy-admin">
+
+<div class="shell">
+
+  <!-- ============ SIDEBAR (view switcher) ============ -->
+  <aside class="sidebar">
+    <div class="logo">W</div>
+    <button class="side-btn active" data-view="overview" title="Overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    </button>
+    <button class="side-btn" data-view="members" title="Members">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </button>
+    <button class="side-btn" data-view="quiz" title="Quiz &amp; Funnel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </button>
+    <button class="side-btn" data-view="fasts" title="Fasts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+    </button>
+    <button class="side-btn" data-view="bundles" title="Bundles">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    </button>
+    <button class="side-btn" data-view="affiliates" title="Affiliates">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+    <button class="side-btn" data-view="engagement" title="Engagement">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </button>
+    <button class="side-btn" data-view="record" title="The Record">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    </button>
+    <div class="side-spacer"></div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- print-only report header -->
+    <div class="print-head">
+      <h1>WHEALTHY — Stewards Admin Report</h1>
+      <p id="printMeta">—</p>
+    </div>
+
+    <!-- global topbar: title + search + range + user -->
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Overview</div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="text" placeholder="Search fast types...">
+      </div>
+      <div class="tabs" id="rangeTabs">
+        <button class="tab" data-range="7d">7D</button>
+        <button class="tab active" data-range="30d">30D</button>
+        <button class="tab" data-range="90d">90D</button>
+        <button class="tab" data-range="all">All</button>
+      </div>
+      <div class="refresh">
+        <span class="ago">Updated <b id="refreshAgo">just now</b></span>
+        <button class="refresh-btn" id="refreshBtn" title="Refresh now">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </button>
+      </div>
+      <div class="hello"><span>Hello, <b>Iiggie</b></span><div class="avatar">I</div></div>
+    </div>
+
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view active" id="view-overview">
+      <div class="hero">
+        <div class="kicker">The State of the House</div>
+        <h1>Membership, Fasts, and Bundles at a glance</h1>
+        <p>Every number on this page is governed by the record. The range selector above applies to every view.</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="v" id="hFree">—</div><div class="l">Free Members</div></div>
+          <div class="hero-stat"><div class="v" id="hPaid">—</div><div class="l">Paid Stewards</div></div>
+          <div class="hero-stat"><div class="v" id="hBuyers">—</div><div class="l">Product Purchasers</div></div>
+          <div class="hero-stat"><div class="v" id="hConv">—</div><div class="l">Free → Paid</div></div>
+        </div>
+        <div class="hero-actions" style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-lime" data-action="export-pdf">Export PDF Report</button>
+          <button class="btn btn-ghost" data-action="export-md">Export Markdown Report</button>
+        </div>
+      </div>
+      <div class="sec-head"><h2>The Path</h2><span class="sub">conversion at each step</span></div>
+      <div class="funnel" id="funnel"></div>
+      <div class="kpis" id="ovKpis"></div>
+      <div class="chart-card">
+        <h3>Activity Trend — Fasts Started · Completed · Bundle Orders</h3>
+        <div id="ovTrendChart"></div>
+      </div>
+    </section>
+
+    <!-- ================= MEMBERS ================= -->
+    <section class="view" id="view-members">
+      <div class="sec-head"><h2>Members</h2><span class="sub">free tier · paid stewards · purchasers</span></div>
+      <div class="kpis" id="memberKpis"></div>
+      <div class="charts">
+        <div class="chart-card chart-tall">
+          <h3>Member Growth</h3>
+          <div class="chart-wrap" id="growthChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Member Status Mix</h3>
+          <div id="memberStatusChart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ & FUNNEL ================= -->
+    <section class="view" id="view-quiz">
+      <div class="sec-head"><h2>Quiz &amp; Funnel</h2><span class="sub">the stewardship mirror</span></div>
+      <div class="kpis" id="quizKpis"></div>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Archetype Distribution</h3>
+          <div class="chart-wrap" id="archChart" style="height:auto"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Load Season</h3>
+          <div id="seasonChart" style="padding-top:6px"></div>
+        </div>
+      </div>
+      <div class="sec-head"><h2 style="font-size:15px;color:var(--text-muted)">Who Is Taking The Quiz</h2><span class="sub">Part 1 "The Weight" fields</span></div>
+      <div class="kpis" id="demoKpis"></div>
+      <div class="charts" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+        <div class="chart-card"><h3>Age Band</h3><div id="ageChart"></div></div>
+        <div class="chart-card"><h3>Work</h3><div id="jobChart"></div></div>
+        <div class="chart-card"><h3>Hours Carried Weekly</h3><div id="hoursChart"></div></div>
+        <div class="chart-card"><h3>Current Consumption</h3><div id="consumptionChart"></div></div>
+      </div>
+    </section>
+
+    <!-- ================= FASTS ================= -->
+    <section class="view" id="view-fasts">
+      <div class="sec-head"><h2>The Fast</h2><span class="sub">started · completed · adherence</span></div>
+      <div class="kpis" id="fastKpis"></div>
+      <div class="sec-head"><h2 style="font-size:15px;color:var(--text-muted)">People on the Fast</h2><span class="sub">distinct stewards, not fast counts</span></div>
+      <div class="kpis" id="peopleKpis"></div>
+
+      <!-- steward log: member list + running log (all time, not range-filtered) -->
+      <div class="sec-head"><h2 style="font-size:15px;color:var(--text-muted)">Steward Log</h2><span class="sub">click a steward for their full history · all time</span></div>
+      <div class="st-layout">
+        <div>
+          <div class="st-search">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-dim);flex:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="stewardSearch" type="text" placeholder="Search by steward number...">
+          </div>
+          <div class="st-list" id="stewardList"></div>
+        </div>
+        <div class="st-detail" id="stewardDetail"></div>
+      </div>
+
+      <div class="sec-head"><h2 style="font-size:15px;color:var(--text-muted)">Performance by Fast Type</h2></div>
+      <div class="cards" id="fastCards"></div>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Fasts by Type</h3>
+          <div class="chart-wrap" id="typeChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Where Fasts End Early (day ended)</h3>
+          <div class="chart-wrap" id="dropoffChart" style="height:auto"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Fasts Started vs Completed</h3>
+          <div id="fastTrendChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Chosen Duration</h3>
+          <div id="durationChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Outcome per Person</h3>
+          <div id="peopleChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Most Broken Rules (fast_history.weak_rule)</h3>
+          <div id="weakRuleList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BUNDLES ================= -->
+    <section class="view" id="view-bundles">
+      <div class="sec-head"><h2>Bundles</h2><span class="sub">suggested vs purchased</span></div>
+      <div class="kpis" id="bundleKpis"></div>
+      <div class="chart-card chart-tall">
+        <h3>Bundles — Suggested vs Purchased</h3>
+        <div class="chart-wrap" id="bundleChart"></div>
+      </div>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Order Status Mix</h3>
+          <div id="orderStatusChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Try Orders by Product</h3>
+          <div id="tryProductChart"></div>
+        </div>
+        <div class="spotlight">
+          <div class="spot-art"><div class="mark" id="spotMark">—</div></div>
+          <div class="spot-title">
+            <div class="avatar">W</div>
+            <div>
+              <h3 id="spotName">—</h3>
+              <p>Top bundle this range</p>
+            </div>
+          </div>
+          <div class="spot-sec">
+            <div class="l">Suggested → Purchased</div>
+            <div class="big"><span class="a" id="spotRate">—</span><span class="b" id="spotCounts">—</span></div>
+          </div>
+          <div class="spot-sec">
+            <div class="l">This Range</div>
+            <div class="tiles">
+              <div class="tile"><div class="v" id="tSuggested">—</div><div class="l">Suggested</div></div>
+              <div class="tile"><div class="v" id="tPurchased">—</div><div class="l">Purchased</div></div>
+              <div class="tile"><div class="v" id="tMatch">—</div><div class="l">Match</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= AFFILIATES ================= -->
+    <section class="view" id="view-affiliates">
+      <div class="sec-head"><h2>Affiliates</h2><span class="sub">founding affiliates · referrals via ?ref=</span></div>
+      <div class="kpis" id="affKpis"></div>
+      <div class="mini-list" style="border-radius:var(--r)">
+        <h3>Top Referrers</h3>
+        <div id="affList"></div>
+        <div class="note">Referred joins credited via Skool ?ref= pass-through</div>
+      </div>
+    </section>
+
+    <!-- ================= ENGAGEMENT ================= -->
+    <section class="view" id="view-engagement">
+      <div class="sec-head"><h2>Engagement</h2><span class="sub">journaling · streaks · Bible 365</span></div>
+      <div class="kpis" id="engKpis"></div>
+      <div class="sec-head"><h2 style="font-size:15px;color:var(--text-muted)">Daily Logs (Energy Tracker)</h2></div>
+      <div class="kpis" id="dailyKpis"></div>
+      <div class="chart-card">
+        <h3>Daily Logs Filed vs Powder Days</h3>
+        <div id="logsTrendChart"></div>
+      </div>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Scripture Comfort (1 = light, 5 = at home in the Word)</h3>
+          <div id="comfortChart" style="padding-top:6px"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Streak Leaderboard</h3>
+          <div id="leadList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RECORD ================= -->
+    <section class="view" id="view-record">
+      <div class="sec-head"><h2>The Record</h2><span class="sub">entries · tone · burned</span></div>
+      <div class="record" id="recordStrip"></div>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Entries Filed vs Burned</h3>
+          <div id="entriesTrendChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Tone of Entries</h3>
+          <div class="chart-wrap" id="toneChart" style="height:auto"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<div class="mock-badge" id="mockBadge" style="display:none"></div>
+</div><!-- /#whealthy-admin -->
+
+<script>
+/* =========================================================
+   DATA LAYER — payload comes from the admin-stats edge function.
+   Sources per field:
+   - members.free / paid: Skool tier webhooks via Zapier -> approved_members (tier column)
+   - members.purchasers: distinct emails in orders + try_orders
+   - funnel: approved_members, quiz submissions, fasts, orders
+   - fasts.*: fasts (status, fast_model, duration, ended_day), fast_days, fast_history
+   - bundles.*: approved_members.bundle (suggested), fasts.bundle_key, orders (purchased)
+   - record.*: record_entries (tone, burned)
+========================================================= */
+const LIVE_ENDPOINT = "https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats";
+const KEY_STORE = "wh_admin_key";
+
+/* LIVE ONLY — no mock data. Every number comes from the admin-stats edge
+   function (read-only aggregates over the real tables). Stewards arrive
+   pre-anonymized as SW-numbers; names and emails never reach this page. */
+let STEWARD_LOG = [];   // filled from live payload
+
+function getAdminKey(forceAsk){
+  let k = localStorage.getItem(KEY_STORE);
+  if(!k || forceAsk){
+    k = prompt("Enter the WHEALTHY admin key:");
+    if(k){ k = k.trim(); localStorage.setItem(KEY_STORE, k); }
+  }
+  return k;
+}
+
+function dataStatus(text, isError){
+  const b = document.getElementById("mockBadge");
+  if(!b) return;
+  if(!isError){ b.style.display = "none"; return; }
+  b.style.display = "";
+  b.textContent = text;
+}
+
+async function getData(range, bypassCache = false){
+  let key = getAdminKey(false);
+  if(!key){ dataStatus("Admin key required — refresh to enter it", true); return null; }
+  for(let attempt = 0; attempt < 2; attempt++){
+    try{
+      const r = await fetch(LIVE_ENDPOINT, {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify({range, admin_key: key, bypass_cache: bypassCache})
+      });
+      if(r.status === 401){
+        localStorage.removeItem(KEY_STORE);
+        key = getAdminKey(true);
+        if(!key){ dataStatus("Admin key rejected", true); return null; }
+        continue;
+      }
+      if(!r.ok) throw new Error("HTTP " + r.status);
+      const d = await r.json();
+      dataStatus("", false);
+      return d;
+    }catch(err){
+      dataStatus("Live data unavailable — check connection, then hit refresh", true);
+      return null;
+    }
+  }
+  return null;
+}
+
+/* ========================= STATE ========================= */
+let currentRange = "30d";
+let activeView = "overview";
+let currentData = null;
+let lastRefresh = Date.now();
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString("en-US");
+
+const VIEW_TITLES = {overview:"Overview",members:"Members",quiz:"Quiz & Funnel",fasts:"The Fast",bundles:"Bundles",affiliates:"Affiliates",engagement:"Engagement",record:"The Record"};
+
+/* ========================= STEWARD LOG ========================= */
+let selectedSteward = null;
+const stStats = s => ({
+  started: s.log.length,
+  completed: s.log.filter(x=>x.status==="completed").length,
+  ended: s.log.filter(x=>x.status==="ended").length,
+  active: s.log.some(x=>x.status==="active")
+});
+const STATUS_LABEL = {active:"Active", completed:"Completed", ended:"Stopped"};
+/* The fast is kept in secret. Stewards appear ONLY as an anonymous number.
+   Live: admin-stats assigns a stable steward_no server-side and never
+   sends names or emails to this page. */
+const sLabel = id => "Steward " + id.replace("SW-","");
+const sNum = id => id.replace("SW-","");
+
+function logRow(x, who){
+  const prog = x.status==="completed" ? `finished ${x.total} of ${x.total}` :
+               x.status==="active"    ? `day ${x.day} of ${x.total}` :
+                                        `stopped day ${x.day} of ${x.total}`;
+  return `<div class="log-row">
+    <span class="status-chip ${x.status}">${STATUS_LABEL[x.status]}</span>
+    <div class="fastname"><b>${x.fast}</b><span>${x.figure}${who?` · ${who}`:""}</span></div>
+    <span class="prog">${prog}</span>
+    <span class="when">${x.date}</span>
+  </div>`;
+}
+
+function renderStewardList(filter){
+  const q = (filter||"").toLowerCase().trim();
+  $("stewardList").innerHTML = STEWARD_LOG
+    .filter(s=>!q || s.id.toLowerCase().includes(q) || sLabel(s.id).toLowerCase().includes(q))
+    .map(s=>{
+      const st = stStats(s);
+      return `<div class="st-card ${selectedSteward===s.id?"selected":""}" data-steward="${s.id}">
+        <div class="st-avatar">${sNum(s.id)}</div>
+        <div class="who"><b>${sLabel(s.id)}</b><span>kept in secret</span></div>
+        <div class="st-nums">
+          <div><div class="n">${st.started}</div><div class="t">Start</div></div>
+          <div><div class="n" style="color:var(--green)">${st.completed}</div><div class="t">Done</div></div>
+          <div><div class="n" style="color:var(--amber)">${st.ended}</div><div class="t">Stop</div></div>
+        </div>
+        ${st.active?'<div class="st-dot" title="Fasting now"></div>':""}
+      </div>`;
+    }).join("");
+}
+
+function renderStewardDetail(){
+  const el = $("stewardDetail");
+  if(!selectedSteward){
+    // default: running log of all activity, newest first (mock order is per-member; flatten + tag)
+    const all = STEWARD_LOG.flatMap(s=>s.log.map(x=>({...x, who:sLabel(s.id)})));
+    el.innerHTML = `<div class="st-detail-head">
+        <div class="st-avatar" style="width:46px;height:46px">ALL</div>
+        <div class="who"><h3>Running Log — All Stewards</h3><p>every fast: active, completed, stopped · select a steward for their history</p></div>
+      </div>
+      <div class="log-rows">${all.sort((a,b)=>(b.status==="active")-(a.status==="active")).map(x=>logRow(x, x.who)).join("")}</div>`;
+    return;
+  }
+  const s = STEWARD_LOG.find(x=>x.id===selectedSteward);
+  const st = stStats(s);
+  const pct = st.started ? Math.round(st.completed/st.started*100) : 0;
+  el.innerHTML = `
+    <button class="st-back" data-steward="__all__">← Back to running log</button>
+    <div class="st-detail-head">
+      <div class="st-avatar" style="width:46px;height:46px">${sNum(s.id)}</div>
+      <div class="who"><h3>${sLabel(s.id)}</h3><p>identity kept in secret</p></div>
+      <div class="st-totals tiles" style="margin-top:0">
+        <div class="tile"><div class="v">${st.started}</div><div class="l">Started</div></div>
+        <div class="tile"><div class="v" style="color:var(--green)">${st.completed}</div><div class="l">Completed</div></div>
+        <div class="tile"><div class="v" style="color:var(--amber)">${st.ended}</div><div class="l">Stopped</div></div>
+        <div class="tile"><div class="v" style="color:var(--lime)">${pct}%</div><div class="l">Completion</div></div>
+      </div>
+    </div>
+    <div class="log-rows">${s.log.map(x=>logRow(x)).join("")}</div>`;
+}
+
+function selectSteward(id){
+  selectedSteward = id==="__all__" ? null : id;
+  renderStewardList($("stewardSearch").value);
+  renderStewardDetail();
+}
+
+function switchView(v){
+  activeView = v;
+  document.querySelectorAll(".side-btn[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-"+v));
+  $("pageTitle").textContent = VIEW_TITLES[v];
+  // Chart.js can't draw into a hidden canvas, so redraw for the view that just became visible
+  if(currentData) requestAnimationFrame(()=>drawAllCharts(currentData));
+}
+
+/* ========================= REFRESH ========================= */
+function refreshAgoText(){
+  const s = Math.floor((Date.now()-lastRefresh)/1000);
+  if(s < 10) return "just now";
+  if(s < 60) return s + "s ago";
+  const m = Math.floor(s/60);
+  if(m < 60) return m + "m ago";
+  const h = Math.floor(m/60);
+  return h + "h " + (m%60) + "m ago";
+}
+setInterval(()=>{ $("refreshAgo").textContent = refreshAgoText(); }, 5000);
+
+async function manualRefresh(){
+  const btn = $("refreshBtn");
+  btn.classList.add("spinning");
+  await render(currentRange, true);          // in live mode this re-fetches admin-stats
+  lastRefresh = Date.now();
+  $("refreshAgo").textContent = "just now";
+  setTimeout(()=>btn.classList.remove("spinning"), 600);
+}
+
+function setRange(r){
+  currentRange = r;
+  document.querySelectorAll("#rangeTabs .tab").forEach(t=>t.classList.toggle("active",t.dataset.range===r));
+  render(r);
+}
+
+function delta(n){
+  if(!n) return "";
+  return n>0 ? `<div class="d up">▲ ${fmt(n)} this range</div>` : `<div class="d down">▼ ${fmt(Math.abs(n))} this range</div>`;
+}
+
+/* ========================= RENDER ========================= */
+async function render(range, bypassCache = false){
+  const d = await getData(range, bypassCache);
+  if(!d) return;
+  currentData = d;
+
+  // live steward log (anonymous ids straight from the edge function)
+  STEWARD_LOG = d.stewardLog || [];
+  if(selectedSteward && !STEWARD_LOG.find(x=>x.id===selectedSteward)) selectedSteward = null;
+  renderStewardList($("stewardSearch") ? $("stewardSearch").value : "");
+  renderStewardDetail();
+
+  // ---- overview ----
+  $("hFree").textContent = fmt(d.members.free);
+  $("hPaid").textContent = fmt(d.members.paid);
+  $("hBuyers").textContent = fmt(d.members.purchasers);
+  $("hConv").textContent = d.members.conv + "%";
+
+  $("funnel").innerHTML = d.funnel.stages.map((s,i,arr)=>{
+    const conn = i===0 ? "" :
+      `<div class="f-conn">${Math.round(s[1]/arr[i-1][1]*100)}%<span>→</span></div>`;
+    return `${conn}<div class="f-stage"><div class="n">${fmt(s[1])}</div><div class="t">${s[0]}</div></div>`;
+  }).join("");
+
+  const f = d.fasts;
+  const sug = d.bundles.suggested.reduce((a,b)=>a+b,0);
+  const pur = d.bundles.purchased.reduce((a,b)=>a+b,0);
+  $("ovKpis").innerHTML = [
+    ["Fasts Started",fmt(f.started)],
+    ["Fasts Completed",fmt(f.completed)],
+    ["Completion Rate",f.completionRate+"%"],
+    ["Bundles Purchased",fmt(pur)],
+    ["Match Rate",d.bundles.matchRate+"%"],
+    ["MRR",'$'+fmt(d.memberHealth.mrr)]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join("");
+
+  // ---- members ----
+  $("memberKpis").innerHTML = [
+    ["Free Members",fmt(d.members.free),delta(d.members.dFree)],
+    ["Paid Stewards",fmt(d.members.paid),delta(d.members.dPaid)],
+    ["Product Purchasers",fmt(d.members.purchasers),delta(d.members.dBuyers)],
+    ["Free → Paid",d.members.conv+"%",'<div class="d flat">conversion</div>'],
+    ["MRR",'$'+fmt(d.memberHealth.mrr),'<div class="d flat">sum of active price</div>'],
+    ["Lapsed",fmt(d.memberHealth.churned),'<div class="d down">active_through passed</div>'],
+    ["Nurture Queued",fmt(d.memberHealth.nurture.queued),'<div class="d flat">nurture_queue</div>'],
+    ["Nurture Sent",fmt(d.memberHealth.nurture.sent),""],
+    ["Nurture → Joined",fmt(d.memberHealth.nurture.joined),'<div class="d up">cancelled: community_joined</div>']
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]||""}</div>`).join("");
+
+  // ---- quiz & funnel (page_events + approved_members) ----
+  const q = d.quiz;
+  $("quizKpis").innerHTML = [
+    ["Page Views",fmt(q.pageViews),"page_view events"],
+    ["Quiz Opens",fmt(q.starts),"quiz_open events"],
+    ["Completions",fmt(q.completions),""],
+    ["Completion Rate",q.rate+"%",""],
+    ["Drop-offs",fmt(q.dropoffs),"quiz_drop_off events"],
+    ["CTA Clicks",fmt(q.ctaClicks),"cta_click events"],
+    ["Avg Load Score",q.avgLoad,""]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]?`<div class="d flat">${k[2]}</div>`:""}</div>`).join("");
+
+  // demographics (approved_members Part 1 fields)
+  const dm = d.demo;
+  $("demoKpis").innerHTML = [
+    ["Men",dm.sex[0][1]+"%"],
+    ["Women",dm.sex[1][1]+"%"],
+    ["Married / Partnered",dm.marriedPct+"%"],
+    ["Avg Kids",dm.avgKids]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join("");
+
+  // ---- affiliates ----
+  const a = d.affiliates;
+  $("affKpis").innerHTML = [
+    ["Registered Affiliates",fmt(a.registered)],
+    ["Active This Range",fmt(a.active)],
+    ["Referred Joins",fmt(a.referred)],
+    ["Referred Try Orders",fmt(a.tryRefs)]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join("");
+  $("affList").innerHTML = a.top.map(t=>
+    `<div class="mini-row"><span>${t[0]}</span><b>${fmt(t[1])} joins</b></div>`).join("");
+
+  // ---- engagement ----
+  const e = d.engagement;
+  $("engKpis").innerHTML = [
+    ["Active Journalers",fmt(e.journalers),"record_entries"],
+    ["Entries / Member",e.entriesPerMember,""],
+    ["Avg Streak",e.avgStreak+" days",""],
+    ["Scripture Engaged",e.scriptureEngagedPct+"%","member_profile"],
+    ["Avg Interactions",e.avgInteractions,"per member"],
+    ["Scribe Landed",e.scribe.landedRate+"%","landed ÷ (landed+missed)"],
+    ["Prefer Brief Scribe",e.scribe.briefPct+"%","member_ai_prefs"]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]?`<div class="d flat">${k[2]}</div>`:""}</div>`).join("");
+
+  const dl = e.dailyLogs;
+  $("dailyKpis").innerHTML = [
+    ["Logs Filed",fmt(dl.filed),""],
+    ["Avg Energy Stability",dl.avgEnergy+" / 100",""],
+    ["Avg Presence",dl.avgPresence+" / 10",""],
+    ["Drank Powder",dl.powderPct+"%","of logged days"],
+    ["Skipped 2nd Cup",dl.skipPct+"%","of logged days"]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]?`<div class="d flat">${k[2]}</div>`:""}</div>`).join("");
+  $("leadList").innerHTML = e.leaderboard.map((t,i)=>
+    `<div class="mini-row"><span style="display:flex;gap:10px;align-items:center">
+      <b style="color:var(--lime);font-size:13px;min-width:18px">${i+1}</b>${sLabel(t[0])}</span>
+      <b>${fmt(t[1])} days</b></div>`).join("");
+
+  // ---- fasts ----
+  $("fastKpis").innerHTML = [
+    ["Fasts Started",fmt(f.started),""],
+    ["Active Now",fmt(f.active),""],
+    ["Completed",fmt(f.completed),""],
+    ["Ended Early",fmt(f.endedEarly),""],
+    ["Completion Rate",f.completionRate+"%","completed ÷ started"],
+    ["Avg % of Fast Done",f.avgPct+"%","ended day ÷ duration"],
+    ["Day Adherence",f.adherence+"%","rules kept ÷ days filed"],
+    ["Avg Duration",f.avgDuration+" days","chosen at start"],
+    ["Structure Only",d.fastsExtra.structureOnlyPct+"%","fasts without product"]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]?`<div class="d flat">${k[2]}</div>`:""}</div>`).join("");
+
+  // people-level fast outcomes (distinct fasts.member_email)
+  const pp = d.fastsExtra.people;
+  $("peopleKpis").innerHTML = [
+    ["People Started",fmt(pp.started),""],
+    ["Completed",fmt(pp.completed),"finished at least one fast"],
+    ["% Completed",pp.pct+"%","people completed ÷ started"],
+    ["Did Not Complete",fmt(pp.endedEarly),"ended early, none finished"],
+    ["Still Fasting",fmt(pp.active),"active right now"]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]?`<div class="d flat">${k[2]}</div>`:""}</div>`).join("");
+
+  $("fastCards").innerHTML = f.types.map(t=>`
+    <div class="card" data-name="${t.name.toLowerCase()} ${t.figure.toLowerCase()}">
+      <span class="fig">${t.figure}</span>
+      <h3>${t.name}</h3>
+      <div class="row"><span>Started</span><b>${fmt(t.started)}</b></div>
+      <div class="row"><span>Completed</span><b>${fmt(t.completed)}</b></div>
+      <div class="bar"><i style="width:${t.rate}%"></i></div>
+      <div class="pct">${t.rate}% <span>completion · avg ${t.avgPct}% of fast done</span></div>
+    </div>`).join("");
+
+  // ---- bundles (bundle_orders.status + bundle_subscriptions) ----
+  const bo = d.bundleOps;
+  $("bundleKpis").innerHTML = [
+    ["Suggested",fmt(sug),""],
+    ["Purchased",fmt(pur),""],
+    ["Match Rate",d.bundles.matchRate+"%","bought what was suggested"],
+    ["Claim Rate",bo.claimRate+"%","paid members who claimed"],
+    ["Pending",fmt(bo.pending),"orders awaiting confirm"],
+    ["Confirmed",fmt(bo.confirmed),"ready for Shopify"],
+    ["Shipped",fmt(bo.shipped),""],
+    ["Skipped",fmt(bo.skipped),"months skipped"],
+    ["Active Subs",fmt(bo.subs.active),""],
+    ["Paused",fmt(bo.subs.paused),""],
+    ["Cancelled",fmt(bo.subs.cancelled),""],
+    ["Auto-Order On",bo.subs.autoPct+"%",""],
+    ["Try → Member",bo.tryToMember+"%","try buyers who joined"]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div>${k[2]?`<div class="d flat">${k[2]}</div>`:""}</div>`).join("");
+
+  // ---- record ----
+  const r = d.record, tot = r.heavy+r.win+r.mixed;
+  $("recordStrip").innerHTML = `
+    <div><div class="l">Entries Filed</div><div class="v">${fmt(r.entries)}</div></div>
+    <div><div class="l">Heavy</div><div class="v">${r.heavy}%</div></div>
+    <div><div class="l">Win</div><div class="v" style="color:var(--lime)">${r.win}%</div></div>
+    <div><div class="l">Mixed</div><div class="v">${r.mixed}%</div></div>
+    <div><div class="l">Burned</div><div class="v">${fmt(r.burned)}</div>
+      <div class="tonebar">
+        <i style="width:${r.heavy/tot*100}%;background:var(--amber)"></i>
+        <i style="width:${r.win/tot*100}%;background:var(--lime)"></i>
+        <i style="width:${r.mixed/tot*100}%;background:rgba(240,241,243,0.3)"></i>
+      </div>
+    </div>
+    <div><div class="l">Scribe Coverage</div><div class="v">${d.recordExtra.scribePct}%</div></div>
+    <div><div class="l">Resurfaced</div><div class="v">${fmt(d.recordExtra.resurfaced)}</div></div>`;
+
+  // ---- bundle spotlight (top bundle this range) ----
+  const top = d.bundles.top;
+  $("spotMark").textContent = top.mark;
+  $("spotName").textContent = top.name;
+  $("spotRate").textContent = top.rate + "%";
+  $("spotCounts").textContent = `${fmt(top.purchased)} of ${fmt(top.suggested)}`;
+  $("tSuggested").textContent = fmt(sug);
+  $("tPurchased").textContent = fmt(pur);
+  $("tMatch").textContent = d.bundles.matchRate + "%";
+
+  drawAllCharts(d);
+}
+
+/* =========================================================
+   CHARTS — dependency-free inline SVG. Nothing external to
+   load, so charts always render with whatever data is present.
+========================================================= */
+const GRID = "rgba(255,255,255,0.08)";
+const AXIS = "rgba(240,241,243,0.45)";
+
+function legendHTML(items){
+  return `<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px">` +
+    items.map(i=>`<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)">
+      <i style="width:10px;height:10px;border-radius:3px;background:${i[1]};display:inline-block"></i>${i[0]}</span>`).join("") + `</div>`;
+}
+
+/* line/area chart: series = [{name,color,fill,values}] */
+function lineChart(el, labels, series){
+  const W=620, H=240, padL=44, padR=14, padT=12, padB=28;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  const max = (Math.max(0, ...series.flatMap(s=>s.values)) * 1.15) || 1;
+  const x = i => padL + iw * (labels.length===1 ? 0.5 : i/(labels.length-1));
+  const y = v => padT + ih - (v/max)*ih;
+  let svg = "";
+  // grid + y labels
+  for(let g=0; g<=4; g++){
+    const gv = max*g/4, gy = y(gv);
+    svg += `<line x1="${padL}" y1="${gy}" x2="${W-padR}" y2="${gy}" stroke="${GRID}" stroke-width="1"/>`;
+    svg += `<text x="${padL-8}" y="${gy+4}" text-anchor="end" font-size="10" fill="${AXIS}">${Math.round(gv)}</text>`;
+  }
+  // x labels
+  labels.forEach((l,i)=>{ svg += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="${AXIS}">${l}</text>`; });
+  // series
+  series.forEach(s=>{
+    const pts = s.values.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
+    svg += `<polygon points="${x(0)},${y(0)} ${pts} ${x(s.values.length-1)},${y(0)}" fill="${s.fill}"/>`;
+    svg += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s.values.forEach((v,i)=>{ svg += `<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="${s.color}" stroke="#0e0f11" stroke-width="1.5"/>`; });
+  });
+  el.innerHTML = legendHTML(series.map(s=>[s.name,s.color])) +
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block" preserveAspectRatio="xMidYMid meet">${svg}</svg>`;
+}
+
+/* doughnut: items = [{name,value,color}] */
+function doughnutChart(el, items, centerLabel){
+  const total = items.reduce((a,b)=>a+b.value,0) || 1;
+  const R=80, C=2*Math.PI*R, cx=110, cy=110;
+  let off = 0, svg = "";
+  items.forEach(it=>{
+    const frac = it.value/total, len = frac*C;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${it.color}" stroke-width="30"
+      stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    off += len;
+  });
+  svg += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="26" font-weight="600" fill="var(--text)" font-family="Oswald,sans-serif">${fmt(total)}</text>`;
+  svg += `<text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="10" fill="${AXIS}" letter-spacing="1">${centerLabel||"TOTAL"}</text>`;
+  const legend = items.map(it=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--border);font-size:13px">
+      <span style="display:flex;align-items:center;gap:8px;color:var(--text-muted)">
+        <i style="width:10px;height:10px;border-radius:3px;background:${it.color};display:inline-block"></i>${it.name}</span>
+      <b style="font-family:Oswald,sans-serif">${fmt(it.value)} · ${Math.round(it.value/total*100)}%</b>
+    </div>`).join("");
+  el.innerHTML = `<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <svg viewBox="0 0 220 220" width="200" style="flex:none">${svg}</svg>
+    <div style="flex:1;min-width:200px">${legend}</div></div>`;
+}
+
+/* grouped vertical bars: series = [{name,color,values}] */
+function groupedBarChart(el, labels, series){
+  const W=620, H=260, padL=40, padR=10, padT=14, padB=30;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  const max = (Math.max(0, ...series.flatMap(s=>s.values)) * 1.15) || 1;
+  const groupW = iw/labels.length, barW = Math.min(26, groupW/(series.length+1));
+  let svg = "";
+  for(let g=0; g<=4; g++){
+    const gv = max*g/4, gy = padT + ih - (gv/max)*ih;
+    svg += `<line x1="${padL}" y1="${gy}" x2="${W-padR}" y2="${gy}" stroke="${GRID}" stroke-width="1"/>`;
+    svg += `<text x="${padL-8}" y="${gy+4}" text-anchor="end" font-size="10" fill="${AXIS}">${Math.round(gv)}</text>`;
+  }
+  labels.forEach((l,i)=>{
+    const gx = padL + groupW*i + groupW/2;
+    svg += `<text x="${gx}" y="${H-8}" text-anchor="middle" font-size="11" fill="${AXIS}">${l}</text>`;
+    series.forEach((s,si)=>{
+      const v = s.values[i], bh = (v/max)*ih;
+      const bx = gx - (series.length*barW)/2 + si*barW + 1;
+      svg += `<rect x="${bx}" y="${padT+ih-bh}" width="${barW-2}" height="${Math.max(bh,2)}" rx="5" fill="${s.color}"/>`;
+      svg += `<text x="${bx+(barW-2)/2}" y="${padT+ih-bh-5}" text-anchor="middle" font-size="9" fill="${AXIS}">${v}</text>`;
+    });
+  });
+  el.innerHTML = legendHTML(series.map(s=>[s.name,s.color])) +
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block" preserveAspectRatio="xMidYMid meet">${svg}</svg>`;
+}
+
+/* horizontal % bars: items = [{name,value,color}] */
+function hBarChart(el, items){
+  el.innerHTML = items.map(it=>`
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+        <span style="color:var(--text-muted)">${it.name}</span>
+        <b style="font-family:Oswald,sans-serif;font-size:15px">${it.value}%</b>
+      </div>
+      <div style="height:14px;border-radius:999px;background:var(--glass);overflow:hidden">
+        <div style="width:${it.value}%;height:100%;border-radius:999px;background:${it.color}"></div>
+      </div>
+    </div>`).join("");
+}
+
+/* ---- chart engine dispatch ----
+   Chart.js (CDN) is the PRIMARY renderer. If it failed to load,
+   the inline SVG fallback draws the same data instead.
+   Both read from the exact same data object d (mock or live). */
+const chartInstances = {};
+const TYPE_COLORS = ["#ccff00","#00e676","#ffb300","rgba(240,241,243,0.45)"];
+
+function canvasIn(id){
+  const el = $(id);
+  el.innerHTML = "<canvas></canvas>";
+  return el.querySelector("canvas");
+}
+function killChart(id){ if(chartInstances[id]){ chartInstances[id].destroy(); delete chartInstances[id]; } }
+
+/* every chart draw is isolated — one bad chart can never break the page or tabs */
+function safeDraw(fn){ try{ fn(); }catch(err){ console.error("chart error:", err); } }
+
+function drawAllCharts(d){
+  safeDraw(()=>drawExtraCharts(d));   // SVG/HTML always — render fine even when hidden
+  if(window.Chart){ safeDraw(()=>drawPrimaryChartsJs(d)); } else { safeDraw(()=>drawPrimaryChartsSvg(d)); }
+}
+
+/* extra analytics charts (always SVG/HTML, no library needed) */
+function drawExtraCharts(d){
+  doughnutChart($("archChart"), d.quiz.archetypes.map((a,i)=>({name:a[0], value:a[1], color:TYPE_COLORS[i%TYPE_COLORS.length]})), "TAKEN");
+  hBarChart($("seasonChart"), d.quiz.seasons.map((s,i)=>({name:s[0], value:s[1], color:["#ffb300","#ccff00","#00e676"][i%3]})));
+  hBarChart($("comfortChart"), d.engagement.comfort.map((v,i)=>({name:"Level "+(i+1), value:v, color:`rgba(204,255,0,${0.25+i*0.19})`})));
+  groupedBarChart($("dropoffChart"), d.fastsExtra.dropoff.map(x=>x[0]), [
+    {name:"Ended early on this day", color:"#ffb300", values:d.fastsExtra.dropoff.map(x=>x[1])}
+  ]);
+  // demographics (approved_members Part 1)
+  hBarChart($("ageChart"), d.demo.age.map(x=>({name:x[0], value:x[1], color:"#ccff00"})));
+  hBarChart($("jobChart"), d.demo.job.map(x=>({name:x[0], value:x[1], color:"#00e676"})));
+  hBarChart($("hoursChart"), d.demo.hours.map(x=>({name:x[0], value:x[1], color:"rgba(204,255,0,0.6)"})));
+  hBarChart($("consumptionChart"), d.demo.consumption.map(x=>({name:x[0], value:x[1], color:"#ffb300"})));
+
+  // trend lines (fasts.created_at, bundle_orders.created_at, daily_logs.log_date, record_entries.entry_date)
+  const tl = d.trends;
+  lineChart($("ovTrendChart"), d.growth.labels, [
+    {name:"Fasts Started", color:"#ccff00", fill:"rgba(204,255,0,0.08)", values:tl.fastsStarted},
+    {name:"Fasts Completed", color:"#00e676", fill:"rgba(0,230,118,0.06)", values:tl.fastsCompleted},
+    {name:"Bundle Orders", color:"#ffb300", fill:"rgba(255,179,0,0.06)", values:tl.orders}
+  ]);
+  lineChart($("fastTrendChart"), d.growth.labels, [
+    {name:"Started", color:"#ccff00", fill:"rgba(204,255,0,0.08)", values:tl.fastsStarted},
+    {name:"Completed", color:"#00e676", fill:"rgba(0,230,118,0.06)", values:tl.fastsCompleted}
+  ]);
+  lineChart($("logsTrendChart"), d.growth.labels, [
+    {name:"Logs Filed", color:"#ccff00", fill:"rgba(204,255,0,0.08)", values:tl.logsFiled},
+    {name:"Powder Days", color:"#00e676", fill:"rgba(0,230,118,0.06)", values:tl.powderDays}
+  ]);
+  lineChart($("entriesTrendChart"), d.growth.labels, [
+    {name:"Entries Filed", color:"#ccff00", fill:"rgba(204,255,0,0.08)", values:tl.entriesFiled},
+    {name:"Burned", color:"#ff5252", fill:"rgba(255,82,82,0.06)", values:tl.burned}
+  ]);
+
+  // distribution charts
+  groupedBarChart($("durationChart"), tl.durations.map(x=>x[0]), [
+    {name:"Fasts", color:"#ccff00", values:tl.durations.map(x=>x[1])}
+  ]);
+  groupedBarChart($("tryProductChart"), d.tryOrders.map(x=>x[0]), [
+    {name:"Try Orders", color:"#ffb300", values:d.tryOrders.map(x=>x[1])}
+  ]);
+
+  // status doughnuts (approved_members.member_status/active, bundle_orders.status)
+  doughnutChart($("memberStatusChart"), [
+    {name:"Free (lead)", value:d.members.free, color:"#ccff00"},
+    {name:"Paid Steward", value:d.members.paid, color:"#00e676"},
+    {name:"Lapsed", value:d.memberHealth.churned, color:"#ffb300"}
+  ], "MEMBERS");
+  const bo2 = d.bundleOps;
+  doughnutChart($("orderStatusChart"), [
+    {name:"Pending", value:bo2.pending, color:"#ffb300"},
+    {name:"Confirmed", value:bo2.confirmed, color:"rgba(204,255,0,0.55)"},
+    {name:"Shipped", value:bo2.shipped, color:"#00e676"},
+    {name:"Skipped", value:bo2.skipped, color:"rgba(240,241,243,0.35)"}
+  ], "ORDERS");
+  // people outcome doughnut (fasts.member_email distinct by outcome)
+  const ppl = d.fastsExtra.people;
+  doughnutChart($("peopleChart"), [
+    {name:"Completed", value:ppl.completed, color:"#ccff00"},
+    {name:"Did not complete", value:ppl.endedEarly, color:"#ffb300"},
+    {name:"Still fasting", value:ppl.active, color:"#00e676"}
+  ], "PEOPLE");
+
+  // most broken fast rules
+  const maxWR = Math.max(...d.fastsExtra.weakRules.map(w=>w[1])) || 1;
+  $("weakRuleList").innerHTML = d.fastsExtra.weakRules.map(w=>`
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+        <span style="color:var(--text-muted)">${w[0]}</span>
+        <b style="font-family:Oswald,sans-serif;font-size:15px">${fmt(w[1])}</b>
+      </div>
+      <div style="height:10px;border-radius:999px;background:var(--glass);overflow:hidden">
+        <div style="width:${w[1]/maxWR*100}%;height:100%;border-radius:999px;background:var(--red)"></div>
+      </div>
+    </div>`).join("");
+}
+
+/* primary charts — Chart.js path (draw only the visible view; hidden canvases size to 0) */
+function drawPrimaryChartsJs(d){
+  const grid = "rgba(255,255,255,0.06)";
+  Chart.defaults.font.family = "'DM Sans',sans-serif";
+  Chart.defaults.color = "rgba(240,241,243,0.45)";
+  if(activeView==="members"){
+    killChart("growth");
+    chartInstances.growth = new Chart(canvasIn("growthChart"),{type:"line",data:{labels:d.growth.labels,datasets:[
+      {label:"Free",data:d.growth.free,borderColor:"#ccff00",backgroundColor:"rgba(204,255,0,0.12)",fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:"#ccff00"},
+      {label:"Paid Stewards",data:d.growth.paid,borderColor:"#00e676",backgroundColor:"rgba(0,230,118,0.08)",fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:"#00e676"}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:true}}},
+      scales:{x:{grid:{color:grid}},y:{grid:{color:grid},beginAtZero:true}}}});
+  }
+  if(activeView==="fasts"){
+    killChart("type");
+    chartInstances.type = new Chart(canvasIn("typeChart"),{type:"doughnut",data:{
+      labels:d.fasts.types.map(t=>t.name),
+      datasets:[{data:d.fasts.types.map(t=>t.started),backgroundColor:TYPE_COLORS,borderColor:"#0e0f11",borderWidth:3}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:"62%",
+        plugins:{legend:{position:"right",labels:{boxWidth:10,boxHeight:10,usePointStyle:true}}}}});
+  }
+  if(activeView==="bundles"){
+    killChart("bundle");
+    chartInstances.bundle = new Chart(canvasIn("bundleChart"),{type:"bar",data:{labels:d.bundles.keys,datasets:[
+      {label:"Suggested",data:d.bundles.suggested,backgroundColor:"rgba(204,255,0,0.25)",borderColor:"#ccff00",borderWidth:1.5,borderRadius:6},
+      {label:"Purchased",data:d.bundles.purchased,backgroundColor:"#ccff00",borderRadius:6}
+    ]},options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:true}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:grid},beginAtZero:true}}}});
+  }
+  if(activeView==="record"){
+    // tone chart is HTML bars either way — same renderer both paths
+    hBarChart($("toneChart"), [
+      {name:"Heavy", value:d.record.heavy, color:"#ffb300"},
+      {name:"Win", value:d.record.win, color:"#ccff00"},
+      {name:"Mixed", value:d.record.mixed, color:"rgba(240,241,243,0.45)"}
+    ]);
+  }
+}
+
+/* primary charts — SVG fallback path (draws all, hidden views scale fine) */
+function drawPrimaryChartsSvg(d){
+  lineChart($("growthChart"), d.growth.labels, [
+    {name:"Free", color:"#ccff00", fill:"rgba(204,255,0,0.10)", values:d.growth.free},
+    {name:"Paid Stewards", color:"#00e676", fill:"rgba(0,230,118,0.08)", values:d.growth.paid}
+  ]);
+  doughnutChart($("typeChart"), d.fasts.types.map((t,i)=>({name:t.name, value:t.started, color:TYPE_COLORS[i%TYPE_COLORS.length]})), "STARTED");
+  groupedBarChart($("bundleChart"), d.bundles.keys, [
+    {name:"Suggested", color:"rgba(204,255,0,0.35)", values:d.bundles.suggested},
+    {name:"Purchased", color:"#ccff00", values:d.bundles.purchased}
+  ]);
+  hBarChart($("toneChart"), [
+    {name:"Heavy", value:d.record.heavy, color:"#ffb300"},
+    {name:"Win", value:d.record.win, color:"#ccff00"},
+    {name:"Mixed", value:d.record.mixed, color:"rgba(240,241,243,0.45)"}
+  ]);
+}
+
+/* ========================= UTIL ========================= */
+function filterCards(q){
+  q = q.toLowerCase().trim();
+  document.querySelectorAll("#fastCards .card").forEach(c=>{
+    c.style.display = !q || c.dataset.name.includes(q) ? "" : "none";
+  });
+  if(q && activeView!=="fasts") switchView("fasts");
+}
+
+/* =========================================================
+   REPORTS — PDF (print all sections) and Markdown download.
+   Both read the exact data currently on screen (currentData).
+========================================================= */
+const RANGE_LABELS = {"7d":"Last 7 Days","30d":"Last 30 Days","90d":"Last 90 Days","all":"All Time"};
+
+function reportMeta(){
+  return RANGE_LABELS[currentRange] + " · generated " + new Date().toLocaleString() +
+    " · live data";
+}
+
+/* ---- PDF: show every section, redraw all charts as SVG, open print dialog ---- */
+function exportPDF(){
+  if(!currentData) return;
+  $("printMeta").textContent = reportMeta();
+  // SVG charts render at full size even in hidden/printed sections
+  safeDraw(()=>drawExtraCharts(currentData));
+  safeDraw(()=>drawPrimaryChartsSvg(currentData));
+  setTimeout(()=>window.print(), 150);
+}
+window.addEventListener("afterprint", ()=>{ if(currentData) drawAllCharts(currentData); });
+
+/* ---- Markdown ---- */
+function mdTable(rows, headers){
+  const h = "| " + headers.join(" | ") + " |";
+  const s = "|" + headers.map(()=>"---").join("|") + "|";
+  return [h, s, ...rows.map(r=>"| " + r.join(" | ") + " |")].join("\n");
+}
+
+function buildMarkdown(){
+  const d = currentData, f = d.fasts, q = d.quiz, e = d.engagement,
+        bo = d.bundleOps, a = d.affiliates, r = d.record,
+        sug = d.bundles.suggested.reduce((x,y)=>x+y,0),
+        pur = d.bundles.purchased.reduce((x,y)=>x+y,0);
+  const L = [];
+  L.push("# WHEALTHY — Stewards Admin Report");
+  L.push("");
+  L.push("_" + reportMeta() + "_");
+  L.push("");
+  L.push("## Members");
+  L.push("");
+  L.push(mdTable([
+    ["Free members (lead)", fmt(d.members.free)],
+    ["Paid Stewards", fmt(d.members.paid)],
+    ["Product purchasers", fmt(d.members.purchasers)],
+    ["Free to paid", d.members.conv + "%"],
+    ["MRR", "$" + fmt(d.memberHealth.mrr)],
+    ["Lapsed", fmt(d.memberHealth.churned)],
+    ["Nurture queued / sent / joined", fmt(d.memberHealth.nurture.queued) + " / " + fmt(d.memberHealth.nurture.sent) + " / " + fmt(d.memberHealth.nurture.joined)]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push("## The Path (funnel)");
+  L.push("");
+  L.push(mdTable(d.funnel.stages.map((s,i,arr)=>[
+    s[0], fmt(s[1]), i===0 ? "—" : Math.round(s[1]/arr[i-1][1]*100)+"%"
+  ]), ["Stage","Count","Conversion"]));
+  L.push("");
+  L.push("## The Fast");
+  L.push("");
+  L.push(mdTable([
+    ["Started", fmt(f.started)], ["Active now", fmt(f.active)],
+    ["Completed", fmt(f.completed)], ["Ended early", fmt(f.endedEarly)],
+    ["Completion rate", f.completionRate + "%"],
+    ["Avg % of fast done", f.avgPct + "%"],
+    ["Day adherence", f.adherence + "%"],
+    ["Avg duration", f.avgDuration + " days"],
+    ["Structure only", d.fastsExtra.structureOnlyPct + "%"]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push("### People on the fast (distinct stewards)");
+  L.push("");
+  L.push(mdTable([
+    ["People started", fmt(d.fastsExtra.people.started)],
+    ["Completed at least one", fmt(d.fastsExtra.people.completed)],
+    ["% completed", d.fastsExtra.people.pct + "%"],
+    ["Did not complete", fmt(d.fastsExtra.people.endedEarly)],
+    ["Still fasting", fmt(d.fastsExtra.people.active)]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push("### By fast type");
+  L.push("");
+  L.push(mdTable(f.types.map(t=>[t.name, t.figure, fmt(t.started), fmt(t.completed), t.rate+"%", t.avgPct+"%"]),
+    ["Fast","Figure","Started","Completed","Completion","Avg % done"]));
+  L.push("");
+  L.push("### Most broken rules");
+  L.push("");
+  L.push(mdTable(d.fastsExtra.weakRules.map(w=>[w[0], fmt(w[1])]), ["Rule","Times broken"]));
+  L.push("");
+  L.push("### Steward log (all time)");
+  L.push("");
+  L.push(mdTable(STEWARD_LOG.map(s=>{
+    const st = stStats(s);
+    return [sLabel(s.id), st.started, st.completed, st.ended,
+      (st.started?Math.round(st.completed/st.started*100):0)+"%",
+      st.active?"fasting now":"—"];
+  }), ["Steward","Started","Completed","Stopped","Completion","Status"]));
+  L.push("");
+  L.push("## Quiz & Funnel");
+  L.push("");
+  L.push(mdTable([
+    ["Page views", fmt(q.pageViews)], ["Quiz opens", fmt(q.starts)],
+    ["Completions", fmt(q.completions)], ["Completion rate", q.rate + "%"],
+    ["Drop-offs", fmt(q.dropoffs)], ["CTA clicks", fmt(q.ctaClicks)],
+    ["Avg load score", q.avgLoad]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push("### Archetypes");
+  L.push("");
+  L.push(mdTable(q.archetypes.map(x=>[x[0], fmt(x[1])]), ["Archetype","Count"]));
+  L.push("");
+  L.push("### Demographics");
+  L.push("");
+  L.push(mdTable([
+    ["Men / Women", d.demo.sex[0][1] + "% / " + d.demo.sex[1][1] + "%"],
+    ["Married or partnered", d.demo.marriedPct + "%"],
+    ["Avg kids", d.demo.avgKids],
+    ...d.demo.age.map(x=>["Age " + x[0], x[1] + "%"]),
+    ...d.demo.job.map(x=>["Work: " + x[0], x[1] + "%"]),
+    ...d.demo.hours.map(x=>["Hours: " + x[0], x[1] + "%"]),
+    ...d.demo.consumption.map(x=>["Consumption: " + x[0], x[1] + "%"])
+  ], ["Field","Share"]));
+  L.push("");
+  L.push("## Bundles");
+  L.push("");
+  L.push(mdTable([
+    ["Suggested", fmt(sug)], ["Purchased", fmt(pur)],
+    ["Match rate", d.bundles.matchRate + "%"], ["Claim rate", bo.claimRate + "%"],
+    ["Orders pending / confirmed / shipped / skipped", [bo.pending,bo.confirmed,bo.shipped,bo.skipped].map(fmt).join(" / ")],
+    ["Subs active / paused / cancelled", [bo.subs.active,bo.subs.paused,bo.subs.cancelled].map(fmt).join(" / ")],
+    ["Auto-order on", bo.subs.autoPct + "%"],
+    ["Try to member", bo.tryToMember + "%"]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push("### Suggested vs purchased by bundle");
+  L.push("");
+  L.push(mdTable(d.bundles.keys.map((k,i)=>[k, fmt(d.bundles.suggested[i]), fmt(d.bundles.purchased[i])]),
+    ["Bundle","Suggested","Purchased"]));
+  L.push("");
+  L.push("### Try orders by product");
+  L.push("");
+  L.push(mdTable(d.tryOrders.map(t=>[t[0], fmt(t[1])]), ["Product","Orders"]));
+  L.push("");
+  L.push("## Affiliates");
+  L.push("");
+  L.push(mdTable([
+    ["Registered", fmt(a.registered)], ["Active this range", fmt(a.active)],
+    ["Referred joins", fmt(a.referred)], ["Referred try orders", fmt(a.tryRefs)]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push(mdTable(a.top.map(t=>[t[0], fmt(t[1])]), ["Top referrer","Joins"]));
+  L.push("");
+  L.push("## Engagement");
+  L.push("");
+  L.push(mdTable([
+    ["Active journalers", fmt(e.journalers)], ["Entries per member", e.entriesPerMember],
+    ["Avg streak", e.avgStreak + " days"], ["Scripture engaged", e.scriptureEngagedPct + "%"],
+    ["Avg interactions", e.avgInteractions], ["Scribe landed", e.scribe.landedRate + "%"],
+    ["Prefer brief scribe", e.scribe.briefPct + "%"],
+    ["Daily logs filed", fmt(e.dailyLogs.filed)],
+    ["Avg energy stability", e.dailyLogs.avgEnergy + " / 100"],
+    ["Avg presence", e.dailyLogs.avgPresence + " / 10"],
+    ["Drank powder", e.dailyLogs.powderPct + "%"],
+    ["Skipped 2nd cup", e.dailyLogs.skipPct + "%"]
+  ], ["Metric","Value"]));
+  L.push("");
+  L.push("### Scripture comfort");
+  L.push("");
+  L.push(mdTable(e.comfort.map((v,i)=>["Level " + (i+1), v + "%"]), ["Level","Share"]));
+  L.push("");
+  L.push("### Streak leaderboard");
+  L.push("");
+  L.push(mdTable(e.leaderboard.map((t,i)=>[i+1, t[0], t[1] + " days"]), ["#","Steward","Streak"]));
+  L.push("");
+  L.push("## The Record");
+  L.push("");
+  L.push(mdTable([
+    ["Entries filed", fmt(r.entries)],
+    ["Tone heavy / win / mixed", r.heavy + "% / " + r.win + "% / " + r.mixed + "%"],
+    ["Burned", fmt(r.burned)],
+    ["Scribe coverage", d.recordExtra.scribePct + "%"],
+    ["Resurfaced", fmt(d.recordExtra.resurfaced)]
+  ], ["Metric","Value"]));
+  L.push("");
+  return L.join("\n");
+}
+
+function exportMarkdown(){
+  if(!currentData) return;
+  const md = buildMarkdown();
+  const blob = new Blob([md], {type:"text/markdown;charset=utf-8"});
+  const aTag = document.createElement("a");
+  aTag.href = URL.createObjectURL(blob);
+  aTag.download = "whealthy-report-" + currentRange + "-" + new Date().toISOString().slice(0,10) + ".md";
+  document.body.appendChild(aTag);
+  aTag.click();
+  aTag.remove();
+  URL.revokeObjectURL(aTag.href);
+}
+
+/* ---- event wiring: delegated listeners, no inline handlers ----
+   Works even under strict CSP, and one handler erroring can
+   never disable the others. */
+document.addEventListener("click", ev=>{
+  const actBtn = ev.target.closest("[data-action]");
+  if(actBtn){
+    if(actBtn.dataset.action==="export-pdf") exportPDF();
+    if(actBtn.dataset.action==="export-md") exportMarkdown();
+    return;
+  }
+  const stBtn = ev.target.closest("[data-steward]");
+  if(stBtn){ selectSteward(stBtn.dataset.steward); return; }
+  const viewBtn = ev.target.closest("[data-view]");
+  if(viewBtn){ switchView(viewBtn.dataset.view); return; }
+  const rangeBtn = ev.target.closest("[data-range]");
+  if(rangeBtn){ setRange(rangeBtn.dataset.range); return; }
+  if(ev.target.closest("#refreshBtn")){ manualRefresh(); }
+});
+$("searchInput").addEventListener("input", ev=>filterCards(ev.target.value));
+$("stewardSearch").addEventListener("input", ev=>renderStewardList(ev.target.value));
+
+renderStewardList("");
+renderStewardDetail();
+render(currentRange);
+</script>
+</body>
+</html>

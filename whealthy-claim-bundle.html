@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="wh-oswald">
+/* Oswald 700 embedded, lifted from whealthy-dashboard.html 2026-07-15.
+   Headers MUST be Oswald. Relying on the fonts.googleapis.com request
+   alone means that when baknd blocks, strips or delays it, every header
+   silently falls back to sans-serif and the condensed face is lost.
+   That is exactly what happened on whealthy-invite.html. Do not remove
+   this in favour of the network request. */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url(data:font/woff2;base64,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) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+</style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHEALTHY Stewards &#8212; Claim Your Bundle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* --- BAKND/SIMVOLY ISOLATION RESET --- */
+#whealthy-app-embed h1, #whealthy-app-embed h2, #whealthy-app-embed h3, 
+#whealthy-app-embed p, #whealthy-app-embed span, #whealthy-app-embed a, 
+#whealthy-app-embed button, #whealthy-app-embed input, #whealthy-app-embed select, #whealthy-app-embed textarea {
+  -webkit-text-fill-color: currentcolor !important;
+}
+/* ------------------------------------- */\n/* --- BAKND/SIMVOLY COLOR & BUTTON PROTECTION --- */
+#whealthy-app-embed h1, #whealthy-app-embed h2, #whealthy-app-embed h3,
+#whealthy-app-embed h4, #whealthy-app-embed h5, #whealthy-app-embed p,
+#whealthy-app-embed li {
+  color: var(--text);
+}
+#whealthy-app-embed a {
+  color: var(--lime);
+}
+#whealthy-app-embed button, 
+#whealthy-app-embed .btn {
+  background: var(--lime);
+  color: var(--black);
+}
+#whealthy-app-embed .btn--ghost {
+  background: var(--glass-hi);
+  color: var(--lime);
+  border-color: var(--border-mid);
+}
+#whealthy-app-embed input, 
+#whealthy-app-embed select, 
+#whealthy-app-embed textarea {
+  background: var(--glass-mid);
+  color: var(--text);
+  border-color: var(--border-mid);
+}
+/* ----------------------------------------------- */
+
+
+:root{--black:#080809;--charcoal:#0f1012;--graphite:#161719;--surface:#222428;--surface-2:#2a2d33;--border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);--border-hi:rgba(255,255,255,0.2);--glass:rgba(255,255,255,0.04);--glass-mid:rgba(255,255,255,0.07);--glass-hi:rgba(255,255,255,0.10);--lime:#ccff00;--lime-dim:rgba(204,255,0,0.15);--lime-glow:rgba(204,255,0,0.35);--lime-soft:rgba(204,255,0,0.08);--white:#fff;--white-60:rgba(255,255,255,0.60);--white-40:rgba(255,255,255,0.40);--text:#f0f1f3;--text-muted:rgba(240,241,243,0.60);--text-dim:rgba(240,241,243,0.38);--font-display:'Oswald',sans-serif;--font-body:'DM Sans',sans-serif;--radius-sm:8px;--radius:14px;--radius-lg:22px;--radius-xl:32px;--transition:0.3s cubic-bezier(0.23,1,0.32,1);--transition-fast:0.18s cubic-bezier(0.23,1,0.32,1);--red:#ff4d4d;--red-soft:rgba(255,77,77,0.12);--green:#00e676;--green-soft:rgba(0,230,118,0.12)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--black);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;min-height:100svh}
+a{color:var(--lime);text-decoration:none}
+button{font-family:var(--font-body);cursor:pointer;border:none}
+input,select{font-family:var(--font-body)}
+a,button,input,select{-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+img{display:block;max-width:100%}
+h1,h2,h3,p{overflow-wrap:break-word}
+@media(max-width:640px){input,select,textarea{font-size:16px !important}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:4px}
+
+/* Background */
+.bg-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.bg-orb--1{width:500px;height:500px;background:radial-gradient(circle,rgba(204,255,0,0.06)0%,transparent 70%);top:-120px;right:-80px;animation:float-orb 10s ease-in-out infinite}
+.bg-orb--2{width:350px;height:350px;background:radial-gradient(circle,rgba(204,255,0,0.04)0%,transparent 70%);bottom:-60px;left:-100px;animation:float-orb 14s ease-in-out infinite reverse}
+@keyframes float-orb{0%,100%{transform:translate(0,0)}33%{transform:translate(12px,-25px)}66%{transform:translate(-8px,18px)}}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.015)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015)1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 100%)}
+
+/* Layout */
+.wrap{position:relative;z-index:10;max-width:680px;margin:0 auto;padding:32px 20px 64px;min-height:100svh}
+.brand{text-align:center;margin-bottom:32px}
+.brand__logo{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:.12em;text-transform:uppercase;color:var(--white)}
+.brand__logo span{color:var(--lime)}
+.brand__tag{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:4px}
+
+.card{background:rgba(15,16,18,0.85);backdrop-filter:blur(40px) saturate(1.4);-webkit-backdrop-filter:blur(40px) saturate(1.4);border:1px solid var(--border-mid);border-radius:var(--radius-xl);overflow:hidden;animation:card-in .6s cubic-bezier(0.23,1,0.32,1)}
+@keyframes card-in{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
+.card__body{padding:36px 32px}
+
+/* States */
+.state{display:none}
+.state.active{display:block;animation:fade-in .4s ease}
+@keyframes fade-in{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+
+/* Gate */
+.gate__icon{width:64px;height:64px;border-radius:50%;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:28px}
+.gate__title{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);text-align:center;line-height:1.1;margin-bottom:10px}
+.gate__sub{font-size:14px;color:var(--text-muted);text-align:center;line-height:1.6;margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto}
+
+/* Form */
+.field{margin-bottom:18px}
+.label{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--white-60);margin-bottom:8px}
+.input{width:100%;padding:14px 16px;background:var(--glass-mid);border:1px solid var(--border-mid);border-radius:var(--radius);color:var(--text);font-size:15px;transition:border-color var(--transition),background var(--transition);outline:none}
+.input::placeholder{color:var(--text-dim)}
+.input:focus{border-color:rgba(204,255,0,0.4);background:var(--glass-hi)}
+.input.err{border-color:rgba(255,77,77,0.5);background:var(--red-soft)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
+@media(max-width:520px){.row2,.row3{grid-template-columns:1fr}}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 24px;background:var(--lime);color:var(--black);font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;border-radius:var(--radius);box-shadow:0 0 30px rgba(204,255,0,0.25),0 4px 20px rgba(0,0,0,0.4);transition:var(--transition);min-height:52px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.45),0 8px 30px rgba(0,0,0,0.4)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.4;pointer-events:none}
+.btn--ghost{background:var(--glass-hi);color:var(--lime);border:1px solid var(--border-mid);box-shadow:none}
+.btn--ghost:hover{background:var(--lime-soft);border-color:rgba(204,255,0,0.3);box-shadow:none}
+.btn .spin{display:none;width:18px;height:18px;border:2px solid rgba(0,0,0,0.2);border-top-color:var(--black);border-radius:50%;animation:spin .7s linear infinite}
+.btn.loading .btn-text{opacity:0}
+.btn.loading .spin{display:block;position:absolute}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.alert{padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;line-height:1.5;margin-bottom:18px;display:none}
+.alert.show{display:block}
+.alert--err{background:var(--red-soft);border:1px solid rgba(255,77,77,0.25);color:#ff8a8a}
+.alert--ok{background:var(--green-soft);border:1px solid rgba(0,230,118,0.25);color:#69f0ae}
+
+/* Intro video */
+.video{margin-bottom:28px}
+.video__label{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--lime);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.video__frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-mid);background:var(--graphite)}
+.video__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video__placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-dim);text-align:center;padding:20px}
+.video__play{width:56px;height:56px;border-radius:50%;background:var(--lime);color:var(--black);display:flex;align-items:center;justify-content:center}
+
+/* Recommendation banner */
+.rec{display:flex;align-items:center;gap:16px;padding:18px 20px;background:linear-gradient(135deg,rgba(204,255,0,0.07)0%,rgba(204,255,0,0.02)100%);border:1px solid rgba(204,255,0,0.25);border-radius:var(--radius-lg);margin-bottom:24px}
+.rec__icon{width:44px;height:44px;border-radius:50%;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.rec__label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:2px}
+.rec__bundle{font-family:var(--font-display);font-size:19px;font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.1}
+.rec__arch{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+.section-head{font-family:var(--font-display);font-weight:700;font-size:20px;text-transform:uppercase;color:var(--text);margin-bottom:4px;letter-spacing:.02em}
+.section-sub{font-size:13px;color:var(--text-muted);margin-bottom:18px;line-height:1.5}
+
+/* Bundle select */
+.bundle-opt{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition);margin-bottom:10px}
+.bundle-opt:hover{border-color:var(--border-hi);background:var(--glass-mid)}
+.bundle-opt.sel{border-color:rgba(204,255,0,0.45);background:var(--lime-soft)}
+.bundle-opt__radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.bundle-opt.sel .bundle-opt__radio{border-color:var(--lime);background:var(--lime)}
+.bundle-opt.sel .bundle-opt__radio::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--black)}
+.bundle-opt__name{font-weight:600;font-size:14px;color:var(--text)}
+.bundle-opt__tag{font-size:11px;color:var(--text-muted);margin-top:1px}
+.bundle-opt__rec{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);background:var(--lime-dim);border:1px solid rgba(204,255,0,0.25);padding:3px 8px;border-radius:100px;flex-shrink:0}
+
+/* Claimed Status Banner */
+.claimed-banner{text-align:center;padding:32px 24px;background:linear-gradient(135deg,rgba(0,230,118,0.06)0%,rgba(0,230,118,0.02)100%);border:1px solid rgba(0,230,118,0.25);border-radius:var(--radius-xl);margin-bottom:32px;animation:fade-in .5s ease}
+.claimed-banner__icon{width:64px;height:64px;border-radius:50%;background:var(--green-soft);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;animation:pop .5s cubic-bezier(0.34,1.56,0.64,1)}
+.claimed-banner__title{font-family:var(--font-display);font-weight:700;font-size:22px;text-transform:uppercase;color:var(--text);margin-bottom:8px;letter-spacing:.02em}
+.claimed-banner__sub{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:420px;margin:0 auto 20px}
+.claimed-banner__meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:20px}
+.claimed-banner__meta-item{text-align:center}
+.claimed-banner__meta-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.claimed-banner__meta-value{font-size:15px;font-weight:600;color:var(--text)}
+.claimed-banner__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.claimed-banner__actions .btn{width:auto;padding:12px 20px;font-size:13px;min-height:42px}
+.ship-edit{margin-top:24px;max-width:420px;margin-left:auto;margin-right:auto;text-align:left}
+.ship-edit__current{padding:16px 20px;background:var(--glass-mid);border:1px solid var(--border-mid);border-radius:var(--radius);margin-bottom:12px;font-size:13px;color:var(--text-muted);line-height:1.7}
+.ship-edit__current strong{color:var(--text);font-weight:600}
+.ship-edit__form{display:none;animation:fade-in .3s ease}
+.ship-edit__form.open{display:block}
+.ship-edit__form .field{margin-bottom:12px}
+.ship-edit__form .input{padding:12px 14px;font-size:14px}
+.ship-edit__form .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ship-edit__form .row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+@media(max-width:520px){.ship-edit__form .row2,.ship-edit__form .row3{grid-template-columns:1fr}}
+
+/* Prominent Recommendation Card */
+.rec-hero{padding:24px;background:linear-gradient(135deg,rgba(204,255,0,0.08)0%,rgba(204,255,0,0.02)100%);border:2px solid rgba(204,255,0,0.35);border-radius:var(--radius-xl);margin-bottom:24px;cursor:pointer;transition:var(--transition)}
+.rec-hero:hover{border-color:rgba(204,255,0,0.5);background:linear-gradient(135deg,rgba(204,255,0,0.1)0%,rgba(204,255,0,0.04)100%)}
+.rec-hero__badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);background:var(--lime-dim);border:1px solid rgba(204,255,0,0.3);padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.rec-hero__badge::before{content:'';width:6px;height:6px;background:var(--lime);border-radius:50%;animation:rec-pulse 2s ease-in-out infinite}
+@keyframes rec-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.rec-hero__row{display:flex;align-items:center;gap:16px}
+.rec-hero__radio{width:24px;height:24px;border-radius:50%;border:2px solid var(--lime);background:var(--lime);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rec-hero__radio::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--black)}
+.rec-hero__name{font-family:var(--font-display);font-weight:700;font-size:18px;text-transform:uppercase;color:var(--text)}
+.rec-hero__tag{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+/* Alternatives Toggle */
+.alt-toggle{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 0;cursor:pointer;color:var(--text-muted);font-size:13px;font-weight:500;transition:var(--transition);margin-bottom:8px;border:none;background:none;width:100%}
+.alt-toggle:hover{color:var(--text)}
+.alt-toggle__arrow{font-size:10px;transition:transform .3s ease}
+.alt-toggle__arrow.open{transform:rotate(180deg)}
+.alt-list{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.alt-list.open{max-height:500px}
+
+/* Auto-order toggle */
+.toggle-row{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);margin:20px 0}
+.toggle{position:relative;width:44px;height:26px;flex-shrink:0;margin-top:1px}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle__track{position:absolute;inset:0;background:var(--surface-2);border-radius:100px;transition:var(--transition)}
+.toggle__track::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:var(--white-60);border-radius:50%;transition:var(--transition)}
+.toggle input:checked+.toggle__track{background:var(--lime)}
+.toggle input:checked+.toggle__track::before{transform:translateX(18px);background:var(--black)}
+.toggle-row__title{font-weight:600;font-size:14px;color:var(--text)}
+.toggle-row__desc{font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:2px}
+
+.fine{font-size:11px;color:var(--text-dim);text-align:center;line-height:1.6;margin-top:14px}
+
+/* Manage (returning) */
+.manage-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.manage-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 18px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius)}
+.manage-item__label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.manage-item__value{font-size:14px;color:var(--text);font-weight:500;line-height:1.4}
+.manage-item__edit{font-size:12px;font-weight:600;color:var(--lime);background:none;border:none;flex-shrink:0;padding:2px 0}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px}
+.status-pill--on{color:var(--lime);background:var(--lime-dim);border:1px solid rgba(204,255,0,0.25)}
+.status-pill--off{color:var(--text-muted);background:var(--glass-mid);border:1px solid var(--border-mid)}
+.next-date{text-align:center;padding:18px;background:linear-gradient(135deg,rgba(204,255,0,0.06)0%,rgba(204,255,0,0.02)100%);border:1px solid rgba(204,255,0,0.2);border-radius:var(--radius-lg);margin-bottom:22px}
+.next-date__label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:4px}
+.next-date__value{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text)}
+
+.success-icon{width:72px;height:72px;border-radius:50%;background:var(--lime-soft);border:2px solid var(--lime);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:32px;animation:pop .5s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+
+.signout{display:block;margin:18px auto 0;font-size:12px;color:var(--text-dim);background:none;border:none;text-decoration:underline;text-underline-offset:3px}
+.signout:hover{color:var(--text-muted)}
+.foot{text-align:center;font-size:11px;color:var(--text-dim);margin-top:28px;line-height:1.6}
+
+@media(max-width:480px){.card__body{padding:28px 20px}.gate__title{font-size:22px}.brand__logo{font-size:22px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}.bg-orb{animation:none !important}}
+
+/* ============================================
+   CONVERSION RESULT PAGE STYLES
+   ============================================ */
+
+/* Value stack */
+.value-stack{max-width:560px;margin:0 auto;padding:0 24px}
+.value-stack__title{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:20px;text-align:center}
+.value-stack__item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.value-stack__item:last-of-type{border-bottom:none}
+.value-stack__name{font-size:14px;color:var(--text-muted);line-height:1.4}
+.value-stack__name strong{color:var(--text);font-weight:500}
+.value-stack__price{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--white-40);white-space:nowrap}
+.value-stack__price--strike{text-decoration:line-through;color:var(--white-20)}
+.value-stack__total{display:flex;justify-content:space-between;align-items:center;padding:20px 0;margin-top:8px;border-top:2px solid var(--border-mid)}
+.value-stack__total-label{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+.value-stack__total-price{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--white-40);text-decoration:line-through}
+.value-stack__your-price{text-align:center;padding:28px 0 8px}
+.value-stack__your-label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+.value-stack__your-amount{font-family:var(--font-display);font-size:clamp(52px,10vw,72px);font-weight:700;color:var(--white);line-height:1}
+.value-stack__your-amount sup{font-size:clamp(22px,4vw,32px);vertical-align:super;color:var(--text-muted)}
+.value-stack__your-amount sub{font-size:clamp(18px,3vw,24px);vertical-align:baseline;color:var(--text-muted);font-weight:400}
+.value-stack__per-day{font-size:14px;color:var(--text-muted);margin-top:8px}
+.value-stack__per-day strong{color:var(--lime);font-weight:600}
+.value-stack__savings{display:inline-flex;align-items:center;gap:6px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.2);border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);margin-top:16px}
+
+/* What's included grid */
+.included-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto;padding:0 24px}
+.included-item{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:var(--transition)}
+.included-item:hover{border-color:var(--border-mid);background:var(--glass-mid)}
+.included-item__img{width:100%;aspect-ratio:1/1;object-fit:contain;border-radius:var(--radius-sm);margin-bottom:12px}
+.included-item__name{font-family:var(--font-display);font-size:14px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:4px}
+.included-item__role{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--lime)}
+.included-item__desc{font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:8px}
+
+/* Guarantee / Risk Reversal */
+.guarantee-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:560px;margin:0 auto;padding:0 24px}
+.guarantee-item{text-align:center;padding:20px 12px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius)}
+.guarantee-item__icon{font-size:24px;margin-bottom:10px}
+.guarantee-item__title{font-family:var(--font-display);font-size:13px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:4px;line-height:1.2}
+.guarantee-item__desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+
+/* Quick testimonial */
+.result-proof{max-width:560px;margin:0 auto;padding:0 24px}
+.result-proof__card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
+.result-proof__quote{font-size:15px;color:var(--text);line-height:1.65;font-style:italic;margin-bottom:16px}
+.result-proof__quote strong{font-style:normal;font-weight:600;color:var(--white)}
+.result-proof__meta{display:flex;align-items:center;gap:10px}
+.result-proof__avatar{width:36px;height:36px;border-radius:50%;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.result-proof__name{font-size:13px;font-weight:600;color:var(--text)}
+.result-proof__role{font-size:11px;color:var(--text-dim)}
+
+/* Pattern brief (collapsed belief section) */
+.pattern-brief{max-width:560px;margin:0 auto;padding:0 24px}
+.pattern-brief__card{background:var(--glass);border:1px solid var(--border);border-left:3px solid var(--lime);border-radius:var(--radius);padding:24px}
+.pattern-brief__headline{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:10px;line-height:1.1}
+.pattern-brief__body{font-size:14px;color:var(--text-muted);line-height:1.65}
+.pattern-brief__stat{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--text-muted)}
+.pattern-brief__stat strong{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--lime)}
+
+.result-container{background:transparent}
+.result-hero-inner{padding:80px 24px 60px;text-align:center;position:relative;overflow:hidden}
+.result-hero-inner__orb{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(100px);background:radial-gradient(circle,rgba(204,255,0,0.06)0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.result-hero-inner__eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:6px 16px;border-radius:100px;margin-bottom:28px}
+.result-hero-inner__label{font-size:14px;color:var(--text-muted);margin-bottom:12px}
+.result-hero-inner__name{font-family:var(--font-display);font-weight:700;font-size:clamp(48px,8vw,88px);line-height:.92;text-transform:uppercase;color:var(--text)}
+.result-hero-inner__name em{font-style:normal;color:var(--lime);display:block}
+
+.identity-callout{margin-top:48px;text-align:center}
+.identity-callout__card{display:inline-block;background:linear-gradient(135deg,rgba(204,255,0,0.06)0%,rgba(204,255,0,0.02)100%);border:1px solid rgba(204,255,0,0.2);border-radius:var(--radius-lg);padding:28px 36px;max-width:540px}
+.identity-callout__text{font-size:16px;color:var(--text);line-height:1.7;font-style:italic}
+.identity-callout__text strong{color:var(--lime) !important;font-style:normal;font-weight:600}
+
+/* Routine block */
+.routine-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;max-width:1200px;margin:0 auto}
+.routine-block{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 18px;text-align:center;transition:var(--transition)}
+.routine-block:hover{background:var(--glass-mid);border-color:rgba(204,255,0,0.2)}
+.routine-block__time{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:10px}
+.routine-block__icon{font-size:24px;margin-bottom:10px}
+.routine-block__title{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:6px;line-height:1.1}
+.routine-block__desc{font-size:12px;color:var(--text-muted);line-height:1.55;margin-bottom:14px}
+.routine-block__product{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:3px 8px;border-radius:4px;display:inline-block}
+
+/* Bundle card */
+.bundle-card__mixing{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;padding:12px 16px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.bundle-card__mixing strong{color:var(--text);font-weight:600}
+
+/* Next steps */
+.next-steps{max-width:560px;margin:0 auto 36px;padding:0 24px}
+.next-steps__label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:8px;text-align:center}
+.next-steps__title{font-family:var(--font-display);font-weight:700;font-size:clamp(24px,4.5vw,36px);text-transform:uppercase;line-height:1.0;color:var(--text);text-align:center;margin-bottom:24px}
+.next-steps__list{display:flex;flex-direction:column;gap:12px}
+.next-step{display:flex;align-items:flex-start;gap:16px;padding:18px 20px;background:var(--glass-mid);border:1px solid var(--border-mid);border-radius:var(--radius);position:relative;transition:var(--transition)}
+.next-step:hover{border-color:rgba(204,255,0,0.22)}
+.next-step__num{width:34px;height:34px;border-radius:50%;background:var(--lime);color:var(--black);font-family:var(--font-display);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 18px rgba(204,255,0,0.3)}
+.next-step__body{flex:1;padding-top:2px}
+.next-step__title{font-family:var(--font-display);font-size:17px;font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.1;margin-bottom:4px}
+.next-step__desc{font-size:13px;color:var(--text-muted);line-height:1.55}
+.next-step__connector{position:absolute;left:37px;bottom:-12px;width:1px;height:12px;background:linear-gradient(var(--border-hi),transparent);z-index:1}
+
+/* Primary Button matched to homepage */
+.btn-primary--arc{animation:arc-pulse 3s linear infinite; display:inline-flex;align-items:center;gap:10px;background:var(--lime);color:var(--black);font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:16px 32px;border-radius:var(--radius);border:none;cursor:pointer;position:relative;overflow:hidden;transition:var(--transition);box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}
+@keyframes arc-pulse{0%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}50%{box-shadow:0 0 60px rgba(204,255,0,0.6),0 4px 20px rgba(0,0,0,0.4)}100%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}}
+.btn-primary--arc:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.5),0 8px 30px rgba(0,0,0,0.4)}
+.btn-primary--arc:active{transform:translateY(0)}
+
+/* Chips */
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--white-60);background:var(--glass);border:1px solid var(--border);padding:5px 12px;border-radius:100px;backdrop-filter:blur(8px)}
+.chip__dot{width:4px;height:4px;background:var(--lime);border-radius:50%}
+
+/* Skool Community Invite */
+.skool-invite{max-width:500px;margin:0 auto;padding:0 24px 40px;text-align:center}
+.skool-invite__card{background:var(--glass);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:28px 24px}
+.skool-invite__emoji{font-size:32px;margin-bottom:12px}
+.skool-invite__title{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:8px;line-height:1.1}
+.skool-invite__desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.55}
+.skool-invite__btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--glass-hi);border:1px solid var(--border-mid);border-radius:var(--radius);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--lime);cursor:pointer;transition:var(--transition);text-decoration:none}
+.skool-invite__btn:hover{background:var(--lime-soft);border-color:rgba(204,255,0,0.3)}
+
+/* Final CTA */
+.result-final-cta{padding:80px 24px;text-align:center;position:relative}
+.result-final-cta__bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(204,255,0,0.06)0%,transparent 70%);pointer-events:none}
+.result-final-cta__content{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.result-final-cta__headline{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,5vw,64px);text-transform:uppercase;line-height:.95;color:var(--text);margin-bottom:20px}
+.result-final-cta__headline em{font-style:normal;color:var(--lime)}
+.result-final-cta__sub{font-size:16px;color:var(--text-muted);max-width:460px;margin:0 auto 36px;line-height:1.7}
+.result-final-cta__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:28px}
+
+/* Result Footer */
+.result-footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-top:1px solid var(--border);padding:28px 24px;text-align:center}
+.result-footer__logo{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+.result-footer__logo span{color:var(--lime)}
+.result-footer__copy{font-size:10px;color:var(--text-dim);max-width:500px;margin:0 auto;line-height:1.6}
+
+/* Checkout Modal Overlay */
+.checkout-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity var(--transition)}
+.checkout-modal.open{opacity:1;pointer-events:auto}
+.checkout-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.checkout-modal__card{position:relative;z-index:1;width:90%;max-width:960px;height:85vh;background:rgba(22,23,25,0.75);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--border-mid);border-radius:var(--radius-xl);overflow:hidden;display:flex;flex-direction:column;transform:translateY(40px) scale(0.96);transition:transform var(--transition)}
+.checkout-modal.open .checkout-modal__card{transform:translateY(0) scale(1)}
+.checkout-modal__close{position:absolute;top:16px;right:16px;z-index:10;width:36px;height:36px;border-radius:50%;background:var(--glass-mid);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;color:var(--white-60);font-size:18px;cursor:pointer;transition:var(--transition)}
+.checkout-modal__close:hover{background:var(--glass-hi);color:var(--white)}
+.checkout-modal__loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);background:var(--charcoal);z-index:2;transition:opacity 0.3s ease}
+.checkout-modal__loading.hidden{opacity:0;pointer-events:none}
+.checkout-modal__loading .spin{display:block;width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--lime);border-radius:50%;animation:spin .7s linear infinite}
+.checkout-modal__iframe{width:100%;height:100%;border:0;background:transparent;z-index:1}
+
+/* Responsive adjustments */
+@media(max-width:1100px){
+  .routine-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:640px){
+  .value-stack{padding:0 16px}
+  .value-stack__item{padding:12px 0}
+  .value-stack__name{font-size:13px}
+  .value-stack__price{font-size:16px}
+  .value-stack__total-price{font-size:20px}
+  .included-grid{padding:0 16px;gap:10px}
+  .included-item{padding:14px 12px}
+  .included-item__name{font-size:12px}
+  .included-item__desc{font-size:11px}
+  .guarantee-row{padding:0 16px;gap:8px}
+  .guarantee-item{padding:16px 10px}
+  .guarantee-item__icon{font-size:20px;margin-bottom:8px}
+  .guarantee-item__title{font-size:11px}
+  .guarantee-item__desc{font-size:10px}
+  .result-proof{padding:0 16px}
+  .result-proof__card{padding:20px 16px}
+  .result-proof__quote{font-size:14px}
+  .pattern-brief{padding:0 16px}
+  .pattern-brief__card{padding:20px 16px}
+  
+  .result-hero-inner{padding:40px 12px 28px}
+  .result-hero-inner__name{font-size:clamp(24px,9vw,40px)}
+  .result-hero-inner__eyebrow{font-size:10px;padding:4px 12px}
+  .result-hero-inner__label{font-size:12px}
+  
+  .identity-callout__card{padding:16px 12px}
+  .identity-callout__text{font-size:14px}
+  
+  .routine-block{padding:18px 14px}
+  .routine-block__title{font-size:15px}
+  .routine-block__desc{font-size:11px}
+  .routine-block__time{font-size:9px}
+  .routine-block__icon{font-size:20px;margin-bottom:8px}
+  .routine-block__product{font-size:9px}
+  .routine-grid{grid-template-columns:repeat(2,1fr)}
+  
+  .skool-invite{padding:0 16px 32px}
+  .skool-invite__card{padding:20px 16px}
+  .result-final-cta{padding:56px 16px}
+  .result-footer{padding:20px 16px}
+}
+@media(max-width:480px){
+  .included-grid{grid-template-columns:1fr}
+  .guarantee-row{grid-template-columns:1fr}
+  .value-stack__your-amount{font-size:clamp(44px,12vw,64px)}
+  .routine-grid{grid-template-columns:1fr}
+  
+  .skool-invite{padding:0 12px 28px}
+  .skool-invite__card{padding:18px 14px}
+  .skool-invite__title{font-size:16px}
+  .skool-invite__desc{font-size:12px}
+  .skool-invite__btn{font-size:12px;padding:10px 20px}
+  .result-final-cta{padding:44px 12px}
+  .result-final-cta__headline{font-size:clamp(24px,6vw,40px)}
+  .result-final-cta__sub{font-size:13px}
+  .result-footer{padding:16px 12px}
+  .result-footer__logo{font-size:14px}
+  .result-footer__copy{font-size:9px}
+  .chip{font-size:9px;padding:3px 8px}
+}
+/* Affiliate Generator */
+.affiliate-gen { margin-top: 24px; padding: 24px 20px; background: rgba(204, 255, 0, 0.04); border: 1px solid rgba(204, 255, 0, 0.15); border-radius: var(--radius-xl); text-align: left; position: relative; overflow: hidden; backdrop-filter: blur(10px); }
+.affiliate-gen::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(204, 255, 0, 0.5), transparent); }
+.affiliate-gen__header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.affiliate-gen__icon { width: 32px; height: 32px; border-radius: 50%; background: var(--lime-dim); border: 1px solid rgba(204, 255, 0, 0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.affiliate-gen__title { font-family: var(--font-display); font-size: 18px; font-weight: 700; text-transform: uppercase; color: var(--text); letter-spacing: .02em; }
+.affiliate-gen__sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px; }
+.affiliate-gen__sub strong { color: var(--lime); }
+.affiliate-gen__input-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
+.affiliate-gen__input { flex: 1; min-width: 200px; padding: 12px 14px; background: var(--glass-hi); border: 1px solid var(--border-mid); border-radius: var(--radius); color: var(--text); font-size: 13px; transition: border-color var(--transition); outline: none; }
+.affiliate-gen__input:focus { border-color: rgba(204, 255, 0, 0.4); }
+.affiliate-gen__btn { flex-shrink: 0; padding: 0 20px; height: 44px; background: var(--lime); color: var(--black); font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; border-radius: var(--radius); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; border: none; }
+.affiliate-gen__btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(204, 255, 0, 0.25); }
+.affiliate-gen__btn.loading .btn-text { opacity: 0; }
+.affiliate-gen__btn .spin { width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.2); border-top-color: var(--black); border-radius: 50%; animation: spin .7s linear infinite; display: none; position: absolute; }
+.affiliate-gen__btn.loading .spin { display: block; }
+.affiliate-gen__result { margin-top: 16px; padding: 12px; background: var(--glass-mid); border: 1px solid var(--lime-dim); border-radius: var(--radius); display: none; align-items: center; justify-content: space-between; gap: 10px; animation: fade-in .3s ease; }
+.affiliate-gen__result.show { display: flex; }
+.affiliate-gen__link { font-family: monospace; font-size: 12px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.affiliate-gen__copy { background: none; border: none; color: var(--lime); font-size: 12px; font-weight: 700; text-transform: uppercase; cursor: pointer; flex-shrink: 0; padding: 4px; display: flex; align-items: center; gap: 4px; }
+.affiliate-gen__copy:hover { color: var(--white); }
+</style>
+</head>
+<body>
+<div id="whealthy-app-embed">
+<div class="bg-orb bg-orb--1"></div>
+<div class="bg-orb bg-orb--2"></div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="brand__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div>
+    <div class="brand__tag">Stewards &#183; Claim Your Bundle</div>
+  </div>
+
+  <div class="card"><div class="card__body">
+
+    <!-- ============ STATE: GATE ============ -->
+    <div class="state active" id="stateGate">
+      <div class="gate__icon">&#128737;&#65039;</div>
+      <h1 class="gate__title">Members Only</h1>
+      <p class="gate__sub">Enter the email you joined the Stewards with. We'll pull up your bundle and your account.</p>
+      <div class="alert alert--err" id="gateAlert"></div>
+      <div class="field">
+        <label class="label" for="gateEmail">Your Email</label>
+        <input type="email" class="input" id="gateEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <button class="btn" id="gateBtn" onclick="verify()"><span class="btn-text">Find My Bundle</span><span class="spin"></span></button>
+      <p class="fine">Not a member yet? <a href="#" id="joinLink" target="_blank" rel="noopener">Join the Stewards &#8594;</a></p>
+    </div>
+
+    <!-- ============ STATE: LOCKED (not a member) ============ -->
+    <div class="state" id="stateLocked">
+      <div class="gate__icon">&#128274;</div>
+      <h1 class="gate__title">Join First</h1>
+      <p class="gate__sub" id="lockedMsg">We couldn't find an active membership for that email. Claiming your bundle happens inside the Stewards community.</p>
+      <a class="btn" id="lockedJoin" target="_blank" rel="noopener"><span class="btn-text">Join the Stewards</span></a>
+      <button class="signout" onclick="resetGate()">Try a different email</button>
+    </div>
+
+    <!-- ============ STATE: SETUP (first claim) ============ -->
+    <div class="state" id="stateSetup">
+      <!-- Claimed Banner (hidden by default, shown by JS when subscription exists) -->
+      <div id="claimedBanner" style="display:none; max-width:640px; margin:0 auto 28px;"></div>
+
+      <!-- hype message (replaces intro video) -->
+      <div class="video" style="max-width:640px; margin:0 auto 32px; text-align:center; padding: 32px 24px; background: rgba(204,255,0,0.03); border: 1px solid rgba(204,255,0,0.15); border-radius: 16px;" id="introVideo">
+        <h2 style="color: var(--lime); font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 12px;">You're In. Now Claim Your Edge.</h2>
+        <p style="color: var(--text-dim); font-size: 16px; line-height: 1.6; margin: 0;">As a verified Steward, your first governance bundle is unlocked and waiting. This is the exact protocol used to drive peak neurological sync and relentless energy. <strong style="color: #fff;">Select your bundle below to complete your activation and get it shipped immediately.</strong></p>
+      </div>
+
+      <!-- Bundle Confirmation Switcher -->
+      <div style="max-width:560px; margin:0 auto 32px; text-align:left;" id="bundleSwitcherWrap">
+        <!-- Prominent recommendation card (populated by JS) -->
+        <div id="recHeroSlot"></div>
+        <!-- Alternatives toggle + list (populated by JS) -->
+        <div id="altSection"></div>
+      </div>
+
+      <!-- Dynamic Archetype Recommendation & Sales Details -->
+      <div id="setupSalesPage"></div>
+
+      <div class="alert alert--err" id="setupAlert" style="margin-top:20px"></div>
+    </div>
+
+    <!-- ============ STATE: SUCCESS ============ -->
+    <div class="state" id="stateSuccess">
+      <div class="success-icon">&#10003;</div>
+      <h1 class="gate__title">Bundle Claimed</h1>
+      <p class="gate__sub" id="successMsg">Your bundle is on its way. We'll send a heads-up before each monthly shipment.</p>
+      <button class="btn btn--ghost" onclick="buildSetup(); show('stateSetup')"><span class="btn-text">Back to My System</span></button>
+      <button class="signout" onclick="resetGate()">Sign out</button>
+    </div>
+
+  </div></div>
+
+  <p class="foot">WHEALTHY Stewards &#183; Your membership includes your monthly bundle.<br>Questions? Reach out inside the community.</p>
+</div>
+
+<!-- Checkout Modal Overlay -->
+<div class="checkout-modal" id="checkoutModal">
+  <div class="checkout-modal__backdrop" onclick="closeCheckout()"></div>
+  <div class="checkout-modal__card">
+    <button class="checkout-modal__close" onclick="closeCheckout()">&#10005;</button>
+    <div class="checkout-modal__loading" id="checkoutLoading">
+      <div class="spin"></div>
+      <p style="margin-top: 10px; font-family: var(--font-body); font-size: 14px;">Loading secure checkout...</p>
+    </div>
+    <iframe class="checkout-modal__iframe" id="checkoutIframe" src="" frameborder="0"></iframe>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===== CONFIG ===== */
+const FN = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
+const SKOOL_BASE = 'https://www.skool.com/bakndcreator/about';
+
+// The four bundles with dynamic product/mixing info matching the homepage
+const BUNDLES = [
+  {
+    key: 'genius-joe',
+    name: 'Genius Joe + Hydration',
+    tag: 'Functional mushroom coffee &#183; Morning',
+    url: 'https://whealthylabel.com/genius-joe-functional-coffee-hydration-bundle',
+    tagline: 'Your Governed Morning Bundle',
+    products: [
+      {name: 'Genius Joe', role: 'Functional Coffee', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp', desc: 'Smooth, governed caffeine with adaptogens. Replace the dependency ritual.'},
+      {name: 'Hydration Powder', role: 'Daily Foundation', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp', desc: 'Clean hydration that keeps your baseline where it needs to be.'}
+    ],
+    mixing: 'Mix 1/2 scoop of each in 16-20oz of water, or enjoy as two separate drinks. Since they are sweet and rich in flavor, a half scoop of each is perfect. Morning and all-day hydration, governed.'
+  },
+  {
+    key: 'boss',
+    name: 'Boss + Hydration',
+    tag: '10X nootropic capsules &#183; Midday',
+    url: 'https://whealthylabel.com/boss-performance-capsules-hydration-bundle',
+    tagline: 'Your Governed Performance Bundle',
+    products: [
+      {name: 'Boss Capsules', role: 'Performance Capsules', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp', desc: 'Steady, directed energy in capsule form. No mixing. No ritual. Just governance.'},
+      {name: 'Hydration Powder', role: 'Daily Foundation', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp', desc: 'Clean hydration that sustains the foundation all day.'}
+    ],
+    mixing: 'Take Boss Capsules with water in the morning or midday. Mix 1/2 scoop Hydration Powder in 16-20oz water and sip throughout the day (rich in flavor, a half scoop is plenty).'
+  },
+  {
+    key: 'genius-guice',
+    name: 'Genius Guice + Hydration',
+    tag: 'Nootropic think drink &#183; Afternoon',
+    url: 'https://whealthylabel.com/genius-guice-think-drink-powder-hydration-bundle',
+    tagline: 'Your Governed Clarity Bundle',
+    products: [
+      {name: 'Genius Guice', role: 'Think Drink', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp', desc: 'The afternoon think drink. Cognitive clarity without caffeine that follows you into the evening.'},
+      {name: 'Hydration Powder', role: 'Daily Foundation', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp', desc: 'Clean hydration that keeps the system flowing.'}
+    ],
+    mixing: 'Mix 1/2 scoop of each in 16-20oz of water for a combined clarity + hydration drink, or enjoy separately. Both are sweet and rich in flavor, so a half scoop of each is perfect. Afternoon and all-day.'
+  },
+  {
+    key: 'charge',
+    name: 'Charge + Hydration',
+    tag: 'Clean energy powder &#183; Afternoon',
+    url: 'https://whealthylabel.com/charge-powder-hydration',
+    tagline: 'Your Governed Energy Bundle',
+    products: [
+      {name: 'Charge Powder', role: 'Clean Energy', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp', desc: 'On-demand governed energy. No caffeine reload. No crash. Clean and repeatable.'},
+      {name: 'Hydration Powder', role: 'Daily Foundation', img: 'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp', desc: 'The baseline that makes everything else work better.'}
+    ],
+    mixing: 'Mix 1/2 scoop of each in 16-20oz of water for a combined energy + hydration drink, or enjoy separately. Both are sweet and rich in flavor, so a half scoop of each is perfect. Anytime you need governed energy.'
+  }
+];
+
+// Archetype mapping details (from homepage results)
+const AR = {
+  'owned-by-caffeine': {
+    n: ['Owned by', 'Caffeine'],
+    pH: "You're Not Just <em>Tired.</em>",
+    pB: "You're operating in an <strong>Owned by Caffeine</strong> pattern. The morning ritual isn't preference anymore. It's dependency. You've built your entire day around something that owns the first hour of it, and every hour after is a negotiation with what caffeine gives you and what it takes away.",
+    sH: "This Isn't <em>Weakness.</em>",
+    sB: "You didn't choose this pattern. It built itself one cup at a time over years. The dependency is chemical and behavioral, not a character flaw. You're not undisciplined. You're running an energy system that was never designed to carry the kind of responsibility you carry.",
+    sv: '73', su: '%', sl: 'of stewards carrying your kind of responsibility show this exact pattern.'
+  },
+  'wired-but-scattered': {
+    n: ['Wired but', 'Scattered'],
+    pH: "You're Not Lazy.<br>You're <em>Scattered.</em>",
+    pB: "You're operating in a <strong>Wired but Scattered</strong> pattern. You have energy. It just goes everywhere. You start the day alert and end it exhausted, but nothing landed.",
+    sH: "This Isn't a <em>Discipline</em> Problem.",
+    sB: "Stewards carrying high responsibility with fragmented energy show this exact pattern. Your system is overloaded and your energy has no governance structure. That's a systems problem, not a you problem.",
+    sv: '68', su: '%', sl: 'of high-responsibility stewards report energy that feels "busy but unproductive."'
+  },
+  'sharp-until-2pm': {
+    n: ['Sharp Until', '2PM'],
+    pH: "You're Not <em>Broken.</em>",
+    pB: "You're operating in a <strong>Sharp Until 2PM</strong> pattern. Mornings are strong. Then the collapse hits. The afternoon becomes a write-off. Evenings are about surviving until bedtime, not being present.",
+    sH: "This Isn't About<br><em>Getting Older.</em>",
+    sB: "This is a spike-crash cycle, not an age problem. Your energy peaks too hard, too early, and there is nothing sustaining the second half.",
+    sv: '81', su: '%', sl: 'of stewards in this pattern report "faking it" through the afternoon.'
+  },
+  'running-on-fumes': {
+    n: ['Running on', 'Fumes'],
+    pH: "You're Not <em>Fine.</em>",
+    pB: "You're operating in a <strong>Running on Fumes</strong> pattern. Not crashing. Just never fully on. Functioning externally while deteriorating internally. You have gotten so good at performing at 60% that nobody can tell. But you can.",
+    sH: "This Is the <em>Quietest</em> Pattern.",
+    sB: "Nobody stages an intervention for \"functional.\" But \"functional\" is not the same as \"clear.\" You have normalized a depleted baseline, and the gap between where you are and where you could be is wider than you think.",
+    sv: '77', su: '%', sl: 'of stewards in this pattern describe themselves as \"always at 60%\".'
+  },
+  'skeptical-steward': {
+    n: ['The Skeptical', 'Steward'],
+    pH: "You're Not <em>Cynical.</em>",
+    pB: "You're operating in a <strong>Skeptical Steward</strong> pattern. You have tried supplements before and been ghosted. No felt difference. Vague promises. Your guard is up because the wellness industry earned your distrust. And you are right to be skeptical.",
+    sH: "This Isn't <em>Closed-Mindedness.</em>",
+    sB: "It is earned skepticism. Most products make promises they cannot keep and rely on you forgetting to cancel. Your unwillingness to get burned again is not a flaw. It is intelligence.",
+    sv: '4', su: '', sl: 'is the average number of wellness products tried and abandoned before finding WHEALTHY.'
+  }
+};
+
+const IC = {
+  family: { t: 'You said <strong>family</strong> matters most right now. Governed energy means coming home and still being present. The version your family actually needs.' },
+  work: { t: 'You said <strong>work performance</strong> matters most right now. Governed energy means sharp decisions at 4pm, not just 9am. No more faking it through the afternoon.' },
+  faith: { t: 'You said <strong>faith and calling</strong> matter most right now. Governed energy is stewardship of the body you carry everything else with. Your calling requires a vessel that is clear, stable, and present.' },
+  all: { t: 'You said <strong>all of it</strong> matters: family, work, faith. Governed energy means having enough of yourself left to show up fully in every arena, not just the one that gets your best hours.' }
+};
+
+const bundleName = k => (BUNDLES.find(b=>b.key===k)||{}).name || k;
+
+/* ===== STATE ===== */
+let MEMBER = null;          // {email,name,identity_anchor}
+let REC = null;             // recommendation {archetype,bundle_key,...}
+let SUB = null;             // existing subscription row
+let selectedBundle = null;  // currently selected bundle key (setup)
+
+/* ===== HELPERS ===== */
+const $ = id => document.getElementById(id);
+
+function show(stateId){
+  document.querySelectorAll('.state').forEach(s=>s.classList.remove('active'));
+  $(stateId).classList.add('active');
+
+  const wrap = document.querySelector('.wrap');
+  const card = document.querySelector('.card');
+  const cardBody = document.querySelector('.card__body');
+
+  if (stateId === 'stateSetup') {
+    wrap.style.maxWidth = '1100px';
+    card.style.background = 'transparent';
+    card.style.border = 'none';
+    card.style.backdropFilter = 'none';
+    card.style.webkitBackdropFilter = 'none';
+    cardBody.style.padding = '0';
+  } else {
+    wrap.style.maxWidth = '680px';
+    card.style.background = 'rgba(15,16,18,0.85)';
+    card.style.border = '1px solid var(--border-mid)';
+    card.style.backdropFilter = 'blur(40px) saturate(1.4)';
+    card.style.webkitBackdropFilter = 'blur(40px) saturate(1.4)';
+    cardBody.style.padding = '36px 32px';
+  }
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function alertMsg(id,msg,ok){
+  const el=$(id); el.textContent=msg;
+  el.className='alert '+(ok?'alert--ok':'alert--err')+' show';
+}
+function clearAlert(id){ const el=$(id); el.className='alert'; }
+function loading(btnId,on){
+  const b=$(btnId); if(b) { b.classList.toggle('loading',on); b.disabled=on; }
+}
+function refUrl(){
+  try{ const r=new URLSearchParams(location.search).get('ref');
+    return r ? SKOOL_BASE+'?ref='+encodeURIComponent(r) : SKOOL_BASE; }
+  catch(e){ return SKOOL_BASE; }
+}
+function fmtDate(d){
+  if(!d) return '&#8212;';
+  try{ return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
+  catch(e){ return d; }
+}
+
+/* ===== INIT ===== */
+$('joinLink').href = refUrl();
+$('lockedJoin').href = refUrl();
+
+// --- PREVIEW MODE (For testing Affiliate link generator) ---
+if (new URLSearchParams(window.location.search).get('preview') === 'claimed') {
+  SUB = { status: 'active', bundle_name: 'Energy Starter', bundle_key: 'charge', next_eligible_date: new Date().toISOString(), ship_name: 'WHEALTHY Steward', ship_address1: '123 Vitality Lane', ship_city: 'Austin', ship_state: 'TX', ship_zip: '78701' };
+  MEMBER = { name: 'WHEALTHY Steward', email: 'preview@example.com' };
+  buildSetup(); 
+  show('stateSetup');
+} else {
+  const cached = localStorage.getItem('wh_steward_email');
+  if(cached){ $('gateEmail').value = cached; verify(); }
+}
+// -----------------------------------------------------------
+
+$('gateEmail').addEventListener('keydown',e=>{ if(e.key==='Enter') verify(); });
+
+/* ===== VERIFY (gate) ===== */
+async function verify(){
+  const email = $('gateEmail').value.trim().toLowerCase();
+  clearAlert('gateAlert');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){
+    alertMsg('gateAlert','Enter a valid email address.'); return;
+  }
+  loading('gateBtn',true);
+  try{
+    const r = await fetch(FN+'/get-subscription',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email})
+    });
+    const d = await r.json();
+    loading('gateBtn',false);
+
+    if(!d.verified){
+      if(d.lapsed){
+        $('lockedMsg').textContent = "Your membership looks inactive. Rejoin or renew inside the Stewards community to claim your bundle.";
+      }
+      show('stateLocked'); return;
+    }
+
+    localStorage.setItem('wh_steward_email',email);
+    MEMBER = d.member; REC = d.recommendation; SUB = d.subscription;
+
+    buildSetup(); show('stateSetup');
+  }catch(e){
+    loading('gateBtn',false);
+    alertMsg('gateAlert','Connection error. Please try again.');
+  }
+}
+window.verify = verify;
+
+/* ===== SETUP (first claim) ===== */
+function buildSetup(){
+  // --- PREVIEW MODE (For testing Affiliate link generator) ---
+  if (new URLSearchParams(window.location.search).get('preview') === 'claimed') {
+    SUB = { status: 'active', bundle_name: 'Energy Starter', bundle_key: 'charge', next_eligible_date: new Date().toISOString(), ship_name: 'WHEALTHY Steward', ship_address1: '123 Vitality Lane', ship_city: 'Austin', ship_state: 'TX', ship_zip: '78701' };
+    MEMBER = { name: 'WHEALTHY Steward', email: 'preview@example.com' };
+  }
+  // -----------------------------------------------------------
+  clearAlert('setupAlert');
+  
+  // Determine the recommended bundle from quiz vs existing subscription
+  const quizKey = (REC && REC.bundle_key) || 'charge';
+  const activeKey = (SUB && SUB.bundle_key) || null;
+  const recKey = activeKey || quizKey;
+  selectedBundle = recKey;
+
+  // ---- CLAIMED BANNER ----
+  const bannerEl = $('claimedBanner');
+  const videoEl = $('introVideo');
+  if (SUB && SUB.status === 'active') {
+    const nextDate = SUB.next_eligible_date ? fmtDate(SUB.next_eligible_date) : 'Pending';
+    const shipAddr = SUB.ship_address1 ? `${SUB.ship_name || ''}<br>${SUB.ship_address1}${SUB.ship_address2 ? ', '+SUB.ship_address2 : ''}<br>${SUB.ship_city || ''}, ${SUB.ship_state || ''} ${SUB.ship_zip || ''}` : 'Not set';
+    bannerEl.style.display = 'block';
+    bannerEl.innerHTML = `
+      <div class="claimed-banner">
+        <div class="claimed-banner__icon">&#10003;</div>
+        <h2 class="claimed-banner__title">Your ${SUB.bundle_name || bundleName(SUB.bundle_key)} Bundle Has Been Claimed</h2>
+        <p class="claimed-banner__sub">Your current order is active and included with your Stewards membership. Your next bundle ships automatically.</p>
+        <div class="claimed-banner__meta">
+          <div class="claimed-banner__meta-item">
+            <div class="claimed-banner__meta-label">Current Bundle</div>
+            <div class="claimed-banner__meta-value">${SUB.bundle_name || bundleName(SUB.bundle_key)}</div>
+          </div>
+          <div class="claimed-banner__meta-item">
+            <div class="claimed-banner__meta-label">Next Shipment</div>
+            <div class="claimed-banner__meta-value">${nextDate}</div>
+          </div>
+          <div class="claimed-banner__meta-item">
+            <div class="claimed-banner__meta-label">Status</div>
+            <div class="claimed-banner__meta-value"><span class="status-pill status-pill--on" style="font-size:12px">Active</span></div>
+          </div>
+        </div>
+
+        <!-- Next Steps & Affiliate Card -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; max-width: 500px; margin: 0 auto 32px; text-align: left;">
+          
+          <h3 style="color: var(--lime); font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">Your Next Steps to Success</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: flex-start;">
+              <div style="background: var(--lime); color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">1</div>
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Introduce Yourself</div>
+                <div style="color: var(--text-dim); font-size: 13px; line-height: 1.5;">Join the Stewards Community and make your first post. Tell us who you are and what your goals are.</div>
+              </div>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: flex-start;">
+              <div style="background: var(--lime); color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">2</div>
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Get Your Links</div>
+                <div style="color: var(--text-dim); font-size: 13px; line-height: 1.5;">Head over to your Dashboard's Affiliate Center to grab your referral links and assets.</div>
+              </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: flex-start;">
+              <div style="background: var(--lime); color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">3</div>
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Start Earning</div>
+                <div style="color: var(--text-dim); font-size: 13px; line-height: 1.5;">Share your links immediately. Just 3 active referrals gets your membership paid for!</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <div style="font-size:18px;">&#128279;</div>
+              <h4 style="color: var(--lime); font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; margin:0;">Refer 3, Get it Free</h4>
+            </div>
+            <p style="color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 16px;">We pay a massive <strong style="color: #fff;">40% recurring commission</strong> on every single person you bring into the ecosystem. Refer just 3 people and your membership is completely paid for. Grab your custom funnel links from the Dashboard and start earning today.</p>
+            <a href="https://whealthylabel.com/dashboard" class="btn" style="text-decoration:none;gap:8px; width: 100%; justify-content: center; background: rgba(204,255,0,0.1); border: 1px solid var(--lime); color: var(--lime);">
+              Get Your Affiliate Links on the Dashboard
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Info Box -->
+        <div style="margin-top:20px;margin-bottom:32px;padding:16px 20px;background:rgba(204,255,0,0.04);border:1px solid rgba(204,255,0,0.12);border-radius:12px;text-align:left;display:flex;align-items:flex-start;gap:12px;max-width:500px;margin-left:auto;margin-right:auto">
+          <span style="font-size:16px;flex-shrink:0;margin-top:1px">&#128230;</span>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.6;margin:0">Your next governance bundle will be available to claim with a verified active Stewards membership. Come back here next month to select and claim your next bundle.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="claimed-banner__actions" style="flex-direction: column; gap: 16px; max-width: 500px; margin: 0 auto;">
+
+          <button class="btn btn--ghost" onclick="retakeQuiz()" style="gap:6px; width: 100%; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Retake Energy Analysis
+          </button>
+        </div>
+      </div>
+    `;
+    if(videoEl) videoEl.style.display = 'none';
+    // Hide bundle switcher and sales page when already claimed
+    $('bundleSwitcherWrap').style.display = 'none';
+    $('setupSalesPage').innerHTML = '';
+
+
+
+    return; // Stop here &#8212; no sales page needed
+  } else {
+    bannerEl.style.display = 'none';
+    bannerEl.innerHTML = '';
+    if(videoEl) videoEl.style.display = 'block';
+    $('bundleSwitcherWrap').style.display = 'block';
+  }
+
+  // ---- PROMINENT RECOMMENDATION CARD ----
+  const recBundle = BUNDLES.find(b=>b.key===recKey);
+  const recHero = $('recHeroSlot');
+  if (recBundle) {
+    const isQuiz = !activeKey;
+    const badgeLabel = isQuiz ? 'Matched to Your Quiz Result' : 'Your Active Bundle';
+    recHero.innerHTML = `
+      <div class="rec-hero" id="recHeroCard" onclick="selectRec()">
+        <div class="rec-hero__badge">${badgeLabel}</div>
+        <div class="rec-hero__row">
+          <div class="rec-hero__radio"></div>
+          <div>
+            <div class="rec-hero__name">${recBundle.name}</div>
+            <div class="rec-hero__tag">${recBundle.tag}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- ALTERNATIVE BUNDLES (collapsed) ----
+  const altBundles = BUNDLES.filter(b=>b.key!==recKey);
+  const altSection = $('altSection');
+  altSection.innerHTML = `
+    <button class="alt-toggle" onclick="toggleAlts()">
+      Want a different bundle? <span class="alt-toggle__arrow" id="altArrow">&#9660;</span>
+    </button>
+    <div class="alt-list" id="altList">
+      ${altBundles.map(b=>`
+        <div class="bundle-opt${b.key===selectedBundle?' sel':''}" onclick="selectAlt('${b.key}')">
+          <div class="bundle-opt__radio"></div>
+          <div><div class="bundle-opt__name">${b.name}</div><div class="bundle-opt__tag">${b.tag}</div></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Render sales page contents
+  renderSalesPage(selectedBundle);
+}
+
+function selectRec(){
+  const recKey = ((SUB && SUB.bundle_key) || (REC && REC.bundle_key) || 'charge');
+  selectedBundle = recKey;
+  // Reset hero card to selected state
+  const heroCard = $('recHeroCard');
+  if(heroCard){ heroCard.style.borderColor = 'rgba(204,255,0,0.35)'; }
+  // Deselect alternatives
+  document.querySelectorAll('#altList .bundle-opt').forEach(el=>el.classList.remove('sel'));
+  renderSalesPage(selectedBundle);
+}
+window.selectRec = selectRec;
+
+function selectAlt(key){
+  selectedBundle = key;
+  // Dim the hero card border to show it's not selected
+  const heroCard = $('recHeroCard');
+  if(heroCard){ heroCard.style.borderColor = 'var(--border-mid)'; }
+  // Highlight the selected alternative
+  const altBundles = BUNDLES.filter(b=>b.key!==((SUB && SUB.bundle_key) || (REC && REC.bundle_key) || 'charge'));
+  document.querySelectorAll('#altList .bundle-opt').forEach((el,i)=>{
+    el.classList.toggle('sel', altBundles[i] && altBundles[i].key===key);
+  });
+  renderSalesPage(key);
+}
+window.selectAlt = selectAlt;
+
+function toggleAlts(){
+  const list = $('altList');
+  const arrow = $('altArrow');
+  list.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+window.toggleAlts = toggleAlts;
+
+function renderSalesPage(bundleKey) {
+  const bundle = BUNDLES.find(b=>b.key===bundleKey);
+  if(!bundle) return;
+  
+  const archKey = (REC && REC.archetype) || 'owned-by-caffeine';
+  const d = AR[archKey] || AR['owned-by-caffeine'];
+  
+  const idAnchor = (MEMBER && MEMBER.identity_anchor) || 'all';
+  const id = IC[idAnchor] || IC.all;
+  
+  const PROOF_MAP={
+    'owned-by-caffeine':{quote:'I didn\'t feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup.',name:'Marcus T.',role:'Sales Director, Father of 3',emoji:'&#128104;'},
+    'wired-but-scattered':{quote:'I still had energy but it finally had <strong>direction.</strong> I stopped spinning and started finishing things.',name:'Chris M.',role:'Builder, Father',emoji:'&#127959;&#65039;'},
+    'sharp-until-2pm':{quote:'I still had energy at <strong>4pm without the crash.</strong> I didn\'t realize how normalized the afternoon drop was.',name:'Daniel R.',role:'Founder, Husband',emoji:'&#128104;&#8205;&#128188;'},
+    'running-on-fumes':{quote:'I noticed I was <strong>more patient after work.</strong> That\'s not a supplement effect. That\'s a rhythm shift.',name:'Pastor Jerome W.',role:'Ministry Leader, Dad',emoji:'&#9962;'},
+    'skeptical-steward':{quote:'I\'ve tried everything. This is the first time I could actually <strong>name what changed.</strong> Day 5 was real.',name:'Kevin W.',role:'Operations Manager, Dad of 2',emoji:'&#128737;&#65039;'}
+  };
+  const proof = PROOF_MAP[archKey] || PROOF_MAP['owned-by-caffeine'];
+
+  const container = $('setupSalesPage');
+  container.innerHTML = `
+<div class="result-container">
+
+  <!-- ===== 1. PATTERN HERO ===== -->
+  <div class="result-hero-inner">
+    <div class="result-hero-inner__orb"></div>
+    <div style="position:relative;z-index:1">
+      <div class="result-hero-inner__eyebrow">
+        <span style="width:5px;height:5px;background:var(--lime);border-radius:50%"></span>
+        Your Energy Pattern
+      </div>
+      <p class="result-hero-inner__label">Based on your quiz, you matched with</p>
+      <h1 class="result-hero-inner__name">${d.n[0]}<br><em>${d.n[1]}</em></h1>
+    </div>
+  </div>
+
+  <!-- ===== 2. PATTERN BRIEF ===== -->
+  <div style="padding:0 0 48px">
+    <div class="pattern-brief">
+      <div class="pattern-brief__card">
+        <div class="pattern-brief__headline">${d.pH.replace(/<\/?em>/g,'')}</div>
+        <p class="pattern-brief__body">${d.pB}</p>
+        <div class="pattern-brief__stat">
+          <strong>${d.sv}${d.su}</strong>
+          <span>${d.sl}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3. IDENTITY CALLOUT ===== -->
+  <div style="padding:0 24px 48px;max-width:584px;margin:0 auto">
+    <div class="identity-callout__card" style="display:block;text-align:left;max-width:none">
+      <p class="identity-callout__text">${id.t}</p>
+    </div>
+  </div>
+
+  <!-- ===== 4. THE SYSTEM ===== -->
+  <div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div style="text-align:center;margin-bottom:36px;padding:0 24px">
+      <p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px">Your Governance System</p>
+      <h2 style="font-family:var(--font-display);font-size:clamp(28px,5vw,44px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:.95;margin-bottom:10px">What's Waiting <span style="color:var(--lime)">Inside.</span></h2>
+      <p style="font-size:14px;color:var(--text-muted);max-width:460px;margin:0 auto;line-height:1.6">Matched to your ${d.n.join(' ')} result. This is the system that ships to you every month.</p>
+    </div>
+
+    <!-- WHAT'S INCLUDED -->
+    <div class="included-grid" style="margin-bottom:40px">
+      ${bundle.products.map(p=>`
+        <div class="included-item">
+          <img class="included-item__img" src="${p.img}" alt="${p.name}">
+          <div class="included-item__name">${p.name}</div>
+          <div class="included-item__role">${p.role}</div>
+          <p class="included-item__desc">${p.desc}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- HOW TO USE -->
+    <div style="max-width:560px;margin:0 auto 40px;padding:0 24px">
+      <div class="bundle-card__mixing"><strong>How to use:</strong> ${bundle.mixing}</div>
+    </div>
+
+    <!-- ===== 5. VALUE STACK ===== -->
+    <div class="value-stack" style="margin-bottom:40px">
+      <div class="value-stack__title">What You're Probably Spending Now</div>
+      <div class="value-stack__item">
+        <div class="value-stack__name"><strong>Daily coffee habit</strong><br>2-3 cups, cafe or home brew beans</div>
+        <div class="value-stack__price value-stack__price--strike">$120/mo</div>
+      </div>
+      <div class="value-stack__item">
+        <div class="value-stack__name"><strong>Energy drinks</strong><br>The afternoon fix that crashes you by 4pm</div>
+        <div class="value-stack__price value-stack__price--strike">$75/mo</div>
+      </div>
+      <div class="value-stack__item">
+        <div class="value-stack__name"><strong>Supplements that ghost you</strong><br>The ones you stopped buying after 60 days</div>
+        <div class="value-stack__price value-stack__price--strike">$45/mo</div>
+      </div>
+      <div class="value-stack__total">
+        <div class="value-stack__total-label">Total Broken Pattern Cost</div>
+        <div class="value-stack__total-price">$240/mo</div>
+      </div>
+      <div class="value-stack__your-price">
+        <div class="value-stack__your-label">Your Stewards Membership Covers This</div>
+        <div class="value-stack__your-amount">$9.95<sub style="font-size:12px;font-weight:500;text-transform:none">/shipping</sub></div>
+        <p class="value-stack__per-day">Covered by your monthly membership ($79/mo) &#8212; just pay $9.95 shipping.</p>
+        <div class="value-stack__savings">Less than what the broken pattern already costs you</div>
+      </div>
+    </div>
+
+    <!-- ===== 6. PRIMARY CTA ===== -->
+    <div style="text-align:center;padding:0 24px;margin-bottom:40px">
+      <button class="btn-primary--arc" id="claimBtn" onclick="claim()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center;margin:0 auto">
+        <span class="btn-text">Claim My ${bundle.name} Bundle</span>
+        <span class="spin"></span>
+      </button>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.6">
+        Included with membership ($79/mo) + $9.95 Shipping
+      </p>
+    </div>
+
+    <!-- ===== 7. GUARANTEES ===== -->
+    <div class="guarantee-row">
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">&#128666;</div>
+        <div class="guarantee-item__title">Ships for $9.95</div>
+        <div class="guarantee-item__desc">Your system ships every month with zero delivery fees.</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">&#128260;</div>
+        <div class="guarantee-item__title">Cancel Anytime</div>
+        <div class="guarantee-item__desc">No commitments. Adjust, pause, or cancel whenever you need.</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">&#9889;</div>
+        <div class="guarantee-item__title">Feel It In 14 Days</div>
+        <div class="guarantee-item__desc">Noticeable, stable clarity or your money back.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 8. SOCIAL PROOF ===== -->
+  <div style="padding:48px 0">
+    <p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:20px;text-align:center">Same Pattern. Real Result.</p>
+    <div class="result-proof">
+      <div class="result-proof__card">
+        <p class="result-proof__quote">"${proof.quote}"</p>
+        <div class="result-proof__meta">
+          <div class="result-proof__avatar">${proof.emoji}</div>
+          <div>
+            <div class="result-proof__name">${proof.name}</div>
+            <div class="result-proof__role">${proof.role}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 9. DAILY ROUTINE SYSTEM ===== -->
+  <div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div style="text-align:center;margin-bottom:32px;padding:0 24px">
+      <p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px">Your Governed Day</p>
+      <h2 style="font-family:var(--font-display);font-size:clamp(24px,4.5vw,40px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.0">Every Part of Your Day.<br><span style="color:var(--lime)">Protected.</span></h2>
+    </div>
+    <div class="routine-grid" style="max-width:800px;grid-template-columns:repeat(3,1fr)">
+      <div class="routine-block">
+        <div class="routine-block__time">Morning</div>
+        <div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">01</div>
+        <h3 class="routine-block__title">Start Clear</h3>
+        <p class="routine-block__desc">No fog. No desperation. You start as yourself.</p>
+        <span class="routine-block__product">Functional Coffee</span>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:8px">Focus</div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-block__time">Midday</div>
+        <div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">02</div>
+        <h3 class="routine-block__title">Stay Stable</h3>
+        <p class="routine-block__desc">Sharp for the decisions that matter.</p>
+        <span class="routine-block__product">Performance Capsules</span>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:8px">Family</div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-block__time">Afternoon</div>
+        <div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">03</div>
+        <h3 class="routine-block__title">Think Again</h3>
+        <p class="routine-block__desc">Focus without evening caffeine.</p>
+        <span class="routine-block__product">Genius Guice</span>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:8px">Faith</div>
+      </div>
+      <div class="routine-block">
+        <div class="routine-block__time">Anytime</div>
+        <div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">04</div>
+        <h3 class="routine-block__title">Stay Charged</h3>
+        <p class="routine-block__desc">On-demand. No crash. Repeatable.</p>
+        <span class="routine-block__product">Charge Powder</span>
+      </div>
+      <div class="routine-block">
+        <div class="routine-block__time">All Day</div>
+        <div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">05</div>
+        <h3 class="routine-block__title">Stay Flowing</h3>
+        <p class="routine-block__desc">The baseline that makes everything else work better.</p>
+        <span class="routine-block__product">Hydration Powder</span>
+      </div>
+      <div class="routine-block">
+        <div class="routine-block__time">Evening</div>
+        <div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">06</div>
+        <h3 class="routine-block__title">Still Here</h3>
+        <p class="routine-block__desc">Come home with something left.</p>
+        <span class="routine-block__product">Governed Day</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 10. COMMUNITY BONUS ===== -->
+  <div style="padding:48px 0">
+    <p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px;text-align:center">Part of Your Membership</p>
+    <div class="skool-invite">
+      <div class="skool-invite__card">
+        <div class="skool-invite__emoji" style="font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--lime)">S</div>
+        <h3 class="skool-invite__title">The Products Govern Your Energy.<br><span style="color:var(--lime)">The Community Governs Your Growth.</span></h3>
+        <p class="skool-invite__desc">$79 a month. Your governance system delivered to your door, and a community of stewards who carry the same weight standing beside you. Bible, body, and business. The bundle is the system. The Stewards are the reason you stay.</p>
+        <a href="${refUrl()}" target="_blank" rel="noopener" class="skool-invite__btn">Preview the Community &#8594;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 11. FINAL CTA ===== -->
+  <div class="result-final-cta">
+    <div class="result-final-cta__bg"></div>
+    <div class="result-final-cta__content">
+      <h2 class="result-final-cta__headline">The Pattern<br>Has a Name.<br><em>You're Not Alone in It.</em></h2>
+      <p class="result-final-cta__sub">One membership. Your ${d.n.join(' ')} system delivered every month, and people who carry the same weight standing with you. Claim your bundle and protect your day.</p>
+      <button class="btn-primary--arc" onclick="claim()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center;margin:0 auto">
+        Claim My ${bundle.name} Bundle &#8212; $9.95 Shipping
+      </button>
+      <div class="result-final-cta__chips">
+        <span class="chip"><span class="chip__dot"></span>Cancel Anytime</span>
+        <span class="chip"><span class="chip__dot"></span>$9.95 Shipping</span>
+        <span class="chip"><span class="chip__dot"></span>Matched to ${d.n.join(' ')}</span>
+      </div>
+      <button class="result-retake" onclick="retakeQuiz()">Retake the Energy Pattern Analysis</button>
+    </div>
+  </div>
+
+  <!-- ===== 12. FOOTER ===== -->
+  <div class="result-footer">
+    <div class="result-footer__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div>
+    <p class="result-footer__copy">&copy; 2026 WHEALTHY Label. All rights reserved. Not evaluated by the FDA. Not intended to diagnose, treat, cure, or prevent any disease.</p>
+  </div>
+
+</div>
+  `;
+}
+
+function openCheckout(url) {
+  const modal = $('checkoutModal');
+  const iframe = $('checkoutIframe');
+  const loader = $('checkoutLoading');
+  
+  loader.classList.remove('hidden');
+  iframe.src = url;
+  
+  iframe.onload = () => {
+    loader.classList.add('hidden');
+  };
+  
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeCheckout() {
+  const modal = $('checkoutModal');
+  const iframe = $('checkoutIframe');
+  
+  modal.classList.remove('open');
+  document.body.classList.remove('modal-open');
+  iframe.src = '';
+  loading('claimBtn', false);
+}
+window.closeCheckout = closeCheckout;
+
+// Baknd handles the order confirmation redirect natively after checkout.
+// No postMessage listener needed.
+
+async function claim(){
+  clearAlert('setupAlert');
+  if(!selectedBundle){ alertMsg('setupAlert','Pick a bundle to claim.'); return; }
+  const b = BUNDLES.find(x => x.key === selectedBundle);
+  if(!b || !b.url){ alertMsg('setupAlert','Invalid bundle selected.'); return; }
+
+  loading('claimBtn',true);
+  const separator = b.url.includes('?') ? '&' : '?';
+  const redirectUrl = b.url + separator + 'email=' + encodeURIComponent(MEMBER.email);
+  
+  openCheckout(redirectUrl);
+}
+window.claim = claim;
+
+function retakeQuiz(){
+  const email = (MEMBER && MEMBER.email) ? encodeURIComponent(MEMBER.email) : '';
+  window.location.href = 'https://whealthylabel.com/' + (email ? '?email=' + email + '&retake=true' : '');
+}
+window.retakeQuiz = retakeQuiz;
+
+/* ===== SHIPPING EDIT ===== */
+function toggleShipEdit(){
+  const form = $('shipForm');
+  const display = $('shipDisplay');
+  const btn = $('shipToggleBtn');
+  if(form.classList.contains('open')){
+    form.classList.remove('open');
+    display.style.display = 'block';
+    btn.textContent = 'Edit';
+  } else {
+    form.classList.add('open');
+    display.style.display = 'none';
+    btn.textContent = 'Cancel';
+  }
+}
+window.toggleShipEdit = toggleShipEdit;
+
+async function saveShipping(){
+  const alert$ = $('shipAlert');
+  alert$.className = 'alert';
+  const name = $('editShipName').value.trim();
+  const addr1 = $('editShipAddr1').value.trim();
+  const city = $('editShipCity').value.trim();
+  const state = $('editShipState').value.trim();
+  const zip = $('editShipZip').value.trim();
+  if(!addr1 || !city || !state || !zip){
+    alertMsg('shipAlert','Please fill in address, city, state, and ZIP.'); return;
+  }
+  loading('saveShipBtn',true);
+  try{
+    const r = await fetch(FN+'/update-subscription',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        email: MEMBER.email,
+        shipping: {
+          name: name,
+          address1: addr1,
+          address2: $('editShipAddr2').value.trim(),
+          city: city,
+          state: state,
+          zip: zip,
+          phone: $('editShipPhone').value.trim(),
+          country: 'US'
+        }
+      })
+    });
+    const d = await r.json();
+    loading('saveShipBtn',false);
+    if(d.success){
+      // Update local SUB
+      SUB.ship_name = name; SUB.ship_address1 = addr1;
+      SUB.ship_address2 = $('editShipAddr2').value.trim();
+      SUB.ship_city = city; SUB.ship_state = state; SUB.ship_zip = zip;
+      SUB.ship_phone = $('editShipPhone').value.trim();
+      // Update display
+      const newAddr = `${name}<br>${addr1}${SUB.ship_address2 ? ', '+SUB.ship_address2 : ''}<br>${city}, ${state} ${zip}`;
+      $('shipDisplay').innerHTML = newAddr;
+      toggleShipEdit();
+      alertMsg('shipAlert','Address updated successfully!',true);
+      $('shipAlert').className = 'alert alert--ok show';
+      setTimeout(()=>{ $('shipAlert').className='alert'; }, 3000);
+    } else {
+      alertMsg('shipAlert', d.error || 'Failed to update. Try again.');
+    }
+  }catch(e){
+    loading('saveShipBtn',false);
+    alertMsg('shipAlert','Connection error. Please try again.');
+  }
+}
+window.saveShipping = saveShipping;
+
+/* ===== SHARED ===== */
+function friendlyErr(code){
+  const m={not_a_member:'We couldn\'t verify your membership.',membership_inactive:'Your membership looks inactive. Renew inside the community to claim.'};
+  return m[code]||'Something went wrong. Please try again.';
+}
+window.resetGate = function(){
+  localStorage.removeItem('wh_steward_email');
+  MEMBER=REC=SUB=null; selectedBundle=null;
+  $('gateEmail').value=''; clearAlert('gateAlert');
+  show('stateGate');
+};
+
+/* ===== AFFILIATE GENERATOR ===== */
+window.generateAffiliateLink = async function() {
+  const btn = $('generateAffiliateBtn');
+  const input = $('skoolLinkInput');
+  const alertEl = $('affiliateAlert');
+  const resEl = $('affiliateResult');
+  const linkText = $('generatedLinkText');
+  
+  alertEl.className = 'alert';
+  alertEl.innerHTML = '';
+  resEl.classList.remove('show');
+
+  const val = input.value.trim();
+  if (!val) {
+    alertEl.className = 'alert show alert--err';
+    alertEl.innerHTML = 'Please paste your Skool link first.';
+    return;
+  }
+
+  let refId = '';
+  try {
+    const url = new URL(val);
+    refId = url.searchParams.get('ref');
+  } catch(e) {
+    // Check if they pasted just the ID
+    const match = val.match(/ref=([a-zA-Z0-9]+)/);
+    if (match) refId = match[1];
+    else if (val.length === 32 && !val.includes('/')) refId = val;
+  }
+
+  if (!refId) {
+    alertEl.className = 'alert show alert--err';
+    alertEl.innerHTML = 'Invalid Skool link. Make sure it contains ?ref=...';
+    return;
+  }
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(FN + '/register-affiliate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: MEMBER?.name || MEMBER?.email?.split('@')[0] || 'Member',
+        email: MEMBER?.email,
+        ref_id: refId
+      })
+    });
+    const data = await res.json();
+    
+    if (!res.ok) throw new Error(data.error || 'Failed to register affiliate');
+
+    const generated = `https://whealthylabel.com/?ref=${refId}`;
+    linkText.innerText = generated;
+    resEl.classList.add('show');
+    
+    alertEl.className = 'alert show alert--ok';
+    alertEl.innerHTML = 'Link generated successfully!';
+  } catch (err) {
+    console.error(err);
+    alertEl.className = 'alert show alert--err';
+    alertEl.innerHTML = err.message || 'Something went wrong. Please try again.';
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+};
+
+window.copyAffiliateLink = function() {
+  const text = $('generatedLinkText').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const copyBtn = document.querySelector('.affiliate-gen__copy');
+    const orig = copyBtn.innerHTML;
+    copyBtn.innerHTML = 'Copied! &#10003;';
+    setTimeout(() => { copyBtn.innerHTML = orig; }, 2000);
+  });
+};
+
+window.shareToX = function() {
+  const text = encodeURIComponent('I just joined the Stewards membership and unlocked my energy protocol. Find out your pattern and get your governance bundle here:');
+  const url = encodeURIComponent($('generatedLinkText').innerText);
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+};
+
+window.shareToFB = function() {
+  const url = encodeURIComponent($('generatedLinkText').innerText);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+};
+
+window.shareToWA = function() {
+  const text = encodeURIComponent('I just joined the Stewards membership and unlocked my energy protocol. Find out your pattern and get your governance bundle here: ');
+  const url = encodeURIComponent($('generatedLinkText').innerText);
+  window.open(`https://api.whatsapp.com/send?text=${text}${url}`, '_blank');
+};
+
+})();
+</script>
+</div>
+</body>
+</html>
+

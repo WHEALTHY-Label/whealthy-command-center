@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="wh-oswald">
+/* Oswald 700 embedded, lifted from whealthy-dashboard.html 2026-07-15.
+   Headers MUST be Oswald. Relying on the fonts.googleapis.com request
+   alone means that when baknd blocks, strips or delays it, every header
+   silently falls back to sans-serif and the condensed face is lost.
+   That is exactly what happened on whealthy-invite.html. Do not remove
+   this in favour of the network request. */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url(data:font/woff2;base64,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) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+</style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WHEALTHY &mdash; 365-Day Bible Study</title>
+<meta name="description" content="Read through the entire Bible in one year with the WHEALTHY 365-Day Bible Study tracker. Start any day, track your progress, and build a daily reading habit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+/* ── BAKND/SIMVOLY ISOLATION RESET ── */
+#whealthy-app-embed h1,#whealthy-app-embed h2,#whealthy-app-embed h3,
+#whealthy-app-embed p,#whealthy-app-embed span,#whealthy-app-embed a,
+#whealthy-app-embed button,#whealthy-app-embed input,#whealthy-app-embed select,#whealthy-app-embed textarea{
+  -webkit-text-fill-color:currentcolor !important;
+}
+#whealthy-app-embed h1,#whealthy-app-embed h2,#whealthy-app-embed h3,
+#whealthy-app-embed h4,#whealthy-app-embed h5,#whealthy-app-embed p,
+#whealthy-app-embed li{color:var(--text)}
+#whealthy-app-embed a{color:var(--lime)}
+#whealthy-app-embed button,#whealthy-app-embed .btn{background:var(--lime);color:var(--black)}
+#whealthy-app-embed .btn--ghost{background:var(--glass-hi);color:var(--lime);border-color:var(--border-mid)}
+#whealthy-app-embed input,#whealthy-app-embed select,#whealthy-app-embed textarea{background:var(--glass-mid);color:var(--text);border-color:var(--border-mid)}
+
+/* ── CSS VARIABLES ── */
+:root{
+  --black:#080809;
+  --charcoal:#0f1012;
+  --graphite:#161719;
+  --graphite-light:#1e2024;
+  --surface:#222428;
+  --border:rgba(255,255,255,0.07);
+  --border-mid:rgba(255,255,255,0.12);
+  --border-hi:rgba(255,255,255,0.2);
+  --glass:rgba(255,255,255,0.04);
+  --glass-mid:rgba(255,255,255,0.07);
+  --glass-hi:rgba(255,255,255,0.10);
+  --lime:#ccff00;
+  --lime-dim:rgba(204,255,0,0.15);
+  --lime-glow:rgba(204,255,0,0.35);
+  --lime-soft:rgba(204,255,0,0.08);
+  --text:#f0f1f3;
+  --text-muted:rgba(240,241,243,0.60);
+  --text-dim:rgba(240,241,243,0.38);
+  --font-display:'Oswald',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --radius-sm:8px;
+  --radius:14px;
+  --radius-lg:22px;
+  --radius-xl:32px;
+  --transition:0.3s cubic-bezier(0.23,1,0.32,1);
+  --transition-fast:0.18s cubic-bezier(0.23,1,0.32,1);
+}
+
+/* ── RESETS ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  font-family:var(--font-body);background:var(--black);color:var(--text);
+  line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  -webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;
+  min-height:100svh;
+}
+h1,h2,h3,p{overflow-wrap:break-word;word-wrap:break-word}
+a,button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+button{font-family:var(--font-body);cursor:pointer;border:none}
+input{font-family:var(--font-body)}
+a{color:var(--lime);text-decoration:none;transition:opacity var(--transition-fast)}
+a:hover{opacity:0.8}
+
+/* ── BACKGROUND ── */
+.bg-noise{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");opacity:.5}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 100%)}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.bg-orb--1{width:500px;height:500px;background:radial-gradient(circle,rgba(204,255,0,0.06) 0%,transparent 70%);top:-120px;right:-80px;animation:float-orb 10s ease-in-out infinite}
+.bg-orb--2{width:350px;height:350px;background:radial-gradient(circle,rgba(204,255,0,0.04) 0%,transparent 70%);bottom:-60px;left:-100px;animation:float-orb 14s ease-in-out infinite reverse}
+@keyframes float-orb{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-25px) translateX(12px)}66%{transform:translateY(18px) translateX(-8px)}}
+
+/* ── MAIN WRAPPER ── */
+.app-wrapper{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+.app-header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,8,9,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;
+}
+.header-inner{
+  max-width:900px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px;
+}
+.header-logo{
+  font-family:var(--font-display);font-weight:700;font-size:22px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text);
+  line-height:1;
+}
+.header-logo span{color:var(--lime)}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-auth{font-size:13px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+.header-auth a{font-weight:600;font-size:12px;letter-spacing:.04em}
+.header-auth-email{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--text-dim)}
+
+/* Settings */
+.settings-wrap{position:relative}
+.btn-settings{
+  background:none !important;color:var(--text-dim) !important;padding:8px;border-radius:var(--radius-sm);
+  transition:color var(--transition-fast);display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;
+}
+.btn-settings:hover{color:var(--text) !important}
+.btn-settings svg{width:20px;height:20px}
+.settings-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--graphite);border:1px solid var(--border-mid);border-radius:var(--radius);
+  min-width:200px;overflow:hidden;
+  opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:opacity var(--transition-fast),transform var(--transition-fast),visibility var(--transition-fast);
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+}
+.settings-dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
+.settings-item{
+  display:block;width:100%;padding:12px 16px;background:none !important;
+  color:var(--text-muted) !important;font-size:13px;font-weight:500;text-align:left;
+  transition:background var(--transition-fast),color var(--transition-fast);
+  border-bottom:1px solid var(--border);
+}
+.settings-item:last-child{border-bottom:none}
+.settings-item:hover{background:var(--glass-mid) !important;color:var(--text) !important}
+.settings-item--danger{color:rgba(255,77,77,0.8) !important}
+.settings-item--danger:hover{color:#ff4d4d !important;background:rgba(255,77,77,0.08) !important}
+
+/* ── MAIN CONTENT ── */
+.main-content{flex:1;padding:24px 20px 40px;max-width:900px;width:100%;margin:0 auto}
+
+/* ── HERO CARD ── */
+.hero-card{
+  background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:32px 28px;text-align:center;
+  animation:card-in 0.6s cubic-bezier(0.23,1,0.32,1);
+}
+@keyframes card-in{0%{opacity:0;transform:translateY(16px) scale(0.98)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
+.week-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:100px;
+  background:var(--lime-soft);
+  font-family:var(--font-display);font-weight:600;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--lime);
+  margin-bottom:20px;
+}
+.week-pill .week-theme{font-weight:400;opacity:0.7;font-family:var(--font-body);letter-spacing:.02em;text-transform:none;font-size:11px}
+
+.hero-day{
+  font-family:var(--font-display);font-weight:700;font-size:64px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--text);
+  line-height:1;margin-bottom:8px;
+}
+.hero-ref{
+  font-family:var(--font-display);font-weight:600;font-size:24px;
+  letter-spacing:.04em;color:var(--lime);margin-bottom:8px;
+}
+.hero-title{
+  font-family:var(--font-body);font-weight:400;font-size:16px;
+  color:var(--text-muted);margin-bottom:16px;
+}
+
+/* Scripture reader */
+.scripture-section{margin-bottom:24px;text-align:left}
+.btn-read-passage{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--lime-soft) !important;color:var(--lime) !important;
+  border:1px solid rgba(204,255,0,0.15) !important;
+  padding:10px 20px;border-radius:100px;
+  font-family:var(--font-display);font-weight:600;font-size:12px;
+  letter-spacing:.08em;text-transform:uppercase;
+  transition:var(--transition);cursor:pointer;margin:0 auto 16px;display:flex;
+}
+.btn-read-passage:hover{background:var(--lime-dim) !important;border-color:rgba(204,255,0,0.3) !important}
+.btn-read-passage svg{width:16px;height:16px}
+.btn-read-passage.active{background:var(--glass-mid) !important;color:var(--text-muted) !important;border-color:var(--border-mid) !important}
+.scripture-reader{
+  display:none;margin-top:0;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+}
+.scripture-reader.open{display:block;animation:fade-in 0.3s ease}
+.scripture-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--border);
+}
+.scripture-header-title{
+  font-family:var(--font-display);font-weight:600;font-size:14px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--lime);
+}
+.scripture-translation{
+  font-family:var(--font-body);font-size:11px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);
+  padding:4px 10px;background:var(--glass-mid);border-radius:100px;
+}
+.scripture-body{
+  padding:20px;max-height:60vh;overflow-y:auto;
+  font-family:var(--font-body);font-size:16px;line-height:1.85;
+  color:var(--text);-webkit-overflow-scrolling:touch;
+}
+.scripture-body::-webkit-scrollbar{width:6px}
+.scripture-body::-webkit-scrollbar-track{background:transparent}
+.scripture-body::-webkit-scrollbar-thumb{background:var(--border-mid);border-radius:3px}
+.scripture-body::-webkit-scrollbar-thumb:hover{background:var(--border-hi)}
+.scripture-body .verse-num{
+  font-family:var(--font-display);font-weight:700;font-size:11px;
+  color:var(--lime);vertical-align:super;margin-right:4px;opacity:0.7;
+  letter-spacing:.02em;
+}
+.scripture-body p{margin-bottom:12px;text-align:left}
+.scripture-loading{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:40px 20px;color:var(--text-dim);font-size:14px;
+}
+.scripture-loading .spin{width:18px;height:18px;border:2px solid var(--border-mid);border-top-color:var(--lime);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scripture-error{
+  padding:24px 20px;text-align:center;color:var(--text-dim);font-size:14px;line-height:1.6;
+}
+.scripture-error a{color:var(--lime);font-weight:600}
+
+/* Completion toggle */
+.toggle-wrap{margin-bottom:28px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.toggle-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:none !important;
+  border:2px solid var(--border-mid) !important;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);position:relative;overflow:visible;
+  cursor:pointer;
+}
+.toggle-btn svg{width:32px;height:32px;opacity:0;transition:opacity var(--transition-fast);color:var(--black)}
+.toggle-btn.completed{
+  background:var(--lime) !important;
+  border-color:var(--lime) !important;
+  box-shadow:0 0 30px var(--lime-glow),0 0 60px rgba(204,255,0,0.15);
+}
+.toggle-btn.completed svg{opacity:1}
+.toggle-btn:hover:not(.scroll-locked){border-color:var(--lime) !important;transform:scale(1.05)}
+.toggle-btn.completed:hover{transform:scale(1.08)}
+@keyframes toggle-pop{0%{transform:scale(0.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.toggle-btn.just-toggled{animation:toggle-pop 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+
+/* Scroll-gate locked state */
+.toggle-btn.scroll-locked{
+  opacity:0.3;cursor:not-allowed;
+  border-color:var(--border) !important;
+  pointer-events:none;
+}
+.toggle-btn.scroll-locked:hover{transform:none;border-color:var(--border) !important}
+
+/* Scroll hint label */
+.scroll-gate-hint{
+  display:none;align-items:center;gap:6px;
+  font-family:var(--font-body);font-size:12px;font-weight:500;
+  color:var(--text-dim);letter-spacing:.02em;
+  animation:hint-pulse 2s ease-in-out infinite;
+}
+.scroll-gate-hint.visible{display:flex}
+.scroll-gate-hint svg{width:14px;height:14px;color:var(--lime);flex-shrink:0}
+@keyframes hint-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+
+/* Scroll-gate unlocked animation */
+@keyframes gate-unlock{
+  0%{opacity:0.3;transform:scale(0.9)}
+  50%{opacity:1;transform:scale(1.12);border-color:var(--lime)}
+  100%{opacity:1;transform:scale(1)}
+}
+.toggle-btn.just-unlocked{animation:gate-unlock 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+
+/* Scripture scroll progress bar */
+.scripture-scroll-progress{
+  height:3px;background:var(--glass-mid);
+  border-radius:0 0 var(--radius-lg) var(--radius-lg);
+  overflow:hidden;display:none;
+}
+.scripture-reader.open .scripture-scroll-progress{display:block}
+.scripture-scroll-fill{
+  height:100%;width:0%;background:var(--lime);
+  border-radius:2px;transition:width 0.15s ease-out;
+}
+
+/* Navigation */
+.day-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:24px}
+.nav-arrow{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--glass-mid) !important;color:var(--text-muted) !important;
+  border:1px solid var(--border) !important;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition-fast);
+}
+.nav-arrow:hover:not(:disabled){background:var(--glass-hi) !important;color:var(--text) !important;border-color:var(--border-mid) !important}
+.nav-arrow:disabled{opacity:0.25;cursor:not-allowed}
+.nav-arrow svg{width:18px;height:18px}
+.nav-label{font-family:var(--font-display);font-weight:500;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);min-width:120px}
+
+/* Progress bar */
+.progress-wrap{margin-bottom:20px}
+.progress-track{
+  width:100%;height:4px;border-radius:2px;
+  background:rgba(255,255,255,0.07);overflow:hidden;
+}
+.progress-fill{
+  height:100%;border-radius:2px;
+  background:var(--lime);
+  transition:width 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+
+/* Stats row */
+.stats-row{display:flex;align-items:center;justify-content:center;gap:24px}
+.stat{
+  font-family:var(--font-display);font-weight:600;font-size:14px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);
+  display:flex;align-items:center;gap:6px;
+}
+.stat-icon{color:var(--lime);font-size:16px;display:flex;align-items:center}
+.stat-icon svg{width:16px;height:16px}
+
+/* ── CALENDAR TOGGLE ── */
+.calendar-toggle-wrap{text-align:center;margin:32px 0 24px}
+.btn-calendar-toggle{
+  background:var(--glass-mid) !important;color:var(--text-muted) !important;
+  border:1px solid var(--border) !important;
+  padding:12px 24px;border-radius:100px;
+  font-family:var(--font-display);font-weight:600;font-size:13px;
+  letter-spacing:.08em;text-transform:uppercase;
+  transition:var(--transition);display:inline-flex;align-items:center;gap:8px;
+}
+.btn-calendar-toggle:hover{background:var(--glass-hi) !important;color:var(--text) !important;border-color:var(--border-mid) !important}
+.btn-calendar-toggle svg{width:16px;height:16px;transition:transform var(--transition)}
+.btn-calendar-toggle.active svg{transform:rotate(180deg)}
+
+/* ── CALENDAR GRID ── */
+.calendar-grid{display:none;margin-top:8px}
+.calendar-grid.open{display:block;animation:fade-in 0.4s ease}
+@keyframes fade-in{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+
+.week-section{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;
+  transition:border-color var(--transition-fast);
+}
+.week-section:hover{border-color:var(--border-mid)}
+.week-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;cursor:pointer;
+  transition:background var(--transition-fast);
+  gap:12px;
+}
+.week-header:hover{background:var(--glass-mid)}
+.week-header-left{display:flex;align-items:center;gap:10px;min-width:0}
+.week-label{
+  font-family:var(--font-display);font-weight:700;font-size:15px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text);
+  white-space:nowrap;
+}
+.week-theme-label{
+  font-family:var(--font-body);font-size:12px;font-weight:400;
+  color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.week-header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.week-count{
+  font-family:var(--font-display);font-weight:600;font-size:13px;
+  letter-spacing:.06em;color:var(--text-dim);
+}
+.week-count.all-done{color:var(--lime)}
+.week-chevron{
+  color:var(--text-dim);transition:transform var(--transition);
+  display:flex;align-items:center;
+}
+.week-chevron svg{width:16px;height:16px}
+.week-section.expanded .week-chevron{transform:rotate(180deg)}
+
+.week-days{
+  max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.23,1,0.32,1);
+}
+.week-section.expanded .week-days{max-height:600px}
+
+.day-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;border-top:1px solid var(--border);
+  cursor:pointer;transition:background var(--transition-fast);
+}
+.day-row:hover{background:var(--glass-mid)}
+.day-row.is-today{background:var(--lime-soft)}
+.day-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+  border:1.5px solid var(--border-mid);
+  transition:var(--transition-fast);
+}
+.day-dot.done{background:var(--lime);border-color:var(--lime);box-shadow:0 0 8px rgba(204,255,0,0.3)}
+.day-row-num{
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  letter-spacing:.04em;color:var(--text-dim);min-width:48px;
+}
+.day-row-ref{
+  font-family:var(--font-display);font-weight:600;font-size:14px;
+  color:var(--text);flex:1;min-width:0;
+}
+.day-row-title{
+  font-family:var(--font-body);font-size:13px;font-weight:400;
+  color:var(--text-dim);display:none;
+}
+.day-row.is-future{
+  opacity:0.35;cursor:not-allowed;
+}
+.day-row.is-future:hover{background:transparent}
+.day-row-lock{
+  display:none;color:var(--text-dim);flex-shrink:0;
+}
+.day-row-lock svg{width:12px;height:12px}
+.day-row.is-future .day-row-lock{display:flex;align-items:center}
+
+/* ── WELCOME OVERLAY ── */
+.overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(8,8,9,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;visibility:hidden;
+  transition:opacity 0.4s ease,visibility 0.4s ease;
+}
+.overlay.open{opacity:1;visibility:visible}
+.overlay-card{
+  background:var(--charcoal);border:1px solid var(--border-mid);
+  border-radius:var(--radius-xl);padding:48px 36px;
+  max-width:440px;width:100%;text-align:center;
+  transform:translateY(20px) scale(0.96);
+  transition:transform 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.overlay.open .overlay-card{transform:translateY(0) scale(1)}
+
+.overlay-logo{
+  font-family:var(--font-display);font-weight:700;font-size:28px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text);
+  margin-bottom:8px;
+}
+.overlay-logo span{color:var(--lime)}
+.overlay-title{
+  font-family:var(--font-display);font-weight:700;font-size:32px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--text);
+  margin-bottom:12px;line-height:1.1;
+}
+.overlay-sub{
+  font-size:15px;color:var(--text-muted);line-height:1.6;margin-bottom:32px;
+}
+.overlay-date-group{margin-bottom:28px}
+.overlay-date-label{
+  display:block;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;
+}
+.overlay-date-input{
+  width:100%;max-width:260px;padding:14px 16px;
+  background:var(--glass-mid) !important;border:1px solid var(--border-mid) !important;
+  border-radius:var(--radius);color:var(--text) !important;
+  font-family:var(--font-body);font-size:16px;font-weight:500;
+  text-align:center;outline:none;
+  transition:border-color var(--transition);
+  color-scheme:dark;
+}
+.overlay-date-input:focus{border-color:rgba(204,255,0,0.4) !important}
+.btn-begin{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:16px 48px;background:var(--lime) !important;color:var(--black) !important;
+  font-family:var(--font-display);font-weight:700;font-size:16px;
+  letter-spacing:.08em;text-transform:uppercase;
+  border-radius:100px;border:none;cursor:pointer;
+  transition:var(--transition);
+  box-shadow:0 0 30px rgba(204,255,0,0.25),0 4px 20px rgba(0,0,0,0.4);
+}
+.btn-begin:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.45),0 8px 30px rgba(0,0,0,0.4)}
+
+/* ── CELEBRATION OVERLAY ── */
+.celebration-glow{
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(204,255,0,0.15) 0%,rgba(204,255,0,0.05) 40%,transparent 70%);
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;animation:pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow{0%,100%{opacity:0.7;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+.celebration-title{
+  font-family:var(--font-display);font-weight:700;font-size:42px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text);
+  line-height:1.1;margin-bottom:12px;position:relative;
+}
+.celebration-sub{
+  font-size:16px;color:var(--text-muted);line-height:1.6;margin-bottom:32px;position:relative;
+}
+.btn-restart{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 36px;background:var(--glass-hi) !important;color:var(--lime) !important;
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  letter-spacing:.08em;text-transform:uppercase;
+  border-radius:100px;border:1px solid var(--border-mid) !important;
+  cursor:pointer;transition:var(--transition);position:relative;
+}
+.btn-restart:hover{background:var(--lime-dim) !important;border-color:var(--lime) !important}
+
+/* ── FOOTER ── */
+.app-footer{
+  text-align:center;padding:32px 20px 40px;
+  border-top:1px solid var(--border);
+}
+.footer-brand{
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);
+  margin-bottom:8px;
+}
+.footer-copy{font-size:12px;color:var(--text-dim);line-height:1.6}
+.footer-copy a{color:var(--text-dim);font-weight:500}
+.footer-copy a:hover{color:var(--lime)}
+
+/* ══════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════════════ */
+
+/* 1440px+ Desktop */
+@media(min-width:1440px){
+  .main-content{max-width:900px}
+  .calendar-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .calendar-columns .week-section{margin-bottom:0}
+}
+
+/* 1024-1439px Laptops */
+@media(min-width:1024px) and (max-width:1439px){
+  .main-content{max-width:800px}
+  .calendar-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .calendar-columns .week-section{margin-bottom:0}
+}
+
+/* 768-1023px Tablets */
+@media(min-width:768px) and (max-width:1023px){
+  .main-content{max-width:600px}
+  .calendar-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .calendar-columns .week-section{margin-bottom:0}
+  .hero-card{padding:36px 32px}
+  .day-row-title{display:block}
+}
+
+/* 480-767px Phablets */
+@media(min-width:480px) and (max-width:767px){
+  .main-content{max-width:520px;margin:0 auto}
+  .hero-card{padding:28px 24px}
+  .stats-row{gap:20px}
+  .day-row-title{display:block}
+}
+
+/* 414-479px Large phones */
+@media(min-width:414px) and (max-width:479px){
+  .hero-day{font-size:46px}
+  .hero-card{padding:24px 20px}
+}
+
+/* 375-413px Standard phones */
+@media(min-width:375px) and (max-width:413px){
+  .hero-day{font-size:42px}
+  .hero-ref{font-size:22px}
+  .hero-card{padding:24px 20px}
+}
+
+/* 320-374px Small phones */
+@media(max-width:374px){
+  .header-logo{font-size:16px;letter-spacing:.08em}
+  .header-inner{height:48px}
+  .hero-card{padding:16px;border-radius:var(--radius-lg)}
+  .hero-day{font-size:36px}
+  .hero-ref{font-size:20px}
+  .hero-title{font-size:14px;margin-bottom:20px}
+  .toggle-btn{width:60px;height:60px}
+  .toggle-btn svg{width:26px;height:26px}
+  .nav-arrow{width:40px;height:40px}
+  .nav-label{font-size:12px;min-width:90px}
+  .stats-row{gap:16px}
+  .stat{font-size:12px}
+  .week-label{font-size:13px}
+  .day-row{padding:10px 16px;gap:10px}
+  .day-row-num{font-size:12px;min-width:40px}
+  .day-row-ref{font-size:13px}
+  .week-header{padding:14px 16px}
+  .calendar-toggle-wrap{margin:24px 0 16px}
+  .btn-calendar-toggle{padding:10px 20px;font-size:12px}
+  .overlay-card{padding:32px 24px}
+  .overlay-title{font-size:26px}
+  .overlay-sub{font-size:14px}
+  .celebration-title{font-size:32px}
+  .main-content{padding:16px 12px 32px}
+}
+
+/* General mobile (below 768px) */
+@media(max-width:767px){
+  .hero-day{font-size:48px}
+  .header-logo{font-size:18px}
+  .header-auth-email{max-width:100px}
+}
+
+/* Landscape phones */
+@media(max-height:500px) and (orientation:landscape){
+  .hero-card{padding:20px 24px}
+  .hero-day{font-size:36px}
+  .toggle-btn{width:56px;height:56px}
+  .toggle-btn svg{width:24px;height:24px}
+  .week-pill{margin-bottom:12px}
+  .hero-title{margin-bottom:16px}
+  .toggle-wrap{margin-bottom:16px}
+}
+
+/* Safe area insets */
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  .app-header{padding-top:env(safe-area-inset-top);padding-left:calc(20px + env(safe-area-inset-left));padding-right:calc(20px + env(safe-area-inset-right))}
+  .main-content{padding-left:calc(20px + env(safe-area-inset-left));padding-right:calc(20px + env(safe-area-inset-right))}
+  .app-footer{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}
+  .bg-orb--1,.bg-orb--2{animation:none}
+}
+
+/* iOS zoom prevention */
+input[type="date"]{font-size:16px !important}
+input[type="email"]{font-size:16px !important}
+
+/* ── OVERLAY AUTH FORM (email gate) ── */
+.overlay-step{display:none}
+.overlay-step.active{display:block}
+.overlay-gate-form{margin-bottom:20px}
+.overlay-field{margin-bottom:14px}
+.overlay-field-label{
+  display:block;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;
+}
+.overlay-field-input{
+  width:100%;padding:14px 16px;
+  background:var(--glass-mid) !important;border:1px solid var(--border-mid) !important;
+  border-radius:var(--radius);color:var(--text) !important;
+  font-family:var(--font-body);font-size:16px;font-weight:400;
+  outline:none;transition:border-color var(--transition);
+}
+.overlay-field-input:focus{border-color:rgba(204,255,0,0.4) !important}
+.overlay-field-input::placeholder{color:var(--text-dim)}
+.overlay-field-input.err{border-color:rgba(255,77,77,0.5) !important;background:rgba(255,77,77,0.06) !important}
+.overlay-alert{
+  padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;
+  line-height:1.5;margin-bottom:14px;display:none;text-align:center;
+}
+.overlay-alert.show{display:block;animation:fade-in 0.3s ease}
+.overlay-alert--err{background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.2);color:#ff8a8a}
+.overlay-alert--ok{background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.15);color:var(--lime)}
+.btn-gate{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:14px;background:var(--lime) !important;color:var(--black) !important;
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  letter-spacing:.08em;text-transform:uppercase;
+  border-radius:var(--radius);border:none;cursor:pointer;
+  transition:var(--transition);min-height:52px;position:relative;
+  box-shadow:0 0 20px rgba(204,255,0,0.2);
+}
+.btn-gate:hover{box-shadow:0 0 35px rgba(204,255,0,0.35);transform:translateY(-1px)}
+.btn-gate:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;box-shadow:none !important}
+.btn-gate .spin{display:none;width:18px;height:18px;border:2px solid rgba(0,0,0,0.2);border-top-color:var(--black);border-radius:50%;animation:spin 0.7s linear infinite}
+.btn-gate.loading .btn-gate-text{opacity:0}
+.btn-gate.loading .spin{display:block;position:absolute}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay-fine{
+  text-align:center;margin-top:14px;font-size:12px;color:var(--text-dim);line-height:1.6;
+}
+.overlay-fine a{color:var(--lime);font-weight:600}
+.overlay-divider{
+  display:flex;align-items:center;gap:12px;
+  margin:20px 0;color:var(--text-dim);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.overlay-divider::before,.overlay-divider::after{
+  content:'';flex:1;height:1px;background:var(--border-mid);
+}
+.overlay-verified-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:100px;
+  background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.15);
+  font-size:12px;font-weight:600;color:var(--lime);
+  margin-bottom:16px;letter-spacing:.04em;
+}
+.overlay-verified-badge svg{width:14px;height:14px}
+.overlay-user-email{
+  font-size:14px;color:var(--text-muted);margin-bottom:20px;word-break:break-all;
+}
+</style>
+</head>
+<body>
+<div id="whealthy-app-embed">
+
+<!-- Background -->
+<div class="bg-noise"></div>
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb--1"></div>
+<div class="bg-orb bg-orb--2"></div>
+
+<div class="app-wrapper">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-logo">W<span>HEAL</span>THY</div>
+      <div class="header-right">
+        <div class="header-auth" id="headerAuth">
+          <span class="header-auth-email" id="authEmail" style="display:none"></span>
+        </div>
+        <div class="settings-wrap">
+          <button class="btn-settings" id="btnSettings" aria-label="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+          <div class="settings-dropdown" id="settingsDropdown">
+            <button class="settings-item" id="btnResetDate">Reset Start Date</button>
+            <button class="settings-item settings-item--danger" id="btnClearAll">Clear All Progress</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Hero Card -->
+    <div class="hero-card" id="heroCard">
+      <div class="week-pill" id="weekPill">
+        <span id="weekLabel">WEEK 1</span>
+        <span class="week-theme" id="weekTheme"></span>
+      </div>
+      <div class="hero-day" id="heroDay">DAY 1</div>
+      <div class="hero-ref" id="heroRef">Genesis 1-3</div>
+      <div class="hero-title" id="heroTitle">Creation and the Fall</div>
+
+      <!-- Scripture Reader -->
+      <div class="scripture-section" style="text-align:center">
+        <button class="btn-read-passage" id="btnReadPassage" aria-label="Read today's scripture passage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span id="readPassageText">Read Passage</span>
+        </button>
+        <div class="scripture-reader" id="scriptureReader">
+          <div class="scripture-header">
+            <span class="scripture-header-title" id="scriptureRefTitle">Genesis 1-3</span>
+            <span class="scripture-translation">NIV</span>
+          </div>
+          <div class="scripture-body" id="scriptureBody">
+            <div class="scripture-loading" id="scriptureLoading"><span class="spin"></span> Loading scripture...</div>
+          </div>
+          <div class="scripture-scroll-progress" id="scriptureScrollProgress">
+            <div class="scripture-scroll-fill" id="scriptureScrollFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-wrap">
+        <button class="toggle-btn" id="toggleBtn" aria-label="Mark reading complete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <div class="scroll-gate-hint" id="scrollGateHint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><polyline points="19 12 12 19 5 12"/></svg>
+          <span>Scroll passage to unlock</span>
+        </div>
+      </div>
+
+      <div class="day-nav">
+        <button class="nav-arrow" id="btnPrev" aria-label="Previous day">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span class="nav-label" id="navLabel">Day 1 of 365</span>
+        <button class="nav-arrow" id="btnNext" aria-label="Next day">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat" id="statComplete">0 / 365 COMPLETE</div>
+        <div class="stat" id="statStreak">
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg></span>
+          0 DAY STREAK
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar Toggle -->
+    <div class="calendar-toggle-wrap">
+      <button class="btn-calendar-toggle" id="btnCalendarToggle">
+        <span id="calendarToggleText">View All Weeks</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid" id="calendarGrid">
+      <div class="calendar-columns" id="calendarColumns"></div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-brand">WHEALTHY STEWARDS</div>
+    <div class="footer-copy">&copy; 2026 WHEALTHY Label. All rights reserved.<br><a href="https://skool.com/bakndcreator" target="_blank" rel="noopener">skool.com/bakndcreator</a></div>
+  </footer>
+
+</div><!-- .app-wrapper -->
+
+<!-- Welcome Overlay -->
+<div class="overlay" id="welcomeOverlay">
+  <div class="overlay-card">
+    <div class="overlay-logo">W<span>HEAL</span>THY</div>
+    <div class="overlay-title">365-Day Bible Study</div>
+    <div class="overlay-sub">Read through the entire Bible in one year, starting any day you choose.</div>
+
+    <!-- Step 2: Date Picker (shown after email verified) -->
+    <div class="overlay-step active" id="welcomeStep2">
+      <div class="overlay-verified-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Active Steward
+      </div>
+      <div class="overlay-user-email" id="welcomeUserEmail"></div>
+      <div class="overlay-divider">Choose Your Start Date</div>
+      <div class="overlay-date-group">
+        <input type="date" class="overlay-date-input" id="startDateInput">
+      </div>
+      <button class="btn-begin" id="btnBegin" style="margin-top:24px">Begin</button>
+    </div>
+  </div>
+</div>
+
+<!-- Celebration Overlay -->
+<div class="overlay" id="celebrationOverlay">
+  <div class="overlay-card" style="position:relative;overflow:visible">
+    <div class="celebration-glow"></div>
+    <div class="celebration-title">365 Days Complete</div>
+    <div class="celebration-sub">You read through the entire Bible.</div>
+    <button class="btn-restart" id="btnRestart">Start Again</button>
+  </div>
+</div>
+
+</div><!-- #whealthy-app-embed -->
+
+<script>
+// ══════════════════════════════════════
+// 365-DAY READINGS DATA
+// ══════════════════════════════════════
+const READINGS=[
+{day:1,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 1-3",title:"Creation and the Fall"},
+{day:2,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 4-7",title:"First families and consequences"},
+{day:3,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 8-11",title:"New beginnings and human ambition"},
+{day:4,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 12-15",title:"Abraham's calling and faith"},
+{day:5,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 16-19",title:"Waiting, impatience, and God's timing"},
+{day:6,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 20-23",title:"Integrity in difficult situations"},
+{day:7,week:1,theme:"FOUNDATIONS",subtheme:"God as Creator and Promise-Keeper",ref:"Genesis 24-26",title:"Legacy and next generation"},
+{day:8,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 27-29",title:"Jacob's deception and consequences"},
+{day:9,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 30-32",title:"Building wealth and wrestling with God"},
+{day:10,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 33-36",title:"Reconciliation and moving forward"},
+{day:11,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 37-39",title:"Joseph's integrity under pressure"},
+{day:12,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 40-42",title:"Waiting and preparation seasons"},
+{day:13,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 43-45",title:"Forgiveness and family restoration"},
+{day:14,week:2,theme:"CHARACTER FORMATION",subtheme:"God builds leaders through trials",ref:"Genesis 46-50",title:"Legacy and God's bigger plan"},
+{day:15,week:3,theme:null,subtheme:null,ref:"Exodus 1-3",title:"God calls a deliverer"},
+{day:16,week:3,theme:null,subtheme:null,ref:"Exodus 4-6",title:"God's power over human excuses"},
+{day:17,week:3,theme:null,subtheme:null,ref:"Exodus 7-9",title:"Confrontation with Pharaoh"},
+{day:18,week:3,theme:null,subtheme:null,ref:"Exodus 10-12",title:"Passover and deliverance"},
+{day:19,week:3,theme:null,subtheme:null,ref:"Exodus 13-15",title:"Crossing the Red Sea"},
+{day:20,week:3,theme:null,subtheme:null,ref:"Exodus 16-18",title:"God provides in the wilderness"},
+{day:21,week:3,theme:null,subtheme:null,ref:"Exodus 19-21",title:"God's covenant and commands"},
+{day:22,week:4,theme:null,subtheme:null,ref:"Exodus 22-24",title:"Justice and God's presence"},
+{day:23,week:4,theme:null,subtheme:null,ref:"Exodus 25-27",title:"God's dwelling place instructions"},
+{day:24,week:4,theme:null,subtheme:null,ref:"Exodus 28-29",title:"Priestly consecration"},
+{day:25,week:4,theme:null,subtheme:null,ref:"Exodus 30-32",title:"Golden calf and intercession"},
+{day:26,week:4,theme:null,subtheme:null,ref:"Exodus 33-35",title:"God's glory revealed"},
+{day:27,week:4,theme:null,subtheme:null,ref:"Exodus 36-38",title:"Tabernacle construction"},
+{day:28,week:4,theme:null,subtheme:null,ref:"Exodus 39-40",title:"God's glory fills the tabernacle"},
+{day:29,week:5,theme:null,subtheme:null,ref:"Leviticus 1-4",title:"Offerings and atonement"},
+{day:30,week:5,theme:null,subtheme:null,ref:"Leviticus 5-7",title:"Guilt and fellowship offerings"},
+{day:31,week:5,theme:null,subtheme:null,ref:"Leviticus 8-10",title:"Priests consecrated"},
+{day:32,week:5,theme:null,subtheme:null,ref:"Leviticus 11-13",title:"Laws on clean and unclean"},
+{day:33,week:5,theme:null,subtheme:null,ref:"Leviticus 14-15",title:"Cleansing laws"},
+{day:34,week:5,theme:null,subtheme:null,ref:"Leviticus 16-18",title:"Day of Atonement, holiness"},
+{day:35,week:5,theme:null,subtheme:null,ref:"Leviticus 19-21",title:"Holy living"},
+{day:36,week:6,theme:null,subtheme:null,ref:"Leviticus 22-23",title:"Sacred festivals"},
+{day:37,week:6,theme:null,subtheme:null,ref:"Leviticus 24-25",title:"Justice and Jubilee"},
+{day:38,week:6,theme:null,subtheme:null,ref:"Leviticus 26-27",title:"Blessings and warnings"},
+{day:39,week:6,theme:null,subtheme:null,ref:"Numbers 1-2",title:"Census and arrangement of tribes"},
+{day:40,week:6,theme:null,subtheme:null,ref:"Numbers 3-4",title:"Duties of Levites"},
+{day:41,week:6,theme:null,subtheme:null,ref:"Numbers 5-6",title:"Purity and Nazirite vow"},
+{day:42,week:6,theme:null,subtheme:null,ref:"Numbers 7-8",title:"Dedication of tabernacle"},
+{day:43,week:7,theme:null,subtheme:null,ref:"Numbers 9-11",title:"Guidance and complaints"},
+{day:44,week:7,theme:null,subtheme:null,ref:"Numbers 12-14",title:"Rebellion and consequences"},
+{day:45,week:7,theme:null,subtheme:null,ref:"Numbers 15-17",title:"God affirms leadership"},
+{day:46,week:7,theme:null,subtheme:null,ref:"Numbers 18-20",title:"Provision and disobedience"},
+{day:47,week:7,theme:null,subtheme:null,ref:"Numbers 21-22",title:"Victory and Balaam's donkey"},
+{day:48,week:7,theme:null,subtheme:null,ref:"Numbers 23-25",title:"Balaam's prophecies"},
+{day:49,week:7,theme:null,subtheme:null,ref:"Numbers 26-27",title:"Inheritance laws"},
+{day:50,week:8,theme:null,subtheme:null,ref:"Numbers 28-30",title:"Offerings and vows"},
+{day:51,week:8,theme:null,subtheme:null,ref:"Numbers 31-32",title:"War and land division"},
+{day:52,week:8,theme:null,subtheme:null,ref:"Numbers 33-34",title:"Journey reviewed, borders"},
+{day:53,week:8,theme:null,subtheme:null,ref:"Numbers 35-36",title:"Cities of refuge"},
+{day:54,week:8,theme:null,subtheme:null,ref:"Deuteronomy 1-3",title:"Moses reviews history"},
+{day:55,week:8,theme:null,subtheme:null,ref:"Deuteronomy 4-6",title:"Call to obedience"},
+{day:56,week:8,theme:null,subtheme:null,ref:"Deuteronomy 7-9",title:"Remember God's power"},
+{day:57,week:9,theme:null,subtheme:null,ref:"Deuteronomy 10-12",title:"Love and obey God"},
+{day:58,week:9,theme:null,subtheme:null,ref:"Deuteronomy 13-15",title:"Purity in worship"},
+{day:59,week:9,theme:null,subtheme:null,ref:"Deuteronomy 16-18",title:"Leadership standards"},
+{day:60,week:9,theme:null,subtheme:null,ref:"Deuteronomy 19-21",title:"Justice in the land"},
+{day:61,week:9,theme:null,subtheme:null,ref:"Deuteronomy 22-24",title:"Social laws"},
+{day:62,week:9,theme:null,subtheme:null,ref:"Deuteronomy 25-27",title:"Covenant renewal"},
+{day:63,week:9,theme:null,subtheme:null,ref:"Deuteronomy 28-29",title:"Blessings and curses"},
+{day:64,week:10,theme:null,subtheme:null,ref:"Deuteronomy 30-31",title:"Choose life"},
+{day:65,week:10,theme:null,subtheme:null,ref:"Deuteronomy 32-34",title:"Moses' song and death"},
+{day:66,week:10,theme:null,subtheme:null,ref:"Joshua 1-3",title:"Be strong and courageous"},
+{day:67,week:10,theme:null,subtheme:null,ref:"Joshua 4-6",title:"Crossing Jordan, Jericho falls"},
+{day:68,week:10,theme:null,subtheme:null,ref:"Joshua 7-9",title:"Defeat and renewal"},
+{day:69,week:10,theme:null,subtheme:null,ref:"Joshua 10-12",title:"Conquests continue"},
+{day:70,week:10,theme:null,subtheme:null,ref:"Joshua 13-15",title:"Land allotted"},
+{day:71,week:11,theme:null,subtheme:null,ref:"Joshua 16-18",title:"Further land divisions"},
+{day:72,week:11,theme:null,subtheme:null,ref:"Joshua 19-21",title:"Cities of refuge and Levites"},
+{day:73,week:11,theme:null,subtheme:null,ref:"Joshua 22-24",title:"Farewell and covenant renewal"},
+{day:74,week:11,theme:null,subtheme:null,ref:"Judges 1-3",title:"Disobedience and deliverers"},
+{day:75,week:11,theme:null,subtheme:null,ref:"Judges 4-6",title:"Deborah and Gideon's call"},
+{day:76,week:11,theme:null,subtheme:null,ref:"Judges 7-9",title:"Gideon's victory and Abimelech"},
+{day:77,week:11,theme:null,subtheme:null,ref:"Judges 10-12",title:"Jephthah's leadership"},
+{day:78,week:12,theme:null,subtheme:null,ref:"Judges 13-15",title:"Samson's beginnings"},
+{day:79,week:12,theme:null,subtheme:null,ref:"Judges 16-18",title:"Samson's downfall and Micah's idols"},
+{day:80,week:12,theme:null,subtheme:null,ref:"Judges 19-21",title:"Civil war in Israel"},
+{day:81,week:12,theme:null,subtheme:null,ref:"Ruth 1-4",title:"Redemption story"},
+{day:82,week:12,theme:null,subtheme:null,ref:"1 Samuel 1-3",title:"Samuel's calling"},
+{day:83,week:12,theme:null,subtheme:null,ref:"1 Samuel 4-7",title:"Ark captured and returned"},
+{day:84,week:12,theme:null,subtheme:null,ref:"1 Samuel 8-10",title:"Israel demands a king"},
+{day:85,week:13,theme:null,subtheme:null,ref:"1 Samuel 11-13",title:"Saul's early reign"},
+{day:86,week:13,theme:null,subtheme:null,ref:"1 Samuel 14-15",title:"Saul's disobedience"},
+{day:87,week:13,theme:null,subtheme:null,ref:"1 Samuel 16-17",title:"David anointed and Goliath"},
+{day:88,week:13,theme:null,subtheme:null,ref:"1 Samuel 18-20",title:"David and Jonathan"},
+{day:89,week:13,theme:null,subtheme:null,ref:"1 Samuel 21-23",title:"David on the run"},
+{day:90,week:13,theme:null,subtheme:null,ref:"1 Samuel 24-26",title:"Mercy to Saul"},
+{day:91,week:13,theme:null,subtheme:null,ref:"1 Samuel 27-29",title:"David among Philistines"},
+{day:92,week:14,theme:null,subtheme:null,ref:"1 Samuel 30-31",title:"Saul's death"},
+{day:93,week:14,theme:null,subtheme:null,ref:"2 Samuel 1-3",title:"David's rise to power"},
+{day:94,week:14,theme:null,subtheme:null,ref:"2 Samuel 4-7",title:"God's covenant with David"},
+{day:95,week:14,theme:null,subtheme:null,ref:"2 Samuel 8-10",title:"David's victories"},
+{day:96,week:14,theme:null,subtheme:null,ref:"2 Samuel 11-13",title:"David's sin and consequences"},
+{day:97,week:14,theme:null,subtheme:null,ref:"2 Samuel 14-16",title:"Absalom's rebellion begins"},
+{day:98,week:14,theme:null,subtheme:null,ref:"2 Samuel 17-19",title:"Absalom's defeat"},
+{day:99,week:15,theme:null,subtheme:null,ref:"2 Samuel 20-22",title:"David's final battles and song"},
+{day:100,week:15,theme:null,subtheme:null,ref:"2 Samuel 23-24",title:"David's mighty men, census"},
+{day:101,week:15,theme:null,subtheme:null,ref:"1 Kings 1-2",title:"Solomon succeeds David"},
+{day:102,week:15,theme:null,subtheme:null,ref:"1 Kings 3-5",title:"Solomon's wisdom and preparations"},
+{day:103,week:15,theme:null,subtheme:null,ref:"1 Kings 6-7",title:"Temple construction"},
+{day:104,week:15,theme:null,subtheme:null,ref:"1 Kings 8-9",title:"Temple dedication"},
+{day:105,week:15,theme:null,subtheme:null,ref:"1 Kings 10-11",title:"Solomon's wealth and downfall"},
+{day:106,week:16,theme:null,subtheme:null,ref:"1 Kings 12-14",title:"Kingdom divided"},
+{day:107,week:16,theme:null,subtheme:null,ref:"1 Kings 15-17",title:"Asa, Elijah introduced"},
+{day:108,week:16,theme:null,subtheme:null,ref:"1 Kings 18-20",title:"Elijah at Mount Carmel"},
+{day:109,week:16,theme:null,subtheme:null,ref:"1 Kings 21-22",title:"Ahab's sins and death"},
+{day:110,week:16,theme:null,subtheme:null,ref:"2 Kings 1-3",title:"Elijah taken, Elisha's ministry"},
+{day:111,week:16,theme:null,subtheme:null,ref:"2 Kings 4-6",title:"Elisha's miracles"},
+{day:112,week:16,theme:null,subtheme:null,ref:"2 Kings 7-9",title:"Deliverance and Jehu's rise"},
+{day:113,week:17,theme:null,subtheme:null,ref:"2 Kings 10-12",title:"Jehu's reforms"},
+{day:114,week:17,theme:null,subtheme:null,ref:"2 Kings 13-15",title:"Kings of Israel and Judah"},
+{day:115,week:17,theme:null,subtheme:null,ref:"2 Kings 16-18",title:"Hezekiah's reforms"},
+{day:116,week:17,theme:null,subtheme:null,ref:"2 Kings 19-21",title:"Deliverance and Manasseh's sin"},
+{day:117,week:17,theme:null,subtheme:null,ref:"2 Kings 22-23",title:"Josiah's reforms"},
+{day:118,week:17,theme:null,subtheme:null,ref:"2 Kings 24-25",title:"Fall of Jerusalem"},
+{day:119,week:17,theme:null,subtheme:null,ref:"1 Chronicles 1-3",title:"Genealogies"},
+{day:120,week:18,theme:null,subtheme:null,ref:"1 Chronicles 4-6",title:"More genealogies"},
+{day:121,week:18,theme:null,subtheme:null,ref:"1 Chronicles 7-9",title:"Genealogies and returnees"},
+{day:122,week:18,theme:null,subtheme:null,ref:"1 Chronicles 10-12",title:"David's early reign"},
+{day:123,week:18,theme:null,subtheme:null,ref:"1 Chronicles 13-15",title:"Ark brought to Jerusalem"},
+{day:124,week:18,theme:null,subtheme:null,ref:"1 Chronicles 16-18",title:"David's worship and victories"},
+{day:125,week:18,theme:null,subtheme:null,ref:"1 Chronicles 19-21",title:"War and census"},
+{day:126,week:18,theme:null,subtheme:null,ref:"1 Chronicles 22-24",title:"Temple preparations"},
+{day:127,week:19,theme:null,subtheme:null,ref:"1 Chronicles 25-27",title:"Organization of Levites and army"},
+{day:128,week:19,theme:null,subtheme:null,ref:"1 Chronicles 28-29",title:"David's charge to Solomon"},
+{day:129,week:19,theme:null,subtheme:null,ref:"2 Chronicles 1-3",title:"Solomon's reign begins"},
+{day:130,week:19,theme:null,subtheme:null,ref:"2 Chronicles 4-6",title:"Temple furnishings and dedication"},
+{day:131,week:19,theme:null,subtheme:null,ref:"2 Chronicles 7-9",title:"God's glory and Solomon's fame"},
+{day:132,week:19,theme:null,subtheme:null,ref:"2 Chronicles 10-12",title:"Division of the kingdom"},
+{day:133,week:19,theme:null,subtheme:null,ref:"2 Chronicles 13-15",title:"Asa's reforms"},
+{day:134,week:20,theme:null,subtheme:null,ref:"2 Chronicles 16-18",title:"Alliances and warnings"},
+{day:135,week:20,theme:null,subtheme:null,ref:"2 Chronicles 19-21",title:"Jehoshaphat's reign and war"},
+{day:136,week:20,theme:null,subtheme:null,ref:"2 Chronicles 22-24",title:"Athaliah and Joash"},
+{day:137,week:20,theme:null,subtheme:null,ref:"2 Chronicles 25-27",title:"Amaziah, Uzziah, Jotham"},
+{day:138,week:20,theme:null,subtheme:null,ref:"2 Chronicles 28-30",title:"Hezekiah's reforms"},
+{day:139,week:20,theme:null,subtheme:null,ref:"2 Chronicles 31-33",title:"Revival and decline"},
+{day:140,week:20,theme:null,subtheme:null,ref:"2 Chronicles 34-36",title:"Josiah's reign to exile"},
+{day:141,week:21,theme:null,subtheme:null,ref:"Ezra 1-3",title:"Return and rebuilding altar"},
+{day:142,week:21,theme:null,subtheme:null,ref:"Ezra 4-6",title:"Opposition and temple completion"},
+{day:143,week:21,theme:null,subtheme:null,ref:"Ezra 7-8",title:"Ezra's mission"},
+{day:144,week:21,theme:null,subtheme:null,ref:"Ezra 9-10",title:"Reform and repentance"},
+{day:145,week:21,theme:null,subtheme:null,ref:"Nehemiah 1-3",title:"Wall rebuilding begins"},
+{day:146,week:21,theme:null,subtheme:null,ref:"Nehemiah 4-6",title:"Opposition overcome"},
+{day:147,week:21,theme:null,subtheme:null,ref:"Nehemiah 7-9",title:"Census and revival"},
+{day:148,week:22,theme:null,subtheme:null,ref:"Nehemiah 10-11",title:"Covenant renewal"},
+{day:149,week:22,theme:null,subtheme:null,ref:"Nehemiah 12-13",title:"Dedication and reforms"},
+{day:150,week:22,theme:null,subtheme:null,ref:"Esther 1-3",title:"Esther's rise"},
+{day:151,week:22,theme:null,subtheme:null,ref:"Esther 4-6",title:"Courage and favor"},
+{day:152,week:22,theme:null,subtheme:null,ref:"Esther 7-10",title:"Deliverance for the Jews"},
+{day:153,week:22,theme:null,subtheme:null,ref:"Job 1-3",title:"Job's trials begin"},
+{day:154,week:22,theme:null,subtheme:null,ref:"Job 4-6",title:"Friends respond"},
+{day:155,week:23,theme:null,subtheme:null,ref:"Job 7-9",title:"Job's defense"},
+{day:156,week:23,theme:null,subtheme:null,ref:"Job 10-12",title:"Job and Zophar"},
+{day:157,week:23,theme:null,subtheme:null,ref:"Job 13-15",title:"Job and Eliphaz"},
+{day:158,week:23,theme:null,subtheme:null,ref:"Job 16-18",title:"Job's lament"},
+{day:159,week:23,theme:null,subtheme:null,ref:"Job 19-21",title:"Job's Redeemer"},
+{day:160,week:23,theme:null,subtheme:null,ref:"Job 22-24",title:"Injustice discussed"},
+{day:161,week:23,theme:null,subtheme:null,ref:"Job 25-27",title:"Job's stand"},
+{day:162,week:24,theme:null,subtheme:null,ref:"Job 28-30",title:"Wisdom and suffering"},
+{day:163,week:24,theme:null,subtheme:null,ref:"Job 31-33",title:"Job's final defense, Elihu speaks"},
+{day:164,week:24,theme:null,subtheme:null,ref:"Job 34-36",title:"Elihu continues"},
+{day:165,week:24,theme:null,subtheme:null,ref:"Job 37-39",title:"God answers from the storm"},
+{day:166,week:24,theme:null,subtheme:null,ref:"Job 40-42",title:"Restoration"},
+{day:167,week:24,theme:null,subtheme:null,ref:"Psalms 1-4",title:"Worship foundations"},
+{day:168,week:24,theme:null,subtheme:null,ref:"Psalms 5-8",title:"God's greatness"},
+{day:169,week:25,theme:null,subtheme:null,ref:"Psalms 9-12",title:"Trust and deliverance"},
+{day:170,week:25,theme:null,subtheme:null,ref:"Psalms 13-16",title:"God's refuge"},
+{day:171,week:25,theme:null,subtheme:null,ref:"Psalms 17-20",title:"Victory in God"},
+{day:172,week:25,theme:null,subtheme:null,ref:"Psalms 21-24",title:"The King of glory"},
+{day:173,week:25,theme:null,subtheme:null,ref:"Psalms 25-28",title:"Guidance and praise"},
+{day:174,week:25,theme:null,subtheme:null,ref:"Psalms 29-32",title:"Forgiveness and joy"},
+{day:175,week:25,theme:null,subtheme:null,ref:"Psalms 33-36",title:"God's steadfast love"},
+{day:176,week:26,theme:null,subtheme:null,ref:"Psalms 37-40",title:"The righteous and the wicked"},
+{day:177,week:26,theme:null,subtheme:null,ref:"Psalms 41-44",title:"God our refuge"},
+{day:178,week:26,theme:null,subtheme:null,ref:"Psalms 45-48",title:"The King and His city"},
+{day:179,week:26,theme:null,subtheme:null,ref:"Psalms 49-52",title:"Wealth and wickedness"},
+{day:180,week:26,theme:null,subtheme:null,ref:"Psalms 53-56",title:"God's deliverance"},
+{day:181,week:26,theme:null,subtheme:null,ref:"Psalms 57-60",title:"Confidence in God"},
+{day:182,week:26,theme:null,subtheme:null,ref:"Psalms 61-64",title:"God our protector"},
+{day:183,week:27,theme:null,subtheme:null,ref:"Psalms 65-68",title:"Praise for God's blessings"},
+{day:184,week:27,theme:null,subtheme:null,ref:"Psalms 69-72",title:"The righteous King"},
+{day:185,week:27,theme:null,subtheme:null,ref:"Psalms 73-76",title:"God's justice"},
+{day:186,week:27,theme:null,subtheme:null,ref:"Psalms 77-80",title:"God's mighty works"},
+{day:187,week:27,theme:null,subtheme:null,ref:"Psalms 81-84",title:"Worship and obedience"},
+{day:188,week:27,theme:null,subtheme:null,ref:"Psalms 85-88",title:"God's steadfast love"},
+{day:189,week:27,theme:null,subtheme:null,ref:"Psalms 89-92",title:"God's covenant faithfulness"},
+{day:190,week:28,theme:null,subtheme:null,ref:"Psalms 93-96",title:"The Lord reigns"},
+{day:191,week:28,theme:null,subtheme:null,ref:"Psalms 97-100",title:"Joyful praise"},
+{day:192,week:28,theme:null,subtheme:null,ref:"Psalms 101-104",title:"God's creation and care"},
+{day:193,week:28,theme:null,subtheme:null,ref:"Psalms 105-106",title:"God's faithfulness to Israel"},
+{day:194,week:28,theme:null,subtheme:null,ref:"Psalms 107-109",title:"Thanksgiving and pleas for help"},
+{day:195,week:28,theme:null,subtheme:null,ref:"Psalms 110-113",title:"The Lord exalted"},
+{day:196,week:28,theme:null,subtheme:null,ref:"Psalms 114-118",title:"Deliverance and steadfast love"},
+{day:197,week:29,theme:null,subtheme:null,ref:"Psalms 119:1-40",title:"Loving God's Word"},
+{day:198,week:29,theme:null,subtheme:null,ref:"Psalms 119:41-88",title:"Strength in God's Word"},
+{day:199,week:29,theme:null,subtheme:null,ref:"Psalms 119:89-136",title:"Faithfulness of God's Word"},
+{day:200,week:29,theme:null,subtheme:null,ref:"Psalms 119:137-176",title:"Enduring love of God's Word"},
+{day:201,week:29,theme:null,subtheme:null,ref:"Psalms 120-123",title:"Trust and security in God"},
+{day:202,week:29,theme:null,subtheme:null,ref:"Psalms 124-127",title:"God's protection and provision"},
+{day:203,week:29,theme:null,subtheme:null,ref:"Psalms 128-131",title:"God's blessings on His people"},
+{day:204,week:30,theme:null,subtheme:null,ref:"Psalms 132-135",title:"Praise for God's works"},
+{day:205,week:30,theme:null,subtheme:null,ref:"Psalms 136-139",title:"God's steadfast love and knowledge"},
+{day:206,week:30,theme:null,subtheme:null,ref:"Psalms 140-143",title:"Deliverance from enemies"},
+{day:207,week:30,theme:null,subtheme:null,ref:"Psalms 144-146",title:"God our refuge and helper"},
+{day:208,week:30,theme:null,subtheme:null,ref:"Psalms 147-150",title:"Let everything praise the Lord"},
+{day:209,week:30,theme:null,subtheme:null,ref:"Proverbs 1-3",title:"Wisdom's foundation"},
+{day:210,week:30,theme:null,subtheme:null,ref:"Proverbs 4-6",title:"Guard your heart"},
+{day:211,week:31,theme:null,subtheme:null,ref:"Proverbs 7-9",title:"The call of wisdom"},
+{day:212,week:31,theme:null,subtheme:null,ref:"Proverbs 10-12",title:"Righteousness and wickedness"},
+{day:213,week:31,theme:null,subtheme:null,ref:"Proverbs 13-15",title:"Wise living"},
+{day:214,week:31,theme:null,subtheme:null,ref:"Proverbs 16-18",title:"God's sovereignty and human plans"},
+{day:215,week:31,theme:null,subtheme:null,ref:"Proverbs 19-21",title:"Integrity and justice"},
+{day:216,week:31,theme:null,subtheme:null,ref:"Proverbs 22-24",title:"Wisdom for life"},
+{day:217,week:31,theme:null,subtheme:null,ref:"Proverbs 25-27",title:"Practical counsel"},
+{day:218,week:32,theme:null,subtheme:null,ref:"Proverbs 28-31",title:"Humility and trust in God"},
+{day:219,week:32,theme:null,subtheme:null,ref:"Ecclesiastes 1-3",title:"Life's seasons and purpose"},
+{day:220,week:32,theme:null,subtheme:null,ref:"Ecclesiastes 4-6",title:"The vanity of riches"},
+{day:221,week:32,theme:null,subtheme:null,ref:"Ecclesiastes 7-9",title:"Wisdom in life's uncertainties"},
+{day:222,week:32,theme:null,subtheme:null,ref:"Ecclesiastes 10-12",title:"Fear God and keep His commands"},
+{day:223,week:32,theme:null,subtheme:null,ref:"Song of Solomon 1-4",title:"Love and devotion"},
+{day:224,week:32,theme:null,subtheme:null,ref:"Song of Solomon 5-8",title:"The joy of love"},
+{day:225,week:33,theme:null,subtheme:null,ref:"Isaiah 1-3",title:"Judah's rebellion"},
+{day:226,week:33,theme:null,subtheme:null,ref:"Isaiah 4-6",title:"The Lord's glory revealed"},
+{day:227,week:33,theme:null,subtheme:null,ref:"Isaiah 7-9",title:"Immanuel prophecy"},
+{day:228,week:33,theme:null,subtheme:null,ref:"Isaiah 10-12",title:"God's deliverance"},
+{day:229,week:33,theme:null,subtheme:null,ref:"Isaiah 13-15",title:"Judgment on nations"},
+{day:230,week:33,theme:null,subtheme:null,ref:"Isaiah 16-18",title:"God's sovereignty"},
+{day:231,week:33,theme:null,subtheme:null,ref:"Isaiah 19-21",title:"God's justice among nations"},
+{day:232,week:34,theme:null,subtheme:null,ref:"Isaiah 22-24",title:"Judgment and glory"},
+{day:233,week:34,theme:null,subtheme:null,ref:"Isaiah 25-27",title:"Salvation and restoration"},
+{day:234,week:34,theme:null,subtheme:null,ref:"Isaiah 28-30",title:"Woe to rebellious nations"},
+{day:235,week:34,theme:null,subtheme:null,ref:"Isaiah 31-33",title:"The Lord saves Zion"},
+{day:236,week:34,theme:null,subtheme:null,ref:"Isaiah 34-36",title:"Judgment and deliverance"},
+{day:237,week:34,theme:null,subtheme:null,ref:"Isaiah 37-39",title:"Hezekiah's prayer and healing"},
+{day:238,week:34,theme:null,subtheme:null,ref:"Isaiah 40-42",title:"Comfort for God's people"},
+{day:239,week:35,theme:null,subtheme:null,ref:"Isaiah 43-45",title:"The Lord redeems"},
+{day:240,week:35,theme:null,subtheme:null,ref:"Isaiah 46-48",title:"God's sovereignty over idols"},
+{day:241,week:35,theme:null,subtheme:null,ref:"Isaiah 49-51",title:"Salvation to the nations"},
+{day:242,week:35,theme:null,subtheme:null,ref:"Isaiah 52-54",title:"The suffering servant"},
+{day:243,week:35,theme:null,subtheme:null,ref:"Isaiah 55-57",title:"Invitation to the thirsty"},
+{day:244,week:35,theme:null,subtheme:null,ref:"Isaiah 58-60",title:"True fasting and God's glory"},
+{day:245,week:35,theme:null,subtheme:null,ref:"Isaiah 61-63",title:"The Lord's favor and vengeance"},
+{day:246,week:36,theme:null,subtheme:null,ref:"Isaiah 64-66",title:"Prayer and new heavens and earth"},
+{day:247,week:36,theme:null,subtheme:null,ref:"Jeremiah 1-3",title:"God calls Jeremiah"},
+{day:248,week:36,theme:null,subtheme:null,ref:"Jeremiah 4-6",title:"Warnings to Judah"},
+{day:249,week:36,theme:null,subtheme:null,ref:"Jeremiah 7-9",title:"False worship and judgment"},
+{day:250,week:36,theme:null,subtheme:null,ref:"Jeremiah 10-12",title:"The living God"},
+{day:251,week:36,theme:null,subtheme:null,ref:"Jeremiah 13-15",title:"Signs of judgment"},
+{day:252,week:36,theme:null,subtheme:null,ref:"Jeremiah 16-18",title:"God the potter"},
+{day:253,week:37,theme:null,subtheme:null,ref:"Jeremiah 19-21",title:"Siege and prophecy to kings"},
+{day:254,week:37,theme:null,subtheme:null,ref:"Jeremiah 22-24",title:"Shepherds and the Branch"},
+{day:255,week:37,theme:null,subtheme:null,ref:"Jeremiah 25-27",title:"Seventy years of captivity"},
+{day:256,week:37,theme:null,subtheme:null,ref:"Jeremiah 28-30",title:"Restoration promised"},
+{day:257,week:37,theme:null,subtheme:null,ref:"Jeremiah 31-32",title:"The new covenant"},
+{day:258,week:37,theme:null,subtheme:null,ref:"Jeremiah 33-35",title:"God's promises to David"},
+{day:259,week:37,theme:null,subtheme:null,ref:"Jeremiah 36-38",title:"Jeremiah's trials"},
+{day:260,week:38,theme:null,subtheme:null,ref:"Jeremiah 39-41",title:"Jerusalem falls"},
+{day:261,week:38,theme:null,subtheme:null,ref:"Jeremiah 42-44",title:"Disobedience in Egypt"},
+{day:262,week:38,theme:null,subtheme:null,ref:"Jeremiah 45-47",title:"Oracles against nations"},
+{day:263,week:38,theme:null,subtheme:null,ref:"Jeremiah 48-50",title:"Judgment on Moab and Babylon"},
+{day:264,week:38,theme:null,subtheme:null,ref:"Jeremiah 51-52",title:"Babylon's fall"},
+{day:265,week:38,theme:null,subtheme:null,ref:"Lamentations 1-2",title:"Grief over Jerusalem"},
+{day:266,week:38,theme:null,subtheme:null,ref:"Lamentations 3-5",title:"Hope in God's mercy"},
+{day:267,week:39,theme:null,subtheme:null,ref:"Ezekiel 1-3",title:"Vision and calling"},
+{day:268,week:39,theme:null,subtheme:null,ref:"Ezekiel 4-6",title:"Symbolic acts of judgment"},
+{day:269,week:39,theme:null,subtheme:null,ref:"Ezekiel 7-9",title:"Day of wrath"},
+{day:270,week:39,theme:null,subtheme:null,ref:"Ezekiel 10-12",title:"God's glory departs"},
+{day:271,week:39,theme:null,subtheme:null,ref:"Ezekiel 13-15",title:"False prophets and useless vine"},
+{day:272,week:39,theme:null,subtheme:null,ref:"Ezekiel 16-17",title:"God's faithfulness to the unfaithful"},
+{day:273,week:39,theme:null,subtheme:null,ref:"Ezekiel 18-20",title:"Personal responsibility"},
+{day:274,week:40,theme:null,subtheme:null,ref:"Ezekiel 21-23",title:"Judgment on Jerusalem"},
+{day:275,week:40,theme:null,subtheme:null,ref:"Ezekiel 24-26",title:"Siege and Tyre's fall"},
+{day:276,week:40,theme:null,subtheme:null,ref:"Ezekiel 27-29",title:"Judgment on Tyre and Egypt"},
+{day:277,week:40,theme:null,subtheme:null,ref:"Ezekiel 30-32",title:"Woe to Egypt"},
+{day:278,week:40,theme:null,subtheme:null,ref:"Ezekiel 33-35",title:"Watchman's duty"},
+{day:279,week:40,theme:null,subtheme:null,ref:"Ezekiel 36-37",title:"New heart and dry bones"},
+{day:280,week:40,theme:null,subtheme:null,ref:"Ezekiel 38-39",title:"Gog's defeat"},
+{day:281,week:41,theme:null,subtheme:null,ref:"Ezekiel 40-42",title:"Vision of the new temple"},
+{day:282,week:41,theme:null,subtheme:null,ref:"Ezekiel 43-45",title:"Worship restored"},
+{day:283,week:41,theme:null,subtheme:null,ref:"Ezekiel 46-48",title:"Land restored"},
+{day:284,week:41,theme:null,subtheme:null,ref:"Daniel 1-3",title:"Faith in exile"},
+{day:285,week:41,theme:null,subtheme:null,ref:"Daniel 4-6",title:"God's power over kings"},
+{day:286,week:41,theme:null,subtheme:null,ref:"Daniel 7-9",title:"Visions of the future"},
+{day:287,week:41,theme:null,subtheme:null,ref:"Daniel 10-12",title:"Final vision"},
+{day:288,week:42,theme:null,subtheme:null,ref:"Hosea 1-4",title:"Israel's unfaithfulness"},
+{day:289,week:42,theme:null,subtheme:null,ref:"Hosea 5-7",title:"Judgment and restoration"},
+{day:290,week:42,theme:null,subtheme:null,ref:"Hosea 8-10",title:"Reaping the whirlwind"},
+{day:291,week:42,theme:null,subtheme:null,ref:"Hosea 11-14",title:"God's love for Israel"},
+{day:292,week:42,theme:null,subtheme:null,ref:"Joel 1-3",title:"The day of the Lord"},
+{day:293,week:42,theme:null,subtheme:null,ref:"Amos 1-3",title:"Judgment on nations"},
+{day:294,week:42,theme:null,subtheme:null,ref:"Amos 4-6",title:"Woe to the complacent"},
+{day:295,week:43,theme:null,subtheme:null,ref:"Amos 7-9",title:"Israel's downfall and hope"},
+{day:296,week:43,theme:null,subtheme:null,ref:"Obadiah",title:"Edom's judgment"},
+{day:297,week:43,theme:null,subtheme:null,ref:"Jonah 1-4",title:"God's compassion on Nineveh"},
+{day:298,week:43,theme:null,subtheme:null,ref:"Micah 1-3",title:"Judgment and leaders' corruption"},
+{day:299,week:43,theme:null,subtheme:null,ref:"Micah 4-5",title:"Hope and ruler from Bethlehem"},
+{day:300,week:43,theme:null,subtheme:null,ref:"Micah 6-7",title:"What the Lord requires"},
+{day:301,week:43,theme:null,subtheme:null,ref:"Nahum 1-3",title:"Nineveh's destruction"},
+{day:302,week:44,theme:null,subtheme:null,ref:"Habakkuk 1-3",title:"Faith in hard times"},
+{day:303,week:44,theme:null,subtheme:null,ref:"Zephaniah 1-3",title:"The day of the Lord"},
+{day:304,week:44,theme:null,subtheme:null,ref:"Haggai 1-2",title:"Rebuilding the temple"},
+{day:305,week:44,theme:null,subtheme:null,ref:"Zechariah 1-3",title:"Visions of restoration"},
+{day:306,week:44,theme:null,subtheme:null,ref:"Zechariah 4-6",title:"God's Spirit and judgment"},
+{day:307,week:44,theme:null,subtheme:null,ref:"Zechariah 7-9",title:"True fasting and coming King"},
+{day:308,week:44,theme:null,subtheme:null,ref:"Zechariah 10-12",title:"God's deliverance of Judah"},
+{day:309,week:45,theme:null,subtheme:null,ref:"Zechariah 13-14",title:"The Lord reigns"},
+{day:310,week:45,theme:null,subtheme:null,ref:"Malachi 1-2",title:"The Lord's rebuke to priests"},
+{day:311,week:45,theme:null,subtheme:null,ref:"Malachi 3-4",title:"The day of the Lord"},
+{day:312,week:45,theme:null,subtheme:null,ref:"Matthew 1-3",title:"Jesus' birth and baptism"},
+{day:313,week:45,theme:null,subtheme:null,ref:"Matthew 4-6",title:"Sermon on the Mount (part 1)"},
+{day:314,week:45,theme:null,subtheme:null,ref:"Matthew 7-9",title:"Sermon on the Mount (part 2) and miracles"},
+{day:315,week:45,theme:null,subtheme:null,ref:"Matthew 10-12",title:"Mission and opposition"},
+{day:316,week:46,theme:null,subtheme:null,ref:"Matthew 13-15",title:"Parables and miracles"},
+{day:317,week:46,theme:null,subtheme:null,ref:"Matthew 16-18",title:"Peter's confession and teachings"},
+{day:318,week:46,theme:null,subtheme:null,ref:"Matthew 19-21",title:"Teachings and triumphal entry"},
+{day:319,week:46,theme:null,subtheme:null,ref:"Matthew 22-24",title:"Parables and end times"},
+{day:320,week:46,theme:null,subtheme:null,ref:"Matthew 25-26",title:"Final teachings and betrayal"},
+{day:321,week:46,theme:null,subtheme:null,ref:"Matthew 27-28",title:"Crucifixion and resurrection"},
+{day:322,week:46,theme:null,subtheme:null,ref:"Mark 1-3",title:"Beginning of ministry"},
+{day:323,week:47,theme:null,subtheme:null,ref:"Mark 4-6",title:"Parables and miracles"},
+{day:324,week:47,theme:null,subtheme:null,ref:"Mark 7-9",title:"Teachings and transfiguration"},
+{day:325,week:47,theme:null,subtheme:null,ref:"Mark 10-12",title:"Teachings on discipleship"},
+{day:326,week:47,theme:null,subtheme:null,ref:"Mark 13-14",title:"End times and betrayal"},
+{day:327,week:47,theme:null,subtheme:null,ref:"Mark 15-16",title:"Crucifixion and resurrection"},
+{day:328,week:47,theme:null,subtheme:null,ref:"Luke 1-2",title:"Births of John and Jesus"},
+{day:329,week:47,theme:null,subtheme:null,ref:"Luke 3-4",title:"Baptism, temptation, and ministry"},
+{day:330,week:48,theme:null,subtheme:null,ref:"Luke 5-6",title:"Call of disciples and teachings"},
+{day:331,week:48,theme:null,subtheme:null,ref:"Luke 7-8",title:"Miracles and parables"},
+{day:332,week:48,theme:null,subtheme:null,ref:"Luke 9-10",title:"Mission and teaching on love"},
+{day:333,week:48,theme:null,subtheme:null,ref:"Luke 11-12",title:"Prayer and warnings"},
+{day:334,week:48,theme:null,subtheme:null,ref:"Luke 13-15",title:"Parables of the lost"},
+{day:335,week:48,theme:null,subtheme:null,ref:"Luke 16-18",title:"Stewardship and persistence"},
+{day:336,week:48,theme:null,subtheme:null,ref:"Luke 19-20",title:"Triumphal entry and temple teaching"},
+{day:337,week:49,theme:null,subtheme:null,ref:"Luke 21-22",title:"End times and betrayal"},
+{day:338,week:49,theme:null,subtheme:null,ref:"Luke 23-24",title:"Crucifixion and resurrection"},
+{day:339,week:49,theme:null,subtheme:null,ref:"John 1-3",title:"Word made flesh and new birth"},
+{day:340,week:49,theme:null,subtheme:null,ref:"John 4-5",title:"Living water and healing"},
+{day:341,week:49,theme:null,subtheme:null,ref:"John 6-7",title:"Bread of life and living water"},
+{day:342,week:49,theme:null,subtheme:null,ref:"John 8-9",title:"Light of the world and healing"},
+{day:343,week:49,theme:null,subtheme:null,ref:"John 10-11",title:"Good Shepherd and Lazarus"},
+{day:344,week:50,theme:null,subtheme:null,ref:"John 12-13",title:"Triumphal entry and servant leadership"},
+{day:345,week:50,theme:null,subtheme:null,ref:"John 14-15",title:"Comfort and abiding in Christ"},
+{day:346,week:50,theme:null,subtheme:null,ref:"John 16-17",title:"Holy Spirit and Jesus' prayer"},
+{day:347,week:50,theme:null,subtheme:null,ref:"John 18-19",title:"Arrest and crucifixion"},
+{day:348,week:50,theme:null,subtheme:null,ref:"John 20-21",title:"Resurrection and restoration"},
+{day:349,week:50,theme:null,subtheme:null,ref:"Acts 1-3",title:"Holy Spirit and early church"},
+{day:350,week:50,theme:null,subtheme:null,ref:"Acts 4-6",title:"Boldness and service"},
+{day:351,week:51,theme:null,subtheme:null,ref:"Acts 7-8",title:"Stephen's testimony and gospel spread"},
+{day:352,week:51,theme:null,subtheme:null,ref:"Acts 9-10",title:"Saul's conversion and Gentiles"},
+{day:353,week:51,theme:null,subtheme:null,ref:"Acts 11-13",title:"Missionary journeys begin"},
+{day:354,week:51,theme:null,subtheme:null,ref:"Acts 14-16",title:"Ministry and imprisonment"},
+{day:355,week:51,theme:null,subtheme:null,ref:"Acts 17-19",title:"Gospel to the nations"},
+{day:356,week:51,theme:null,subtheme:null,ref:"Acts 20-22",title:"Paul's farewell and arrest"},
+{day:357,week:51,theme:null,subtheme:null,ref:"Acts 23-25",title:"Trials before leaders"},
+{day:358,week:52,theme:null,subtheme:null,ref:"Acts 26-28",title:"Paul in Rome"},
+{day:359,week:52,theme:null,subtheme:null,ref:"Romans 1-3",title:"Sin and justification"},
+{day:360,week:52,theme:null,subtheme:null,ref:"Romans 4-6",title:"Faith and new life"},
+{day:361,week:52,theme:null,subtheme:null,ref:"Romans 7-9",title:"Struggle and God's sovereignty"},
+{day:362,week:52,theme:null,subtheme:null,ref:"Romans 10-12",title:"Salvation and transformed living"},
+{day:363,week:52,theme:null,subtheme:null,ref:"Romans 13-16",title:"Love and unity in Christ"},
+{day:364,week:52,theme:null,subtheme:null,ref:"Revelation 1-11",title:"Vision of Christ and judgments"},
+{day:365,week:52,theme:null,subtheme:null,ref:"Revelation 12-22",title:"Victory of Christ and new creation"}
+];
+
+// ══════════════════════════════════════
+// SUPABASE CLIENT
+// ══════════════════════════════════════
+const SUPABASE_URL='https://yzaxzmuuvozonhgwhlim.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXh6bXV1dm96b25oZ3dobGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDEwNTksImV4cCI6MjA4OTM3NzA1OX0.azWx9VrATCtci1Xzedm4NwozQRHVP8kfROZZSDmlaL8';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+const LS_KEY='wh_bible_state';
+const SCRIPTURE_CACHE_KEY='wh_bible_scripture_v1';
+let state={startDate:null,completed:[],streak:0,lastSaved:null,email:null};
+let currentDay=1;
+let session=null;
+let calendarOpen=false;
+let settingsOpen=false;
+let readerOpen=false;
+let scrollGateUnlocked=false; // true once user has scrolled to bottom of scripture
+const scriptureCache=new Map();
+
+// ══════════════════════════════════════
+// DOM REFS
+// ══════════════════════════════════════
+const $=id=>document.getElementById(id);
+
+// ══════════════════════════════════════
+// LOCALSTORAGE
+// ══════════════════════════════════════
+function loadLocal(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){
+      const d=JSON.parse(raw);
+      state.startDate=d.startDate||null;
+      state.completed=Array.isArray(d.completed)?d.completed:[];
+      state.streak=d.streak||0;
+      state.lastSaved=d.lastSaved||null;
+      state.email=d.email||null;
+      return true;
+    }
+  }catch(e){console.warn('localStorage read error',e)}
+  return false;
+}
+
+function saveLocal(){
+  state.lastSaved=new Date().toISOString();
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify(state));
+  }catch(e){console.warn('localStorage write error',e)}
+}
+
+// ══════════════════════════════════════
+// SUPABASE SYNC
+// ══════════════════════════════════════
+async function syncFromSupabase(sess){
+  if(!sess)return;
+  try{
+    const{data,error}=await sb.from('bible_progress').select('*').eq('user_id',sess.user.id).single();
+    if(error&&error.code!=='PGRST116'){console.warn('Supabase fetch error',error);return}
+    if(data){
+      const remoteTime=new Date(data.updated_at).getTime();
+      const localTime=state.lastSaved?new Date(state.lastSaved).getTime():0;
+      if(remoteTime>localTime && data.start_date){
+        state.startDate=data.start_date;
+        state.completed=Array.isArray(data.completed_days)?data.completed_days:[];
+        state.streak=data.streak||0;
+        state.lastSaved=data.updated_at;
+        saveLocal();
+      }else{
+        await pushToSupabase(sess);
+      }
+    }else if(state.startDate){
+      await pushToSupabase(sess);
+    }
+  }catch(e){console.warn('Supabase sync error',e)}
+}
+
+async function pushToSupabase(sess){
+  if(!sess||!state.startDate)return;
+  try{
+    await sb.from('bible_progress').upsert({
+      user_id:sess.user.id,
+      email:state.email||sess.user.email||null,
+      start_date:state.startDate,
+      completed_days:state.completed,
+      streak:state.streak,
+      updated_at:new Date().toISOString()
+    },{onConflict:'user_id'});
+  }catch(e){console.warn('Supabase push error',e)}
+}
+
+// ══════════════════════════════════════
+// CALCULATIONS
+// ══════════════════════════════════════
+function getTodayDayNumber(){
+  if(!state.startDate)return 1;
+  const start=new Date(state.startDate+'T00:00:00');
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const diff=Math.floor((today.getTime()-start.getTime())/86400000)+1;
+  return Math.max(1,Math.min(365,diff));
+}
+
+function calcStreak(){
+  if(state.completed.length===0){state.streak=0;return}
+  const todayNum=getTodayDayNumber();
+  const set=new Set(state.completed);
+  let streak=0;
+  let checkDay=todayNum;
+  // If today isn't completed, start from yesterday
+  if(!set.has(checkDay))checkDay--;
+  while(checkDay>=1&&set.has(checkDay)){
+    streak++;
+    checkDay--;
+  }
+  state.streak=streak;
+}
+
+// ══════════════════════════════════════
+// AUTH UI
+// ══════════════════════════════════════
+function updateAuthUI(){
+  const emailEl=$('authEmail');
+  const userEmail=state.email||(session&&session.user?session.user.email:null);
+  if(!userEmail){
+    emailEl.style.display='none';
+  }else{
+    emailEl.style.display='inline';
+    emailEl.textContent=userEmail;
+  }
+}
+
+// ══════════════════════════════════════
+// HERO CARD RENDERING
+// ══════════════════════════════════════
+function renderHero(){
+  const reading=READINGS[currentDay-1];
+  if(!reading)return;
+
+  // Week pill
+  $('weekLabel').textContent='WEEK '+reading.week;
+  const themeEl=$('weekTheme');
+  if(reading.theme){
+    themeEl.textContent=reading.theme;
+    themeEl.style.display='inline';
+  }else{
+    themeEl.style.display='none';
+  }
+
+  // Main content
+  $('heroDay').textContent='DAY '+reading.day;
+  $('heroRef').textContent=reading.ref;
+  $('heroTitle').textContent=reading.title;
+
+  // Toggle state
+  const btn=$('toggleBtn');
+  const isDone=state.completed.includes(currentDay);
+  btn.classList.toggle('completed',isDone);
+
+  // Scroll-gate: if reader is open, passage not yet completed, and user hasn't scrolled to bottom → lock
+  updateScrollGate();
+
+  // Nav &mdash; can't advance past today's reading
+  const todayMax=getTodayDayNumber();
+  $('btnPrev').disabled=currentDay<=1;
+  $('btnNext').disabled=currentDay>=todayMax||currentDay>=365;
+  $('navLabel').textContent='Day '+currentDay+' of 365';
+
+  // Progress
+  const pct=state.completed.length/365*100;
+  $('progressFill').style.width=pct.toFixed(1)+'%';
+
+  // Stats
+  $('statComplete').textContent=state.completed.length+' / 365 COMPLETE';
+  $('statStreak').innerHTML='<span class="stat-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg></span>'+state.streak+' DAY STREAK';
+  // Fetch scripture
+  loadScripture(reading.ref);
+}
+
+// ══════════════════════════════════════
+// CALENDAR GRID RENDERING
+// ══════════════════════════════════════
+let calendarBuilt=false;
+function buildCalendar(){
+  if(calendarBuilt)return;
+  calendarBuilt=true;
+  const container=$('calendarColumns');
+  const todayNum=getTodayDayNumber();
+  const completedSet=new Set(state.completed);
+
+  for(let w=1;w<=52;w++){
+    const weekReadings=READINGS.filter(r=>r.week===w);
+    if(weekReadings.length===0)continue;
+    const doneCount=weekReadings.filter(r=>completedSet.has(r.day)).length;
+    const theme=weekReadings[0].theme;
+    const isCurrent=weekReadings.some(r=>r.day===todayNum);
+
+    const section=document.createElement('div');
+    section.className='week-section'+(isCurrent?' expanded':'');
+    section.dataset.week=w;
+
+    let headerHTML=`<div class="week-header" data-week="${w}">
+      <div class="week-header-left">
+        <span class="week-label">Week ${w}</span>
+        ${theme?'<span class="week-theme-label">'+theme+'</span>':''}
+      </div>
+      <div class="week-header-right">
+        <span class="week-count${doneCount===weekReadings.length?' all-done':''}">${doneCount}/${weekReadings.length}</span>
+        <span class="week-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>`;
+
+    let daysHTML='<div class="week-days">';
+    weekReadings.forEach(r=>{
+      const done=completedSet.has(r.day);
+      const isToday=r.day===todayNum;
+      const isFuture=r.day>todayNum;
+      daysHTML+=`<div class="day-row${isToday?' is-today':''}${isFuture?' is-future':''}" data-day="${r.day}">
+        <span class="day-dot${done?' done':''}"></span>
+        <span class="day-row-num">Day ${r.day}</span>
+        <span class="day-row-ref">${r.ref}</span>
+        <span class="day-row-title">${r.title}</span>
+        ${isFuture?'<span class="day-row-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>':''}
+      </div>`;
+    });
+    daysHTML+='</div>';
+
+    section.innerHTML=headerHTML+daysHTML;
+    container.appendChild(section);
+  }
+
+  // Event delegation for calendar
+  container.addEventListener('click',e=>{
+    const header=e.target.closest('.week-header');
+    if(header){
+      const sec=header.closest('.week-section');
+      sec.classList.toggle('expanded');
+      return;
+    }
+    const row=e.target.closest('.day-row');
+    if(row){
+      const day=parseInt(row.dataset.day,10);
+      // Block clicking future days
+      if(day>getTodayDayNumber())return;
+      currentDay=day;
+      renderHero();
+      // Scroll to hero
+      $('heroCard').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+}
+
+function refreshCalendarDots(){
+  if(!calendarBuilt)return;
+  const completedSet=new Set(state.completed);
+  const todayNum=getTodayDayNumber();
+  document.querySelectorAll('.day-row').forEach(row=>{
+    const day=parseInt(row.dataset.day,10);
+    const dot=row.querySelector('.day-dot');
+    if(dot)dot.classList.toggle('done',completedSet.has(day));
+    // Update future state (in case day changed since calendar was built)
+    row.classList.toggle('is-future',day>todayNum);
+  });
+  // Update week counts
+  for(let w=1;w<=52;w++){
+    const sec=document.querySelector(`.week-section[data-week="${w}"]`);
+    if(!sec)continue;
+    const weekReadings=READINGS.filter(r=>r.week===w);
+    const doneCount=weekReadings.filter(r=>completedSet.has(r.day)).length;
+    const countEl=sec.querySelector('.week-count');
+    if(countEl){
+      countEl.textContent=doneCount+'/'+weekReadings.length;
+      countEl.classList.toggle('all-done',doneCount===weekReadings.length);
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// SCROLL-GATE LOGIC
+// ══════════════════════════════════════
+function updateScrollGate(){
+  const btn=$('toggleBtn');
+  const hint=$('scrollGateHint');
+  const hintText=hint.querySelector('span');
+  const isDone=state.completed.includes(currentDay);
+
+  // If already completed (allow unchecking) or already unlocked via scroll → no gate
+  if(isDone || scrollGateUnlocked){
+    btn.classList.remove('scroll-locked');
+    btn.style.pointerEvents='';
+    hint.classList.remove('visible');
+    return;
+  }
+
+  // Gate is active: lock the button
+  btn.classList.add('scroll-locked');
+  btn.style.pointerEvents='none';
+  hint.classList.add('visible');
+  // Update hint text based on reader state
+  if(hintText){
+    hintText.textContent=readerOpen?'Scroll to bottom to unlock':'Open passage to unlock';
+  }
+}
+
+function onScriptureScroll(){
+  const body=$('scriptureBody');
+  const fill=$('scriptureScrollFill');
+  if(!body)return;
+
+  const scrollTop=body.scrollTop;
+  const scrollHeight=body.scrollHeight-body.clientHeight;
+  if(scrollHeight<=0){
+    // Content doesn't overflow &mdash; auto-unlock
+    scrollGateUnlocked=true;
+    if(fill)fill.style.width='100%';
+    updateScrollGate();
+    return;
+  }
+
+  const pct=Math.min(scrollTop/scrollHeight,1);
+  if(fill)fill.style.width=(pct*100).toFixed(1)+'%';
+
+  // Unlock when within 5px of bottom (accounts for subpixel rounding)
+  if(scrollTop+5>=scrollHeight){
+    if(!scrollGateUnlocked){
+      scrollGateUnlocked=true;
+      const btn=$('toggleBtn');
+      btn.classList.remove('scroll-locked');
+      btn.style.pointerEvents='';
+      $('scrollGateHint').classList.remove('visible');
+
+      // Unlock animation
+      btn.classList.remove('just-unlocked');
+      void btn.offsetWidth;
+      btn.classList.add('just-unlocked');
+      setTimeout(()=>btn.classList.remove('just-unlocked'),600);
+    }
+  }
+}
+
+// Attach scroll listener to scripture body
+$('scriptureBody').addEventListener('scroll',onScriptureScroll,{passive:true});
+
+// ══════════════════════════════════════
+// COMPLETION TOGGLE
+// ══════════════════════════════════════
+function toggleCompletion(){
+  const btn=$('toggleBtn');
+
+  // If scroll-gated and trying to mark complete, block
+  if(btn.classList.contains('scroll-locked'))return;
+
+  const idx=state.completed.indexOf(currentDay);
+  if(idx===-1){
+    state.completed.push(currentDay);
+  }else{
+    state.completed.splice(idx,1);
+  }
+  calcStreak();
+  saveLocal();
+  renderHero();
+  refreshCalendarDots();
+
+  // Animation
+  btn.classList.remove('just-toggled');
+  void btn.offsetWidth; // force reflow
+  btn.classList.add('just-toggled');
+
+  // Background sync
+  if(session)pushToSupabase(session);
+
+  // Check celebration
+  if(state.completed.length>=365){
+    setTimeout(()=>$('celebrationOverlay').classList.add('open'),600);
+  }
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function prevDay(){if(currentDay>1){currentDay--;renderHero()}}
+function nextDay(){
+  const todayMax=getTodayDayNumber();
+  if(currentDay<365&&currentDay<todayMax){currentDay++;renderHero()}
+}
+
+// ══════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════
+function toggleSettings(){
+  settingsOpen=!settingsOpen;
+  $('settingsDropdown').classList.toggle('open',settingsOpen);
+}
+
+function resetStartDate(){
+  settingsOpen=false;
+  $('settingsDropdown').classList.remove('open');
+  $('welcomeOverlay').classList.add('open');
+}
+
+function clearAllProgress(){
+  if(!confirm('This will erase ALL your progress, including completed readings and your start date. This cannot be undone. Are you sure?'))return;
+  settingsOpen=false;
+  $('settingsDropdown').classList.remove('open');
+  const keepEmail=state.email;
+  state={startDate:null,completed:[],streak:0,lastSaved:null,email:keepEmail};
+  try{localStorage.removeItem(LS_KEY)}catch(e){}
+  currentDay=1;
+  calendarBuilt=false;
+  $('calendarColumns').innerHTML='';
+  renderHero();
+  // Use dashboard email
+  const cached=keepEmail;
+  if(cached){
+    showWelcomeStep2(cached);
+  }
+  $('welcomeOverlay').classList.add('open');
+  // Clear Supabase too
+  if(session){
+    try{sb.from('bible_progress').delete().eq('user_id',session.user.id)}catch(e){}
+  }
+}
+
+// ══════════════════════════════════════
+// WELCOME FLOW
+// ══════════════════════════════════════
+function beginStudy(){
+  const dateVal=$('startDateInput').value;
+  if(!dateVal){alert('Please choose a start date.');return}
+  state.startDate=dateVal;
+  calcStreak();
+  saveLocal();
+  $('welcomeOverlay').classList.remove('open');
+  currentDay=getTodayDayNumber();
+  renderHero();
+  buildCalendar();
+  if(session)pushToSupabase(session);
+}
+
+// ══════════════════════════════════════
+function showWelcomeStep2(email){
+  const step1 = $('welcomeStep1');
+  if(step1) step1.classList.remove('active');
+  $('welcomeStep2').classList.add('active');
+  $('welcomeUserEmail').textContent=email||'';
+  const today=new Date();
+  $('startDateInput').value=today.toISOString().split('T')[0];
+}
+
+// ══════════════════════════════════════
+// CELEBRATION / RESTART
+// ══════════════════════════════════════
+function restartStudy(){
+  $('celebrationOverlay').classList.remove('open');
+  const keepData=confirm('Would you like to keep your completed readings as a record? Click OK to keep them, or Cancel to start completely fresh.');
+  if(!keepData){
+    state.completed=[];
+    state.streak=0;
+  }
+  state.startDate=null;
+  saveLocal();
+  currentDay=1;
+  calendarBuilt=false;
+  $('calendarColumns').innerHTML='';
+  renderHero();
+  // Use dashboard email
+  const cached=state.email;
+  if(cached){
+    showWelcomeStep2(cached);
+  }
+  $('welcomeOverlay').classList.add('open');
+}
+
+// ══════════════════════════════════════
+// SCRIPTURE READER
+// ══════════════════════════════════════
+function loadScriptureCache(){
+  try{
+    const raw=localStorage.getItem(SCRIPTURE_CACHE_KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      Object.entries(parsed).forEach(([k,v])=>scriptureCache.set(k,v));
+    }
+  }catch(e){}
+}
+
+function saveScriptureCache(){
+  try{
+    const obj={};
+    // Only keep last 30 passages in localStorage to avoid bloat
+    const entries=[...scriptureCache.entries()];
+    const recent=entries.slice(-30);
+    recent.forEach(([k,v])=>obj[k]=v);
+    localStorage.setItem(SCRIPTURE_CACHE_KEY,JSON.stringify(obj));
+  }catch(e){}
+}
+
+function parseRef(ref){
+  // Parse references like "Genesis 1-3", "1 Samuel 1-4", "Psalm 119", "Song of Solomon 1-4"
+  // Returns { book: 'genesis', chapters: [1,2,3] }
+  const r=ref.trim();
+  // Match: book name (possibly starting with a number) + chapter(s)
+  const m=r.match(/^(.+?)\s+(\d+)(?:\s*[-&ndash;]\s*(\d+))?$/i);
+  if(!m)return null;
+  const book=m[1].trim();
+  const start=parseInt(m[2],10);
+  const end=m[3]?parseInt(m[3],10):start;
+  const chapters=[];
+  for(let i=start;i<=end;i++)chapters.push(i);
+  return{book,chapters};
+}
+
+async function fetchSingleChapter(book,chapter){
+  const url='https://bible-api.com/'+encodeURIComponent(book)+'+'+chapter;
+  const resp=await fetch(url);
+  if(!resp.ok)throw new Error('API returned '+resp.status);
+  const data=await resp.json();
+  if(data.error)throw new Error(data.error);
+  return{
+    chapter:chapter,
+    verses:data.verses||[],
+    reference:data.reference||''
+  };
+}
+
+async function fetchScripture(ref){
+  // Check memory cache
+  if(scriptureCache.has(ref))return scriptureCache.get(ref);
+
+  const parsed=parseRef(ref);
+  if(!parsed)throw new Error('Could not parse reference: '+ref);
+
+  // Fetch each chapter individually (bible-api.com fails on multi-chapter ranges)
+  const chapterResults=await Promise.all(
+    parsed.chapters.map(ch=>fetchSingleChapter(parsed.book,ch))
+  );
+
+  // Combine all verses
+  const allVerses=[];
+  chapterResults.forEach(cr=>{
+    cr.verses.forEach(v=>{
+      allVerses.push({...v,chapter:v.chapter||cr.chapter});
+    });
+  });
+
+  const result={
+    ref:ref,
+    verses:allVerses,
+    text:allVerses.map(v=>v.text).join(' ')
+  };
+
+  scriptureCache.set(ref,result);
+  saveScriptureCache();
+  return result;
+}
+
+function formatScriptureHTML(data){
+  if(!data.verses||data.verses.length===0){
+    // Fallback: just show the raw text
+    return '<p>'+data.text.replace(/\n/g,'</p><p>')+'</p>';
+  }
+
+  let html='';
+  let currentChapter=null;
+
+  data.verses.forEach(v=>{
+    if(v.chapter!==currentChapter){
+      if(currentChapter!==null)html+='</p>';
+      currentChapter=v.chapter;
+      html+='<p style="margin-top:20px;margin-bottom:4px;"><strong style="font-family:var(--font-display);font-size:18px;color:var(--lime);letter-spacing:.04em;text-transform:uppercase;">Chapter '+v.chapter+'</strong></p><p>';
+    }
+    html+='<span class="verse-num">'+v.verse+'</span>'+v.text.trim()+' ';
+  });
+  html+='</p>';
+  return html;
+}
+
+async function loadScripture(ref){
+  const reader=$('scriptureReader');
+  const body=$('scriptureBody');
+  const refTitle=$('scriptureRefTitle');
+
+  refTitle.textContent=ref;
+
+  // Close reader when navigating to a new day
+  if(readerOpen){
+    readerOpen=false;
+    reader.classList.remove('open');
+    const btn=$('btnReadPassage');
+    btn.classList.remove('active');
+    $('readPassageText').textContent='Read Passage';
+  }
+
+  // Reset scroll-gate for the new day
+  scrollGateUnlocked=false;
+  $('scriptureScrollFill').style.width='0%';
+
+  // Pre-load if it's cached (instant display when user opens)
+  if(scriptureCache.has(ref)){
+    const data=scriptureCache.get(ref);
+    body.innerHTML=formatScriptureHTML(data);
+  }else{
+    body.innerHTML='<div class="scripture-loading"><span class="spin"></span> Loading scripture...</div>';
+  }
+}
+
+async function toggleReader(){
+  readerOpen=!readerOpen;
+  const reader=$('scriptureReader');
+  const btn=$('btnReadPassage');
+  const body=$('scriptureBody');
+  const reading=READINGS[currentDay-1];
+  if(!reading)return;
+
+  if(readerOpen){
+    reader.classList.add('open');
+    btn.classList.add('active');
+    $('readPassageText').textContent='Close Passage';
+
+    // Reset scroll-gate for the current day (unless already completed)
+    scrollGateUnlocked=false;
+    $('scriptureScrollFill').style.width='0%';
+    updateScrollGate();
+
+    // Fetch if not already loaded
+    if(!scriptureCache.has(reading.ref)){
+      body.innerHTML='<div class="scripture-loading"><span class="spin"></span> Loading scripture...</div>';
+      try{
+        const data=await fetchScripture(reading.ref);
+        body.innerHTML=formatScriptureHTML(data);
+        // Check if content doesn't scroll (short passage)
+        requestAnimationFrame(()=>onScriptureScroll());
+      }catch(e){
+        console.warn('Scripture fetch error',e);
+        const bgRef=encodeURIComponent(reading.ref);
+        body.innerHTML='<div class="scripture-error">Unable to load scripture right now.<br>Read it on <a href="https://www.biblegateway.com/passage/?search='+bgRef+'&version=NIV" target="_blank" rel="noopener">BibleGateway (NIV)</a></div>';
+        // Unlock on error so they can still mark complete
+        scrollGateUnlocked=true;
+        updateScrollGate();
+      }
+    }else{
+      const data=scriptureCache.get(reading.ref);
+      body.innerHTML=formatScriptureHTML(data);
+      // Check if content doesn't scroll (short passage)
+      requestAnimationFrame(()=>onScriptureScroll());
+    }
+
+    // Smooth scroll to make the reader visible
+    reader.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }else{
+    reader.classList.remove('open');
+    btn.classList.remove('active');
+    $('readPassageText').textContent='Read Passage';
+    // Keep gate locked &mdash; they must open & scroll to unlock
+    updateScrollGate();
+  }
+}
+
+// ══════════════════════════════════════
+// CALENDAR TOGGLE
+// ══════════════════════════════════════
+function toggleCalendar(){
+  calendarOpen=!calendarOpen;
+  const grid=$('calendarGrid');
+  const btn=$('btnCalendarToggle');
+  const text=$('calendarToggleText');
+  if(calendarOpen){
+    buildCalendar();
+    refreshCalendarDots();
+    grid.classList.add('open');
+    btn.classList.add('active');
+    text.textContent='Back to Today';
+  }else{
+    grid.classList.remove('open');
+    btn.classList.remove('active');
+    text.textContent='View All Weeks';
+  }
+}
+
+// ══════════════════════════════════════
+// CLOSE SETTINGS ON OUTSIDE CLICK
+// ══════════════════════════════════════
+document.addEventListener('click',e=>{
+  if(settingsOpen&&!e.target.closest('.settings-wrap')){
+    settingsOpen=false;
+    $('settingsDropdown').classList.remove('open');
+  }
+});
+
+// ══════════════════════════════════════
+// EVENT BINDINGS
+// ══════════════════════════════════════
+$('toggleBtn').addEventListener('click',toggleCompletion);
+$('btnPrev').addEventListener('click',prevDay);
+$('btnNext').addEventListener('click',nextDay);
+$('btnSettings').addEventListener('click',e=>{e.stopPropagation();toggleSettings()});
+$('btnResetDate').addEventListener('click',resetStartDate);
+$('btnClearAll').addEventListener('click',clearAllProgress);
+$('btnBegin').addEventListener('click',beginStudy);
+$('btnCalendarToggle').addEventListener('click',toggleCalendar);
+$('btnReadPassage').addEventListener('click',toggleReader);
+$('btnRestart').addEventListener('click',restartStudy);
+
+// Keyboard nav
+document.addEventListener('keydown',e=>{
+  if($('welcomeOverlay').classList.contains('open'))return;
+  if(e.key==='ArrowLeft')prevDay();
+  if(e.key==='ArrowRight')nextDay();
+  if(e.key===' '||e.key==='Enter'){
+    if(document.activeElement===$('toggleBtn')||document.activeElement===document.body){
+      e.preventDefault();
+      toggleCompletion();
+    }
+  }
+});
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+(async function init(){
+  // 0. Load scripture cache from localStorage
+  loadScriptureCache();
+
+  // 1. Load localStorage
+  const hasLocal=loadLocal();
+
+  // DASHBOARD AUTH CHECK
+  const dashDataRaw = localStorage.getItem('whealthy_member_data');
+  const dashData = dashDataRaw ? JSON.parse(dashDataRaw) : null;
+  const dashEmail = dashData && dashData.email ? dashData.email : null;
+  
+  if (!dashEmail) {
+    window.location.href = 'https://whealthylabel.com/dashboard';
+    return;
+  }
+  
+  // Set email from dashboard to state
+  state.email = dashEmail;
+  saveLocal();
+
+  // 2. Check auth
+  try{
+    const{data:{session:sess}}=await sb.auth.getSession();
+    session=sess;
+    updateAuthUI();
+
+    // 3. If signed in, sync
+    if(session){
+      await syncFromSupabase(session);
+    }
+  }catch(e){
+    console.warn('Auth check failed',e);
+    updateAuthUI();
+  }
+
+  // 4. Auth state listener
+  sb.auth.onAuthStateChange((event,sess)=>{
+    session=sess;
+    updateAuthUI();
+    if(event==='SIGNED_IN'&&sess){
+      syncFromSupabase(sess).then(()=>{
+        currentDay=getTodayDayNumber();
+        renderHero();
+        if(calendarOpen)refreshCalendarDots();
+      });
+    }
+  });
+
+  // 5. Show welcome or render
+  if(!state.startDate){
+    $('welcomeOverlay').classList.add('open');
+    showWelcomeStep2(dashEmail);
+    renderHero();
+  }else{
+    currentDay=getTodayDayNumber();
+    renderHero();
+    // Check if all complete
+    if(state.completed.length>=365){
+      $('celebrationOverlay').classList.add('open');
+    }
+  }
+})();
+</script>
+</div><!-- #whealthy-app-embed -->
+</body>
+</html>

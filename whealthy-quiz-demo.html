@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="wh-oswald">
+/* Oswald 700 embedded, lifted from whealthy-dashboard.html 2026-07-15.
+   Headers MUST be Oswald. Relying on the fonts.googleapis.com request
+   alone means that when baknd blocks, strips or delays it, every header
+   silently falls back to sans-serif and the condensed face is lost.
+   That is exactly what happened on whealthy-invite.html. Do not remove
+   this in favour of the network request. */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url(data:font/woff2;base64,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) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+</style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WHEALTHY &#8212; Energy Pattern Quiz</title>
+
+<!-- Open Graph / Social Preview Tags -->
+<meta property="og:title" content="WHEALTHY &#8212; Find What's Draining You">
+<meta property="og:description" content="Take the 60-second energy pattern quiz. Discover your archetype and get your personalized governance routine.">
+<meta property="og:image" content="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/background/Gemini_Generated_Image_h0ekmah0ekmah0ek-3779404.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://whealthylabel.com/steward-quiz">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* --- BAKND/SIMVOLY ISOLATION RESET --- */
+#whealthy-quiz-embed h1, #whealthy-quiz-embed h2, #whealthy-quiz-embed h3,
+#whealthy-quiz-embed p, #whealthy-quiz-embed span, #whealthy-quiz-embed a,
+#whealthy-quiz-embed button, #whealthy-quiz-embed input, #whealthy-quiz-embed select, #whealthy-quiz-embed textarea {
+  -webkit-text-fill-color: currentcolor !important;
+}
+/* ------------------------------------- */
+
+:root{--black:#080809;--charcoal:#0f1012;--graphite:#161719;--graphite-light:#1e2024;--surface:#222428;--surface-2:#2a2d33;--border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);--border-hi:rgba(255,255,255,0.2);--glass:rgba(255,255,255,0.04);--glass-mid:rgba(255,255,255,0.07);--glass-hi:rgba(255,255,255,0.10);--lime:#ccff00;--lime-dim:rgba(204,255,0,0.15);--lime-glow:rgba(204,255,0,0.35);--lime-soft:rgba(204,255,0,0.08);--white:#fff;--white-80:rgba(255,255,255,0.80);--white-60:rgba(255,255,255,0.60);--white-40:rgba(255,255,255,0.40);--white-20:rgba(255,255,255,0.20);--text:#f0f1f3;--text-muted:rgba(240,241,243,0.60);--text-dim:rgba(240,241,243,0.38);--font-display:'Oswald',sans-serif;--font-body:'DM Sans',sans-serif;--radius-sm:8px;--radius:14px;--radius-lg:22px;--radius-xl:32px;--transition:0.3s cubic-bezier(0.23,1,0.32,1);--transition-fast:0.18s cubic-bezier(0.23,1,0.32,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--black);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;min-height:100svh}
+a,button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--font-body);cursor:pointer;border:none}
+img{display:block;max-width:100%}
+h1,h2,h3,p{overflow-wrap:break-word;word-wrap:break-word}
+@media(max-width:640px){input,select,textarea{font-size:16px !important}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:4px}
+
+/* ===================== PAGE LAYOUT ===================== */
+.quiz-page{min-height:100svh;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.quiz-page__bg{position:fixed;inset:0;z-index:0}
+.quiz-page__orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.quiz-page__orb--1{width:600px;height:600px;background:radial-gradient(circle,rgba(204,255,0,0.06)0%,transparent 70%);top:-100px;right:-100px;animation:float-orb 8s ease-in-out infinite}
+.quiz-page__orb--2{width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,0.03)0%,transparent 70%);bottom:100px;left:-80px;animation:float-orb 12s ease-in-out infinite reverse}
+.quiz-page__orb--3{width:300px;height:300px;background:radial-gradient(circle,rgba(204,255,0,0.04)0%,transparent 70%);top:50%;left:40%;animation:float-orb 10s ease-in-out infinite 3s}
+@keyframes float-orb{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-30px) translateX(15px)}66%{transform:translateY(20px) translateX(-10px)}}
+.quiz-page__noise{position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");opacity:.4;pointer-events:none}
+.quiz-page__grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02)1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none}
+
+/* ===================== HEADER ===================== */
+.quiz-header{position:relative;z-index:10;padding:20px 24px;display:flex;align-items:center;justify-content:space-between}
+.quiz-header__logo{font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.06em;color:var(--text);text-decoration:none}
+.quiz-header__logo span{color:var(--lime)}
+.quiz-header__badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:4px 10px;border-radius:100px}
+
+/* ===================== QUIZ CONTAINER ===================== */
+.quiz-container{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:20px 24px 40px}
+.quiz-card{width:560px;max-width:100%;background:rgba(22,23,25,0.75);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--border-mid);border-radius:var(--radius-xl);overflow:hidden;animation:card-enter .6s cubic-bezier(0.23,1,0.32,1)}
+@keyframes card-enter{0%{opacity:0;transform:translateY(30px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.quiz-card--result{width:100%;max-width:100%;border-radius:0;border:none;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;overflow-y:auto}
+
+/* Progress bar */
+.quiz-progress{height:3px;background:var(--glass-hi)}
+.quiz-progress__fill{height:100%;background:var(--lime);width:0;transition:width .6s cubic-bezier(0.23,1,0.32,1)}
+
+/* Quiz body */
+.quiz-body{padding:44px 40px 36px;position:relative;overflow:hidden;min-height:380px}
+.quiz-slide{width:100%;opacity:0;transform:translateX(40px);transition:opacity .45s cubic-bezier(0.23,1,0.32,1),transform .45s cubic-bezier(0.23,1,0.32,1)}
+.quiz-slide.active{opacity:1;transform:translateX(0)}
+.quiz-slide.exiting{opacity:0;transform:translateX(-30px);position:absolute;top:0;left:0;right:0;padding:44px 40px 36px;pointer-events:none}
+.quiz-q-num{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:16px}
+.quiz-question{font-family:var(--font-display);font-size:26px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:28px;line-height:1.15}
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.qm-option{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition);font-size:15px;color:var(--text-muted)}
+.qm-option:hover{border-color:var(--border-hi);color:var(--text);background:var(--glass-mid)}
+.qm-option.selected{border-color:rgba(204,255,0,0.4);background:var(--lime-soft);color:var(--text)}
+.qm-option__radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.qm-option.selected .qm-option__radio{border-color:var(--lime);background:var(--lime)}
+.qm-option.selected .qm-option__radio::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--black)}
+.quiz-slide .qm-option{opacity:0;transform:translateY(8px);animation:optionReveal .4s cubic-bezier(0.23,1,0.32,1) forwards}
+.quiz-slide .qm-option:nth-child(1){animation-delay:.08s}
+.quiz-slide .qm-option:nth-child(2){animation-delay:.14s}
+.quiz-slide .qm-option:nth-child(3){animation-delay:.20s}
+.quiz-slide .qm-option:nth-child(4){animation-delay:.26s}
+@keyframes optionReveal{to{opacity:1;transform:translateY(0)}}
+
+/* Buttons */
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--lime);color:var(--black);font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:16px 32px;border-radius:var(--radius);border:none;cursor:pointer;position:relative;overflow:hidden;transition:var(--transition);box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.2)0%,transparent 60%);opacity:0;transition:opacity var(--transition-fast)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.5),0 8px 30px rgba(0,0,0,0.4)}
+.btn-primary:hover::before{opacity:1}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary--arc{animation:arc-pulse 3s linear infinite}
+@keyframes arc-pulse{0%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}50%{box-shadow:0 0 60px rgba(204,255,0,0.6),0 4px 20px rgba(0,0,0,0.4)}100%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}}
+.quiz-next{width:100%;justify-content:center;opacity:.35;pointer-events:none;transition:opacity .3s ease,transform var(--transition),box-shadow var(--transition)}
+.quiz-next.ready{opacity:1;pointer-events:auto}
+
+/* Footer */
+.quiz-footer{padding:12px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px}
+.quiz-footer__text{font-size:11px;color:var(--text-dim);letter-spacing:.05em}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--white-60);background:var(--glass);border:1px solid var(--border);padding:5px 12px;border-radius:100px}
+.chip__dot{width:4px;height:4px;background:var(--lime);border-radius:50%}
+
+/* Secondary question */
+.secondary-q{text-align:center;padding:20px 0}
+.secondary-q__label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:16px}
+.secondary-q__question{font-family:var(--font-display);font-size:clamp(18px,3.5vw,24px);font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:24px;line-height:1.15}
+.secondary-q__options{display:flex;flex-direction:column;gap:10px;max-width:400px;margin:0 auto}
+
+/* Email capture */
+.email-capture__form{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.email-capture__row{display:flex;gap:10px}
+.email-capture__input{flex:1;padding:14px 18px;background:var(--glass);border:1px solid var(--border-mid);border-radius:var(--radius);color:var(--text);font-size:14px;font-family:var(--font-body);outline:none;transition:var(--transition);min-width:0}
+.email-capture__input:focus{border-color:rgba(204,255,0,0.4);box-shadow:0 0 20px rgba(204,255,0,0.1)}
+.email-capture__input::placeholder{color:var(--text-dim)}
+.email-capture__input.error{border-color:rgba(255,100,80,0.6);box-shadow:0 0 12px rgba(255,100,80,0.1)}
+.email-capture__error{font-size:11px;color:rgba(255,100,80,0.85);text-align:left;margin-top:-4px;display:none}
+.email-capture__error.visible{display:block}
+
+/* Countdown */
+.countdown-transition{text-align:center;padding:100px 24px;min-height:80svh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.countdown-transition__logo{font-family:var(--font-display);font-size:clamp(24px,5vw,40px);font-weight:700;color:var(--text);margin-bottom:48px;letter-spacing:.06em}
+.countdown-transition__logo span{color:var(--lime)}
+.countdown-transition__number{font-family:var(--font-display);font-size:clamp(80px,20vw,160px);font-weight:700;color:var(--lime);line-height:1;transition:opacity .3s ease,transform .3s cubic-bezier(0.34,1.56,0.64,1)}
+.countdown-transition__text{font-size:14px;color:var(--text-muted);margin-top:16px;letter-spacing:.06em}
+
+/* Result transition */
+.result-transition{text-align:center;padding:100px 24px;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.result-transition__check{width:72px;height:72px;border-radius:50%;background:var(--lime-soft);border:2px solid var(--lime);display:flex;align-items:center;justify-content:center;margin:0 auto 28px;animation:scale-in .5s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes scale-in{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.result-transition__check svg{width:32px;height:32px}
+.result-transition__title{font-family:var(--font-display);font-size:clamp(28px,5vw,44px);font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:12px;line-height:1.0}
+.result-transition__title em{font-style:normal;color:var(--lime);display:block}
+.result-transition__sub{font-size:15px;color:var(--text-muted);max-width:400px;margin:0 auto 40px;line-height:1.6}
+.result-transition__loader{display:flex;gap:6px;justify-content:center}
+.result-transition__loader span{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:loader-bounce 1.2s ease-in-out infinite}
+.result-transition__loader span:nth-child(2){animation-delay:.15s}
+.result-transition__loader span:nth-child(3){animation-delay:.3s}
+@keyframes loader-bounce{0%,80%,100%{transform:scale(0.6);opacity:.3}40%{transform:scale(1);opacity:1}}
+
+/* ===================== RESULT PAGE STYLES ===================== */
+.result-container{max-width:100%;margin:0 auto}
+.result-hero-inner{text-align:center;padding:60px 24px 48px;position:relative;overflow:hidden}
+.result-hero-inner__orb{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(204,255,0,0.1)0%,transparent 70%);border-radius:50%;filter:blur(60px);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.result-hero-inner__eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:16px}
+.result-hero-inner__label{font-size:14px;color:var(--text-muted);margin-bottom:8px}
+.result-hero-inner__name{font-family:var(--font-display);font-size:clamp(48px,10vw,88px);font-weight:700;text-transform:uppercase;line-height:.92;color:var(--text)}
+.result-hero-inner__name em{font-style:normal;color:var(--lime);display:block}
+
+/* Pattern brief */
+.pattern-brief{max-width:560px;margin:0 auto;padding:0 24px}
+.pattern-brief__card{background:var(--glass);border:1px solid var(--border);border-left:3px solid var(--lime);border-radius:var(--radius);padding:24px}
+.pattern-brief__headline{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:10px;line-height:1.1}
+.pattern-brief__body{font-size:14px;color:var(--text-muted);line-height:1.65}
+.pattern-brief__stat{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--text-muted)}
+.pattern-brief__stat strong{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--lime)}
+
+/* Identity callout */
+.identity-callout__card{background:var(--glass);border:1px solid var(--border-mid);border-radius:var(--radius);padding:20px 24px}
+.identity-callout__text{font-size:14px;color:var(--text-muted);line-height:1.65}
+.identity-callout__text strong{color:var(--text);font-weight:600}
+
+/* Included grid */
+.included-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto;padding:0 24px}
+.included-item{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:var(--transition)}
+.included-item:hover{border-color:var(--border-mid);background:var(--glass-mid)}
+.included-item__img{width:100%;aspect-ratio:1/1;object-fit:contain;border-radius:var(--radius-sm);margin-bottom:12px}
+.included-item__name{font-family:var(--font-display);font-size:14px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:4px}
+.included-item__role{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--lime)}
+.included-item__desc{font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:8px}
+
+/* Bundle mixing */
+.bundle-card__mixing{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;padding:12px 16px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.bundle-card__mixing strong{color:var(--text);font-weight:600}
+
+/* Value stack */
+.value-stack{max-width:560px;margin:0 auto;padding:0 24px}
+.value-stack__title{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:20px;text-align:center}
+.value-stack__item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.value-stack__item:last-of-type{border-bottom:none}
+.value-stack__name{font-size:14px;color:var(--text-muted);line-height:1.4}
+.value-stack__name strong{color:var(--text);font-weight:500}
+.value-stack__price{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--white-40);white-space:nowrap}
+.value-stack__price--strike{text-decoration:line-through;color:var(--white-20)}
+.value-stack__total{display:flex;justify-content:space-between;align-items:center;padding:20px 0;margin-top:8px;border-top:2px solid var(--border-mid)}
+.value-stack__total-label{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+.value-stack__total-price{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--white-40);text-decoration:line-through}
+.value-stack__your-price{text-align:center;padding:28px 0 8px}
+.value-stack__your-label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+.value-stack__your-amount{font-family:var(--font-display);font-size:clamp(52px,10vw,72px);font-weight:700;color:var(--white);line-height:1}
+.value-stack__your-amount sub{font-size:clamp(18px,3vw,24px);vertical-align:baseline;color:var(--text-muted);font-weight:400}
+.value-stack__per-day{font-size:14px;color:var(--text-muted);margin-top:8px}
+.value-stack__savings{display:inline-flex;align-items:center;gap:6px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.2);border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);margin-top:16px}
+
+/* Next steps */
+.next-steps{max-width:560px;margin:0 auto 36px;padding:0 24px}
+.next-steps__label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:8px;text-align:center}
+.next-steps__title{font-family:var(--font-display);font-weight:700;font-size:clamp(24px,4.5vw,36px);text-transform:uppercase;line-height:1.0;color:var(--text);text-align:center;margin-bottom:24px}
+.next-steps__list{display:flex;flex-direction:column;gap:12px}
+.next-step{display:flex;align-items:flex-start;gap:16px;padding:18px 20px;background:var(--glass-mid);border:1px solid var(--border-mid);border-radius:var(--radius);position:relative;transition:var(--transition)}
+.next-step:hover{border-color:rgba(204,255,0,0.22)}
+.next-step__num{width:34px;height:34px;border-radius:50%;background:var(--lime);color:var(--black);font-family:var(--font-display);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 18px rgba(204,255,0,0.3)}
+.next-step__body{flex:1;padding-top:2px}
+.next-step__title{font-family:var(--font-display);font-size:17px;font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.1;margin-bottom:4px}
+.next-step__desc{font-size:13px;color:var(--text-muted);line-height:1.55}
+.next-step__connector{position:absolute;left:37px;bottom:-12px;width:1px;height:12px;background:linear-gradient(var(--border-hi),transparent);z-index:1}
+
+/* Guarantee */
+.guarantee-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:560px;margin:0 auto;padding:0 24px}
+.guarantee-item{text-align:center;padding:20px 12px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius)}
+.guarantee-item__icon{font-size:24px;margin-bottom:10px}
+.guarantee-item__title{font-family:var(--font-display);font-size:13px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:4px;line-height:1.2}
+.guarantee-item__desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+
+/* Proof */
+.result-proof{max-width:560px;margin:0 auto;padding:0 24px}
+.result-proof__card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
+.result-proof__quote{font-size:15px;color:var(--text);line-height:1.65;font-style:italic;margin-bottom:16px}
+.result-proof__quote strong{font-style:normal;font-weight:600;color:var(--white)}
+.result-proof__meta{display:flex;align-items:center;gap:10px}
+.result-proof__avatar{width:36px;height:36px;border-radius:50%;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.result-proof__name{font-size:13px;font-weight:600;color:var(--text)}
+.result-proof__role{font-size:11px;color:var(--text-dim)}
+
+/* Routine grid */
+.routine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:800px;margin:0 auto;padding:0 24px}
+.routine-block{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;text-align:center;transition:var(--transition)}
+.routine-block:hover{border-color:rgba(204,255,0,0.2);background:var(--glass-mid)}
+.routine-block__time{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:6px}
+.routine-block__icon{font-size:24px;margin-bottom:8px}
+.routine-block__title{font-family:var(--font-display);font-size:16px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:6px;line-height:1.1}
+.routine-block__desc{font-size:11px;color:var(--text-muted);line-height:1.5;margin-bottom:10px}
+.routine-block__product{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.15);padding:3px 8px;border-radius:4px}
+
+/* Skool invite */
+.skool-invite{max-width:500px;margin:0 auto;padding:0 24px 40px;text-align:center}
+.skool-invite__card{background:var(--glass);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:28px 24px}
+.skool-invite__emoji{font-size:32px;margin-bottom:12px}
+.skool-invite__title{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:8px;line-height:1.1}
+.skool-invite__desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.55}
+.skool-invite__btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--glass-hi);border:1px solid var(--border-mid);border-radius:var(--radius);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--lime);cursor:pointer;transition:var(--transition);text-decoration:none}
+.skool-invite__btn:hover{background:var(--lime-soft);border-color:rgba(204,255,0,0.3)}
+
+/* Final CTA */
+.result-final-cta{text-align:center;padding:80px 24px;position:relative;overflow:hidden}
+.result-final-cta__bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(204,255,0,0.06)0%,transparent 70%);pointer-events:none}
+.result-final-cta__content{position:relative;z-index:1;max-width:700px;margin:0 auto}
+.result-final-cta__headline{font-family:var(--font-display);font-weight:700;font-size:clamp(36px,6vw,72px);text-transform:uppercase;line-height:.95;margin-bottom:20px;color:var(--text)}
+.result-final-cta__headline em{font-style:normal;color:var(--lime)}
+.result-final-cta__sub{font-size:16px;color:var(--text-muted);max-width:480px;margin:0 auto 36px;line-height:1.7}
+.result-final-cta__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px}
+.result-retake{background:none;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;margin-top:24px;padding:8px;transition:color var(--transition-fast)}
+.result-retake:hover{color:var(--text-muted)}
+
+/* Result footer */
+.result-footer{text-align:center;padding:32px 24px;border-top:1px solid var(--border)}
+.result-footer__logo{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.06em;color:var(--text);margin-bottom:8px}
+.result-footer__copy{font-size:10px;color:var(--text-dim);max-width:500px;margin:0 auto;line-height:1.5}
+
+/* Result sticky CTA */
+.result-sticky{position:fixed;bottom:0;left:0;right:0;z-index:1001;padding:12px 16px;background:rgba(8,8,9,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;gap:12px;transform:translateY(100%);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;max-width:100vw}
+.result-sticky.visible{transform:translateY(0);pointer-events:auto}
+.result-sticky__text{font-size:12px;color:var(--text-muted);display:none}
+.result-sticky .btn-primary{font-size:13px;padding:12px 24px}
+@media(min-width:641px){.result-sticky__text{display:block}}
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:640px){
+  .quiz-body{padding:28px 20px 24px}
+  .quiz-slide.exiting{padding:28px 20px 24px}
+  .quiz-question{font-size:22px;margin-bottom:20px}
+  .qm-option{padding:14px 16px;font-size:14px}
+  .email-capture__row{flex-direction:column}
+  .included-grid{padding:0 16px;gap:10px}
+  .guarantee-row{padding:0 16px;gap:8px}
+  .result-proof{padding:0 16px}
+  .routine-grid{grid-template-columns:repeat(2,1fr);padding:0 16px}
+  .skool-invite{padding:0 16px 32px}
+}
+@media(max-width:480px){
+  .quiz-body{padding:24px 16px 20px}
+  .quiz-slide.exiting{padding:24px 16px 20px}
+  .quiz-question{font-size:20px}
+  .qm-option{padding:12px 14px;font-size:13px}
+  .included-grid{grid-template-columns:1fr}
+  .guarantee-row{grid-template-columns:1fr}
+  .routine-grid{grid-template-columns:1fr}
+}
+@media(max-width:360px){
+  .quiz-body{padding:20px 14px 16px}
+  .quiz-slide.exiting{padding:20px 14px 16px}
+  .quiz-question{font-size:18px}
+}
+@media(max-height:500px) and (orientation:landscape){
+  .quiz-container{padding:10px 24px 20px}
+  .quiz-body{min-height:240px;padding:16px 20px 12px}
+  .quiz-question{font-size:18px;margin-bottom:14px}
+  .qm-option{padding:10px 14px;font-size:13px;min-height:40px}
+  .quiz-next{min-height:40px;padding:10px 20px}
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  .result-sticky{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .quiz-page__orb{animation:none !important}
+  .btn-primary--arc{animation:none !important}
+}
+</style>
+</head>
+<body>
+<div id="whealthy-quiz-embed">
+<div class="quiz-page">
+
+<!-- Background -->
+<div class="quiz-page__bg">
+  <div class="quiz-page__orb quiz-page__orb--1"></div>
+  <div class="quiz-page__orb quiz-page__orb--2"></div>
+  <div class="quiz-page__orb quiz-page__orb--3"></div>
+  <div class="quiz-page__noise"></div>
+  <div class="quiz-page__grid"></div>
+</div>
+
+<!-- Header -->
+<header class="quiz-header">
+  <a href="https://whealthylabel.com/" class="quiz-header__logo">W<span>HEAL</span>THY</a>
+  <span class="quiz-header__badge">60-Second Quiz</span>
+</header>
+
+<!-- Quiz Container -->
+<main class="quiz-container" id="quizContainer">
+  <div class="quiz-card" id="quizCard">
+    <div class="quiz-progress"><div class="quiz-progress__fill" id="qProgress"></div></div>
+    <div class="quiz-body" id="qBody"></div>
+    <div class="quiz-footer" id="qFooter">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" stroke="var(--lime)" stroke-width="1" stroke-linejoin="round"/></svg>
+      <span class="quiz-footer__text">Private &#183; 60 seconds &#183; No fluff</span>
+    </div>
+  </div>
+</main>
+
+</div>
+</div>
+
+<script>
+/* =====================================================
+   WHEALTHY STANDALONE QUIZ - SAME ENGINE AS HOME PAGE
+   ===================================================== */
+
+// Ref tracking
+(function(){
+  try{
+    const ref=new URLSearchParams(window.location.search).get('ref');
+    if(ref) sessionStorage.setItem('whealthy_ref',ref);
+  }catch(e){}
+})();
+function getRefCode(){
+  try{return new URLSearchParams(window.location.search).get('ref')||sessionStorage.getItem('whealthy_ref')||'';}catch(e){return '';}
+}
+
+// Primary quiz questions
+const QD=[
+  {q:"First, where are you starting from? Which sounds like your morning?",opts:["I need coffee before I can think straight","I crash hard every afternoon","I'm wired but can't actually focus","I feel fine but know I'm running on fumes"]},
+  {q:"Be honest &#8212; how many cups before you feel functional?",opts:["One &#8212; I'm pretty dialed in","Two to three &#8212; I need a while","Three or more &#8212; it's a problem","It doesn't really help anymore"]},
+  {q:"What happens after lunch?",opts:["I crash hard and fake it through","I stay pretty stable actually","I need something or I'm useless","I've just accepted the fog"]},
+  {q:"Have you tried cutting back on caffeine?",opts:["Yes and I had headaches and failed","Yes briefly but went back","I've wanted to but haven't tried","I don't think it's that bad"]},
+  {q:"Last one. What are you really carrying right now?",opts:["Being present with my family","Performing at a high level at work","My faith and how I carry my calling","All of the above honestly"]}
+];
+
+// Scoring matrix: [question][option] => [owned, wired, sharp, fumes, skeptical]
+const SM=[
+  [[3,0,0,0,0],[0,0,3,0,0],[0,3,0,0,0],[0,0,0,3,0]],
+  [[0,0,2,0,1],[0,2,1,0,0],[2,1,0,0,0],[0,0,0,2,1]],
+  [[0,0,3,0,0],[0,0,1,0,2],[2,1,0,0,0],[0,0,0,3,0]],
+  [[3,0,0,0,0],[0,2,1,0,0],[0,1,0,2,0],[0,0,0,1,2]],
+  [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+];
+
+const AK=['owned-by-caffeine','wired-but-scattered','sharp-until-2pm','running-on-fumes','skeptical-steward'];
+const IK=['family','work','faith','all'];
+
+let qS=0, ans=[-1,-1,-1,-1,-1], secondaryAns=null;
+let lastQuizResult=null, lastBundleKey=null, lastContactInfo=null;
+
+// Supabase Edge Function
+const SUPABASE_FN_URL='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/add-member';
+
+// Skool community join link with referral pass-through
+const SKOOL_BASE='https://www.skool.com/bakndcreator/about';
+function getSkoolJoinUrl(){
+  try{
+    const ref=new URLSearchParams(window.location.search).get('ref')||sessionStorage.getItem('whealthy_ref');
+    return ref ? SKOOL_BASE+'?ref='+encodeURIComponent(ref) : SKOOL_BASE;
+  }catch(e){ return SKOOL_BASE; }
+}
+function proceedToSkool(){
+  window.open(getSkoolJoinUrl(),'_blank','noopener');
+}
+function joinStewards(){
+  showBridgeView();
+}
+
+// Zapier webhook (backup)
+const ZAPIER_URL='https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_WEBHOOK_ID/';
+
+function sendToWebhook(payload){
+  fetch(SUPABASE_FN_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(r=>{if(!r.ok)console.warn('Supabase returned',r.status);return r.json()}).then(d=>{if(d&&d.success)console.log('Supabase: saved',d.email,d.archetype)}).catch(e=>console.warn('Supabase error:',e));
+  fetch(ZAPIER_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload),
+    mode:'no-cors'
+  }).catch(()=>{});
+}
+
+// Affiliate Lookup
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const ref = new URLSearchParams(window.location.search).get('ref') || sessionStorage.getItem('whealthy_ref');
+    if (ref) {
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXh6bXV1dm96b25oZ3dobGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDEwNTksImV4cCI6MjA4OTM3NzA1OX0.azWx9VrATCtci1Xzedm4NwozQRHVP8kfROZZSDmlaL8';
+      const r = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/rest/v1/affiliates?select=name&ref_id=eq.'+ref, {
+        headers: {'apikey': SUPABASE_ANON_KEY,'Authorization': 'Bearer '+SUPABASE_ANON_KEY}
+      });
+      const data = await r.json();
+      if (data && data.length > 0 && data[0].name) {
+        window._affiliateName = data[0].name;
+      }
+    }
+  } catch(e) { console.warn('Affiliate lookup failed', e); }
+
+  // Auto-start quiz
+  // renderQ(0);
+  document.getElementById('quizCard').classList.add('quiz-card--result');
+  lastQuizResult={key:'owned-by-caffeine',id:'all',scores:[5,0,0,0,0]};
+  lastBundleKey='genius-joe';
+  showFullResult(lastQuizResult, lastBundleKey);
+});
+
+// Archetype to bundle mapping
+const BUNDLE_MAP={
+  'owned-by-caffeine':{default:'genius-joe',needsSecondary:true,secondaryType:'coffee-preference',secondaryQ:'Do you want to keep coffee in your routine, or are you ready to move away from it?',secondaryOpts:[{label:'Keep coffee, just make it better',bundle:'genius-joe'},{label:'Ready to move away from coffee',bundle:'boss',altBundle:'charge',needsFormat:true}]},
+  'wired-but-scattered':{default:'charge',needsSecondary:false},
+  'sharp-until-2pm':{default:'charge',needsSecondary:false},
+  'running-on-fumes':{default:'boss',needsSecondary:true,secondaryType:'format-preference',secondaryQ:'What format works better for your day?',secondaryOpts:[{label:'Capsules &#8212; quick and easy, no mixing',bundle:'boss'},{label:'Drink mix &#8212; I like sipping something throughout the day',bundle:'genius-guice'}]},
+  'skeptical-steward':{default:'boss',needsSecondary:true,secondaryType:'format-preference',secondaryQ:'What format would you actually stick with?',secondaryOpts:[{label:'Capsules &#8212; just give me something simple',bundle:'boss'},{label:'Drink mix &#8212; I want to taste and feel the difference',bundle:'genius-guice'}]}
+};
+
+// Bundle definitions
+const BUNDLES={
+  'genius-joe':{name:'Genius Joe + Hydration',tagline:'Your Governed Morning Bundle',products:[{name:'Genius Joe',role:'Functional Coffee',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/GEnius_joe-3787014.png',desc:'Smooth, governed caffeine with adaptogens. Replace the dependency ritual.'},{name:'Hydration Powder',role:'Daily Foundation',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Subject-1662966.png?format=webp',desc:'Clean hydration that keeps your baseline where it needs to be.'}],mixing:'Mix 1 scoop of each in 20oz of water, or enjoy as two separate drinks. Morning and all-day hydration, governed.'},
+  'boss':{name:'Boss + Hydration',tagline:'Your Governed Performance Bundle',products:[{name:'Boss Capsules',role:'Performance Capsules',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/Boss_Capsules/BOSS-6348541.png',desc:'Steady, directed energy in capsule form. No mixing. No ritual. Just governance.'},{name:'Hydration Powder',role:'Daily Foundation',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Subject-1662966.png?format=webp',desc:'Clean hydration that sustains the foundation all day.'}],mixing:'Take Boss Capsules with water in the morning or midday. Mix 1 scoop Hydration Powder in 16-20oz water and sip throughout the day.'},
+  'genius-guice':{name:'Genius Guice + Hydration',tagline:'Your Governed Clarity Bundle',products:[{name:'Genius Guice',role:'Think Drink',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Subject-1662141.png',desc:'The afternoon think drink. Cognitive clarity without caffeine that follows you into the evening.'},{name:'Hydration Powder',role:'Daily Foundation',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Subject-1662966.png?format=webp',desc:'Clean hydration that keeps the system flowing.'}],mixing:'Mix 1 scoop of each in 20oz of water for a combined clarity + hydration drink, or enjoy separately. Afternoon and all-day.'},
+  'charge':{name:'Charge + Hydration',tagline:'Your Governed Energy Bundle',products:[{name:'Charge Powder',role:'Clean Energy',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Subject_2-1662966.png?format=webp',desc:'On-demand governed energy. No caffeine reload. No crash. Clean and repeatable.'},{name:'Hydration Powder',role:'Daily Foundation',img:'https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Subject-1662966.png?format=webp',desc:'The baseline that makes everything else work better.'}],mixing:'Mix 1 scoop of each in 20oz of water for a combined energy + hydration drink, or enjoy separately. Anytime you need governed energy.'}
+};
+
+// Archetype result data
+const AR={'owned-by-caffeine':{n:['Owned by','Caffeine'],pH:"You're Not <em>Tired.</em>",pB:'You\'re operating in an <strong>Owned by Caffeine</strong> pattern. The morning ritual isn\'t preference anymore. It\'s dependency.',sv:'73',su:'%',sl:'of stewards carrying your kind of responsibility show this exact pattern.'},'wired-but-scattered':{n:['Wired but','Scattered'],pH:"You're Not Lazy.<br>You're <em>Scattered.</em>",pB:'You\'re operating in a <strong>Wired but Scattered</strong> pattern. You have energy. It just goes everywhere.',sv:'68',su:'%',sl:'of high-responsibility stewards report energy that feels "busy but unproductive."'},'sharp-until-2pm':{n:['Sharp Until','2PM'],pH:"You're Not <em>Broken.</em>",pB:'You\'re operating in a <strong>Sharp Until 2PM</strong> pattern. Mornings are strong. Then the collapse hits.',sv:'81',su:'%',sl:'of stewards in this pattern report "faking it" through the afternoon.'},'running-on-fumes':{n:['Running on','Fumes'],pH:"You're Not <em>Fine.</em>",pB:'You\'re operating in a <strong>Running on Fumes</strong> pattern. Not crashing. Just never fully on.',sv:'77',su:'%',sl:'of stewards in this pattern describe themselves as "always at 60%.\"'},'skeptical-steward':{n:['The Skeptical','Steward'],pH:"You're Not <em>Cynical.</em>",pB:'You\'re operating in a <strong>Skeptical Steward</strong> pattern. You have tried supplements before and been ghosted.',sv:'4',su:'',sl:'is the average number of wellness products tried and abandoned before finding WHEALTHY.'}};
+
+const IC={family:{t:'You said <strong>family</strong> matters most right now. Governed energy means coming home and still being present.'},work:{t:'You said <strong>work performance</strong> matters most right now. Governed energy means sharp decisions at 4pm, not just 9am.'},faith:{t:'You said <strong>faith and calling</strong> matter most right now. Governed energy is stewardship of the body you carry everything else with.'},all:{t:'You said <strong>all of it</strong> matters: family, work, faith. Governed energy means having enough of yourself left to show up fully in every arena.'}};
+
+/* Quiz Functions */
+function renderQ(s){
+  const d=QD[s];
+  document.getElementById('qProgress').style.width=((s+1)/5*100)+'%';
+  document.getElementById('qBody').innerHTML='<div class="quiz-slide active">'+
+    '<div class="quiz-q-num">Question '+(s+1)+' of 5</div>'+
+    '<div class="quiz-question">'+d.q+'</div>'+
+    '<div class="quiz-options">'+d.opts.map(function(o,i){return '<div class="qm-option" onclick="pickOpt(this,'+i+')"><div class="qm-option__radio"></div><span>'+o+'</span></div>'}).join('')+'</div>'+
+    '<button class="btn-primary quiz-next" id="qNext" onclick="nextQ()">'+(s<4?'Continue':'See My Pattern')+'</button>'+
+  '</div>';
+}
+
+function pickOpt(el,i){
+  el.closest('.quiz-options').querySelectorAll('.qm-option').forEach(function(o){o.classList.remove('selected')});
+  el.classList.add('selected');
+  ans[qS]=i;
+  document.getElementById('qNext').classList.add('ready');
+}
+
+function slideIn(body, html){
+  var oldSlide=body.querySelector('.quiz-slide');
+  if(oldSlide) oldSlide.classList.add('exiting');
+  var wrapper=document.createElement('div');
+  wrapper.innerHTML=html;
+  var newSlide=wrapper.firstElementChild;
+  body.appendChild(newSlide);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){newSlide.classList.add('active')})});
+  if(oldSlide){setTimeout(function(){oldSlide.remove()},500)}
+}
+
+function nextQ(){
+  if(ans[qS]<0)return;
+  var body=document.getElementById('qBody');
+  if(qS<4){
+    qS++;
+    document.getElementById('qProgress').style.width=((qS+1)/5*100)+'%';
+    var d=QD[qS];
+    slideIn(body, '<div class="quiz-slide">'+
+      '<div class="quiz-q-num">Question '+(qS+1)+' of 5</div>'+
+      '<div class="quiz-question">'+d.q+'</div>'+
+      '<div class="quiz-options">'+d.opts.map(function(o,i){return '<div class="qm-option" onclick="pickOpt(this,'+i+')"><div class="qm-option__radio"></div><span>'+o+'</span></div>'}).join('')+'</div>'+
+      '<button class="btn-primary quiz-next" id="qNext" onclick="nextQ()">'+(qS<4?'Continue':'See My Pattern')+'</button>'+
+    '</div>');
+  } else {
+    document.getElementById('qProgress').style.width='100%';
+    document.getElementById('qFooter').style.display='none';
+    var result=calcArc();
+    var mapping=BUNDLE_MAP[result.key];
+    if(mapping.needsSecondary){showSecondaryQ(result,mapping)} else {showContactForm(result,mapping.default)}
+  }
+}
+
+function calcArc(){
+  var s=[0,0,0,0,0];
+  for(var q=0;q<5;q++){var a=ans[q];if(a<0)continue;for(var i=0;i<5;i++)s[i]+=SM[q][a][i]}
+  var mx=0;for(var i=1;i<5;i++)if(s[i]>s[mx])mx=i;
+  return{key:AK[mx],id:IK[ans[4]]||'all',scores:s};
+}
+
+function showSecondaryQ(result,mapping){
+  var body=document.getElementById('qBody');
+  slideIn(body, '<div class="quiz-slide"><div class="secondary-q">'+
+    '<div class="secondary-q__label">One More Question</div>'+
+    '<div class="secondary-q__question">'+mapping.secondaryQ+'</div>'+
+    '<div class="secondary-q__options quiz-options">'+
+    mapping.secondaryOpts.map(function(opt,i){return '<div class="qm-option" onclick="pickSecondary(this,'+i+',\''+result.key+'\')"><div class="qm-option__radio"></div><span>'+opt.label+'</span></div>'}).join('')+
+    '</div></div></div>');
+}
+
+function pickSecondary(el,idx,archetypeKey){
+  el.closest('.secondary-q__options').querySelectorAll('.qm-option').forEach(function(o){o.classList.remove('selected')});
+  el.classList.add('selected');
+  var mapping=BUNDLE_MAP[archetypeKey];
+  var chosen=mapping.secondaryOpts[idx];
+  if(chosen.needsFormat){setTimeout(function(){showFormatQ(archetypeKey,chosen)},500);return}
+  secondaryAns=idx;
+  var result=calcArc();
+  setTimeout(function(){showContactForm(result,chosen.bundle)},500);
+}
+
+function showFormatQ(archetypeKey,parentChoice){
+  var body=document.getElementById('qBody');
+  slideIn(body, '<div class="quiz-slide"><div class="secondary-q">'+
+    '<div class="secondary-q__label">Last One</div>'+
+    '<div class="secondary-q__question">What format works better for your day?</div>'+
+    '<div class="secondary-q__options quiz-options">'+
+    '<div class="qm-option" onclick="pickFormat(this,\'boss\')"><div class="qm-option__radio"></div><span>Capsules &#8212; quick and easy, no mixing</span></div>'+
+    '<div class="qm-option" onclick="pickFormat(this,\'charge\')"><div class="qm-option__radio"></div><span>Drink mix &#8212; I like sipping something</span></div>'+
+    '</div></div></div>');
+}
+
+function pickFormat(el,bundleKey){
+  el.closest('.secondary-q__options').querySelectorAll('.qm-option').forEach(function(o){o.classList.remove('selected')});
+  el.classList.add('selected');
+  var result=calcArc();
+  setTimeout(function(){showContactForm(result,bundleKey)},500);
+}
+
+/* Contact Form */
+function showContactForm(result,bundleKey){
+  lastQuizResult=result;lastBundleKey=bundleKey;
+  var body=document.getElementById('qBody');
+  slideIn(body, '<div class="quiz-slide"><div style="text-align:center">'+
+    '<div class="quiz-q-num">Almost There</div>'+
+    '<div class="quiz-question" style="font-size:clamp(18px,3.5vw,24px);margin-bottom:12px">Where Should We Send<br>Your Results?</div>'+
+    '<p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.6">Your energy pattern is ready. Enter your info and we will send your personalized governance plan.</p>'+
+    '<div class="email-capture__form" style="text-align:left">'+
+    '<div class="email-capture__row"><input type="text" class="email-capture__input" id="captName" placeholder="First name" autocomplete="given-name"><input type="text" class="email-capture__input" id="captLastName" placeholder="Last name" autocomplete="family-name"></div>'+
+    '<input type="tel" class="email-capture__input" id="captPhone" placeholder="Phone (###-###-####)" autocomplete="tel" oninput="formatPhone(this)">'+
+    '<input type="email" class="email-capture__input" id="captEmail" placeholder="your@email.com" autocomplete="email">'+
+    '<p class="email-capture__error" id="captError"></p>'+
+    '<button class="btn-primary quiz-next ready" onclick="submitContactForm()" style="width:100%;justify-content:center">See My Results</button>'+
+    '</div>'+
+    '<p style="font-size:11px;color:var(--text-dim);margin-top:12px">We respect your privacy. No spam. Unsubscribe anytime.</p>'+
+  '</div></div>');
+}
+
+function submitContactForm(){
+  var nameEl=document.getElementById('captName'),lastEl=document.getElementById('captLastName'),phoneEl=document.getElementById('captPhone'),emailEl=document.getElementById('captEmail'),errorEl=document.getElementById('captError');
+  [nameEl,lastEl,phoneEl,emailEl].forEach(function(el){el.classList.remove('error')});
+  errorEl.classList.remove('visible');errorEl.textContent='';
+  var firstName=nameEl.value.trim(),lastName=lastEl.value.trim(),phone=phoneEl.value.trim(),email=emailEl.value.trim();
+  var errors=[];
+  if(!firstName){nameEl.classList.add('error');errors.push('First name is required')}
+  if(!lastName){lastEl.classList.add('error');errors.push('Last name is required')}
+  if(!phone||!validatePhone(phone)){phoneEl.classList.add('error');errors.push('Phone must be ###-###-####')}
+  if(!email||!validateEmail(email)){emailEl.classList.add('error');errors.push('Valid email is required')}
+  if(errors.length>0){errorEl.textContent=errors[0];errorEl.classList.add('visible');setTimeout(function(){[nameEl,lastEl,phoneEl,emailEl].forEach(function(el){el.classList.remove('error')});errorEl.classList.remove('visible')},3000);return}
+  lastContactInfo={first_name:firstName,last_name:lastName,phone:phone,email:email};
+  showCountdown(lastQuizResult,lastBundleKey);
+}
+
+/* Countdown */
+function showCountdown(result,bundleKey){
+  lastQuizResult=result;lastBundleKey=bundleKey;
+  var bundle=BUNDLES[bundleKey],archData=AR[result.key],contact=lastContactInfo||{};
+  sendToWebhook({event:'quiz_complete',source:'standalone-quiz',referred_by:getRefCode(),timestamp:new Date().toISOString(),first_name:contact.first_name||'',last_name:contact.last_name||'',phone:contact.phone||'',email:contact.email||'',archetype:result.key,archetype_name:archData.n.join(' '),identity_anchor:result.id,bundle_key:bundleKey,bundle_name:bundle.name,price:'79.00',price_interval:'monthly',scores:{'owned-by-caffeine':result.scores[0],'wired-but-scattered':result.scores[1],'sharp-until-2pm':result.scores[2],'running-on-fumes':result.scores[3],'skeptical-steward':result.scores[4]},answers:{q1_morning:QD[0].opts[ans[0]]||'',q2_cups:QD[1].opts[ans[1]]||'',q3_after_lunch:QD[2].opts[ans[2]]||'',q4_cut_back:QD[3].opts[ans[3]]||'',q5_matters_most:QD[4].opts[ans[4]]||''}});
+
+  // Expand card to full page
+  var card=document.getElementById('quizCard');
+  card.classList.add('quiz-card--result');
+  var body=document.getElementById('qBody');
+  slideIn(body, '<div class="quiz-slide"><div class="countdown-transition"><div class="countdown-transition__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div><div class="countdown-transition__number" id="countNum">3</div><div class="countdown-transition__text">Building your governance routine...</div></div></div>');
+
+  function swapNumber(n){var el=document.getElementById('countNum');if(!el)return;el.style.opacity='0';el.style.transform='scale(0.6)';setTimeout(function(){el.textContent=n;el.style.transition='opacity .35s ease, transform .35s cubic-bezier(0.34,1.56,0.64,1)';el.style.opacity='1';el.style.transform='scale(1)'},150)}
+  setTimeout(function(){swapNumber(2)},900);
+  setTimeout(function(){swapNumber(1)},1800);
+  setTimeout(function(){
+    card.innerHTML='<div class="result-transition"><div class="result-transition__check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h2 class="result-transition__title">Pattern<br><em>Identified.</em></h2><p class="result-transition__sub">We found your energy pattern. Loading your personalized governance routine now.</p><div class="result-transition__loader"><span></span><span></span><span></span></div></div>';
+    setTimeout(function(){showFullResult(result,bundleKey)},2500);
+  },2700);
+}
+
+/* Bridge View */
+function showBridgeView(){
+  var result=lastQuizResult;
+  var d=AR[result.key];
+  var card=document.getElementById('quizCard');
+  var rs=document.getElementById('resultSticky');if(rs)rs.remove();
+  var nameStr = (typeof lastContactInfo !== 'undefined' && lastContactInfo && lastContactInfo.first_name) ? ', ' + lastContactInfo.first_name : '';
+  
+  card.scrollTop=0;
+  window.scrollTo(0,0);
+  
+  card.innerHTML='<div class="result-transition" style="min-height:80svh;padding:60px 24px;justify-content:flex-start;max-width:100%;overflow-x:hidden;">' +
+    '<h2 class="result-transition__title" style="font-size:clamp(28px,6vw,44px);margin-bottom:12px;line-height:1.0;">Pattern Identified.<br><span style="color:var(--lime)">Welcome to the Stewards'+nameStr+'.</span></h2>' +
+    '<p class="result-transition__sub" style="margin-bottom:24px;font-size:15px;line-height:1.6;">The products will govern your energy, but the community will govern your growth. Inside, you\'ll unlock the systems and modules required to hold the standard across your faith, family, and business—including practical A.I. skills to multiply your impact and serve others. Your $79/mo membership includes your physical system delivered to your door, but the tools and the people inside are the reason you\'ll stay.</p>' +
+    '<div class="product-shipping-notice" style="margin:0 auto 40px;display:inline-block;padding:12px 16px;border:1px solid rgba(204,255,0,0.3);border-radius:6px;background:rgba(204,255,0,0.05);color:var(--lime);font-size:13px;font-weight:600;line-height:1.4;max-width:500px;text-align:left;"><strong>[ U.S. ADDRESSES ONLY ]</strong> Physical product delivery is currently limited to the United States. International stewards are still welcome to join for the training and community.</div>' +
+    '<div class="next-steps__list" style="text-align:left;max-width:500px;margin:0 auto 48px;width:100%;">' +
+      '<div class="next-step"><div class="next-step__num">1</div><div class="next-step__body"><div class="next-step__title">Join the Community</div><div class="next-step__desc">Set up your Skool profile. This is where the governance happens.</div></div><div class="next-step__connector"></div></div>' +
+      '<div class="next-step"><div class="next-step__num">2</div><div class="next-step__body"><div class="next-step__title">Claim Your Physical Bundle</div><div class="next-step__desc">Provide your shipping address inside to claim your matched '+d.n.join(' ')+' system (U.S. Only).</div></div><div class="next-step__connector"></div></div>' +
+      '<div class="next-step"><div class="next-step__num">3</div><div class="next-step__body"><div class="next-step__title">Begin the Training</div><div class="next-step__desc">Dive into the A.I. and performance modules, engage with the Stewards, and start your physical routine when your box arrives.</div></div></div>' +
+    '</div>' +
+    '<button class="btn-primary btn-primary--arc" onclick="proceedToSkool()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center">I Understand &#8212; Proceed to Skool &#8594;</button>' +
+  '</div>';
+}
+
+/* Full Result Page */
+function showFullResult(result,bundleKey){
+  var d=AR[result.key],id=IC[result.id]||IC.all,bundle=BUNDLES[bundleKey];
+  var card=document.getElementById('quizCard');
+  card.scrollTop=0;
+
+  var PROOF_MAP={
+    'owned-by-caffeine':{quote:'I didn\'t feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup.',name:'Marcus T.',role:'Sales Director, Father of 3',emoji:'&#128104;'},
+    'wired-but-scattered':{quote:'I still had energy but it finally had <strong>direction.</strong> I stopped spinning and started finishing things.',name:'Chris M.',role:'Builder, Father',emoji:'&#127959;&#65039;'},
+    'sharp-until-2pm':{quote:'I still had energy at <strong>4pm without the crash.</strong> I didn\'t realize how normalized the afternoon drop was.',name:'Daniel R.',role:'Founder, Husband',emoji:'&#128104;&#8205;&#128188;'},
+    'running-on-fumes':{quote:'I noticed I was <strong>more patient after work.</strong> That\'s not a supplement effect. That\'s a rhythm shift.',name:'Pastor Jerome W.',role:'Ministry Leader, Dad',emoji:'&#9962;'},
+    'skeptical-steward':{quote:'I\'ve tried everything. This is the first time I could actually <strong>name what changed.</strong> Day 5 was real.',name:'Kevin W.',role:'Operations Manager, Dad of 2',emoji:'&#128737;&#65039;'}
+  };
+  var proof=PROOF_MAP[result.key]||PROOF_MAP['owned-by-caffeine'];
+
+  card.innerHTML='<div class="result-container">'+
+  '<div class="result-hero-inner"><div class="result-hero-inner__orb"></div><div style="position:relative;z-index:1"><div class="result-hero-inner__eyebrow"><span style="width:5px;height:5px;background:var(--lime);border-radius:50%"></span>Your Energy Pattern</div><p class="result-hero-inner__label">You are operating in the</p><h1 class="result-hero-inner__name">'+d.n[0]+'<br><em>'+d.n[1]+'</em></h1></div></div>'+
+  '<div style="padding:0 0 48px"><div class="pattern-brief"><div class="pattern-brief__card"><div class="pattern-brief__headline">'+d.pH.replace(/<\/?em>/g,'')+'</div><p class="pattern-brief__body">'+d.pB.replace(/<\/?strong>/g,'')+'</p><div class="pattern-brief__stat"><strong>'+d.sv+d.su+'</strong><span>'+d.sl+'</span></div></div></div></div>'+
+  '<div style="padding:0 24px 48px;max-width:584px;margin:0 auto"><div class="identity-callout__card" style="display:block;text-align:left;max-width:none"><p class="identity-callout__text">'+id.t+'</p></div></div>'+
+  '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">'+
+  '<div style="text-align:center;margin-bottom:36px;padding:0 24px"><p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px">Your Governance System</p><h2 style="font-family:var(--font-display);font-size:clamp(28px,5vw,44px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:.95;margin-bottom:10px">This Is What\'s<br>Waiting <span style="color:var(--lime)">Inside.</span></h2><p style="font-size:14px;color:var(--text-muted);max-width:460px;margin:0 auto;line-height:1.6">Matched to your '+d.n.join(' ')+' result. This is the system that ships to you every month inside the Stewards Membership.</p></div>'+
+  '<div class="included-grid" style="margin-bottom:40px">'+bundle.products.map(function(p){return '<div class="included-item"><img class="included-item__img" src="'+p.img+'" alt="'+p.name+'"><div class="product-shipping-notice" style="margin-bottom:12px; border-radius:4px; border:1px solid rgba(204,255,0,0.2);">Ships to U.S. Addresses Only</div><div class="included-item__name">'+p.name+'</div><div class="included-item__role">'+p.role+'</div><p class="included-item__desc">'+p.desc+'</p></div>'}).join('')+'</div>'+
+  '<div style="max-width:560px;margin:0 auto 40px;padding:0 24px"><div class="bundle-card__mixing"><strong>How to use:</strong> '+bundle.mixing+'</div></div>'+
+  '<div class="value-stack" style="margin-bottom:40px"><div class="value-stack__title">What You\'re Probably Spending Now</div><div class="value-stack__item"><div class="value-stack__name"><strong>Daily coffee habit</strong><br>2-3 cups, cafe or home brew beans</div><div class="value-stack__price value-stack__price--strike">$120/mo</div></div><div class="value-stack__item"><div class="value-stack__name"><strong>Energy drinks</strong><br>The afternoon fix that crashes you by 4pm</div><div class="value-stack__price value-stack__price--strike">$75/mo</div></div><div class="value-stack__item"><div class="value-stack__name"><strong>Supplements that ghost you</strong><br>The ones you stopped buying after 60 days</div><div class="value-stack__price value-stack__price--strike">$45/mo</div></div><div class="value-stack__total"><div class="value-stack__total-label">Total Broken Pattern Cost</div><div class="value-stack__total-price">$240/mo</div></div><div class="value-stack__your-price"><div class="value-stack__your-label">The Stewards Membership</div><div class="value-stack__your-amount">$79<sub>/mo</sub></div><p class="value-stack__per-day">Your full system delivered every month, plus the community that keeps you in it. One price.</p><div class="value-stack__savings">Less than what the broken pattern already costs you</div></div></div>'+
+  '<div class="next-steps"><p class="next-steps__label">Your Next 3 Steps</p><h3 class="next-steps__title">Here\'s How You<br>Get Started.</h3><div class="next-steps__list"><div class="next-step"><div class="next-step__num">1</div><div class="next-step__body"><div class="next-step__title">Join the Stewards</div><div class="next-step__desc">Tap below to join the community on Skool. One membership, $79/mo, your system and the people who carry the same weight.</div></div><div class="next-step__connector"></div></div><div class="next-step"><div class="next-step__num">2</div><div class="next-step__body"><div class="next-step__title">Watch the Intro</div><div class="next-step__desc">A 90-second welcome inside shows you exactly how the governance routine works and how to get the most from your first month.</div></div><div class="next-step__connector"></div></div><div class="next-step"><div class="next-step__num">3</div><div class="next-step__body"><div class="next-step__title">Claim Your '+d.n.join(' ')+' Bundle</div><div class="next-step__desc">Add your contact and shipping info inside, and your matched system ships to your door. Done.</div></div></div></div></div>'+
+  '<div style="text-align:center;padding:0 24px;margin-bottom:40px"><button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center">Join the Stewards &#8212; $79/mo</button><p style="font-size:13px;color:var(--text-muted);margin-top:14px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.6">Step 1 starts here. You\'ll join on Skool, watch the quick intro, then claim your '+d.n.join(' ')+' bundle inside by adding your shipping info.</p><p style="font-size:12px;color:var(--text-dim);margin-top:8px">$79/mo &#183; Cancel anytime &#183; Your system + the community, one price</p></div>'+
+  '<div class="guarantee-row"><div class="guarantee-item"><div class="guarantee-item__icon">&#128230;</div><div class="guarantee-item__title">Delivered Monthly</div><div class="guarantee-item__desc">Your system ships every month as part of membership.</div></div><div class="guarantee-item"><div class="guarantee-item__icon">&#128260;</div><div class="guarantee-item__title">Cancel Anytime</div><div class="guarantee-item__desc">No contracts, no commitments. Leave whenever you need to.</div></div><div class="guarantee-item"><div class="guarantee-item__icon">&#129309;</div><div class="guarantee-item__title">You\'re Not Alone</div><div class="guarantee-item__desc">The community comes with it. People who carry the same weight.</div></div></div></div>'+
+  '<div style="padding:48px 0"><p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:20px;text-align:center">Same Pattern. Real Result.</p><div class="result-proof"><div class="result-proof__card"><p class="result-proof__quote">"'+proof.quote+'"</p><div class="result-proof__meta"><div class="result-proof__avatar">'+proof.emoji+'</div><div><div class="result-proof__name">'+proof.name+'</div><div class="result-proof__role">'+proof.role+'</div></div></div></div></div></div>'+
+  '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div style="text-align:center;margin-bottom:32px;padding:0 24px"><p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px">Your Governed Day</p><h2 style="font-family:var(--font-display);font-size:clamp(24px,4.5vw,40px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.0">Every Part of Your Day.<br><span style="color:var(--lime)">Protected.</span></h2></div><div class="routine-grid"><div class="routine-block"><div class="routine-block__time">Morning</div><div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">01</div><h3 class="routine-block__title">Start Clear</h3><p class="routine-block__desc">No fog. No desperation. You start as yourself.</p><span class="routine-block__product">Functional Coffee</span><div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:8px">Focus</div></div><div class="routine-block"><div class="routine-block__time">Midday</div><div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">02</div><h3 class="routine-block__title">Stay Stable</h3><p class="routine-block__desc">Sharp for the decisions that matter.</p><span class="routine-block__product">Performance Capsules</span><div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:8px">Family</div></div><div class="routine-block"><div class="routine-block__time">Afternoon</div><div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">03</div><h3 class="routine-block__title">Think Again</h3><p class="routine-block__desc">Focus without evening caffeine.</p><span class="routine-block__product">Genius Guice</span><div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:8px">Faith</div></div><div class="routine-block"><div class="routine-block__time">Anytime</div><div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">04</div><h3 class="routine-block__title">Stay Charged</h3><p class="routine-block__desc">On-demand. No crash. Repeatable.</p><span class="routine-block__product">Charge Powder</span></div><div class="routine-block"><div class="routine-block__time">All Day</div><div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">05</div><h3 class="routine-block__title">Stay Flowing</h3><p class="routine-block__desc">The foundation underneath everything.</p><span class="routine-block__product">Hydration Powder</span></div><div class="routine-block"><div class="routine-block__time">Evening</div><div class="routine-block__icon" style="font-family:var(--font-display);font-weight:700;color:var(--lime);font-size:20px">06</div><h3 class="routine-block__title">Still Here</h3><p class="routine-block__desc">Come home with something left.</p><span class="routine-block__product">Governed Day</span></div></div></div>'+
+  '<div style="padding:48px 0"><p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px;text-align:center">Part of Your Membership</p><div class="skool-invite"><div class="skool-invite__card"><div class="skool-invite__emoji" style="font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--lime)">S</div><h3 class="skool-invite__title">The Products Govern Your Energy.<br><span style="color:var(--lime)">The Community Governs Your Growth.</span></h3><p class="skool-invite__desc">$79 a month. Your governance system delivered to your door, and a community of stewards who carry the same weight standing beside you. Bible, body, and business. The bundle is the system. The Stewards are the reason you stay.</p><a href="'+getSkoolJoinUrl()+'" target="_blank" rel="noopener" class="skool-invite__btn">Preview the Community &#8594;</a></div></div></div>'+
+  '<div class="result-final-cta"><div class="result-final-cta__bg"></div><div class="result-final-cta__content"><h2 class="result-final-cta__headline">The Pattern<br>Has a Name.<br><em>You\'re Not Alone in It.</em></h2><p class="result-final-cta__sub">One membership. Your '+d.n.join(' ')+' system delivered every month, and people who carry the same weight standing with you. Join the Stewards and claim your first bundle inside.</p>'+(window._affiliateName ? '<p style="font-size:15px;color:var(--lime);font-weight:600;margin-bottom:24px">Your friend '+window._affiliateName+' invited you to join. Tap below to claim your spot.</p>' : '')+'<button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="font-size:17px;padding:20px 44px;width:100%;max-width:500px;justify-content:center">Join the Stewards &#8212; $79/mo</button><div class="result-final-cta__chips"><span class="chip"><span class="chip__dot"></span>Cancel Anytime</span><span class="chip"><span class="chip__dot"></span>One Price</span><span class="chip"><span class="chip__dot"></span>Matched to '+d.n.join(' ')+'</span></div><button class="result-retake" onclick="retakeQuiz()">Retake the Energy Pattern Analysis</button></div></div>'+
+  '<div class="result-footer"><div class="result-footer__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div><p class="result-footer__copy">&copy; 2026 WHEALTHY Label. All rights reserved. Not evaluated by the FDA. Not intended to diagnose, treat, cure, or prevent any disease.</p></div>'+
+  '</div>';
+
+  // Add sticky CTA
+  var existingSticky=document.getElementById('resultSticky');
+  if(existingSticky)existingSticky.remove();
+  var sticky=document.createElement('div');
+  sticky.className='result-sticky';sticky.id='resultSticky';
+  sticky.innerHTML='<span class="result-sticky__text">Your '+d.n.join(' ')+' system &#8212; $79/mo</span><button class="btn-primary btn-primary--arc" onclick="joinStewards()">Join the Stewards</button>';
+  document.body.appendChild(sticky);
+  setTimeout(function(){
+    window.addEventListener('scroll',function(){
+      if(window.scrollY>300){sticky.classList.add('visible')}else{sticky.classList.remove('visible')}
+    },{passive:true});
+  },500);
+}
+
+function retakeQuiz(){
+  var rs=document.getElementById('resultSticky');if(rs)rs.remove();
+  var card=document.getElementById('quizCard');
+  card.classList.remove('quiz-card--result');
+  card.innerHTML='<div class="quiz-progress"><div class="quiz-progress__fill" id="qProgress"></div></div><div class="quiz-body" id="qBody"></div><div class="quiz-footer" id="qFooter"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" stroke="var(--lime)" stroke-width="1" stroke-linejoin="round"/></svg><span class="quiz-footer__text">Private &#183; 60 seconds &#183; No fluff</span></div>';
+  qS=0;ans=[-1,-1,-1,-1,-1];secondaryAns=null;lastContactInfo=null;
+  window.scrollTo(0,0);
+  renderQ(0);
+}
+
+function formatPhone(el){
+  var v=el.value.replace(/\D/g,'');
+  if(v.length>10)v=v.slice(0,10);
+  if(v.length>=7){el.value=v.slice(0,3)+'-'+v.slice(3,6)+'-'+v.slice(6)}
+  else if(v.length>=4){el.value=v.slice(0,3)+'-'+v.slice(3)}
+  else{el.value=v}
+}
+function validateEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)}
+function validatePhone(phone){return /^\d{3}-\d{3}-\d{4}$/.test(phone)}
+</script>
+</div>
+</body>
+</html>
