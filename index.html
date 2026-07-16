@@ -477,32 +477,303 @@ textarea,input,select{font-size:16px}
 /* ── Login Gate Overlay ── */
 .login-gate{position:fixed;inset:0;z-index:2147483000;background:#080809;display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
 .login-gate.hidden{opacity:0;pointer-events:none}
-.login-gate-card{width:100%;max-width:420px;margin:0 20px;background:rgba(15,16,18,0.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:48px 36px 40px;text-align:center;animation:card-pop .6s cubic-bezier(0.23,1,0.32,1)}
-@keyframes card-pop{0%{opacity:0;transform:translateY(20px) scale(0.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
-.login-gate-logo{font-family:var(--font-display);font-weight:700;font-size:28px;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:6px}
-.login-gate-logo span{color:#ccff00}
-.login-gate-tag{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px}
-.login-gate-badge{display:inline-flex;align-items:center;gap:5px;margin:8px 0 28px;padding:4px 12px;background:rgba(204,255,0,0.06);border:1px solid rgba(204,255,0,0.15);border-radius:100px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ccff00}
-.login-gate-title{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:#f0f1f3;margin-bottom:6px}
-.login-gate-sub{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:24px;line-height:1.55}
-.login-gate-input{width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#f0f1f3;font-size:15px;font-family:var(--font-body);outline:none;transition:border-color .3s,background .3s;margin-bottom:16px}
-.login-gate-input::placeholder{color:rgba(255,255,255,0.3)}
-.login-gate-input:focus{border-color:rgba(204,255,0,0.4);background:rgba(255,255,255,0.09)}
-.login-gate-input.error{border-color:rgba(255,77,77,0.5);background:rgba(255,77,77,0.08)}
-.login-gate-input.success{border-color:rgba(0,230,118,0.4);background:rgba(0,230,118,0.08)}
-.login-gate-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 24px;background:#ccff00;color:#080809;font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;border-radius:14px;border:none;cursor:pointer;transition:.3s;box-shadow:0 0 30px rgba(204,255,0,0.25);min-height:52px;position:relative;overflow:hidden}
-.login-gate-btn:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.45)}
-.login-gate-btn:disabled{opacity:0.4;pointer-events:none;transform:none}
-.login-gate-btn .spinner{display:none;width:18px;height:18px;border:2px solid rgba(0,0,0,0.2);border-top-color:#080809;border-radius:50%;animation:spin .7s linear infinite;position:absolute}
-.login-gate-btn.loading .btn-text{opacity:0}
-.login-gate-btn.loading .spinner{display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
-.login-gate-alert{padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;margin-bottom:16px;display:none;text-align:left}
-.login-gate-alert.show{display:block}
-.login-gate-alert.err{background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.25);color:#ff8a8a}
-.login-gate-alert.ok{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.25);color:#69f0ae}
-.login-gate-footer{margin-top:24px;font-size:11px;color:rgba(255,255,255,0.2)}
-@media(max-width:480px){.login-gate-card{padding:36px 24px 32px;margin:0 12px}.login-gate-logo{font-size:24px}.login-gate-title{font-size:19px}.login-gate-input{font-size:16px !important}}
+#dashGate.wa-root{
+  --wa-bg:#080809;
+  --wa-surface:#101012;
+  --wa-border:#1F1F23;
+  --wa-text:#FFFFFF;
+  --wa-body:#B4B4BC;
+  --wa-muted:#6E6E78;
+  --wa-lime:#CCFF00;
+  --wa-font-display:'Oswald','Helvetica Neue',Arial,sans-serif;
+  --wa-font-body:'DM Sans','Helvetica Neue',Arial,sans-serif;
+  position:relative; z-index:10;
+  width:100%;
+  height:100%;
+  background:var(--wa-bg);
+  display:flex;
+  align-items:center; justify-content:center;
+}
+#dashGate.wa-root::before{
+  content:''; position:absolute; left:50%; top:-10%;
+  width:min(760px,120vw); aspect-ratio:1; transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(204,255,0,0.045) 0%,rgba(204,255,0,0) 62%);
+  pointer-events:none; z-index:0;
+}
+#dashGate .wa-card{
+  position:relative; z-index:1;
+  width:100%; max-width:clamp(300px,92vw,420px);
+  background:linear-gradient(180deg,rgba(16,16,18,0.94) 0%,rgba(10,10,12,0.94) 100%);
+  -webkit-backdrop-filter:blur(20px) saturate(1.1);
+  backdrop-filter:blur(20px) saturate(1.1);
+  border:1px solid var(--wa-border);
+  border-radius:clamp(14px,3vw,20px);
+  padding:clamp(22px,5.5vw,40px);
+  box-shadow:0 24px 70px rgba(0,0,0,0.6);
+}
+#dashGate .wa-card::before{
+  content:''; position:absolute; left:clamp(18px,6%,40px); right:clamp(18px,6%,40px); top:0; height:1px;
+  background:linear-gradient(90deg,rgba(204,255,0,0) 0%,rgba(204,255,0,0.5) 50%,rgba(204,255,0,0) 100%);
+  pointer-events:none;
+}
+#dashGate .wa-screen{display:none;}
+#dashGate .wa-screen.is-active{display:block; animation:wa-fade .3s ease both;}
+@keyframes wa-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#dashGate .wa-mark{
+  font-family:var(--wa-font-display); font-weight:700; text-transform:uppercase;
+  letter-spacing:3px; font-size:clamp(11px,2.6vw,12px); color:var(--wa-muted);
+  margin-bottom:clamp(16px,4vw,24px);
+}
+#dashGate .wa-mark b{color:var(--wa-lime); font-weight:700;}
+#dashGate .wa-title{
+  font-family:var(--wa-font-display); font-weight:700; text-transform:uppercase;
+  letter-spacing:clamp(1.5px,0.45vw,2.4px); line-height:1.14;
+  font-size:clamp(21px,5.6vw,30px); color:var(--wa-text);
+  margin:0 0 clamp(8px,2vw,12px);
+  overflow-wrap:anywhere;
+}
+#dashGate .wa-sub{
+  font-family:var(--wa-font-body); font-size:clamp(13.5px,3.4vw,15px);
+  line-height:1.55; color:var(--wa-body); margin:0 0 clamp(18px,4.5vw,28px);
+}
+#dashGate .wa-fine{
+  font-family:var(--wa-font-body); font-size:clamp(12px,3vw,13px);
+  line-height:1.5; color:var(--wa-muted); margin:clamp(14px,3.5vw,18px) 0 0; text-align:center;
+}
+#dashGate .wa-field{margin-bottom:clamp(12px,3vw,16px);}
+#dashGate .wa-label{
+  display:block; font-family:var(--wa-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:1.5px; font-size:clamp(10px,2.4vw,11px); color:var(--wa-muted); margin-bottom:8px;
+}
+#dashGate .wa-input-wrap{position:relative; display:flex; align-items:center;}
+#dashGate .wa-input-prefix{
+  position:absolute; left:14px; font-family:var(--wa-font-body); font-size:16px;
+  color:var(--wa-muted); pointer-events:none; line-height:1;
+}
+#dashGate .wa-input{
+  width:100%; min-height:48px;
+  padding:12px 14px;
+  font-family:var(--wa-font-body);
+  font-size:16px;
+  color:var(--wa-text); background:#0B0B0D;
+  border:1px solid var(--wa-border); border-radius:10px;
+  outline:none; transition:border-color .18s ease, box-shadow .18s ease;
+  -webkit-appearance:none; appearance:none;
+}
+#dashGate .wa-input--prefixed{padding-left:32px;}
+#dashGate .wa-input::placeholder{color:#4A4A52;}
+#dashGate .wa-input:focus{
+  border-color:var(--wa-lime);
+  box-shadow:0 0 0 3px rgba(204,255,0,0.14);
+}
+#dashGate .wa-input:disabled{opacity:.5; cursor:not-allowed;}
+#dashGate .wa-input[aria-invalid="true"]{border-color:#5A2A2A;}
+#dashGate .wa-reveal{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  min-width:44px; min-height:44px;
+  display:flex; align-items:center; justify-content:center;
+  background:none; border:0; padding:0; cursor:pointer;
+  font-family:var(--wa-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:1.5px; font-size:10px; color:var(--wa-muted);
+}
+#dashGate .wa-reveal:hover{color:var(--wa-body);}
+#dashGate .wa-btn{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; min-height:48px; padding:13px 20px;
+  font-family:var(--wa-font-display); font-weight:700; text-transform:uppercase;
+  letter-spacing:1.5px; font-size:clamp(12px,3vw,13px);
+  border-radius:10px; border:1px solid transparent; cursor:pointer;
+  transition:transform .14s ease, opacity .18s ease, background .18s ease, border-color .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+#dashGate .wa-btn:active{transform:scale(.985);}
+#dashGate .wa-btn[disabled]{opacity:.55; cursor:not-allowed; transform:none;}
+#dashGate .wa-btn--primary{
+  background:var(--wa-lime); color:#080809; border-color:var(--wa-lime);
+  box-shadow:0 0 24px rgba(204,255,0,0.16);
+}
+#dashGate .wa-btn--primary:hover:not([disabled]){background:#D6FF1F;}
+#dashGate .wa-btn--ghost{background:transparent; color:var(--wa-body); border-color:var(--wa-border);}
+#dashGate .wa-btn--ghost:hover:not([disabled]){border-color:#33333A; color:var(--wa-text);}
+#dashGate .wa-btn + .wa-btn{margin-top:10px;}
+#dashGate .wa-link{
+  display:block; width:100%; min-height:44px; margin-top:clamp(10px,2.5vw,14px);
+  background:none; border:0; cursor:pointer;
+  font-family:var(--wa-font-body); font-size:13px; color:var(--wa-muted);
+  text-decoration:underline; text-underline-offset:3px;
+}
+#dashGate .wa-link:hover{color:var(--wa-body);}
+#dashGate .wa-back{
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:44px; margin:0 0 clamp(6px,2vw,10px) -6px; padding:0 6px;
+  background:none; border:0; cursor:pointer;
+  font-family:var(--wa-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:1.5px; font-size:11px; color:var(--wa-muted);
+}
+#dashGate .wa-back:hover{color:var(--wa-body);}
+#dashGate .wa-spin{
+  width:14px; height:14px; flex:0 0 14px; border-radius:50%;
+  border:2px solid rgba(8,8,9,0.25); border-top-color:#080809;
+  animation:wa-rot .7s linear infinite; display:none;
+}
+#dashGate .wa-btn--ghost .wa-spin{border-color:rgba(180,180,188,0.25); border-top-color:var(--wa-body);}
+#dashGate .wa-btn.is-busy .wa-spin{display:block;}
+@keyframes wa-rot{to{transform:rotate(360deg)}}
+#dashGate .wa-alert{
+  display:none; font-family:var(--wa-font-body); font-size:13px; line-height:1.5;
+  padding:11px 13px; border-radius:9px; margin:0 0 clamp(12px,3vw,16px);
+  border:1px solid var(--wa-border); color:var(--wa-body); background:#0B0B0D;
+}
+#dashGate .wa-alert.is-shown{display:block;}
+#dashGate .wa-alert.is-err{border-color:#4A2222; color:#E8A5A5; background:rgba(74,34,34,0.14);}
+#dashGate .wa-alert.is-soft{border-color:var(--wa-border); color:var(--wa-body);}
+#dashGate .wa-profile{text-align:center; margin-bottom:clamp(18px,4.5vw,26px);}
+#dashGate .wa-avatar-ring{
+  position:relative; display:inline-flex; margin-bottom:clamp(12px,3vw,18px);
+  padding:3px; border-radius:50%;
+  background:linear-gradient(140deg,var(--wa-lime) 0%,rgba(204,255,0,0.28) 100%);
+  box-shadow:0 0 0 1px rgba(204,255,0,0.25), 0 0 34px rgba(204,255,0,0.30);
+  animation:wa-charge .5s ease both;
+}
+@keyframes wa-charge{
+  from{opacity:0; transform:scale(.9); box-shadow:0 0 0 1px rgba(204,255,0,0), 0 0 0 rgba(204,255,0,0);}
+  to{opacity:1; transform:scale(1);}
+}
+#dashGate .wa-avatar{
+  width:clamp(76px,19vw,92px); height:clamp(76px,19vw,92px);
+  border-radius:50%; object-fit:cover; display:block;
+  background:#16161A; border:2px solid #080809;
+}
+#dashGate .wa-avatar--fallback{
+  display:none; align-items:center; justify-content:center;
+  font-family:var(--wa-font-display); font-weight:700; font-size:clamp(26px,7vw,32px);
+  color:var(--wa-lime); letter-spacing:1.5px;
+}
+#dashGate .wa-handle{
+  font-family:var(--wa-font-body); font-size:clamp(12.5px,3.2vw,14px);
+  color:var(--wa-lime); margin:0 0 6px; word-break:break-word;
+}
+#dashGate .wa-bio{
+  font-family:var(--wa-font-body); font-size:clamp(12.5px,3.2vw,14px); line-height:1.5;
+  color:var(--wa-muted); margin:0;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+#dashGate .wa-suggest{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:30;
+  background:#0E0E10; border:1px solid var(--wa-border); border-radius:10px;
+  box-shadow:0 18px 44px rgba(0,0,0,0.66);
+  overflow:hidden; display:none;
+}
+#dashGate .wa-suggest.is-open{display:block; animation:wa-fade .18s ease both;}
+#dashGate .wa-opt{
+  display:flex; align-items:center; gap:11px; width:100%;
+  min-height:56px;
+  padding:10px 12px; cursor:pointer; text-align:left;
+  background:transparent; border:0;
+  transition:background .14s ease;
+}
+#dashGate .wa-opt:hover, #dashGate .wa-opt.is-cursor{background:#17171B;}
+#dashGate .wa-opt.is-cursor{box-shadow:inset 2px 0 0 var(--wa-lime);}
+#dashGate .wa-opt__img{
+  width:34px; height:34px; flex:0 0 34px; border-radius:50%;
+  object-fit:cover; background:#1A1A1E; display:block;
+}
+#dashGate .wa-opt__fb{
+  width:34px; height:34px; flex:0 0 34px; border-radius:50%;
+  background:#1A1A1E; color:var(--wa-lime);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--wa-font-display); font-weight:700; font-size:15px; letter-spacing:1.5px;
+}
+#dashGate .wa-opt__txt{min-width:0; display:flex; flex-direction:column; gap:2px;}
+#dashGate .wa-opt__name{
+  font-family:var(--wa-font-body); font-size:14px; color:var(--wa-text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#dashGate .wa-opt__handle{
+  font-family:var(--wa-font-body); font-size:12px; color:var(--wa-muted);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#dashGate .wa-note{
+  padding:13px 12px;
+  font-family:var(--wa-font-body); font-size:12.5px; line-height:1.45;
+  color:var(--wa-muted);
+}
+#dashGate .wa-note b{color:var(--wa-body); font-weight:500;}
+#dashGate .wa-label-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  min-height:44px;
+}
+#dashGate .wa-label-row .wa-label{margin-bottom:0;}
+#dashGate .wa-mini{
+  min-height:44px; display:inline-flex; align-items:center; padding:0 2px;
+  background:none; border:0; cursor:pointer;
+  font-family:var(--wa-font-body); font-size:12.5px; color:var(--wa-muted);
+  text-decoration:underline; text-underline-offset:3px;
+}
+#dashGate .wa-mini:hover{color:var(--wa-lime);}
+#dashGate .wa-mini[disabled]{opacity:.5; cursor:not-allowed;}
+#dashGate .wa-spin--field{
+  position:absolute; right:12px; top:calc(50% - 7px);
+  border-color:rgba(180,180,188,0.25); border-top-color:var(--wa-lime);
+}
+#dashGate .wa-spin--field.is-on{display:block;}
+#dashGate .wa-tabs{
+  display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px;
+  background:#0B0B0D; border:1px solid var(--wa-border); border-radius:10px;
+  margin-bottom:clamp(16px,4vw,22px);
+}
+#dashGate .wa-tab{
+  min-height:44px; padding:9px 10px; border:0; border-radius:7px; cursor:pointer;
+  background:transparent; color:var(--wa-muted);
+  font-family:var(--wa-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:1.5px; font-size:clamp(10.5px,2.6vw,11.5px);
+  transition:background .18s ease, color .18s ease;
+}
+#dashGate .wa-tab.is-active{background:#1A1A1E; color:var(--wa-text);}
+#dashGate .wa-door-badge{
+  display:inline-block; margin-bottom:clamp(12px,3vw,16px); padding:6px 12px;
+  border:1px solid var(--wa-border); border-radius:999px; background:#0B0B0D;
+  font-family:var(--wa-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:2px; font-size:10px; color:var(--wa-muted);
+}
+@media (max-width:1280px){ #dashGate .wa-card{max-width:clamp(300px,90vw,410px);} }
+@media (max-width:1024px){ #dashGate.wa-root::before{width:min(600px,130vw);} }
+@media (max-width:768px){  #dashGate .wa-card{max-width:clamp(300px,94vw,400px);} }
+@media (max-width:640px){
+  #dashGate .wa-card{max-width:100%; border-radius:16px;}
+  #dashGate .wa-btn{width:100%;}
+  #dashGate .wa-btn--ghost{width:100%;}
+}
+@media (max-width:480px){
+  #dashGate.wa-root{padding-left:calc(env(safe-area-inset-left,0px) + 14px);
+           padding-right:calc(env(safe-area-inset-right,0px) + 14px);}
+  #dashGate .wa-card{padding:24px 20px;}
+  #dashGate .wa-tabs{margin-bottom:16px;}
+}
+@media (max-width:400px){
+  #dashGate .wa-card{padding:20px 16px; border-radius:14px;}
+  #dashGate .wa-mark{margin-bottom:14px; letter-spacing:2px;}
+  #dashGate .wa-title{letter-spacing:1.5px;}
+}
+@media (max-width:360px){
+  #dashGate.wa-root{padding-left:calc(env(safe-area-inset-left,0px) + 10px);
+           padding-right:calc(env(safe-area-inset-right,0px) + 10px);}
+  #dashGate .wa-card{padding:18px 14px;}
+  #dashGate .wa-opt{padding:10px 10px; gap:9px;}
+  #dashGate .wa-tab{letter-spacing:1.5px; padding:9px 4px;}
+  #dashGate .wa-avatar{width:68px; height:68px;}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #dashGate.wa-root{align-items:flex-start; padding-top:16px; padding-bottom:16px;}
+  #dashGate .wa-card{padding:18px 20px;}
+  #dashGate .wa-mark{margin-bottom:10px;}
+  #dashGate .wa-sub{margin-bottom:14px;}
+  #dashGate .wa-avatar{width:56px; height:56px;}
+  #dashGate .wa-avatar-ring{margin-bottom:10px;}
+  #dashGate .wa-profile{margin-bottom:14px;}
+  #dashGate .wa-bio{display:none;}
+  #dashGate .wa-suggest{max-height:40vh; overflow-y:auto;}
+}
 
 /* ===== LEADERBOARD ===== */
 .lb-filter{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:6px 12px;border-radius:100px;cursor:pointer;white-space:nowrap;transition:all .3s ease}
@@ -789,19 +1060,209 @@ textarea,input,select{font-size:16px}
 
 <!-- ═══ LOGIN GATE OVERLAY ═══ -->
 <div class="login-gate" id="loginGate">
-  <div class="login-gate-card">
-    <div class="login-gate-logo">W<span>HEAL</span>THY</div>
-    <div class="login-gate-tag">Govern Your Energy</div>
-    <div class="login-gate-badge">&#128274; Community Access</div>
-    <div class="login-gate-title">Steward Login</div>
-    <div class="login-gate-sub">Enter the email you used to join the WHEALTHY STEWARDS community on Skool.</div>
-    <div class="login-gate-alert" id="loginAlert"></div>
-    <input class="login-gate-input" type="email" id="loginEmail" placeholder="you@email.com" autocomplete="email">
-    <button class="login-gate-btn" id="loginBtn" onclick="handleGateLogin()">
-      <span class="btn-text">Enter the Command Center</span>
-      <span class="spinner"></span>
-    </button>
-    <div class="login-gate-footer">WHEALTHY LABEL &copy; 2026</div>
+  <div id="dashGate" class="wa-root">
+    <div class="wa-card">
+
+      <!-- ── SCREEN 1: LOCATE ───────────────────────────────── -->
+      <section class="wa-screen" id="waScreenLocate" aria-labelledby="waLocateTitle">
+        <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
+        <h1 class="wa-title" id="waLocateTitle">Let's find you</h1>
+        <p class="wa-sub">Enter your Skool handle and we will pull up your public profile, so you know you are in the right place before you sign in. Your handle is the <b>@name</b> at the end of your Skool link.</p>
+
+        <div class="wa-field">
+          <label class="wa-label" for="waHandle">Skool handle</label>
+          <div class="wa-input-wrap">
+            <span class="wa-input-prefix" aria-hidden="true">@</span>
+            <input id="waHandle" class="wa-input wa-input--prefixed" type="text"
+                   placeholder="start typing" autocomplete="off" autocapitalize="none"
+                   autocorrect="off" spellcheck="false" enterkeyhint="search" maxlength="60"
+                   role="combobox" aria-expanded="false" aria-controls="waSuggest"
+                   aria-autocomplete="list" aria-haspopup="listbox">
+            <span class="wa-spin wa-spin--field" id="waHandleSpin" aria-hidden="true"></span>
+            <div class="wa-suggest" id="waSuggest" role="listbox" aria-label="Matching Skool profile"></div>
+          </div>
+        </div>
+
+        <div class="wa-alert" id="waLocateAlert" role="status" aria-live="polite"></div>
+
+        <button class="wa-btn wa-btn--primary" id="waFindBtn" type="button">
+          <span class="wa-spin" aria-hidden="true"></span>
+          <span id="waFindLabel">Find my profile</span>
+        </button>
+
+      </section>
+
+      <!-- ── SCREEN 1 (found): the "we know you" beat ───────── -->
+      <section class="wa-screen" id="waScreenFound" aria-labelledby="waProfileName">
+        <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
+
+        <div class="wa-profile">
+          <div class="wa-avatar-ring">
+            <img class="wa-avatar" id="waProfileAvatar" alt="" referrerpolicy="no-referrer">
+            <div class="wa-avatar wa-avatar--fallback" id="waProfileInitial" aria-hidden="true"></div>
+          </div>
+          <h1 class="wa-title" id="waProfileName"></h1>
+          <p class="wa-handle" id="waProfileHandle"></p>
+          <p class="wa-bio" id="waProfileBio"></p>
+        </div>
+
+        <button class="wa-btn wa-btn--primary" id="waThatsMeBtn" type="button">That's me</button>
+        <button class="wa-btn wa-btn--ghost" id="waNotMeBtn" type="button">Not me</button>
+      </section>
+
+      <!-- ── SCREEN 1 (not found): a nudge, not an error ────── -->
+      <section class="wa-screen" id="waScreenNotFound" aria-labelledby="waNotFoundTitle">
+        <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
+        <h1 class="wa-title" id="waNotFoundTitle">We could not find that profile</h1>
+        <p class="wa-sub" id="waNotFoundBody">Check the spelling, or try a different handle. Plenty of stewards have no public Skool profile at all, and that is fine. You can go straight to signing in.</p>
+
+        <button class="wa-btn wa-btn--primary" id="waSearchAgainBtn" type="button">Search again</button>
+        <button class="wa-btn wa-btn--ghost" id="waNotFoundSkipBtn" type="button">Continue without it</button>
+      </section>
+
+      <!-- ── SCREEN 2: ACCESS ───────────────────────────────── -->
+      <section class="wa-screen" id="waScreenAccess" aria-labelledby="waAccessTitle">
+        <button class="wa-back" id="waBackBtn" type="button">&#8592; Back</button>
+
+        <h1 class="wa-title" id="waAccessTitle">Sign in</h1>
+        <p class="wa-sub" id="waAccessSub">Use the email you want tied to your steward account.</p>
+
+        <div class="wa-tabs" role="tablist" aria-label="Sign in or create account">
+          <button class="wa-tab is-active" id="waTabLogin"  type="button" role="tab" aria-selected="true">Log in</button>
+          <button class="wa-tab"           id="waTabSignup" type="button" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <div class="wa-field">
+          <label class="wa-label" for="waEmail">Email</label>
+          <input id="waEmail" class="wa-input" type="email" placeholder="you@example.com"
+                 autocomplete="email" autocapitalize="none" autocorrect="off"
+                 spellcheck="false" enterkeyhint="next">
+        </div>
+
+        <div class="wa-field">
+          <div class="wa-label-row">
+            <label class="wa-label" for="waPassword">Password</label>
+            <button class="wa-mini" id="waForgotBtn" type="button">Forgot password?</button>
+          </div>
+          <div class="wa-input-wrap">
+            <input id="waPassword" class="wa-input" type="password" placeholder="Your password"
+                   autocomplete="current-password" enterkeyhint="go">
+            <button class="wa-reveal" id="waRevealBtn" type="button" aria-label="Show password">Show</button>
+          </div>
+        </div>
+
+        <div class="wa-alert" id="waAccessAlert" role="status" aria-live="polite"></div>
+
+        <button class="wa-btn wa-btn--primary" id="waSubmitBtn" type="button">
+          <span class="wa-spin" aria-hidden="true"></span>
+          <span id="waSubmitLabel">Log in</span>
+        </button>
+
+        <button class="wa-btn wa-btn--ghost" id="waSwitchToLoginBtn" type="button" style="display:none">Log in instead</button>
+        <p class="wa-fine" id="waAccessFine"></p>
+      </section>
+
+      <!-- ── RESET: ask for the address ────────────────────── -->
+      <section class="wa-screen" id="waScreenReset" aria-labelledby="waResetTitle">
+        <button class="wa-back" id="waResetBackBtn" type="button">&#8592; Back</button>
+
+        <div id="waResetForm">
+          <h1 class="wa-title" id="waResetTitle">Reset your password</h1>
+          <p class="wa-sub">Enter your email and we will send you a link to set a new one.</p>
+
+          <div class="wa-field">
+            <label class="wa-label" for="waResetEmail">Email</label>
+            <input id="waResetEmail" class="wa-input" type="email" placeholder="you@example.com"
+                   autocomplete="email" autocapitalize="none" autocorrect="off"
+                   spellcheck="false" enterkeyhint="send">
+          </div>
+
+          <div class="wa-alert" id="waResetAlert" role="status" aria-live="polite"></div>
+
+          <button class="wa-btn wa-btn--primary" id="waResetSendBtn" type="button">
+            <span class="wa-spin" aria-hidden="true"></span>
+            <span id="waResetSendLabel">Send reset link</span>
+          </button>
+        </div>
+
+        <div id="waResetSent" style="display:none">
+          <h1 class="wa-title">Check your inbox</h1>
+          <p class="wa-sub" id="waResetSentBody"></p>
+          <button class="wa-btn wa-btn--primary" id="waResetDoneBtn" type="button">Back to log in</button>
+          <button class="wa-link" id="waResetAgainBtn" type="button">Use a different email</button>
+        </div>
+      </section>
+
+      <!-- ── RECOVERY LANDING: set a new password ──────────── -->
+      <section class="wa-screen" id="waScreenNewPassword" aria-labelledby="waNewPwTitle">
+        <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
+        <h1 class="wa-title" id="waNewPwTitle">Set a new password</h1>
+        <p class="wa-sub">Almost there. Choose a password and we will take you straight in.</p>
+
+        <div class="wa-field">
+          <label class="wa-label" for="waNewPw">New password</label>
+          <div class="wa-input-wrap">
+            <input id="waNewPw" class="wa-input" type="password" placeholder="At least 8 characters"
+                   autocomplete="new-password">
+            <button class="wa-reveal" id="waNewPwReveal" type="button" aria-label="Show password">Show</button>
+          </div>
+        </div>
+
+        <div class="wa-field">
+          <label class="wa-label" for="waNewPw2">Confirm password</label>
+          <input id="waNewPw2" class="wa-input" type="password" placeholder="Type it again"
+                 autocomplete="new-password" enterkeyhint="go">
+        </div>
+
+        <div class="wa-alert" id="waNewPwAlert" role="status" aria-live="polite"></div>
+
+        <button class="wa-btn wa-btn--primary" id="waNewPwBtn" type="button">
+          <span class="wa-spin" aria-hidden="true"></span>
+          <span id="waNewPwLabel">Set password and continue</span>
+        </button>
+      </section>
+
+      <!-- ── RENDER FAULT ─────────────────────────────────── -->
+      <section class="wa-screen" id="waScreenError" aria-labelledby="waErrorTitle">
+        <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
+        <h1 class="wa-title" id="waErrorTitle">Something went wrong on our side</h1>
+        <p class="wa-sub">Your account is fine. The application failed to load. Reload the page and it should come back.</p>
+        <button class="wa-btn wa-btn--primary" id="waReloadBtn" type="button">Reload</button>
+        <button class="wa-btn wa-btn--ghost" id="waErrorSignOut" type="button">Sign out</button>
+      </section>
+
+      <!-- ── DOOR A: lead. Never joined. ────────────────────── -->
+      <section class="wa-screen" id="waScreenDoorA" aria-labelledby="waDoorATitle">
+        <div class="wa-door-badge">The community</div>
+        <h1 class="wa-title" id="waDoorATitle">Step Into the Steward Rhythm</h1>
+        <p class="wa-sub">
+          True stewardship is carried out in rhythm, not in isolation. While you have 
+          initialized your account, your membership also includes access 
+          to the private Steward community on Skool. This is where we gather to study, 
+          build, and govern our energy together.
+        </p>
+        <a class="wa-btn wa-btn--primary" id="waDoorACta" href="https://www.skool.com/bakndcreator/about" target="_blank" rel="noopener">
+          Enter the Community
+        </a>
+        <button class="wa-btn wa-btn--ghost" id="waDoorASignOut" type="button">Sign out</button>
+      </section>
+
+      <!-- ── DOOR B: lapsed. Was a member. ──────────────────── -->
+      <section class="wa-screen" id="waScreenDoorB" aria-labelledby="waDoorBTitle">
+        <div class="wa-door-badge">Welcome back</div>
+        <h1 class="wa-title" id="waDoorBTitle">The Door is Open</h1>
+        <p class="wa-sub">
+          Your membership is currently inactive. True stewardship has seasons, but 
+          the rhythm remains. When you are ready to resume your routine and govern 
+          your energy alongside the community, you can reactivate your membership below.
+        </p>
+        <a class="wa-btn wa-btn--primary" id="waDoorBCta" href="https://www.skool.com/bakndcreator/about" target="_blank" rel="noopener">
+          Reactivate Your Membership
+        </a>
+        <button class="wa-btn wa-btn--ghost" id="waDoorBSignOut" type="button">Sign out</button>
+      </section>
+
+    </div>
   </div>
 </div>
 
@@ -2348,56 +2809,831 @@ window.initBible365 = async function() {
 /* ================== STATE ================== */
 const FN_BASE='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
 let MEMBER_EMAIL = __lsGet('wh_steward_email') || '';
+let MEMBER_NAME = '';
 
-// Gate login handler (runs before app init)
-function handleGateLogin(){
-  const inp=document.getElementById('loginEmail');
-  const email=inp.value.trim().toLowerCase();
-  const alert=document.getElementById('loginAlert');
-  const btn=document.getElementById('loginBtn');
-  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    alert.className='login-gate-alert err show';alert.textContent='Please enter a valid email address.';
-    inp.classList.add('error');return;
+// ════════════════════════════════════════════════════════════
+// AUTH SURFACE ENGINE
+// ════════════════════════════════════════════════════════════
+const WA_SCREENS = {
+  locate:   'waScreenLocate',
+  found:    'waScreenFound',
+  notfound: 'waScreenNotFound',
+  access:   'waScreenAccess',
+  doorA:    'waScreenDoorA',
+  doorB:    'waScreenDoorB',
+  reset:    'waScreenReset',
+  newpw:    'waScreenNewPassword',
+  error:    'waScreenError'
+};
+
+const WA_ENTRY_URL = (typeof window !== 'undefined' && window.location)
+  ? String(window.location.hash || '') + String(window.location.search || '')
+  : '';
+function waIsRecoveryEntry(){ return /type=recovery/.test(WA_ENTRY_URL); }
+
+const waState = {
+  screen: 'locate',
+  handle: '',
+  profile: null,
+  mode: 'login',
+  cooldownTimer: null
+};
+
+function waEl(id){ return document.getElementById(id); }
+
+function waShowScreen(name){
+  const target = WA_SCREENS[name];
+  if (!target) return;
+  waState.screen = name;
+  Object.values(WA_SCREENS).forEach(id => {
+    const el = waEl(id);
+    if (el) el.classList.toggle('is-active', id === target);
+  });
+  const card = document.querySelector('#dashGate .wa-card');
+  if (card) card.scrollTop = 0;
+  const root = waEl('dashGate');
+  if (root) root.scrollTop = 0;
+}
+
+function waOpenGate(name){
+  const content = waEl('appLayout') || waEl('sidebar') || document.querySelector('.dash-container');
+  if (content) content.style.display = 'none';
+  const mh = document.querySelector('.mobile-header');
+  if (mh) mh.style.display = 'none';
+  
+  const gate = waEl('loginGate');
+  if (gate) {
+    gate.style.display = 'flex';
+    gate.classList.remove('hidden');
   }
-  btn.classList.add('loading');btn.disabled=true;
-  fetch(FN_BASE+'/governor-state',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'load',email})})
-  .then(r=>{if(r.status===403)throw new Error('not_member');return r.json();})
-  .then(d=>{
-    if(d.error==='not_authorized')throw new Error('not_member');
-    __lsSet('wh_steward_email',email);
-    MEMBER_EMAIL=email;
-    alert.className='login-gate-alert ok show';alert.textContent='Welcome back, Steward. Loading...';
-    inp.classList.remove('error');inp.classList.add('success');
-    setTimeout(()=>{
-      document.getElementById('loginGate').classList.add('hidden');
-      loadAndInit();
-    },800);
-  })
-  .catch(e=>{
-    btn.classList.remove('loading');btn.disabled=false;
-    if(e.message==='not_member'){
-      alert.className='login-gate-alert err show';
-      alert.textContent='This email is not registered as a WHEALTHY STEWARDS member. Join the community on Skool first.';
-      inp.classList.add('error');
-    } else {
-      alert.className='login-gate-alert err show';
-      alert.textContent='Connection error. Please try again.';
-    }
+  waShowScreen(name || 'locate');
+  try { hideBootLoader(); } catch(e) {}
+}
+window.waOpenGate = waOpenGate;
+
+function waCloseGate(){
+  const gate = waEl('loginGate');
+  if (gate) {
+    gate.classList.add('hidden');
+  }
+}
+
+function waAlert(id, msg, kind){
+  const el = waEl(id);
+  if (!el) return;
+  if (!msg){ el.className = 'wa-alert'; el.textContent = ''; return; }
+  el.textContent = msg;
+  el.className = 'wa-alert is-shown ' + (kind === 'err' ? 'is-err' : 'is-soft');
+}
+
+function waBusy(btnId, labelId, busy, busyText, restText){
+  const btn = waEl(btnId), label = waEl(labelId);
+  if (!btn) return;
+  btn.disabled = !!busy;
+  btn.classList.toggle('is-busy', !!busy);
+  if (label) label.textContent = busy ? busyText : restText;
+}
+
+function waNormalizeHandle(raw){
+  let h = String(raw || '').trim().toLowerCase();
+  h = h.replace(/^https?:\/\/(www\.)?skool\.com\//, '');
+  h = h.replace(/^@/, '');
+  h = h.split(/[/?#]/)[0];
+  return h;
+}
+
+const WA_DEBOUNCE = 550;
+const waCache = new Map();
+let waDebounceTimer = null;
+let waAbortCtl = null;
+let waSeq = 0;
+let waAutoPaused = false;
+let waOptions = [];
+let waCursor = -1;
+
+function waValidHandle(h){ return /^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$/.test(h); }
+
+function waSpinField(on){
+  const s = waEl('waHandleSpin');
+  if (s) s.classList.toggle('is-on', !!on);
+}
+
+function waNote(text){
+  const s = waEl('waSuggest');
+  if (!s) return;
+  s.textContent = '';
+  const d = document.createElement('div');
+  d.className = 'wa-note';
+  d.textContent = text;
+  s.appendChild(d);
+  s.classList.add('is-open');
+  const i = waEl('waHandle');
+  if (i) i.setAttribute('aria-expanded','true');
+  waOptions = []; waCursor = -1;
+}
+
+function waCloseSuggest(){
+  const s = waEl('waSuggest');
+  if (s){ s.classList.remove('is-open'); s.textContent = ''; }
+  const i = waEl('waHandle');
+  if (i) i.setAttribute('aria-expanded','false');
+  waOptions = []; waCursor = -1;
+}
+
+function waFallbackDot(initial){
+  const d = document.createElement('span');
+  d.className = 'wa-opt__fb'; d.setAttribute('aria-hidden','true');
+  d.textContent = initial;
+  return d;
+}
+
+function waBuildOption(p){
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'wa-opt';
+  b.setAttribute('role','option'); b.setAttribute('aria-selected','false');
+
+  const initial = String(p.name || p.handle || 'S').trim().charAt(0).toUpperCase();
+  if (p.avatar_url){
+    const img = document.createElement('img');
+    img.className = 'wa-opt__img'; img.alt = ''; img.setAttribute('referrerpolicy','no-referrer');
+    img.addEventListener('error', () => { try { img.replaceWith(waFallbackDot(initial)); } catch(e){} });
+    img.src = p.avatar_url;
+    b.appendChild(img);
+  } else {
+    b.appendChild(waFallbackDot(initial));
+  }
+
+  const t = document.createElement('span'); t.className = 'wa-opt__txt';
+  const n = document.createElement('span'); n.className = 'wa-opt__name';
+  n.textContent = p.name || ('@' + p.handle);
+  const h = document.createElement('span'); h.className = 'wa-opt__handle';
+  h.textContent = '@' + p.handle;
+  t.appendChild(n); t.appendChild(h); b.appendChild(t);
+
+  b.addEventListener('click', () => waChooseProfile(p));
+  return b;
+}
+
+function waChooseProfile(p){
+  waCloseSuggest();
+  const i = waEl('waHandle');
+  if (i) i.value = p.handle;
+  waRenderProfile(p);
+  waShowScreen('found');
+}
+
+function waPaintSuggest(h, data){
+  if (data && data.found === true && data.profile){
+    const s = waEl('waSuggest');
+    if (!s) return;
+    s.textContent = '';
+    s.appendChild(waBuildOption(data.profile));
+    s.classList.add('is-open');
+    const i = waEl('waHandle');
+    if (i) i.setAttribute('aria-expanded','true');
+    waOptions = Array.prototype.slice.call(s.querySelectorAll('.wa-opt'));
+    waCursor = -1;
+  } else {
+    waNote('No public Skool profile at @' + h + '. Check the spelling, or continue and sign in.');
+  }
+}
+
+function waMoveCursor(delta){
+  if (!waOptions.length) return;
+  waCursor = (waCursor + delta + waOptions.length) % waOptions.length;
+  waOptions.forEach((o,i) => {
+    const on = i === waCursor;
+    o.classList.toggle('is-cursor', on);
+    o.setAttribute('aria-selected', String(on));
   });
 }
-window.handleGateLogin=handleGateLogin;
-// Enter key on login
-var _loginInput=document.getElementById('loginEmail');
-if(_loginInput)_loginInput.addEventListener('keydown',function(e){if(e.key==='Enter')handleGateLogin();});
 
-// If already logged in, hide gate immediately (boot loader covers the wait).
-// If not logged in, the gate is the first screen: clear the boot loader.
-if(MEMBER_EMAIL){
-  document.getElementById('loginGate').classList.add('hidden');
-} else {
-  if(window.hideBootLoader)hideBootLoader();
+async function waLiveLookup(h){
+  const seq = ++waSeq;
+  waSpinField(true);
+  let ctl = null;
+  try { ctl = new AbortController(); waAbortCtl = ctl; } catch(e){}
+
+  let res, data;
+  try {
+    res = await fetch(FN_BASE + '/skool-profile-lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ handle: h }),
+      signal: ctl ? ctl.signal : undefined
+    });
+    data = await res.json().catch(() => ({}));
+  } catch (e) {
+    if (e && e.name === 'AbortError') return;
+    waSpinField(false);
+    waNote('Could not reach Skool just now. You can still continue and sign in.');
+    return;
+  }
+
+  if (seq !== waSeq) return;
+  waSpinField(false);
+
+  if (res.status === 429){ waAutoPaused = true; waNote('Too many lookups. Give it a moment, then press Find my profile.'); return; }
+  if (res.status === 502){ waNote('Skool is not responding right now. You can still continue and sign in.'); return; }
+  if (res.status === 400){ waNote('Handles use letters, numbers and hyphens only.'); return; }
+  if (!res.ok){ waNote('Could not reach Skool just now. You can still continue and sign in.'); return; }
+
+  waCache.set(h, data);
+  waPaintSuggest(h, data);
 }
+
+function waOnHandleInput(){
+  const raw = (waEl('waHandle') || {}).value || '';
+  const h = waNormalizeHandle(raw);
+
+  if (waDebounceTimer){ clearTimeout(waDebounceTimer); waDebounceTimer = null; }
+  if (waAbortCtl){ try { waAbortCtl.abort(); } catch(e){} waAbortCtl = null; }
+  waSeq++;
+  waSpinField(false);
+  waAlert('waLocateAlert', '');
+
+  if (!raw.trim()){ waCloseSuggest(); return; }
+
+  if (/\s/.test(raw.trim())){
+    waNote('That looks like a name. A Skool handle has no spaces: it is the @name at the end of your profile link.');
+    return;
+  }
+  if (raw.trim().indexOf('@') > 0){
+    waNote('That looks like an email. Your Skool handle is the @name at the end of your profile link.');
+    return;
+  }
+  if (h.length < 3){ waCloseSuggest(); return; }
+  if (!waValidHandle(h)){
+    waNote('Handles use letters, numbers and hyphens only.');
+    return;
+  }
+  if (waCache.has(h)){ waPaintSuggest(h, waCache.get(h)); return; }
+  if (waAutoPaused){ waNote('Too many lookups. Give it a moment, then press Find my profile.'); return; }
+
+  waNote('Searching @' + h + '...');
+  waDebounceTimer = setTimeout(() => waLiveLookup(h), WA_DEBOUNCE);
+}
+
+function waStartCooldown(seconds){
+  const btn = waEl('waFindBtn');
+  let left = seconds;
+  if (waState.cooldownTimer) clearInterval(waState.cooldownTimer);
+  if (btn) btn.disabled = true;
+  const tick = () => {
+    if (left <= 0){
+      clearInterval(waState.cooldownTimer);
+      waState.cooldownTimer = null;
+      if (btn) btn.disabled = false;
+      const l = waEl('waFindLabel');
+      if (l) l.textContent = 'Find my profile';
+      waAlert('waLocateAlert', '');
+      waAutoPaused = false;
+      return;
+    }
+    const l = waEl('waFindLabel');
+    if (l) l.textContent = 'Give it a moment (' + left + 's)';
+    left--;
+  };
+  tick();
+  waState.cooldownTimer = setInterval(tick, 1000);
+}
+
+async function waFindProfile(){
+  const raw = (waEl('waHandle') || {}).value || '';
+  const handle = waNormalizeHandle(raw);
+
+  if (!handle){
+    waAlert('waLocateAlert', 'Enter your Skool handle to look you up.', 'soft');
+    return;
+  }
+  if (!/^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$/.test(handle)){
+    waAlert('waLocateAlert', 'Handles use letters, numbers and hyphens only.', 'soft');
+    return;
+  }
+
+  waState.handle = handle;
+  waAlert('waLocateAlert', '');
+  waCloseSuggest();
+  if (waDebounceTimer){ clearTimeout(waDebounceTimer); waDebounceTimer = null; }
+
+  if (waCache.has(handle)){
+    const c = waCache.get(handle);
+    if (c && c.found === true && c.profile){ waRenderProfile(c.profile); waShowScreen('found'); return; }
+  }
+
+  waBusy('waFindBtn', 'waFindLabel', true, 'Finding...', 'Find my profile');
+
+  let res = null, data = null;
+  try {
+    res = await fetch(FN_BASE + '/skool-profile-lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ handle })
+    });
+    data = await res.json().catch(() => ({}));
+  } catch (e) {
+    console.warn('[locate] network', e);
+    waBusy('waFindBtn', 'waFindLabel', false, '', 'Find my profile');
+    waEl('waNotFoundTitle').textContent = 'We could not reach Skool';
+    waEl('waNotFoundBody').textContent = 'Skool is not responding right now. This step is optional, so you can go straight to signing in.';
+    waShowScreen('notfound');
+    return;
+  }
+
+  waBusy('waFindBtn', 'waFindLabel', false, '', 'Find my profile');
+
+  if (res.status === 429){
+    waAlert('waLocateAlert', 'Give it a moment. Too many lookups just now.', 'soft');
+    waStartCooldown((data && data.retry_after) || 60);
+    return;
+  }
+
+  if (res.status === 502){
+    waEl('waNotFoundTitle').textContent = 'Skool is not responding right now';
+    waEl('waNotFoundBody').textContent = 'This step is optional. You can skip straight to signing in, or try the lookup again in a moment.';
+    waShowScreen('notfound');
+    return;
+  }
+
+  if (!data || data.found !== true){
+    waEl('waNotFoundTitle').textContent = 'We could not find that profile';
+    waEl('waNotFoundBody').textContent = (data && data.error === 'invalid_handle')
+      ? 'Handles use letters, numbers and hyphens only. Check the spelling and try again.'
+      : 'Check the spelling, or try a different handle. Plenty of stewards have no public Skool profile at all, and that is fine. You can go straight to signing in.';
+    waShowScreen('notfound');
+    return;
+  }
+
+  waCache.set(handle, data);
+  waRenderProfile(data.profile || {});
+  waShowScreen('found');
+}
+
+function waRenderProfile(p){
+  waState.profile = p;
+  waState.handle = p.handle || waState.handle;
+
+  const nameEl = waEl('waProfileName');
+  if (nameEl) nameEl.textContent = p.name || 'Steward';
+
+  const handleEl = waEl('waProfileHandle');
+  if (handleEl) handleEl.textContent = '@' + (p.handle || waState.handle);
+
+  const bioEl = waEl('waProfileBio');
+  if (bioEl){
+    bioEl.textContent = p.bio || '';
+    bioEl.style.display = p.bio ? '' : 'none';
+  }
+
+  const img = waEl('waProfileAvatar');
+  const fb  = waEl('waProfileInitial');
+  const initial = String(p.name || waState.handle || 'S').trim().charAt(0).toUpperCase();
+  if (fb) fb.textContent = initial;
+
+  if (img && p.avatar_url){
+    img.style.display = 'block';
+    if (fb) fb.style.display = 'none';
+    img.alt = (p.name || 'Steward') + ' profile photo';
+    img.onerror = () => {
+      img.style.display = 'none';
+      if (fb) fb.style.display = 'flex';
+    };
+    img.src = p.avatar_url;
+  } else {
+    if (img) img.style.display = 'none';
+    if (fb) fb.style.display = 'flex';
+  }
+}
+
+let waProfileMeta = null;
+
+function waSafeAvatarUrl(url){
+  if (!url || typeof url !== 'string') return null;
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'https:') return null;
+    if (u.hostname !== 'skool.com' && !u.hostname.endsWith('.skool.com')) return null;
+    return u.href;
+  } catch(e){ return null; }
+}
+window.waSafeAvatarUrl = waSafeAvatarUrl;
+
+async function waPersistSkoolProfile(){
+  if (!sb || !waState.profile) return;
+  const p = waState.profile;
+  const data = {};
+  if (p.handle) data.skool_handle = p.handle;
+  const av = waSafeAvatarUrl(p.avatar_url);
+  if (av) data.skool_avatar_url = av;
+  if (!Object.keys(data).length) return;
+  try {
+    const { data: res, error } = await sb.auth.updateUser({ data });
+    if (error) throw error;
+    if (res && res.user) waProfileMeta = res.user.user_metadata || null;
+  } catch(e){
+    console.warn('[profile] could not save Skool profile:', e && e.message);
+  }
+}
+
+async function waLoadProfileMeta(){
+  try {
+    const { data } = await sb.auth.getSession();
+    const u = data && data.session && data.session.user;
+    if (u && u.user_metadata) waProfileMeta = u.user_metadata;
+  } catch(e){}
+}
+
+function waPaintAvatar(el, initials){
+  if (!el) return;
+  el.textContent = initials;
+  const old = el.querySelector('.wh-avatar-photo');
+  if (old) { try { old.remove(); } catch(e){} }
+
+  const url = waSafeAvatarUrl(waProfileMeta && waProfileMeta.skool_avatar_url);
+  if (!url) return;
+
+  const img = document.createElement('img');
+  img.className = 'wh-avatar-photo';
+  img.alt = '';
+  img.setAttribute('referrerpolicy','no-referrer');
+  img.addEventListener('error', () => { try { img.remove(); } catch(e){} });
+  img.src = url;
+  el.appendChild(img);
+}
+window.waPaintAvatar = waPaintAvatar;
+
+function waSetMode(mode){
+  waState.mode = mode;
+  const isSignup = mode === 'signup';
+
+  const tL = waEl('waTabLogin'), tS = waEl('waTabSignup');
+  if (tL){ tL.classList.toggle('is-active', !isSignup); tL.setAttribute('aria-selected', String(!isSignup)); }
+  if (tS){ tS.classList.toggle('is-active',  isSignup); tS.setAttribute('aria-selected', String(isSignup)); }
+
+  const sub = waEl('waAccessSub');
+  if (sub) sub.textContent = isSignup
+    ? 'Pick the email you want tied to your steward account.'
+    : 'Use the email tied to your steward account.';
+
+  const title = waEl('waAccessTitle');
+  if (title) title.textContent = isSignup ? 'Create your account' : 'Sign in';
+
+  const pw = waEl('waPassword');
+  if (pw){
+    pw.autocomplete = isSignup ? 'new-password' : 'current-password';
+    pw.placeholder  = isSignup ? 'At least 8 characters' : 'Your password';
+  }
+
+  const fine = waEl('waAccessFine');
+  if (fine) fine.textContent = isSignup ? 'Use at least 8 characters.' : '';
+
+  const forgot = waEl('waForgotBtn');
+  if (forgot) forgot.style.display = isSignup ? 'none' : 'inline-flex';
+
+  const sw = waEl('waSwitchToLoginBtn');
+  if (sw) sw.style.display = 'none';
+
+  const label = waEl('waSubmitLabel');
+  if (label) label.textContent = isSignup ? 'Create account' : 'Log in';
+
+  waAlert('waAccessAlert', '');
+}
+
+function waResetFormView(){
+  const f = waEl('waResetForm'), sent = waEl('waResetSent');
+  if (f) f.style.display = '';
+  if (sent) sent.style.display = 'none';
+  waAlert('waResetAlert', '');
+  waBusy('waResetSendBtn', 'waResetSendLabel', false, '', 'Send reset link');
+}
+
+function waGoReset(){
+  waResetFormView();
+  const typed = ((waEl('waEmail') || {}).value || '').trim();
+  const box = waEl('waResetEmail');
+  if (box) box.value = typed;
+  waShowScreen('reset');
+  if (box) setTimeout(() => { try { box.focus(); if (typed) box.select(); } catch(e){} }, 60);
+}
+
+async function waSendReset(){
+  const email = ((waEl('waResetEmail') || {}).value || '').trim().toLowerCase();
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    waAlert('waResetAlert', 'Enter a valid email address.', 'err');
+    return;
+  }
+  if (!sb){
+    waAlert('waResetAlert', 'We could not reach the sign in service. Reload and try again.', 'err');
+    return;
+  }
+
+  waAlert('waResetAlert', '');
+  waBusy('waResetSendBtn', 'waResetSendLabel', true, 'Sending...', 'Send reset link');
+  try {
+    await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+  } catch (e) {
+    console.warn('[reset]', e && e.message);
+  }
+  waBusy('waResetSendBtn', 'waResetSendLabel', false, '', 'Send reset link');
+
+  const body = waEl('waResetSentBody');
+  if (body) body.textContent = 'If ' + email + ' has an account, a reset link is on its way. Use it soon, the link does not last long.';
+  const f = waEl('waResetForm'), sent = waEl('waResetSent');
+  if (f) f.style.display = 'none';
+  if (sent) sent.style.display = '';
+}
+
+function waBackToLogin(){
+  const typed = ((waEl('waResetEmail') || {}).value || '').trim();
+  waSetMode('login');
+  if (typed){ const em = waEl('waEmail'); if (em) em.value = typed; }
+  waGoAccess();
+}
+
+async function waSetNewPassword(){
+  const a = (waEl('waNewPw') || {}).value || '';
+  const b = (waEl('waNewPw2') || {}).value || '';
+  const rest = 'Set password and continue';
+
+  if (a.length < 8){ waAlert('waNewPwAlert', 'Use a password of at least 8 characters.', 'err'); return; }
+  if (a !== b){ waAlert('waNewPwAlert', 'Those two passwords do not match.', 'err'); return; }
+  if (!sb){ waAlert('waNewPwAlert', 'We could not reach the sign in service. Reload and try again.', 'err'); return; }
+
+  waAlert('waNewPwAlert', '');
+  waBusy('waNewPwBtn', 'waNewPwLabel', true, 'Saving...', rest);
+  try {
+    const { data, error } = await sb.auth.updateUser({ password: a });
+    if (error) throw error;
+    waBusy('waNewPwBtn', 'waNewPwLabel', false, '', rest);
+    const email = data && data.user ? data.user.email : null;
+    if (!email){ waSetMode('login'); waGoAccess(); return; }
+    await waRunGate(email);
+  } catch (e) {
+    console.warn('[newpw]', e && e.message);
+    waBusy('waNewPwBtn', 'waNewPwLabel', false, '', rest);
+    waAlert('waNewPwAlert', 'We could not set that password. The link may have expired. Request a new one from the log in screen.', 'err');
+  }
+}
+
+function waGoAccess(){
+  const back = waEl('waBackBtn');
+  if (back) back.style.display = waState.handle ? 'inline-flex' : 'none';
+  waShowScreen('access');
+  const email = waEl('waEmail');
+  if (email && !email.value) setTimeout(() => { try { email.focus(); } catch(e){} }, 60);
+}
+
+async function waSubmitAccess(){
+  const email = ((waEl('waEmail') || {}).value || '').trim().toLowerCase();
+  const password = (waEl('waPassword') || {}).value || '';
+  const isSignup = waState.mode === 'signup';
+  const rest = isSignup ? 'Create account' : 'Log in';
+
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    waAlert('waAccessAlert', 'Enter a valid email address.', 'err');
+    return;
+  }
+  if (!password){
+    waAlert('waAccessAlert', 'Enter your password.', 'err');
+    return;
+  }
+  if (isSignup && password.length < 8){
+    waAlert('waAccessAlert', 'Use a password of at least 8 characters.', 'err');
+    return;
+  }
+  if (!sb){
+    waAlert('waAccessAlert', 'We could not reach the sign in service. Reload and try again.', 'err');
+    return;
+  }
+
+  waAlert('waAccessAlert', '');
+  waBusy('waSubmitBtn', 'waSubmitLabel', true, isSignup ? 'Creating...' : 'Signing in...', rest);
+
+  try {
+    if (isSignup){
+      const opts = { emailRedirectTo: window.location.href };
+      if (waState.handle) opts.data = { skool_handle: waState.handle };
+
+      const { data, error } = await sb.auth.signUp({ email, password, options: opts });
+      if (error) throw error;
+
+      if (!data || !data.session){
+        waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
+        waAlert('waAccessAlert', 'Check your inbox. If we can set up an account for that address, a confirmation link is on its way. If you already have an account, log in instead.', 'soft');
+        const sw = waEl('waSwitchToLoginBtn');
+        if (sw) sw.style.display = 'flex';
+        return;
+      }
+      await waPersistSkoolProfile();
+      await waRunGate(email);
+      return;
+    }
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    if (!data || !data.session) throw new Error('no_session');
+
+    await waPersistSkoolProfile();
+    await waRunGate(email);
+
+  } catch (err) {
+    console.warn('[auth]', err && err.message);
+    waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
+    waAlert('waAccessAlert', isSignup
+      ? 'We could not complete that. If you already have an account, log in instead.'
+      : 'That email and password combination did not work.', 'err');
+    const sw = waEl('waSwitchToLoginBtn');
+    if (sw) sw.style.display = isSignup ? 'flex' : 'none';
+  }
+}
+
+async function waRunGate(emailArg){
+  let email = emailArg;
+  if (!email){
+    try {
+      const { data } = await sb.auth.getSession();
+      email = data && data.session && data.session.user ? data.session.user.email : null;
+    } catch(e) {}
+  }
+  if (!email){ waOpenGate('locate'); return; }
+  email = String(email).trim().toLowerCase();
+
+  const loader = waEl('bootLoader');
+  waCloseGate();
+  if (loader && !loader.classList.contains('hide')) {
+    // Keep loader showing
+  } else {
+    // Show a loader if not already showing
+  }
+
+  let d = null;
+  try {
+    const r = await fetch(FN_BASE + '/get-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (!r.ok) throw new Error('gate_http_' + r.status);
+    d = await r.json();
+  } catch (e) {
+    console.warn('[gate] failed, failing closed to Door A', e);
+    waOpenGate('doorA');
+    return;
+  }
+
+  if (d && d.verified === true){
+    const status = (d.member && d.member.member_status) || '';
+    if (status === 'member'){
+      try { __lsSet('wh_steward_email', email); } catch(e) {}
+      MEMBER_EMAIL = email;
+      MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
+      await waLoadProfileMeta();
+      
+      // Hide the gate overlay and display main content
+      waCloseGate();
+      const content = waEl('appLayout') || waEl('sidebar') || document.querySelector('.dash-container');
+      if (content) content.style.display = '';
+      const mh = document.querySelector('.mobile-header');
+      if (mh) mh.style.display = '';
+      
+      // Load and initialize Command Center
+      await loadAndInit();
+      return;
+    }
+    if (status === 'lapsed'){ waOpenGate('doorB'); return; }
+    waOpenGate('doorA');
+    return;
+  }
+
+  if (d && d.lapsed === true){ waOpenGate('doorB'); return; }
+  waOpenGate('doorA');
+}
+window.waRunGate = waRunGate;
+
+function waResetAll(){
+  waState.handle = '';
+  waState.profile = null;
+  waState.mode = 'login';
+  if (waState.cooldownTimer){ clearInterval(waState.cooldownTimer); waState.cooldownTimer = null; }
+  ['waHandle','waEmail','waPassword','waResetEmail','waNewPw','waNewPw2'].forEach(id => { const el = waEl(id); if (el) el.value = ''; });
+  waResetFormView();
+  waAlert('waNewPwAlert', '');
+  if (waDebounceTimer){ clearTimeout(waDebounceTimer); waDebounceTimer = null; }
+  if (waAbortCtl){ try { waAbortCtl.abort(); } catch(e){} waAbortCtl = null; }
+  waAutoPaused = false;
+  waCloseSuggest(); waSpinField(false);
+  const find = waEl('waFindBtn'); if (find) find.disabled = false;
+  waAlert('waLocateAlert', ''); waAlert('waAccessAlert', '');
+  waBusy('waFindBtn','waFindLabel', false, '', 'Find my profile');
+  waSetMode('login');
+}
+window.waResetAll = waResetAll;
+
+function waWire(){
+  const on = (id, ev, fn) => { const el = waEl(id); if (el) el.addEventListener(ev, fn); };
+
+  on('waFindBtn', 'click', waFindProfile);
+  on('waHandle', 'input', waOnHandleInput);
+  on('waHandle', 'keydown', e => {
+    if (e.key === 'ArrowDown'){ e.preventDefault(); waMoveCursor(1); return; }
+    if (e.key === 'ArrowUp'){ e.preventDefault(); waMoveCursor(-1); return; }
+    if (e.key === 'Escape'){ waCloseSuggest(); return; }
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      if (waCursor >= 0 && waOptions[waCursor]){ waOptions[waCursor].click(); return; }
+      waFindProfile();
+    }
+  });
+  const sug = waEl('waSuggest');
+  if (sug) sug.addEventListener('mousedown', e => e.preventDefault());
+  on('waHandle', 'blur', () => setTimeout(waCloseSuggest, 120));
+
+  on('waNotFoundSkipBtn', 'click', waGoAccess);
+  on('waSearchAgainBtn', 'click', () => {
+    waShowScreen('locate');
+    const h = waEl('waHandle');
+    if (h){ h.value = waState.handle || ''; setTimeout(() => { try{ h.focus(); h.select(); }catch(e){} }, 60); }
+  });
+
+  on('waThatsMeBtn', 'click', waGoAccess);
+  on('waNotMeBtn', 'click', () => {
+    waState.profile = null;
+    waShowScreen('locate');
+    const h = waEl('waHandle');
+    if (h){ h.value = ''; setTimeout(() => { try{ h.focus(); }catch(e){} }, 60); }
+  });
+
+  on('waBackBtn', 'click', () => {
+    if (waState.profile){ waShowScreen('found'); return; }
+    waShowScreen('locate');
+    const h = waEl('waHandle');
+    if (h) h.value = waState.handle || '';
+  });
+
+  on('waTabLogin', 'click', () => waSetMode('login'));
+  on('waTabSignup', 'click', () => waSetMode('signup'));
+  on('waForgotBtn', 'click', waGoReset);
+  on('waResetSendBtn', 'click', waSendReset);
+  on('waResetEmail', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSendReset(); } });
+  on('waResetBackBtn', 'click', waBackToLogin);
+  on('waResetDoneBtn', 'click', waBackToLogin);
+  on('waResetAgainBtn', 'click', () => {
+    waResetFormView();
+    const box = waEl('waResetEmail');
+    if (box){ box.value = ''; setTimeout(() => { try { box.focus(); } catch(e){} }, 60); }
+  });
+
+  on('waNewPwBtn', 'click', waSetNewPassword);
+  on('waNewPw', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const n = waEl('waNewPw2'); if (n) n.focus(); } });
+  on('waNewPw2', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSetNewPassword(); } });
+  on('waNewPwReveal', 'click', () => {
+    const p = waEl('waNewPw'), b = waEl('waNewPwReveal');
+    if (!p || !b) return;
+    const show = p.type === 'password';
+    p.type = show ? 'text' : 'password';
+    b.textContent = show ? 'Hide' : 'Show';
+    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+  on('waSwitchToLoginBtn', 'click', () => {
+    waSetMode('login');
+    const pw = waEl('waPassword');
+    if (pw){ pw.value = ''; setTimeout(() => { try { pw.focus(); } catch(e){} }, 60); }
+  });
+
+  on('waEmail', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const p = waEl('waPassword'); if (p) p.focus(); } });
+  on('waPassword', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSubmitAccess(); } });
+  on('waSubmitBtn', 'click', waSubmitAccess);
+
+  on('waRevealBtn', 'click', () => {
+    const p = waEl('waPassword'), b = waEl('waRevealBtn');
+    if (!p || !b) return;
+    const show = p.type === 'password';
+    p.type = show ? 'text' : 'password';
+    b.textContent = show ? 'Hide' : 'Show';
+    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+
+  on('waDoorASignOut', 'click', () => { try{ logout(); }catch(e){} });
+  on('waDoorBSignOut', 'click', () => { try{ logout(); }catch(e){} });
+  on('waErrorSignOut', 'click', () => { try{ logout(); }catch(e){} });
+  on('waReloadBtn', 'click', () => { try{ window.location.reload(); }catch(e){} });
+
+  try {
+    const SKOOL_BASE = 'https://www.skool.com/bakndcreator/about';
+    const ref = new URLSearchParams(location.search).get('ref');
+    const refUrl = ref ? SKOOL_BASE+'?ref='+encodeURIComponent(ref) : SKOOL_BASE;
+    const aCta = waEl('waDoorACta'); if (aCta) aCta.href = refUrl;
+    const bCta = waEl('waDoorBCta'); if (bCta) bCta.href = refUrl;
+  } catch(e) {}
+}
+
+function showGateFallback(){
+  try { waOpenGate('locate'); } catch(e) {
+    const g = waEl('loginGate'); if (g) g.style.display = 'flex';
+  }
+  try { hideBootLoader(); } catch(e) {}
+}
+window.showGateFallback = showGateFallback;
 const KEY='record_fast_v2';
 let S={entries:[],fast:null,equipDismissed:false,
   draft:null, prefs:{scribeStyle:'full',missed:0,landed:0}, history:[], lastScribeLines:[], profile:null};
@@ -5004,9 +6240,12 @@ window.handleLogout=handleLogout;
 function initSidebarUser(){
   const email=MEMBER_EMAIL;
   if(!email)return;
-  const name=email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-  const avatar=name.charAt(0).toUpperCase();
-  const el=document.getElementById('sidebarAvatar');if(el)el.textContent=avatar;
+  const name=MEMBER_NAME || email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const initials=name.charAt(0).toUpperCase();
+  const el=document.getElementById('sidebarAvatar');
+  if(el) {
+    waPaintAvatar(el, initials);
+  }
   const nm=document.getElementById('sidebarName');if(nm)nm.textContent=name;
   const em=document.getElementById('sidebarEmail');if(em)em.textContent=email;
 }
@@ -5071,13 +6310,62 @@ async function loadAndInit(){
 
   if('speechSynthesis' in window)window.speechSynthesis.getVoices();
 }
-if(MEMBER_EMAIL) {
+  // Boot from Supabase session
   if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', loadAndInit);
+    window.addEventListener('DOMContentLoaded', () => {
+      try { waWire(); waSetMode('login'); } catch(e){ console.error('[auth] wiring', e); }
+      if (sb) {
+        try {
+          sb.auth.onAuthStateChange((event) => {
+            if (event === 'PASSWORD_RECOVERY') waOpenGate('newpw');
+          });
+        } catch(e){}
+      }
+      (async () => {
+        try {
+          if (!sb){ showGateFallback(); return; }
+          if (waIsRecoveryEntry()){ waOpenGate('newpw'); return; }
+          const { data } = await sb.auth.getSession();
+          const s = data && data.session;
+          if (s && s.user && s.user.email){
+            await waRunGate(s.user.email);
+          } else {
+            try { localStorage.removeItem('wh_steward_email'); } catch(e) {}
+            waOpenGate('locate');
+          }
+        } catch (e) {
+          console.error('Boot error:', e);
+          showGateFallback();
+        }
+      })();
+    });
   } else {
-    loadAndInit();
+    try { waWire(); waSetMode('login'); } catch(e){ console.error('[auth] wiring', e); }
+    if (sb) {
+      try {
+        sb.auth.onAuthStateChange((event) => {
+          if (event === 'PASSWORD_RECOVERY') waOpenGate('newpw');
+        });
+      } catch(e){}
+    }
+    (async () => {
+      try {
+        if (!sb){ showGateFallback(); return; }
+        if (waIsRecoveryEntry()){ waOpenGate('newpw'); return; }
+        const { data } = await sb.auth.getSession();
+        const s = data && data.session;
+        if (s && s.user && s.user.email){
+          await waRunGate(s.user.email);
+        } else {
+          try { localStorage.removeItem('wh_steward_email'); } catch(e) {}
+          waOpenGate('locate');
+        }
+      } catch (e) {
+        console.error('Boot error:', e);
+        showGateFallback();
+      }
+    })();
   }
-}
 
 })();
 </script>
