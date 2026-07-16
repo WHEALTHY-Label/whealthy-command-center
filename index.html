@@ -6805,13 +6805,66 @@ function renderClaimPage(){
   var archKey = (window.REC && window.REC.archetype) || null;
   if(archKey && ARCHETYPE_COPY[archKey]) {
     var match = ARCHETYPE_COPY[archKey];
-    intro.innerHTML = '<div style="font-family:\'Outfit\', -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 0;">' +
-      '<div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(204,255,0,0.06); border: 2px solid var(--lime); display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(204,255,0,0.25);">' + (match.icon || '📦') + '</div>' +
-      '<div style="margin-bottom:16px;"><span class="draft-chip" style="color:var(--lime);border-color:rgba(204,255,0,0.3);text-transform:uppercase;font-size:11px;font-weight:700;letter-spacing:0.05em">Matched Archetype: '+match.title+'</span></div>' +
-      '<h2 style="color:var(--lime);font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px; font-family:\'Outfit\', -apple-system, sans-serif;">'+match.header+'</h2>' +
-      '<p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.6;margin:0 auto 16px;max-width:540px; font-family:\'Outfit\', -apple-system, sans-serif;">'+match.body+'</p>' +
-      '<div style="display:inline-block;padding:8px 16px;background:rgba(204,255,0,0.05);border:1px solid rgba(204,255,0,0.1);border-radius:8px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4; font-family:\'Outfit\', -apple-system, sans-serif; margin-bottom: 24px;">&#128202; <strong>Steward Stat:</strong> '+match.stats+'</div>' +
-      '<div><button class="btn-lime" style="width:auto; padding: 12px 28px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 0 15px rgba(204,255,0,0.3);" onclick="document.getElementById(\'bundleSwitcherWrap\').scrollIntoView({ behavior: \'smooth\' });" onmouseover="this.style.transform=\'scale(1.02)\'; this.style.boxShadow=\'0 0 25px rgba(204,255,0,0.5)\';" onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 0 15px rgba(204,255,0,0.3)\';">Claim Your Recommended Bundle &darr;</button></div>' +
+    
+    // Parse stats into number + text
+    var statNum = '📊';
+    var statText = match.stats;
+    var statNumMatch = match.stats.match(/^\d+%/);
+    if(statNumMatch) {
+      statNum = statNumMatch[0];
+      statText = match.stats.replace(/^\d+%\s+of\s+/, 'of ');
+    } else if(match.stats.startsWith('4 ')) {
+      statNum = '4';
+      statText = match.stats.replace(/^4\s+is\s+/, '');
+    }
+
+    // Split header for styled subtext
+    var headerParts = match.header.split(/\.\s+/);
+    var headerMain = headerParts[0] + '.';
+    var headerSub = headerParts[1] || '';
+
+    intro.innerHTML = 
+      '<div style="position:relative; width:100%; max-width:760px; margin:0 auto 32px; background:linear-gradient(135deg, rgba(204,255,0,0.04) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(204,255,0,0.15); border-radius:24px; padding:44px 32px; text-align:center; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05); font-family:\'Outfit\', -apple-system, sans-serif; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);">' +
+        '<!-- Glowing Aura Background -->' +
+        '<div style="position:absolute; top:-100px; left:50%; transform:translateX(-50%); width:300px; height:300px; background:radial-gradient(circle, rgba(204,255,0,0.12) 0%, rgba(204,255,0,0) 70%); pointer-events:none; z-index:0;"></div>' +
+        
+        '<div style="position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;">' +
+          '<!-- Top Badge -->' +
+          '<div style="display:inline-flex; align-items:center; gap:8px; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:100px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--lime); margin-bottom:24px; box-shadow:0 0 12px rgba(204,255,0,0.1);">' +
+            '<span style="font-size:14px;">' + (match.icon || '⚡') + '</span>' +
+            'Matched Archetype: ' + match.title +
+          '</div>' +
+          
+          '<!-- Styled Header -->' +
+          '<h2 style="font-family:var(--font-display), \'Outfit\', -apple-system, sans-serif; font-size:clamp(24px, 4.2vw, 36px); font-weight:800; text-transform:uppercase; letter-spacing:0.02em; color:#fff; line-height:1.2; margin-bottom:20px; max-width:640px;">' +
+            headerMain + '<br>' +
+            '<span style="background:linear-gradient(90deg, #fff 0%, var(--lime) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">' + headerSub + '</span>' +
+          '</h2>' +
+          
+          '<!-- Body Text -->' +
+          '<p style="color:#b5b7bc; font-size:15.5px; line-height:1.65; max-width:580px; margin:0 auto 28px;">' +
+            match.body +
+          '</p>' +
+          
+          '<!-- Dashboard Stat Callout -->' +
+          '<div style="width:100%; max-width:520px; margin:0 auto 36px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:18px 24px; display:flex; align-items:center; gap:20px; text-align:left;">' +
+            '<div style="font-family:var(--font-display), \'Outfit\', -apple-system, sans-serif; font-size:38px; font-weight:800; color:var(--lime); line-height:1; text-shadow:0 0 15px rgba(204,255,0,0.3); flex-shrink:0;">' + statNum + '</div>' +
+            '<div style="font-size:13.5px; color:#b5b7bc; line-height:1.5;">' +
+              '<strong style="color:#fff; font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:0.05em; display:block; margin-bottom:2px;">Steward Insight</strong>' + statText +
+            '</div>' +
+          '</div>' +
+          
+          '<!-- Action CTA -->' +
+          '<div>' +
+            '<button class="btn-lime" style="width:auto; padding:16px 36px; font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; border-radius:12px; display:inline-flex; align-items:center; gap:10px; cursor:pointer; background:var(--lime); color:#080809; border:none; transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 4px 20px rgba(204,255,0,0.3);" ' +
+            'onclick="document.getElementById(\'bundleSwitcherWrap\').scrollIntoView({ behavior: \'smooth\' });" ' +
+            'onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 8px 30px rgba(204,255,0,0.5)\'; this.style.background=\'#d8ff33\';" ' +
+            'onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 4px 20px rgba(204,255,0,0.3)\'; this.style.background=\'var(--lime)\';">' +
+              'Claim Your Recommended Bundle' +
+              '<span style="font-size:16px;">&darr;</span>' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
       '</div>';
   } else {
     intro.innerHTML = '<h2 style="color:var(--lime);font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px">Your Bundle is Ready</h2><p style="color:rgba(255,255,255,0.45);font-size:15px;line-height:1.6;margin:0">As a verified Steward, your governance bundle is unlocked and waiting. <strong style="color:#fff">Select your bundle below to complete your activation.</strong></p>';
