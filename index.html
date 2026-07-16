@@ -1665,74 +1665,388 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ BIBLE 365 ============ -->
       <div id="bibleView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">&#128214;</div>
-          <div>
-            <h1 class="view-header-title" id="bibleTitle">Bible 365</h1>
-            <p class="view-header-subtitle" id="bibleSubtitle">Daily scriptural reading &amp; study tracker.</p>
+        <style>
+        .bible-grid {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr;
+          gap: 24px;
+        }
+        @media (max-width: 1024px) {
+          .bible-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .bible-search-dropdown {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: #121316;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          margin-top: 8px;
+          max-height: 240px;
+          overflow-y: auto;
+          z-index: 100;
+          display: none;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .bible-task-checkbox {
+          width: 20px;
+          height: 20px;
+          border-radius: 6px;
+          border: 2px solid rgba(255,255,255,0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+        }
+        .bible-task-checkbox.checked {
+          background: var(--lime) !important;
+          border-color: var(--lime) !important;
+        }
+        .bible-task-checkbox.checked::after {
+          content: '✓';
+          color: #000;
+          font-size: 12px;
+          font-weight: 800;
+        }
+        
+        /* ── CALENDAR STYLES ── */
+        .calendar-columns {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-top: 16px;
+        }
+        @media (min-width: 768px) {
+          .calendar-columns {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+        .week-section {
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 16px;
+          overflow: hidden;
+          transition: border-color 0.25s;
+          margin-bottom: 0;
+        }
+        .week-section:hover {
+          border-color: rgba(255,255,255,0.12);
+        }
+        .week-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 20px;
+          cursor: pointer;
+          transition: background 0.2s;
+          gap: 12px;
+        }
+        .week-header:hover {
+          background: rgba(255,255,255,0.04);
+        }
+        .week-header-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-width: 0;
+        }
+        .week-label {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 14px;
+          letter-spacing: .06em;
+          text-transform: uppercase;
+          color: #fff;
+          white-space: nowrap;
+        }
+        .week-theme-label {
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 400;
+          color: rgba(255,255,255,0.4);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .week-header-right {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-shrink: 0;
+        }
+        .week-count {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 13px;
+          letter-spacing: .06em;
+          color: rgba(255,255,255,0.4);
+        }
+        .week-count.all-done {
+          color: var(--lime);
+        }
+        .week-chevron {
+          color: rgba(255,255,255,0.4);
+          transition: transform 0.3s;
+          display: flex;
+          align-items: center;
+        }
+        .week-chevron svg {
+          width: 14px;
+          height: 14px;
+        }
+        .week-section.expanded .week-chevron {
+          transform: rotate(180deg);
+        }
+        .week-days {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .week-section.expanded .week-days {
+          max-height: 600px;
+        }
+        .day-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 20px;
+          border-top: 1px solid rgba(255,255,255,0.05);
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        .day-row:hover {
+          background: rgba(255,255,255,0.04);
+        }
+        .day-row.is-today {
+          background: rgba(204,255,0,0.05);
+        }
+        .day-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          flex-shrink: 0;
+          border: 1.5px solid rgba(255,255,255,0.25);
+          transition: all 0.2s;
+        }
+        .day-dot.done {
+          background: var(--lime);
+          border-color: var(--lime);
+          box-shadow: 0 0 6px rgba(204,255,0,0.3);
+        }
+        .day-row-num {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 13px;
+          letter-spacing: .04em;
+          color: rgba(255,255,255,0.4);
+          min-width: 48px;
+        }
+        .day-row-ref {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 13px;
+          color: #fff;
+          flex: 1;
+          min-width: 0;
+        }
+        .day-row-title {
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 400;
+          color: rgba(255,255,255,0.4);
+          display: block;
+        }
+        .day-row.is-future {
+          opacity: 0.35;
+          cursor: not-allowed;
+        }
+        .day-row.is-future:hover {
+          background: transparent;
+        }
+        .day-row-lock {
+          display: none;
+          color: rgba(255,255,255,0.4);
+          flex-shrink: 0;
+        }
+        .day-row-lock svg {
+          width: 12px;
+          height: 12px;
+        }
+        .day-row.is-future .day-row-lock {
+          display: flex;
+          align-items: center;
+        }
+        </style>
+
+        <!-- New Top Header Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
+          <h1 style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--lime); margin:0; text-transform:uppercase; letter-spacing:0.04em;">Bible 365</h1>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="position:relative;">
+              <input type="text" id="bible_searchWisdom" placeholder="Search wisdom..." style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:10px 16px 10px 36px; color:#fff; font-size:13px; outline:none; width:180px; transition: border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)';">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:12px;">🔍</span>
+            </div>
+            <button class="btn-ghost" style="width:38px; height:38px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);" onclick="speak('No new notifications')">&#128276;</button>
+            <button class="btn-ghost" style="width:38px; height:38px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);" onclick="toggleCalendar()">&#9881;</button>
           </div>
         </div>
+
         <div id="bible365Root">
-          <div class="g-card" style="text-align:center;padding:32px 24px" id="bible_heroCard">
-            <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(204,255,0,0.08);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:20px">
-              <span id="bible_weekLabel">WEEK 1</span>
-              <span style="font-weight:400;opacity:0.7;font-size:11px;letter-spacing:.02em;text-transform:none" id="bible_weekTheme"></span>
-            </div>
-            <div style="font-family:var(--font-display);font-weight:700;font-size:48px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1;margin-bottom:8px" id="bible_heroDay">DAY 1</div>
-            <div style="font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:.04em;color:var(--lime);margin-bottom:8px" id="bible_heroRef">Genesis 1-3</div>
-            <div style="font-size:16px;color:rgba(255,255,255,0.55);margin-bottom:16px" id="bible_heroTitle">Creation and the Fall</div>
-            <!-- Scripture Reader -->
-            <div style="text-align:center">
-              <button class="btn-ghost" id="bible_btnReadPassage" style="margin:0 auto 16px;display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:100px">
-                <span id="bible_readPassageText">Read Passage</span>
-              </button>
-              <div id="bible_scriptureReader" class="scripture-reader">
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.07)">
-                  <span style="font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--lime)" id="bible_scriptureRefTitle">Genesis 1-3</span>
-                  <span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:100px">NIV</span>
-                </div>
-                <div id="bible_scriptureBody" style="padding:20px;max-height:60vh;overflow-y:auto;font-size:16px;line-height:1.85;color:var(--text)">
-                  <div id="bible_scriptureLoading" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:rgba(255,255,255,0.3);font-size:14px">Loading scripture...</div>
+          <!-- Two-column grid -->
+          <div class="bible-grid">
+            
+            <!-- Left Column: Verse of the Day Card -->
+            <div class="g-card" id="bible_heroCard" style="position:relative; background: radial-gradient(circle at top right, rgba(204,255,0,0.05), transparent 60%), #0e1013; padding: 36px; display:flex; flex-direction:column; justify-content:center; min-height:420px; overflow:hidden;">
+              <!-- Left/Right navigation chevrons for easy day switching -->
+              <button id="bible_btnPrev" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; z-index:10; font-size:16px;" onmouseover="this.style.background='var(--lime)'; this.style.color='#000';" onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.color='#fff';">&larr;</button>
+              <button id="bible_btnNext" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; z-index:10; font-size:16px;" onmouseover="this.style.background='var(--lime)'; this.style.color='#000';" onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.color='#fff';">&rarr;</button>
+
+              <div style="align-self:flex-end; font-family:var(--font-display); font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:8px;" id="bible_weekLabel">Verse of the Day</div>
+              
+              <h2 style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--lime); margin:0 0 16px;" id="bible_heroRef">Psalm 23:1-3</h2>
+              
+              <blockquote style="margin:0 0 20px; font-family: 'Outfit', 'DM Sans', sans-serif; font-size:28px; font-weight:700; font-style:italic; line-height:1.35; color:#fff; letter-spacing:-0.02em;" id="bible_verseQuote">
+                "The Lord is my shepherd; I shall not want. He maketh me to lie down in green pastures: he leadeth me beside the still waters."
+              </blockquote>
+              
+              <p style="font-size:14px; color:rgba(255,255,255,0.55); line-height:1.6; margin:0 0 28px; max-width:560px;" id="bible_heroReflection">
+                A reflection on the peace that comes from absolute trust in divine guidance. Even in the valley of shadows, there is a table prepared for those who walk in faith.
+              </p>
+              
+              <div style="display:flex; gap:12px; align-items:center;">
+                <button class="btn-primary" id="bible_btnReadPassage" style="border-radius:100px; padding:12px 24px; font-size:12px; display:inline-flex; align-items:center; gap:8px;">
+                  <span style="font-size:14px;">📖</span> <span id="bible_readPassageText">Read Full Chapter</span>
+                </button>
+                <button class="btn-secondary" id="bible_btnReflect" onclick="toggleReflectionInput()" style="border-radius:100px; padding:12px 24px; font-size:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#fff;">
+                  Reflect
+                </button>
+              </div>
+
+              <!-- Collapsible Reflection Journal Input -->
+              <div id="bible_reflectionContainer" style="display:none; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.08);">
+                <label style="display:block; font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Daily Reflection Journal</label>
+                <textarea id="bible_reflectionText" placeholder="Write down your thoughts, prayers, or insights from today's scripture..." style="width:100%; height:120px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:#fff; font-size:14px; line-height:1.5; resize:none; outline:none; margin-bottom:12px; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                <div style="display:flex; justify-content:flex-end; gap:8px;">
+                  <button class="btn-ghost" onclick="toggleReflectionInput()" style="padding:8px 16px; font-size:12px; border-radius:8px;">Cancel</button>
+                  <button class="btn-lime" onclick="saveReflectionJournal()" style="padding:8px 16px; font-size:12px; border-radius:8px; width:auto;">Save Reflection</button>
                 </div>
               </div>
             </div>
-            <!-- Toggle + Nav -->
-            <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px">
-              <button class="btn-ghost" id="bible_btnPrev" style="width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%">&larr;</button>
-              <button class="btn-lime" id="bible_toggleBtn" style="width:56px;height:56px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:20px">&#10003;</button>
-              <button class="btn-ghost" id="bible_btnNext" style="width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%">&rarr;</button>
+
+            <!-- Right Column -->
+            <div style="display:flex; flex-direction:column; gap:24px;">
+              
+              <!-- Streak & Milestones Card -->
+              <div class="g-card" style="padding: 28px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:190px;">
+                <!-- SVG Streak Ring -->
+                <div style="position:relative; width:130px; height:130px; margin-bottom:16px;">
+                  <svg width="130" height="130" viewBox="0 0 130 130">
+                    <circle cx="65" cy="65" r="56" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6" />
+                    <circle cx="65" cy="65" r="56" fill="none" stroke="var(--lime)" stroke-width="6"
+                            stroke-linecap="round"
+                            stroke-dasharray="351.8"
+                            stroke-dashoffset="88"
+                            style="transition: stroke-dashoffset 0.8s ease; filter: drop-shadow(0 0 6px rgba(204,255,0,0.3));"
+                            id="bible_streakCircle" />
+                  </svg>
+                  <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <span style="font-family:var(--font-display); font-size:28px; font-weight:800; color:#fff; line-height:1;" id="bible_streakCount">0</span>
+                    <span style="font-size:9px; font-weight:700; letter-spacing:0.08em; color:var(--text-dim); text-transform:uppercase; margin-top:2px;">Days</span>
+                  </div>
+                </div>
+                <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; color:#fff; letter-spacing:0.05em; text-transform:uppercase; margin:0 0 4px;" id="bible_streakTitle">Steady Journey</h3>
+                <p style="font-size:12px; color:rgba(255,255,255,0.5); line-height:1.4; margin:0; max-width:240px;" id="bible_streakDesc">
+                  Your current streak is active. Keep reading to build your momentum.
+                </p>
+              </div>
+
+              <!-- Sanctuary Tasks Card -->
+              <div class="g-card" style="padding: 24px; min-height:190px;">
+                <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); letter-spacing:0.08em; text-transform:uppercase; margin:0 0 16px;">Sanctuary Tasks</h3>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                  
+                  <!-- Task 1 -->
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; cursor:pointer;" onclick="toggleCompletion()">
+                    <div id="bible_taskReadCheck" class="bible-task-checkbox">
+                      <!-- checkmark -->
+                    </div>
+                    <span style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.85);" id="bible_taskReadLabel">Daily Scripture Reading</span>
+                  </div>
+
+                  <!-- Task 2 -->
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; cursor:pointer;" onclick="toggleReflectionInput()">
+                    <div id="bible_taskReflectCheck" class="bible-task-checkbox">
+                      <!-- checkmark -->
+                    </div>
+                    <span style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.85);">Reflection Journaling</span>
+                  </div>
+
+                  <!-- Task 3 -->
+                  <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; text-decoration:none; color:inherit;">
+                    <div style="width:20px; height:20px; border-radius:6px; border:2px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;">
+                      <!-- checkmark icon or indicator -->
+                    </div>
+                    <span style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.85);">Community Prayer</span>
+                  </a>
+
+                </div>
+              </div>
+
             </div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-top:12px" id="bible_navLabel">Day 1 of 365</div>
-            <!-- Progress -->
-            <div style="margin-top:16px;height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden">
-              <div id="bible_progressFill" style="height:100%;background:var(--lime);width:0%;transition:width 0.5s ease;box-shadow:0 0 8px rgba(204,255,0,0.4)"></div>
+
+          </div>
+
+          <!-- Bottom: Year Progress Bar Card -->
+          <div class="g-card" style="padding: 24px; margin-top: 24px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+              <div>
+                <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; color:#fff; letter-spacing:0.05em; text-transform:uppercase; margin:0;" id="bible_progressYearTitle">2026 Year Journey</h3>
+                <div style="font-size:11px; font-weight:600; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.02em; margin-top:2px;" id="bible_progressPercentSub">0% of the way through the Living Word</div>
+              </div>
+              <span style="font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--lime);" id="bible_progressFraction">0 / 365 Days</span>
             </div>
-            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:rgba(255,255,255,0.3)">
-              <span id="bible_statComplete">0 / 365 COMPLETE</span>
-              <span id="bible_statStreak">0 DAY STREAK</span>
+            <div style="height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
+              <div id="bible_progressFill" style="height:100%; background:var(--lime); width:0%; transition:width 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 0 10px rgba(204,255,0,0.4);"></div>
             </div>
           </div>
-          <!-- Calendar Toggle -->
-          <div style="text-align:center;margin:20px 0">
-            <button class="btn-ghost" id="bible_btnCalendarToggle" style="display:inline-flex;align-items:center;gap:6px">
-              <span id="bible_calendarToggleText">View All Weeks</span> &#9660;
+
+          <!-- Scripture Reader container -->
+          <div id="bible_scriptureReader" class="scripture-reader" style="margin-top: 24px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid rgba(255,255,255,0.07)">
+              <span style="font-family:var(--font-display); font-weight:600; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:var(--lime)" id="bible_scriptureRefTitle">Genesis 1-3</span>
+              <span style="font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.3); padding:4px 10px; background:rgba(255,255,255,0.05); border-radius:100px">NIV</span>
+            </div>
+            <div id="bible_scriptureBody" style="padding:20px; max-height:60vh; overflow-y:auto; font-size:16px; line-height:1.85; color:var(--text)">
+              <div id="bible_scriptureLoading" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:40px 20px; color:rgba(255,255,255,0.3); font-size:14px">Loading scripture...</div>
+            </div>
+          </div>
+
+          <!-- Calendar Grid Section -->
+          <div style="text-align:center; margin:24px 0 12px;">
+            <button class="btn-ghost" id="bible_btnCalendarToggle" style="display:inline-flex; align-items:center; gap:6px;">
+              <span id="bible_calendarToggleText">View Study Calendar</span> &#9660;
             </button>
           </div>
-          <div id="bible_calendarGrid" style="display:none"><div id="bible_calendarColumns"></div></div>
-          <!-- Welcome Overlay -->
+          <div id="bible_calendarGrid" style="display:none;"><div class="calendar-columns" id="bible_calendarColumns"></div></div>
+
+          <!-- Start date picker overlay -->
           <div id="bible_welcomeOverlay" class="overlay">
-            <div class="g-card" style="max-width:440px;width:100%;text-align:center;padding:48px 36px;position:relative">
-              <button onclick="go('dash', document.getElementById('navDash')); document.getElementById('bible_welcomeOverlay').classList.remove('open');" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;min-height:auto" class="bible-welcome-close">&times;</button>
-              <div style="font-family:var(--font-display);font-weight:700;font-size:28px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);margin-bottom:8px">W<span style="color:var(--lime)">HEAL</span>THY</div>
-              <div style="font-family:var(--font-display);font-weight:700;font-size:32px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:12px;line-height:1.1">365-Day Bible Study</div>
-              <div style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:32px">Read through the entire Bible in one year, starting any day you choose.</div>
+            <div class="g-card" style="max-width:440px; width:100%; text-align:center; padding:48px 36px; position:relative">
+              <button onclick="go('dash', document.getElementById('navDash')); document.getElementById('bible_welcomeOverlay').classList.remove('open');" style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.4); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; min-height:auto" class="bible-welcome-close">&times;</button>
+              <div style="font-family:var(--font-display); font-weight:700; font-size:28px; letter-spacing:.12em; text-transform:uppercase; color:var(--text); margin-bottom:8px">W<span style="color:var(--lime)">HEAL</span>THY</div>
+              <div style="font-family:var(--font-display); font-weight:700; font-size:32px; letter-spacing:.04em; text-transform:uppercase; color:var(--text); margin-bottom:12px; line-height:1.1">365-Day Bible Study</div>
+              <div style="font-size:15px; color:rgba(255,255,255,0.55); line-height:1.6; margin-bottom:32px">Read through the entire Bible in one year, starting any day you choose.</div>
               <div style="margin-bottom:28px">
-                <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px">Choose Your Start Date</label>
-                <input type="date" id="bible_startDateInput" style="width:100%;max-width:260px;padding:14px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:var(--text);font-size:16px;text-align:center;outline:none;color-scheme:dark">
+                <label style="display:block; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:10px">Choose Your Start Date</label>
+                <input type="date" id="bible_startDateInput" style="width:100%; max-width:260px; padding:14px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:14px; color:var(--text); font-size:16px; text-align:center; outline:none; color-scheme:dark">
               </div>
-              <button class="btn-lime" id="bible_btnBegin" style="padding:16px 48px;border-radius:100px">Begin</button>
+              <button class="btn-lime" id="bible_btnBegin" style="padding:16px 48px; border-radius:100px">Begin</button>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -3481,47 +3795,169 @@ function updateAuthUI(){
 // ══════════════════════════════════════
 // HERO CARD RENDERING
 // ══════════════════════════════════════
+function getDailyReflection(reading) {
+  const themes = {
+    "FOUNDATIONS": "the beauty of beginnings, the sovereignty of the Creator, and the covenant promises that shape history.",
+    "CHARACTER FORMATION": "the discipline of leadership, resilience under pressure, and how God refines our character through trials.",
+    "COVENANT & LAW": "the structure of divine justice, holiness in daily living, and the presence of God dwelling among His people.",
+    "WILDERNESS JOURNEY": "faithfulness through transitions, trusting in God's daily provision, and overcoming human doubt."
+  };
+  const baseTheme = themes[reading.theme] || "divine guidance, wisdom, and alignment with God's eternal purposes.";
+  return `A reflection on ${baseTheme} Even in seasons of preparation and testing, this passage reminds us of the strength and resilience found in faith.`;
+}
+
+function updateVerseQuote(data) {
+  const quoteEl = document.getElementById('bible_verseQuote');
+  if (!quoteEl) return;
+  if (!data || !data.verses || data.verses.length === 0) {
+    quoteEl.textContent = `"...Loading Scripture Quote..."`;
+    return;
+  }
+  let quote = data.verses.slice(0, 2).map(v => v.text.trim()).join(' ');
+  if (quote.length > 250) {
+    quote = quote.substring(0, 247) + '...';
+  }
+  quoteEl.textContent = `"${quote}"`;
+}
+
+window.toggleReflectionInput = function() {
+  const container = document.getElementById('bible_reflectionContainer');
+  if (!container) return;
+  const isHidden = container.style.display === 'none';
+  container.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    document.getElementById('bible_reflectionText').focus();
+  }
+};
+
+window.saveReflectionJournal = function() {
+  const text = document.getElementById('bible_reflectionText').value.trim();
+  const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
+  if (text) {
+    reflections[currentDay] = text;
+    speak('Reflection saved');
+  } else {
+    delete reflections[currentDay];
+  }
+  localStorage.setItem('wh_bible_reflections', JSON.stringify(reflections));
+  
+  // Update task checkbox
+  const chk = document.getElementById('bible_taskReflectCheck');
+  if (chk) chk.classList.toggle('checked', !!text);
+  
+  // Append to daily journal draft if appropriate
+  const recordTa = document.getElementById('transcript') || document.getElementById('dashTranscript');
+  if (recordTa && !recordTa.value.includes(text)) {
+    if (recordTa.value.trim()) {
+      recordTa.value += '\n\nReflection: ' + text;
+    } else {
+      recordTa.value = 'Reflection: ' + text;
+    }
+    if (typeof persistDraft === 'function') persistDraft();
+    const fileBtn = document.getElementById('fileBtn') || document.getElementById('dashFileBtn');
+    if (fileBtn) fileBtn.style.display = 'inline-flex';
+  }
+  
+  // Close container
+  const container = document.getElementById('bible_reflectionContainer');
+  if (container) container.style.display = 'none';
+};
+
 function renderHero(){
   const reading=READINGS[currentDay-1];
   if(!reading)return;
 
-  // Week pill
-  $('bible_weekLabel').textContent='WEEK '+reading.week;
-  const themeEl=$('bible_weekTheme');
-  if(reading.theme){
-    themeEl.textContent=reading.theme;
-    themeEl.style.display='inline';
-  }else{
-    themeEl.style.display='none';
+  // Week & Day pill / Label
+  const weekLabel = document.getElementById('bible_weekLabel');
+  if (weekLabel) {
+    weekLabel.textContent = 'WEEK ' + reading.week + ' • DAY ' + reading.day + (reading.theme ? ' • ' + reading.theme : '');
   }
 
-  // Main content
-  $('bible_heroDay').textContent='DAY '+reading.day;
-  $('bible_heroRef').textContent=reading.ref;
-  $('bible_heroTitle').textContent=reading.title;
+  // References and titles
+  const heroRef = document.getElementById('bible_heroRef');
+  if (heroRef) heroRef.textContent = reading.ref;
+  
+  const heroReflection = document.getElementById('bible_heroReflection');
+  if (heroReflection) heroReflection.textContent = getDailyReflection(reading);
 
-  // Toggle state
-  const btn=$('bible_toggleBtn');
-  const isDone=state.completed.includes(currentDay);
-  btn.classList.toggle('completed',isDone);
+  // Checkbox: Daily Scripture Reading
+  const isDone = state.completed.includes(currentDay);
+  const taskReadCheck = document.getElementById('bible_taskReadCheck');
+  if (taskReadCheck) {
+    taskReadCheck.classList.toggle('checked', isDone);
+  }
+  const taskReadLabel = document.getElementById('bible_taskReadLabel');
+  if (taskReadLabel) {
+    taskReadLabel.textContent = 'Daily Scripture Reading (' + reading.ref + ')';
+  }
 
-  // Scroll-gate: if reader is open, passage not yet completed, and user hasn't scrolled to bottom → lock
+  // Checkbox: Reflection Journaling
+  const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
+  const reflectionText = reflections[currentDay] || '';
+  const taskReflectCheck = document.getElementById('bible_taskReflectCheck');
+  if (taskReflectCheck) {
+    taskReflectCheck.classList.toggle('checked', !!reflectionText);
+  }
+  const reflectInput = document.getElementById('bible_reflectionText');
+  if (reflectInput) reflectInput.value = reflectionText;
+
+  // Update navigation buttons
+  const btnPrev = document.getElementById('bible_btnPrev');
+  if (btnPrev) btnPrev.disabled = currentDay <= 1;
+  const btnNext = document.getElementById('bible_btnNext');
+  if (btnNext) btnNext.disabled = currentDay >= 365;
+
+  // Streak SVG Ring and labels
+  const streak = state.streak || 0;
+  const streakCount = document.getElementById('bible_streakCount');
+  if (streakCount) streakCount.textContent = streak;
+  
+  let milestone = 7;
+  if (streak >= 100) milestone = 150;
+  else if (streak >= 30) milestone = 100;
+  else if (streak >= 7) milestone = 30;
+
+  const progressRatio = Math.min(1, streak / milestone);
+  const strokeDashoffset = 351.8 - (351.8 * progressRatio);
+  const streakCircle = document.getElementById('bible_streakCircle');
+  if (streakCircle) {
+    streakCircle.style.strokeDashoffset = strokeDashoffset;
+  }
+  const streakDesc = document.getElementById('bible_streakDesc');
+  if (streakDesc) {
+    const daysLeft = milestone - streak;
+    if (daysLeft > 0) {
+      streakDesc.textContent = `Your current streak is flourishing. ${daysLeft} days until your next milestone of ${milestone} days.`;
+    } else {
+      streakDesc.textContent = `Excellent streak! You've achieved your milestone of ${milestone} days.`;
+    }
+  }
+
+  // Yearly progress calculation
+  const completedCount = state.completed.length;
+  const pct = completedCount / 365 * 100;
+  
+  const progressFill = document.getElementById('bible_progressFill');
+  if (progressFill) progressFill.style.width = pct.toFixed(1) + '%';
+  
+  const progressYearTitle = document.getElementById('bible_progressYearTitle');
+  if (progressYearTitle) {
+    const year = new Date().getFullYear();
+    progressYearTitle.textContent = `${year} Year Journey`;
+  }
+  const progressPercentSub = document.getElementById('bible_progressPercentSub');
+  if (progressPercentSub) {
+    progressPercentSub.textContent = `${pct.toFixed(0)}% of the way through the Living Word`;
+  }
+  const progressFraction = document.getElementById('bible_progressFraction');
+  if (progressFraction) {
+    progressFraction.textContent = `${completedCount} / 365 Days`;
+  }
+
+  // Scroll gate
   updateScrollGate();
 
-  // Nav , can't advance past today's reading
-  const todayMax=getTodayDayNumber();
-  $('bible_btnPrev').disabled=currentDay<=1;
-  $('bible_btnNext').disabled=currentDay>=365;
-  $('bible_navLabel').textContent='Day '+currentDay+' of 365';
-
-  // Progress
-  const pct=state.completed.length/365*100;
-  $('bible_progressFill').style.width=pct.toFixed(1)+'%';
-
-  // Stats
-  $('bible_statComplete').textContent=state.completed.length+' / 365 COMPLETE';
-  $('bible_statStreak').innerHTML='<span class="stat-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg></span>'+state.streak+' DAY STREAK';
-  // Fetch scripture
+  // Load / Fetch scripture
   loadScripture(reading.ref);
 }
 
@@ -3625,24 +4061,19 @@ function refreshCalendarDots(){
 // SCROLL-GATE LOGIC
 // ══════════════════════════════════════
 function updateScrollGate(){
-  // Null-safe: the hint element does not exist in current markup; the gate
-  // must never crash the render pipeline.
-  const btn=$('bible_toggleBtn');
+  const btn=$('bible_taskReadCheck') || $('bible_toggleBtn');
   const hint=$('bible_scrollGateHint');
   const hintText=hint ? hint.querySelector('span') : null;
   const isDone=state.completed.includes(currentDay);
 
-  // If already completed (allow unchecking) or already unlocked via scroll → no gate
   if(isDone || scrollGateUnlocked){
     if(btn){btn.classList.remove('scroll-locked');btn.style.pointerEvents='';}
     if(hint)hint.classList.remove('visible');
     return;
   }
 
-  // Gate is active: lock the button
   if(btn){btn.classList.add('scroll-locked');btn.style.pointerEvents='none';}
   if(hint)hint.classList.add('visible');
-  // Update hint text based on reader state
   if(hintText){
     hintText.textContent=readerOpen?'Scroll to bottom to unlock':'Open passage to unlock';
   }
@@ -3943,15 +4374,16 @@ async function loadScripture(ref){
   const body=$('bible_scriptureBody');
   const refTitle=$('bible_scriptureRefTitle');
 
-  refTitle.textContent=ref;
+  if (refTitle) refTitle.textContent=ref;
 
   // Close reader when navigating to a new day
   if(readerOpen){
     readerOpen=false;
-    reader.classList.remove('open');
+    if (reader) reader.classList.remove('open');
     const btn=$('bible_btnReadPassage');
-    btn.classList.remove('active');
-    $('bible_readPassageText').textContent='Read Passage';
+    if (btn) btn.classList.remove('active');
+    const btnText = $('bible_readPassageText');
+    if (btnText) btnText.textContent='Read Full Chapter';
   }
 
   // Reset scroll-gate for the new day
@@ -3962,9 +4394,18 @@ async function loadScripture(ref){
   // Pre-load if it's cached (instant display when user opens)
   if(scriptureCache.has(ref)){
     const data=scriptureCache.get(ref);
-    body.innerHTML=formatScriptureHTML(data);
+    if (body) body.innerHTML=formatScriptureHTML(data);
+    updateVerseQuote(data);
   }else{
-    body.innerHTML='<div class="scripture-loading"><span class="spin"></span> Loading scripture...</div>';
+    if (body) body.innerHTML='<div class="scripture-loading"><span class="spin"></span> Loading scripture...</div>';
+    const quoteEl = document.getElementById('bible_verseQuote');
+    if (quoteEl) quoteEl.textContent = `"...Loading Scripture Quote..."`;
+    fetchScripture(ref).then(data => {
+      if (body) body.innerHTML=formatScriptureHTML(data);
+      updateVerseQuote(data);
+    }).catch(e => {
+      if (quoteEl) quoteEl.textContent = `"${ref} — Click 'Read Full Chapter' to view passage."`;
+    });
   }
 }
 
@@ -3979,7 +4420,7 @@ async function toggleReader(){
   if(readerOpen){
     reader.classList.add('open');
     btn.classList.add('active');
-    $('bible_readPassageText').textContent='Close Passage';
+    $('bible_readPassageText').textContent='Close Chapter';
 
     // Reset scroll-gate for the current day (unless already completed)
     scrollGateUnlocked=false;
@@ -4015,7 +4456,7 @@ async function toggleReader(){
   }else{
     reader.classList.remove('open');
     btn.classList.remove('active');
-    $('bible_readPassageText').textContent='Read Passage';
+    $('bible_readPassageText').textContent='Read Full Chapter';
     // Keep gate locked , they must open & scroll to unlock
     updateScrollGate();
   }
@@ -4032,13 +4473,15 @@ function toggleCalendar(){
   if(calendarOpen){
     buildCalendar();
     refreshCalendarDots();
+    grid.style.display='block';
     grid.classList.add('open');
     btn.classList.add('active');
-    text.textContent='Back to Today';
+    if (text) text.textContent='Back to Today';
   }else{
+    grid.style.display='none';
     grid.classList.remove('open');
     btn.classList.remove('active');
-    text.textContent='View All Weeks';
+    if (text) text.textContent='View Study Calendar';
   }
 }
 
@@ -4057,7 +4500,6 @@ document.addEventListener('click',e=>{
 // ══════════════════════════════════════
 window.initBible365 = async function() {
   const bindClick = (id, handler) => { const el = $(id); if(el) el.addEventListener('click', handler); };
-  bindClick('bible_toggleBtn', toggleCompletion);
   bindClick('bible_btnPrev', prevDay);
   bindClick('bible_btnNext', nextDay);
   bindClick('bible_btnResetDate', resetStartDate);
@@ -4066,6 +4508,59 @@ window.initBible365 = async function() {
   bindClick('bible_btnCalendarToggle', toggleCalendar);
   bindClick('bible_btnReadPassage', toggleReader);
   bindClick('bible_btnRestart', restartStudy);
+
+  // Search wisdom input listener
+  const searchInput = document.getElementById('bible_searchWisdom');
+  if (searchInput) {
+    let searchDropdown = document.getElementById('bible_searchDropdown');
+    if (!searchDropdown) {
+      searchDropdown = document.createElement('div');
+      searchDropdown.id = 'bible_searchDropdown';
+      searchDropdown.className = 'bible-search-dropdown';
+      searchInput.parentNode.appendChild(searchDropdown);
+    }
+    
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) {
+        searchDropdown.style.display = 'none';
+        return;
+      }
+      
+      const matches = READINGS.filter(r => 
+        r.ref.toLowerCase().includes(query) || 
+        r.title.toLowerCase().includes(query) || 
+        (r.theme && r.theme.toLowerCase().includes(query)) ||
+        ('day ' + r.day).includes(query)
+      ).slice(0, 5);
+      
+      if (matches.length === 0) {
+        searchDropdown.innerHTML = '<div style="padding:10px 14px; color:rgba(255,255,255,0.4); font-size:12px;">No matches found</div>';
+      } else {
+        searchDropdown.innerHTML = matches.map(r => `
+          <div class="bible-search-item" onclick="selectSearchDay(${r.day})" style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); cursor:pointer; font-size:13px; color:rgba(255,255,255,0.85); transition: background 0.2s;" onmouseover="this.style.background='rgba(204,255,0,0.08)'" onmouseout="this.style.background='transparent'">
+            <div style="font-weight:600; color:var(--lime);">Day ${r.day} — ${r.ref}</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px;">${r.title}</div>
+          </div>
+        `).join('');
+      }
+      searchDropdown.style.display = 'block';
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (e.target !== searchInput) {
+        searchDropdown.style.display = 'none';
+      }
+    });
+  }
+
+  window.selectSearchDay = function(dayNum) {
+    currentDay = dayNum;
+    renderHero();
+    if (searchInput) searchInput.value = '';
+    const searchDropdown = document.getElementById('bible_searchDropdown');
+    if (searchDropdown) searchDropdown.style.display = 'none';
+  };
 
   // Attach scroll listener to scripture body
   const bodyEl = $('bible_scriptureBody');
@@ -4081,7 +4576,7 @@ window.initBible365 = async function() {
     if (e.key === 'ArrowLeft') prevDay();
     if (e.key === 'ArrowRight') nextDay();
     if (e.key === ' ' || e.key === 'Enter') {
-      if (document.activeElement === $('bible_toggleBtn') || document.activeElement === document.body) {
+      if (document.activeElement === $('bible_taskReadCheck') || document.activeElement === document.body) {
         e.preventDefault();
         toggleCompletion();
       }
