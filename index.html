@@ -6394,7 +6394,7 @@ window.renderGlancePage = function() {
 
   // 2. Fasting state
   var fastTitle = 'Fasting';
-  var fastBody = 'System baseline is normal. Ready to initiate fast.';
+  var fastBody = 'Ready to initiate today\'s fasting window. Master the discipline.';
   var fastPct = 0;
   var fastCta = 'Start Fast';
   var fastLabel = 'Inactive';
@@ -6406,7 +6406,7 @@ window.renderGlancePage = function() {
     var target = window.S.fast.duration || 24;
     fastPct = Math.min((hours / target) * 100, 100);
     fastTitle = 'Fasting';
-    fastBody = 'Active fast: <strong>' + hours + '</strong> of <strong>' + target + ' hours</strong> completed. Phase: <strong>' + (window.S.fast.current_phase || 'Stewardship') + '</strong>.';
+    fastBody = 'Active fast: <strong>' + hours + '</strong> of <strong>' + target + ' hours</strong> governed. Maintain the rhythm.';
     fastCta = 'View Fast';
     fastLabel = hours + ' hrs';
     fastStatusColor = 'var(--lime)';
@@ -6496,8 +6496,8 @@ window.renderGlancePage = function() {
           </svg>
           <div style="display:flex; justify-content:space-between; font-size:9px; color:#b5b7bc; margin-top:2px;">
             <span>0H</span>
-            <span>GLYCOGEN</span>
-            <span>KETOSIS</span>
+            <span>DISCIPLINE</span>
+            <span>STRENGTH</span>
             <span>24H</span>
           </div>
         </div>
