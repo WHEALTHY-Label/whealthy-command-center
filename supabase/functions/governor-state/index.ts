@@ -137,6 +137,11 @@ Deno.serve(async (req) => {
         referral_count = count || 0;
       }
 
+      // Load Bible reflections
+      const { data: reflections } = await SB.from("bible_reflections")
+        .select("*")
+        .eq("member_email", cleanEmail);
+
       return json({
         ok: true,
         entries: entries || [],
@@ -151,7 +156,8 @@ Deno.serve(async (req) => {
         profile,
         recommendation,
         affiliate_ref_id,
-        referral_count
+        referral_count,
+        reflections: reflections || []
       });
     }
 
@@ -375,6 +381,20 @@ Deno.serve(async (req) => {
       }, { onConflict: "member_email" });
       if (error) return json({ ok: false, error: error.message }, 200);
       return json({ ok: true });
+    }
+
+    if (action === "save_reflection") {
+      const { day_number, scripture_ref, text, share_personalization } = payload;
+      const { data, error } = await SB.from("bible_reflections").upsert({
+        member_email: cleanEmail,
+        day_number,
+        scripture_ref,
+        text,
+        share_personalization,
+        created_at: new Date().toISOString()
+      }, { onConflict: "member_email, day_number" }).select();
+      if (error) return json({ ok: false, error: error.message }, 200);
+      return json({ ok: true, data });
     }
 
     return json({ error: "unknown_action" }, 400);
