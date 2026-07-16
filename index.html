@@ -3163,6 +3163,8 @@ window.initBible365 = async function() {
 const FN_BASE='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
 let MEMBER_EMAIL = __lsGet('wh_steward_email') || '';
 let MEMBER_NAME = '';
+window.MEMBER_EMAIL = MEMBER_EMAIL;
+window.MEMBER_NAME = MEMBER_NAME;
 
 // ════════════════════════════════════════════════════════════
 // AUTH SURFACE ENGINE
@@ -3641,6 +3643,84 @@ function waPaintWelcomeAvatar(el, initials){
 }
 window.waPaintWelcomeAvatar = waPaintWelcomeAvatar;
 
+async function waFetchAIPersonalization() {
+  try {
+    const name = window.MEMBER_NAME || 'Steward';
+    const email = window.MEMBER_EMAIL || '';
+    if (!email) return;
+
+    // Gather contextual state
+    const archetype = (window.REC && (window.REC.archetype_name || window.REC.archetype)) || 'Steward';
+    
+    // Fast info
+    let fastInfo = 'No active fast';
+    if (window.S && window.S.fast && window.S.fast.active) {
+      const fastStart = new Date(window.S.fast.start_time);
+      const diffMs = Date.now() - fastStart;
+      const hours = Math.floor(diffMs / (1000 * 60 * 60));
+      fastInfo = `Active fast: ${hours} hours in, target duration: ${window.S.fast.duration} hours. Current phase: ${window.S.fast.current_phase || 'stewardship'}`;
+    }
+
+    // Bible info
+    let bibleInfo = 'No active reading';
+    if (window.whBibleState) {
+      const bStreak = window.whBibleState.streak || 0;
+      const completedToday = window.whBibleState.completed_days && window.whBibleState.completed_days.includes(new Date().getDate());
+      bibleInfo = `Bible reading streak: ${bStreak} days. Completed today: ${completedToday ? 'yes' : 'no'}`;
+    }
+
+    // Habits ledger info
+    let habitsInfo = 'No habits logged today';
+    if (window.memberDataCache && window.memberDataCache.member) {
+      const loggedToday = document.querySelectorAll('.habit-checkbox:checked').length;
+      const totalHabits = document.querySelectorAll('.habit-checkbox').length;
+      if (totalHabits > 0) {
+        habitsInfo = `${loggedToday} of ${totalHabits} daily directives completed today`;
+      }
+    }
+
+    const systemPrompt = `You are personalizing the WHEALTHY dashboard for a steward.
+Generate custom, brief title greetings and subtitles for each main view of the app:
+1. Home (dashTitle/dashSubtitle)
+2. Bible 365 (bibleTitle/bibleSubtitle)
+3. The Fast (fastTitle/fastSubtitle)
+4. The Record (recordTitle/recordSubtitle)
+5. Leaderboard (leaderboardTitle/leaderboardSubtitle)
+
+Steward Context:
+- Name: ${name}
+- Archetype: ${archetype}
+- Fast status: ${fastInfo}
+- Bible reading status: ${bibleInfo}
+- Directives logged: ${habitsInfo}
+
+Return ONLY a valid JSON object matching this schema exactly (no preamble, no markdown blocks):
+{
+  "dashTitle": "Good [morning/afternoon/evening], [Name]",
+  "dashSubtitle": "[A brief dynamic 1-sentence focus message based on their active fast/habits/archetype]",
+  "bibleTitle": "Bible 365",
+  "bibleSubtitle": "[Dynamic message encouraging them based on their Bible streak/status]",
+  "fastTitle": "The Fast",
+  "fastSubtitle": "[Dynamic message based on their active fast duration or setup stage]",
+  "recordTitle": "The Record",
+  "recordSubtitle": "[Dynamic message summarizing their progress/directives today]",
+  "leaderboardTitle": "Leaderboard",
+  "leaderboardSubtitle": "[Dynamic message showing their level or encouraging them in the rankings]"
+}`;
+
+    const res = await ask('synthesis', systemPrompt);
+    if (res) {
+      window.aiPersonalizations = res;
+      // Re-personalize current view to apply AI changes instantly
+      const hash = window.location.hash.replace('#', '') || 'dash';
+      personalizePageHeader(hash);
+    }
+  } catch (e) {
+    console.warn('[AI Personalization] failed:', e);
+  }
+}
+window.waFetchAIPersonalization = waFetchAIPersonalization;
+
 function waSetMode(mode){
   waState.mode = mode;
   const isSignup = mode === 'signup';
@@ -3867,6 +3947,11 @@ async function waRunGate(emailArg){
       MEMBER_EMAIL = email;
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
       await waLoadProfileMeta();
+      if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
+        MEMBER_NAME = waProfileMeta.name || waProfileMeta.full_name || waProfileMeta.first_name || '';
+      }
+      window.MEMBER_EMAIL = MEMBER_EMAIL;
+      window.MEMBER_NAME = MEMBER_NAME;
       
       // Hide the gate overlay and display main content
       waCloseGate();
@@ -6813,6 +6898,7 @@ async function loadAndInit(){
   initSR();updateMeta();renderJournalContext();renderWall();renderMapDefault();updateNavBadge();restoreDraft();
   renderDash();setHeaderFocus('dash');
   if(window.hideBootLoader)hideBootLoader();
+  setTimeout(waFetchAIPersonalization, 150);
   
   // Persist Page Routing via Location Hash
   const hash = window.location.hash.replace('#', '');
@@ -6975,6 +7061,22 @@ async function loadAndInit(){
     };
 
     var data = personalMap[view] || personalMap.dash;
+    if (window.aiPersonalizations) {
+      const aiMap = {
+        dash: { title: window.aiPersonalizations.dashTitle, sub: window.aiPersonalizations.dashSubtitle },
+        claim: { title: window.aiPersonalizations.claimTitle || personalMap.claim.title, sub: window.aiPersonalizations.claimSubtitle || personalMap.claim.sub },
+        record: { title: window.aiPersonalizations.recordTitle || personalMap.record.title, sub: window.aiPersonalizations.recordSubtitle || personalMap.record.sub },
+        fast: { title: window.aiPersonalizations.fastTitle || personalMap.fast.title, sub: window.aiPersonalizations.fastSubtitle || personalMap.fast.sub },
+        bible: { title: window.aiPersonalizations.bibleTitle || personalMap.bible.title, sub: window.aiPersonalizations.bibleSubtitle || personalMap.bible.sub },
+        portal: { title: window.aiPersonalizations.portalTitle || personalMap.portal.title, sub: window.aiPersonalizations.portalSubtitle || personalMap.portal.sub },
+        affiliate: { title: window.aiPersonalizations.affiliateTitle || personalMap.affiliate.title, sub: window.aiPersonalizations.affiliateSubtitle || personalMap.affiliate.sub },
+        community: { title: window.aiPersonalizations.communityTitle || personalMap.community.title, sub: window.aiPersonalizations.communitySubtitle || personalMap.community.sub },
+        leaderboard: { title: window.aiPersonalizations.leaderboardTitle || personalMap.leaderboard.title, sub: window.aiPersonalizations.leaderboardSubtitle || personalMap.leaderboard.sub }
+      };
+      if (aiMap[view] && aiMap[view].title && aiMap[view].sub) {
+        data = aiMap[view];
+      }
+    }
     var tId = view + 'Title';
     var sId = view + 'Subtitle';
     var tEl = document.getElementById(tId);
@@ -7001,20 +7103,30 @@ async function loadAndInit(){
       timeGreeting = "Welcome back";
     }
 
-    var displayName = memberName;
-    if (!displayName) {
-      var email = window.MEMBER_EMAIL || '';
-      displayName = email.split('@')[0] || 'Steward';
-    }
-    displayName = displayName.split(' ')[0];
-    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-    titleEl.innerHTML = `${timeGreeting}, <span style="color: var(--lime); font-weight: 800; text-shadow: 0 0 10px rgba(204,255,0,0.2);">${displayName}</span>! 👋`;
-
-    if (archetype) {
-      var archClean = archetype.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c){return c.toUpperCase();});
-      subtitleEl.textContent = `Your Command Center is active. Governing energy focus: ${archClean}.`;
+    if (window.aiPersonalizations && window.aiPersonalizations.dashTitle && window.aiPersonalizations.dashSubtitle) {
+      titleEl.innerHTML = window.aiPersonalizations.dashTitle;
+      subtitleEl.textContent = window.aiPersonalizations.dashSubtitle;
+      const initials = (window.MEMBER_NAME || 'S').charAt(0).toUpperCase();
+      const welcomeEl = document.getElementById('welcomeAvatarSlot');
+      if (welcomeEl && typeof waPaintWelcomeAvatar === 'function') {
+        waPaintWelcomeAvatar(welcomeEl, initials);
+      }
     } else {
-      subtitleEl.textContent = "Your Command Center is active. Access your daily focus and OS controls.";
+      var displayName = memberName;
+      if (!displayName) {
+        var email = window.MEMBER_EMAIL || '';
+        displayName = email.split('@')[0] || 'Steward';
+      }
+      displayName = displayName.split(' ')[0];
+      displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+      titleEl.innerHTML = `${timeGreeting}, <span style="color: var(--lime); font-weight: 800; text-shadow: 0 0 10px rgba(204,255,0,0.2);">${displayName}</span>! 👋`;
+
+      if (archetype) {
+        var archClean = archetype.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c){return c.toUpperCase();});
+        subtitleEl.textContent = `Your Command Center is active. Governing energy focus: ${archClean}.`;
+      } else {
+        subtitleEl.textContent = "Your Command Center is active. Access your daily focus and OS controls.";
+      }
     }
 
     const canvas = document.getElementById('welcomeConfettiCanvas');
