@@ -1619,6 +1619,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
       <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
+      <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
     </nav>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">S</div>
@@ -1734,6 +1735,974 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           </div>
         </div>
       </div>
+
+<div id="tryallView" style="display:none;">
+<style>
+
+/* Checkout Modal Overlay */
+.checkout-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity var(--transition)}
+.checkout-modal.open{opacity:1;pointer-events:auto}
+.checkout-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.checkout-modal__card{position:relative;z-index:1;width:90%;max-width:960px;height:85vh;background:rgba(22,23,25,0.75);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--border-mid);border-radius:var(--radius-xl);overflow:hidden;display:flex;flex-direction:column;transform:translateY(40px) scale(0.96);transition:transform var(--transition)}
+.checkout-modal.open .checkout-modal__card{transform:translateY(0) scale(1)}
+.checkout-modal__close{position:absolute;top:16px;right:16px;z-index:10;width:36px;height:36px;border-radius:50%;background:var(--glass-mid);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;color:var(--white-60);font-size:18px;cursor:pointer;transition:var(--transition)}
+.checkout-modal__close:hover{background:var(--glass-hi);color:var(--white)}
+.checkout-modal__loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);background:var(--charcoal);z-index:2;transition:opacity 0.3s ease}
+.checkout-modal__loading.hidden{opacity:0;pointer-events:none}
+.checkout-modal__loading .spin{display:block;width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--lime);border-radius:50%;animation:spin .7s linear infinite}
+.checkout-modal__iframe{width:100%;height:100%;border:0;background:transparent;z-index:1}
+
+
+/* --- BUTTONS --- */
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--lime);color:var(--black) !important;font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:16px 32px;border-radius:var(--radius);border:none;cursor:pointer;position:relative;overflow:hidden;transition:var(--transition);box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.2)0%,transparent 60%);opacity:0;transition:opacity var(--transition-fast)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.5),0 8px 30px rgba(0,0,0,0.4)}
+.btn-primary:hover::before{opacity:1}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary--arc{animation:arc-pulse 3s linear infinite}
+@keyframes arc-pulse{0%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}50%{box-shadow:0 0 60px rgba(204,255,0,0.6),0 4px 20px rgba(0,0,0,0.4)}100%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}}
+
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;background:var(--black);color:var(--lime) !important;font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:16px 32px;border-radius:var(--radius);border:1px solid var(--border-mid);cursor:pointer;transition:var(--transition)}
+.btn-secondary svg{color:var(--lime) !important}
+.btn-secondary:hover{border-color:rgba(204,255,0,0.4);background:rgba(204,255,0,0.06);transform:translateY(-2px)}
+
+
+/* --- PSYCHO TRIGGERS & SALES POPUP --- */
+.badge--scarcity {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--lime);
+  color: var(--black);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(204,255,0,0.3);
+  animation: pulse-badge 2s infinite;
+}
+@keyframes pulse-badge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.bento-scarcity {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #ff4747;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.bento-scarcity::before {
+  content: '\26A1';
+  font-size: 14px;
+}
+.sales-popup {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: var(--glass-hi);
+  border: 1px solid var(--border-mid);
+  border-left: 4px solid var(--lime);
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  transform: translateY(150%);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease;
+  pointer-events: none;
+}
+.sales-popup.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+.sales-popup__img {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #000;
+}
+.sales-popup__text {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text);
+}
+.sales-popup__text strong {
+  color: #fff;
+}
+.sales-popup__time {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+
+/* --- INGREDIENTS UPGRADE --- */
+.bento-tagline {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--lime);
+  margin-top: -6px;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.ingredient-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+.ingredient-benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff;
+}
+.ingredient-benefits-list li::before {
+  content: '✓';
+  color: var(--lime);
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 1px;
+}
+.ingredient-benefits-list strong {
+  color: var(--lime);
+  margin-right: 6px;
+  font-size: 17px;
+  letter-spacing: 0.03em;
+}
+.bento-ingredients-legal {
+  font-size: 14px;
+  color: var(--text);
+  text-align: left;
+  border-top: 1px solid var(--border-mid);
+  padding-top: 16px;
+  line-height: 1.5;
+}
+
+
+
+/* --- TRY ALL HEADER --- */
+.tryall-header {
+  max-width: 900px;
+  margin: 60px auto 30px auto;
+  text-align: center;
+  padding: 0 20px;
+}
+.tryall-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 48px);
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.tryall-header__title span {
+  color: var(--lime);
+}
+.tryall-header__sub {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0 auto 20px auto;
+  max-width: 700px;
+}
+.tryall-header__sub strong {
+  color: #fff;
+}
+
+/* --- DISCOUNT BANNER --- */
+.discount-banner {
+  background: rgba(18, 18, 18, 0.7);
+  border: 1px solid var(--lime);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 0 auto 40px auto;
+  max-width: 900px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  box-shadow: 0 0 20px rgba(188, 255, 60, 0.15);
+}
+.discount-banner__title {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.discount-banner__text {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.4;
+}
+.discount-banner__action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+.discount-banner__code {
+  color: var(--lime);
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.discount-banner__btn {
+  background: var(--lime);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+.discount-banner__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(188, 255, 60, 0.3);
+}
+.discount-banner__claim-reveal {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+.discount-banner__claim-reveal.revealed {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 15px;
+}
+.discount-banner__claim-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--lime) 0%, #a3e600 100%);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(204, 255, 0, 0.2);
+}
+.discount-banner__claim-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(204, 255, 0, 0.4);
+}
+.discount-banner__claim-btn:active {
+  transform: scale(0.98);
+}
+.discount-banner__claim-btn i {
+  transition: transform 0.2s ease;
+}
+.discount-banner__claim-btn:hover i[data-lucide="arrow-right"] {
+  transform: translateX(4px);
+}
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shine-animation 3s infinite;
+}
+.micro-confetti {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10;
+  animation: explode 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+@keyframes shine-animation {
+  0% { left: -100%; }
+  50% { left: 150%; }
+  100% { left: 150%; }
+}
+@keyframes pulse-text {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; text-shadow: 0 0 8px rgba(204,255,0,0.4); }
+}
+@keyframes explode {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--rot)) scale(0);
+    opacity: 0;
+  }
+}
+.cta-discount-text {
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  font-style: italic;
+  display: block;
+  width: 100%;
+}
+.cta-discount-text strong {
+  color: var(--lime);
+  font-style: normal;
+}
+
+/* --- BENTO GRID SYSTEM --- */
+.bento-catalog {
+  padding: 80px 0 120px;
+  position: relative;
+  z-index: 2;
+  background-color: var(--black);
+}
+.bento-product-section {
+  margin-bottom: 100px;
+  position: relative;
+}
+.bento-product-section:last-child {
+  margin-bottom: 0;
+}
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Base Bento Card */
+.bento-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+}
+.bento-card:hover {
+  background: var(--glass-mid);
+  border-color: var(--border-mid);
+}
+
+/* Specific Card Layouts */
+.bento-card--hero {
+  grid-column: span 1;
+  grid-row: span 2;
+  justify-content: space-between;
+  text-align: center;
+  align-items: center;
+  padding: 40px 32px;
+  background: linear-gradient(165deg, rgba(204,255,0,0.06) 0%, rgba(204,255,0,0.01) 100%);
+  border-color: rgba(204,255,0,0.2);
+}
+.bento-card--hero:hover {
+  border-color: rgba(204,255,0,0.4);
+  transform: translateY(-4px);
+}
+.bento-card--desc {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+.bento-card--benefits {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+.bento-card--perfect {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+.bento-card--ingredients {
+  grid-column: span 3;
+  padding: 24px 32px;
+}
+
+/* Inner Elements */
+.bento-image-wrap {
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto 32px;
+  position: relative;
+}
+.bento-image-wrap img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+  transition: transform 0.4s ease;
+}
+.bento-card--hero:hover .bento-image-wrap img {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.bento-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 36px;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.bento-price-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.bento-price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--lime);
+}
+.bento-retail {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--text-dim);
+  text-decoration: line-through;
+}
+
+.bento-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.bento-ctas .btn-primary,
+.bento-ctas .btn-secondary {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Content Elements */
+.bento-heading {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bento-heading::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: var(--lime);
+  border-radius: 50%;
+}
+.bento-text {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Lists */
+.bento-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+.bento-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.bento-list li .dot {
+  color: var(--lime);
+  flex-shrink: 0;
+  font-size: 14px;
+  margin-top: 2px;
+}
+.bento-list li strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.bento-ingredients-text {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.bento-disclaimer {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 12px;
+}
+
+/* Floating Ambient Orbs */
+.bento-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 1;
+}
+.bento-orb--1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(204,255,0,0.05) 0%, transparent 70%); top: -100px; right: -100px; }
+.bento-orb--2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%); top: 50%; left: -200px; }
+.bento-orb--3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(204,255,0,0.05) 0%, transparent 70%); bottom: -100px; right: 10%; }
+
+@media (max-width: 900px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .bento-card--hero, .bento-card--desc, .bento-card--benefits, .bento-card--perfect, .bento-card--ingredients {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+}
+</style>
+
+
+    
+    <div class="dash-card" style="margin-bottom: 32px;">
+      <div class="dash-card__body">
+        <h2 style="color: var(--lime); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 12px; font-family: var(--font-display);">Member Pricing, Every Time</h2>
+        <p style="color: var(--text-dim); font-size: 14px; line-height: 1.6; margin: 0;">
+            You’re inside the Stewards now. The governance routines are available to everyone, but members never pay full price for the system they run their day on.<br><br>
+            Your member pricing is active on every routine below. Your private member code takes 10% off every product, every time. You'll find it in the card below, and it's yours as long as you're a Steward.
+        </p>
+      </div>
+    </div>
+
+    <div class="discount-banner" id="memberDiscountBanner" style="display:none">
+        <div class="discount-banner__title" style="display:flex;align-items:center;gap:6px;"><i data-lucide="badge-check" style="width:20px;height:20px;"></i> Your Member Discount</div>
+        <div class="discount-banner__text" id="memberDiscountText">10% off every product, every time. Yours as long as you're a Steward.</div>
+        <div class="discount-banner__action">
+            <span class="discount-banner__code" id="memberDiscountCode">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</span>
+            <button class="discount-banner__btn" onclick="copyDiscountCode(this)">Copy Code</button>
+        </div>
+        <div class="discount-banner__claim-reveal" id="claimRevealSection">
+            <div style="padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
+                <p style="color: var(--lime); font-size: 13px; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; animation: pulse-text 2s infinite;">Code Copied! Ready to govern your energy?</p>
+                <button class="discount-banner__claim-btn" onclick="switchView('claim'); window.scrollTo({top: 0, behavior: 'smooth'});">
+                    <span class="btn-shine"></span>
+                    <i data-lucide="sparkles" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                    Claim Your Monthly Bundle
+                    <i data-lucide="arrow-right" style="width: 16px; height: 16px; margin-left: 8px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <section class="bento-catalog"><div class="bento-orb bento-orb--1"></div><div class="bento-orb bento-orb--2"></div><div class="bento-orb bento-orb--3"></div><div class="container">
+    <div class="bento-product-section" id="hydration">
+        <div class="bento-grid">
+        
+            <!-- CARD 1: HERO (Span 1x2) -->
+            <div class="bento-card bento-card--hero">
+                <a href="https://whealthylabel.com/new/try-hydration-powder" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <div class="badge--scarcity">Member Exclusive</div>
+                <div class="bento-image-wrap">
+                    <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp" alt="WHEALTHY Water Lemonade">
+                </div>
+                <div>
+                    <h2 class="bento-title">WHEALTHY Water (Lemonade Flavor)</h2>
+                    <div class="bento-price-wrap">
+                        <span class="bento-price">$20</span>
+                        <span class="bento-retail">$34.99</span>
+                    </div>
+                </div>
+                <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
+                <div class="bento-ctas" style="position: relative; z-index: 2;">
+                    <a href="https://whealthylabel.com/new/try-hydration-powder" class="btn-primary">Add to Your Stack</a>
+                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- CARD 2: DESC (Span 2x1) -->
+            <div class="bento-card bento-card--desc">
+                <h3 class="bento-heading">Discover the Difference</h3>
+                <div class="bento-text">
+                    <p>Meet Lemonade HYDRATION-the clean, refreshing hydration upgrade built for every lifestyle. From intense workouts to all-day meetings, this electrolyte-packed powder is designed to keep you energized, balanced, and fully hydrated without the crash. Crafted for athletes, professionals, parents, and everyday high-performers, this sugar-free, caffeine-free blend supports endurance, muscle function, and overall wellness-all with the crisp taste of real lemonade.</p>
+                </div>
+            </div>
+            
+            <!-- CARD 3: BENEFITS (Span 1x1) -->
+            <div class="bento-card bento-card--benefits">
+                <h3 class="bento-heading">Key Benefits</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Athletes:</strong> Fuels muscles with electrolytes to perform & recover without the crash.</div></li><li><span class="dot">&#10004;</span> <div><strong>Professionals:</strong> Keeps your body & brain hydrated to stay alert and sharp.</div></li><li><span class="dot">&#10004;</span> <div><strong>Gamers:</strong> Clean refreshment to keep you cool & clear-headed.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 4: PERFECT FOR (Span 1x1) -->
+            <div class="bento-card bento-card--perfect">
+                <h3 class="bento-heading">Perfect For</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Athletes:</strong> Replenish electrolytes and maintain endurance.</div></li><li><span class="dot">&#10004;</span> <div><strong>Professionals:</strong> Stay hydrated and focused without the crash.</div></li><li><span class="dot">&#10004;</span> <div><strong>Wellness Seekers:</strong> Support overall health and muscle function.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 5: INGREDIENTS (Span 3x1) -->
+            <div class="bento-card bento-card--ingredients">
+                
+                <ul class="ingredient-benefits-list">
+                  <li><strong>Vitamin B-Complex:</strong> Supercharges natural cellular energy production without the crash.</li>
+                  <li><strong>Magnesium Citrate:</strong> Rapidly absorbed to prevent cramping and support deep muscle recovery.</li>
+                  <li><strong>Potassium & Sodium Citrate:</strong> Premium electrolytes that drive hydration directly into your cells for supreme performance.</li>
+                </ul>
+                <div class="bento-ingredients-legal">
+                  <strong>Full Label:</strong> Vitamin B1, B2, B3, B6, B9, B12, Calcium Citrate, Magnesium Citrate, Sodium Citrate, Potassium Citrate, Polydextrose, Citric Acid, Natural & Artificial Flavors, Sucralose, Calcium Silicate.
+                </div>
+
+                <div class="bento-disclaimer">
+                    *These statements have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="bento-product-section" id="charge">
+        <div class="bento-grid">
+        
+            <!-- CARD 1: HERO (Span 1x2) -->
+            <div class="bento-card bento-card--hero">
+                <a href="https://whealthylabel.com/new/try-charge-powder" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <div class="badge--scarcity">Member Exclusive</div>
+                <div class="bento-image-wrap">
+                    <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge Powder">
+                </div>
+                <div>
+                    <h2 class="bento-title">Charge Powder</h2>
+                    <div class="bento-tagline">"Crush The Can"</div>
+                    <div class="bento-price-wrap">
+                        <span class="bento-price">$40</span>
+                        <span class="bento-retail">$49.99</span>
+                    </div>
+                </div>
+                <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
+                <div class="bento-ctas" style="position: relative; z-index: 2;">
+                    <a href="https://whealthylabel.com/new/try-charge-powder" class="btn-primary">Add to Your Stack</a>
+                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- CARD 2: DESC (Span 2x1) -->
+            <div class="bento-card bento-card--desc">
+                <h3 class="bento-heading">Discover the Difference</h3>
+                <div class="bento-text">
+                    <p>Charge is the on-demand switch. Sometimes the gap is wider than your capacity. Cotton Candy flavor, zero sugar, and natural caffeine from green tea to bridge the gap without the chemical crash of a traditional energy drink. Built to govern the hours that demand more than you have left.</p>
+                </div>
+            </div>
+            
+            <!-- CARD 3: BENEFITS (Span 1x1) -->
+            <div class="bento-card bento-card--benefits">
+                <h3 class="bento-heading">Key Benefits</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Bridged Gaps:</strong> Natural caffeine from green tea gives you margin when yours is gone.</div></li><li><span class="dot">&#10004;</span> <div><strong>No Chemical Crash:</strong> Focus and energy without the traditional energy drink crash.</div></li><li><span class="dot">&#10004;</span> <div><strong>Sugar-Free Focus:</strong> The nostalgic taste of cotton candy without the insulin spike.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 4: PERFECT FOR (Span 1x1) -->
+            <div class="bento-card bento-card--perfect">
+                <h3 class="bento-heading">Perfect For</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>The Gap Manager:</strong> Bringing focus online exactly when the margin disappears.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Late Shift:</strong> Working after hours without sacrificing tomorrow's sleep.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Pre-Workout Replacement:</strong> Clean cognitive and physical energy without the itch or the crash.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 5: INGREDIENTS (Span 3x1) -->
+            <div class="bento-card bento-card--ingredients">
+                
+                <ul class="ingredient-benefits-list">
+                  <li><strong>Natural Green Tea Caffeine:</strong> Delivers clean, sustained energy and sharp focus without the chemical jitters.</li>
+                  <li><strong>L-Theanine:</strong> Synergizes perfectly with caffeine to promote a smooth, relaxed state of hyper-focus.</li>
+                  <li><strong>Full Spectrum Electrolytes:</strong> Replenishes essential minerals (Magnesium, Calcium, Potassium) lost during peak exertion.</li>
+                </ul>
+                <div class="bento-ingredients-legal">
+                  <strong>Full Label:</strong> Natural Caffeine from Green Tea, L-Theanine, Vitamins B1, B2, B3, B6, B9, B12, Calcium, Magnesium, Sodium, Potassium. Flavor: Cotton Candy.
+                </div>
+
+                <div class="bento-disclaimer">
+                    *These statements have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="bento-product-section" id="genius-guice">
+        <div class="bento-grid">
+        
+            <!-- CARD 1: HERO (Span 1x2) -->
+            <div class="bento-card bento-card--hero">
+                <a href="https://whealthylabel.com/new/try-genius-guice-powder" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <div class="badge--scarcity">Member Exclusive</div>
+                <div class="bento-image-wrap">
+                    <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice">
+                </div>
+                <div>
+                    <h2 class="bento-title">Genius Guice</h2>
+                    <div class="bento-tagline">"Freedom To Think"</div>
+                    <div class="bento-price-wrap">
+                        <span class="bento-price">$40</span>
+                        <span class="bento-retail">$49.99</span>
+                    </div>
+                </div>
+                <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
+                <div class="bento-ctas" style="position: relative; z-index: 2;">
+                    <a href="https://whealthylabel.com/new/try-genius-guice-powder" class="btn-primary">Add to Your Stack</a>
+                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- CARD 2: DESC (Span 2x1) -->
+            <div class="bento-card bento-card--desc">
+                <h3 class="bento-heading">Discover the Difference</h3>
+                <div class="bento-text">
+                    <p>The 2pm collapse is a pattern, not a life sentence. Genius Guice brings your focus back in the afternoon without the sugar crash of a traditional energy drink. Alpha-GPC and L-Theanine deliver steady cognitive clarity that recovers your afternoon instead of leaving you to survive it. Sour candy flavor, real focus for every role you carry.</p>
+                </div>
+            </div>
+            
+            <!-- CARD 3: BENEFITS (Span 1x1) -->
+            <div class="bento-card bento-card--benefits">
+                <h3 class="bento-heading">Key Benefits</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Recovered Afternoons:</strong> Steady cognitive clarity through the 2pm window without a sugar crash.</div></li><li><span class="dot">&#10004;</span> <div><strong>Real Nootropics:</strong> Alpha-GPC, Asian Ginseng, and Inositol for focus that holds.</div></li><li><span class="dot">&#10004;</span> <div><strong>Sugar-Free Clarity:</strong> Sour candy flavor without the insulin spike of an energy drink.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 4: PERFECT FOR (Span 1x1) -->
+            <div class="bento-card bento-card--perfect">
+                <h3 class="bento-heading">Perfect For</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>The 2PM Collapse:</strong> Finding cognitive clarity when the afternoon tries to take it.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Wired but Scattered:</strong> Bringing the brain back to center when you can't focus on one thing.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Double Shift:</strong> Maintaining mental endurance for the hours after the workday.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 5: INGREDIENTS (Span 3x1) -->
+            <div class="bento-card bento-card--ingredients">
+                
+                <ul class="ingredient-benefits-list">
+                  <li><strong>Alpha-GPC & Inositol:</strong> Powerful nootropics that cross the blood-brain barrier to instantly boost cognitive function and memory.</li>
+                  <li><strong>Asian Ginseng Extract:</strong> An ancient adaptogen that fights fatigue and elevates physical stamina.</li>
+                  <li><strong>L-Arginine HCl:</strong> Increases nitric oxide production for enhanced blood flow and nutrient delivery to the brain.</li>
+                </ul>
+                <div class="bento-ingredients-legal">
+                  <strong>Full Label:</strong> L-Arginine HCl, Inositol, Alpha-GPC, L-Theanine, Asian Ginseng Extract, Black Pepper Extract, Vitamins B1, B2, B3, B5, B6, B9, B12.
+                </div>
+
+                <div class="bento-disclaimer">
+                    *These statements have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="bento-product-section" id="genius-joe">
+        <div class="bento-grid">
+        
+            <!-- CARD 1: HERO (Span 1x2) -->
+            <div class="bento-card bento-card--hero">
+                <a href="https://whealthylabel.com/new/try-gj-coffee" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <div class="badge--scarcity">Member Exclusive</div>
+                <div class="bento-image-wrap">
+                    <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="Genius Joe Coffee">
+                </div>
+                <div>
+                    <h2 class="bento-title">Genius Joe Coffee</h2>
+                    <div class="bento-price-wrap">
+                        <span class="bento-price">$44</span>
+                        <span class="bento-retail">$49.99</span>
+                    </div>
+                </div>
+                <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
+                <div class="bento-ctas" style="position: relative; z-index: 2;">
+                    <a href="https://whealthylabel.com/new/try-gj-coffee" class="btn-primary">Add to Your Stack</a>
+                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- CARD 2: DESC (Span 2x1) -->
+            <div class="bento-card bento-card--desc">
+                <h3 class="bento-heading">Discover the Difference</h3>
+                <div class="bento-text">
+                    <p>Rich organic dark roast that actually does something. Lion's Mane for cognitive clarity, Chaga for immune resilience, and the caffeine your morning already wants, now governed instead of desperate. Zero mushroom taste. All the function.</p>
+                </div>
+            </div>
+            
+            <!-- CARD 3: BENEFITS (Span 1x1) -->
+            <div class="bento-card bento-card--benefits">
+                <h3 class="bento-heading">Key Benefits</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Clear Mornings:</strong> Lion's Mane supports cognitive clarity so you start sharp, not frantic.</div></li><li><span class="dot">&#10004;</span> <div><strong>No Ownership Pattern:</strong> The function without the three-cup dependency or the anxiety edge.</div></li><li><span class="dot">&#10004;</span> <div><strong>Immune Resilience:</strong> Chaga mushroom packed with antioxidants and adaptogenic support.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 4: PERFECT FOR (Span 1x1) -->
+            <div class="bento-card bento-card--perfect">
+                <h3 class="bento-heading">Perfect For</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Owned by Caffeine:</strong> The steward who cannot start the day without the cup and is done living there.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Frantic Morning:</strong> Trading the three-cup load for one governed cup that actually clears you.</div></li><li><span class="dot">&#10004;</span> <div><strong>Present Before the Day Takes Over:</strong> Starting the morning as yourself, for the people you wake up for.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 5: INGREDIENTS (Span 3x1) -->
+            <div class="bento-card bento-card--ingredients">
+                
+                <ul class="ingredient-benefits-list">
+                  <li><strong>Lion's Mane Extract:</strong> The ultimate brain fuel—stimulates nerve growth factor (NGF) for unparalleled mental clarity.</li>
+                  <li><strong>Chaga Mushroom Extract:</strong> Packed with antioxidants to fortify your immune system and combat oxidative stress.</li>
+                  <li><strong>Organic Dark Roast Arabica:</strong> Rich, premium coffee that delivers your daily ritual with zero digestive upset.</li>
+                </ul>
+                <div class="bento-ingredients-legal">
+                  <strong>Full Label:</strong> Organic Dark Roast Arabica Coffee, Lion's Mane Mushroom Extract, Chaga Mushroom Extract. (1200mg mushroom extract per serving).
+                </div>
+
+                <div class="bento-disclaimer">
+                    *These statements have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="bento-product-section" id="boss">
+        <div class="bento-grid">
+        
+            <!-- CARD 1: HERO (Span 1x2) -->
+            <div class="bento-card bento-card--hero">
+                <a href="https://whealthylabel.com/new/try-boss-capsules-sp" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <div class="badge--scarcity">Member Exclusive</div>
+                <div class="bento-image-wrap">
+                    <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Capsules">
+                </div>
+                <div>
+                    <h2 class="bento-title">Boss Capsules</h2>
+                    <div class="bento-price-wrap">
+                        <span class="bento-price">$35</span>
+                        <span class="bento-retail">$49.99</span>
+                    </div>
+                </div>
+                <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
+                <div class="bento-ctas" style="position: relative; z-index: 2;">
+                    <a href="https://whealthylabel.com/new/try-boss-capsules-sp" class="btn-primary">Add to Your Stack</a>
+                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- CARD 2: DESC (Span 2x1) -->
+            <div class="bento-card bento-card--desc">
+                <h3 class="bento-heading">Discover the Difference</h3>
+                <div class="bento-text">
+                    <p>Boss is not a stimulant and not a supplement stack. It is a precise complex of ten medicinal mushrooms that work with your body's existing systems to normalize stress, sharpen focus, and hold immune resilience under load. No caffeine. No ritual. Two capsules at noon and the midday holds.</p>
+                </div>
+            </div>
+            
+            <!-- CARD 3: BENEFITS (Span 1x1) -->
+            <div class="bento-card bento-card--benefits">
+                <h3 class="bento-heading">Key Benefits</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Stable Midday:</strong> Holds your focus through the second half of the day without another cup.</div></li><li><span class="dot">&#10004;</span> <div><strong>Stress Normalization:</strong> Adaptogenic mushrooms help your body regulate its stress response.</div></li><li><span class="dot">&#10004;</span> <div><strong>Immune Resilience:</strong> Chaga and Turkey Tail support immune health under ongoing load.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 4: PERFECT FOR (Span 1x1) -->
+            <div class="bento-card bento-card--perfect">
+                <h3 class="bento-heading">Perfect For</h3>
+                <ul class="bento-list">
+                    <li><span class="dot">&#10004;</span> <div><strong>Running on Fumes:</strong> The steward at 60 percent all day who never feels fully on.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Skeptical Steward:</strong> Proof before a pitch. Take it for a week and watch your midday.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Second-Cup Loop:</strong> Holding focus at noon without reaching for the energy drink.</div></li>
+                </ul>
+            </div>
+            
+            <!-- CARD 5: INGREDIENTS (Span 3x1) -->
+            <div class="bento-card bento-card--ingredients">
+                
+                <ul class="ingredient-benefits-list">
+                  <li><strong>Cordyceps Sinensis:</strong> Naturally increases oxygen uptake and ATP production for relentless endurance.</li>
+                  <li><strong>Reishi Extract:</strong> The "Mushroom of Immortality"—calms the nervous system and supports deep restorative sleep.</li>
+                  <li><strong>Proprietary 6-Blend:</strong> A comprehensive immune-boosting matrix that keeps your body operating at its absolute peak.</li>
+                </ul>
+                <div class="bento-ingredients-legal">
+                  <strong>Full Label:</strong> Cordyceps Sinensis Powder, Reishi Extract, Shiitake Extract, Lion's Mane, Proprietary Blend (Maitake, Turkey Tail, Chaga, Royal Sun Agaricus, White Button, Black Fungus).
+                </div>
+
+                <div class="bento-disclaimer">
+                    *These statements have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div></section>
+</div>
+
+</div> <!-- content-body -->
+  </main>
+</div>
+
+
 
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
@@ -1878,7 +2847,22 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div id="claimSalesContent" style="margin-top:24px"></div>
 
         <!-- Checkout Popup Modal -->
-        <div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
+        <div class="checkout-modal" id="checkoutModal">
+  <div class="checkout-modal__backdrop" onclick="closeCheckout()"></div>
+  <div class="checkout-modal__card">
+    <button class="checkout-modal__close" onclick="closeCheckout()">&#10005;</button>
+    <div class="checkout-modal__loading" id="checkoutLoading">
+      <div class="spin"></div>
+      <p style="margin-top: 10px; font-family: var(--font-body); font-size: 14px;">Loading secure checkout...</p>
+    </div>
+    <iframe class="checkout-modal__iframe" id="checkoutIframe" src="" frameborder="0"></iframe>
+  </div>
+</div>
+
+
+
+
+<div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
           <div class="checkout-modal-card" onclick="event.stopPropagation()">
             <div class="checkout-modal-header">
               <span class="checkout-modal-title">Complete Checkout</span>
@@ -3119,6 +4103,7 @@ window.initBible365 = async function() {
   const dashEmail = __lsGet('wh_steward_email') || null;
   if (dashEmail) {
     state.email = dashEmail;
+    try { loadMemberDiscount(dashEmail); } catch(e) {}
   }
   saveLocal(false);
 
@@ -3997,6 +4982,7 @@ async function waRunGate(emailArg){
       try { __lsSet('wh_steward_email', email); } catch(e) {}
       MEMBER_EMAIL = email;
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
+      try { loadMemberDiscount(email); } catch(e) {}
       await waLoadProfileMeta();
       if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
         MEMBER_NAME = waProfileMeta.name || waProfileMeta.full_name || waProfileMeta.first_name || '';
@@ -4426,8 +5412,8 @@ const WHY_LABEL={freedom:'breaking what owns you',direction:'seeking direction',
 /* ================== NAV ================== */
 function go(view,el,label){
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
   if(!el && view) {
@@ -4445,9 +5431,12 @@ function go(view,el,label){
   } else if(view==='bible'){
     document.getElementById('headerLine').textContent='Bible 365';
     if(typeof initBible365==='function'&&!window._bibleInited){window._bibleInited=true;initBible365();}
-  } else if(['affiliate','community','portal'].indexOf(view)>=0){
-    const labels={affiliate:'Affiliate Links',community:'Community',portal:'Product Portal'};
+  } else if(['affiliate','community','portal','tryall'].indexOf(view)>=0){
+    const labels={affiliate:'Affiliate Links',community:'Community',portal:'Product Portal',tryall:'Try All'};
     document.getElementById('headerLine').textContent=labels[view]||'Module';
+    if(view==='tryall'){
+      try { loadMemberDiscount(MEMBER_EMAIL); } catch(e) {}
+    }
   } else {
     setHeaderFocus(view);
   }
@@ -7307,7 +8296,7 @@ async function loadAndInit(){
   
   // Persist Page Routing via Location Hash
   const hash = window.location.hash.replace('#', '');
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView'};
   if (hash && map[hash]) {
     const btnMap = {
       dash: 'navDash',
@@ -7631,6 +8620,113 @@ async function loadAndInit(){
     updateAndDraw();
     canvas.animationFrameId = animationFrameId;
   }
+
+  window.loadMemberDiscount = async function(email) {
+    try {
+      const r = await fetch(FN_BASE + '/get-member-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const d = await r.json();
+      const banner = document.getElementById('memberDiscountBanner');
+      if (d && d.verified && d.code) {
+        window.MEMBER_CODE = d.code;
+        const codeEl = document.getElementById('memberDiscountCode');
+        const textEl = document.getElementById('memberDiscountText');
+        if (codeEl) codeEl.textContent = d.code;
+        if (textEl && d.discount) textEl.textContent = d.discount + " off every product, every time. Yours as long as you're a Steward.";
+        if (banner) banner.style.display = '';
+        refreshCodeChips();
+      } else if (banner) {
+        banner.style.display = 'none';
+      }
+    } catch (e) { console.warn('discount code load failed', e); }
+  };
+
+  window.refreshCodeChips = function() {
+    const code = window.MEMBER_CODE || '\u2022\u2022\u2022\u2022\u2022\u2022';
+    document.querySelectorAll('.mcode').forEach(el => { el.textContent = code; });
+    document.querySelectorAll('.mcode-copy').forEach(btn => { btn.disabled = !window.MEMBER_CODE; });
+  };
+
+  window.copyDiscountCode = function(btn) {
+    const codeEl = document.getElementById('memberDiscountCode');
+    const codeVal = codeEl ? codeEl.textContent.trim() : '';
+    if (!codeVal || codeVal.indexOf('\u2022') !== -1) return;
+    btn.style.position = 'relative';
+    btn.style.overflow = 'visible';
+    const handleSuccess = () => {
+      const originalText = btn.innerText;
+      btn.innerText = 'Copied!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+      const claimReveal = document.getElementById('claimRevealSection');
+      if (claimReveal) {
+        claimReveal.classList.add('revealed');
+        if (window.lucide) { window.lucide.createIcons(); }
+      }
+      triggerMicroConfetti(btn);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(codeVal).then(handleSuccess);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = codeVal;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        handleSuccess();
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
+  window.triggerMicroConfetti = function(parentEl) {
+    for (let i = 0; i < 24; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'micro-confetti';
+      confetti.style.background = ['#ccff00', '#ffffff', '#a3e600', '#66bb00'][Math.floor(Math.random() * 4)];
+      confetti.style.left = '50%';
+      confetti.style.top = '50%';
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 40 + Math.random() * 80;
+      const x = Math.cos(angle) * velocity;
+      const y = Math.sin(angle) * velocity;
+      confetti.style.setProperty('--x', `${x}px`);
+      confetti.style.setProperty('--y', `${y}px`);
+      confetti.style.setProperty('--rot', `${Math.random() * 360}deg`);
+      parentEl.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 1000);
+    }
+  };
+
+  window.openCheckout = function(url) {
+    const modal = document.getElementById('checkoutModal');
+    const iframe = document.getElementById('checkoutIframe');
+    const loader = document.getElementById('checkoutLoading');
+    if (loader) loader.classList.remove('hidden');
+    if (iframe) {
+      iframe.src = url;
+      iframe.onload = () => {
+        if (loader) loader.classList.add('hidden');
+      };
+    }
+    if (modal) modal.classList.add('open');
+    document.body.classList.add('modal-open');
+  };
+
+  window.closeCheckout = function() {
+    const modal = document.getElementById('checkoutModal');
+    const iframe = document.getElementById('checkoutIframe');
+    if (modal) modal.classList.remove('open');
+    document.body.classList.remove('modal-open');
+    if (iframe) iframe.src = '';
+  };
+
+
   window.triggerWelcomeCelebration = triggerWelcomeCelebration;
 
 })();
