@@ -3649,6 +3649,19 @@ async function waFetchAIPersonalization() {
     const email = window.MEMBER_EMAIL || '';
     if (!email) return;
 
+    // Calculate local time greeting
+    const hours = new Date().getHours();
+    let timeGreeting = "Welcome back";
+    if (hours >= 5 && hours < 12) {
+      timeGreeting = "Good morning";
+    } else if (hours >= 12 && hours < 17) {
+      timeGreeting = "Good afternoon";
+    } else if (hours >= 17 && hours < 22) {
+      timeGreeting = "Good evening";
+    } else {
+      timeGreeting = "Welcome back";
+    }
+
     // Gather contextual state
     const archetype = (window.REC && (window.REC.archetype_name || window.REC.archetype)) || 'Steward';
     
@@ -3657,8 +3670,8 @@ async function waFetchAIPersonalization() {
     if (window.S && window.S.fast && window.S.fast.active) {
       const fastStart = new Date(window.S.fast.start_time);
       const diffMs = Date.now() - fastStart;
-      const hours = Math.floor(diffMs / (1000 * 60 * 60));
-      fastInfo = `Active fast: ${hours} hours in, target duration: ${window.S.fast.duration} hours. Current phase: ${window.S.fast.current_phase || 'stewardship'}`;
+      const hoursFast = Math.floor(diffMs / (1000 * 60 * 60));
+      fastInfo = `Active fast: ${hoursFast} hours in, target duration: ${window.S.fast.duration} hours. Current phase: ${window.S.fast.current_phase || 'stewardship'}`;
     }
 
     // Bible info
@@ -3690,14 +3703,18 @@ Generate custom, brief title greetings and subtitles for each main view of the a
 Steward Context:
 - Name: ${name}
 - Archetype: ${archetype}
+- Current Local Time of Day: ${timeGreeting} (Hour: ${hours})
 - Fast status: ${fastInfo}
 - Bible reading status: ${bibleInfo}
 - Directives logged: ${habitsInfo}
 
+Voice Guidelines for Time of Day:
+- Since the current local time greeting is "${timeGreeting}", make sure the dashTitle starts exactly with "${timeGreeting}, [Name]" or similar, and the dashSubtitle matches the energy focus of this time of day (e.g. if afternoon, focus on maintaining alignment or avoiding crashes, if evening, focus on laying down the record). Do not reference the morning window unless it is actually morning.
+
 Return ONLY a valid JSON object matching this schema exactly (no preamble, no markdown blocks):
 {
   "dashTitle": "Good [morning/afternoon/evening], [Name]",
-  "dashSubtitle": "[A brief dynamic 1-sentence focus message based on their active fast/habits/archetype]",
+  "dashSubtitle": "[A brief dynamic 1-sentence focus message based on their active fast/habits/archetype/time of day]",
   "bibleTitle": "Bible 365",
   "bibleSubtitle": "[Dynamic message encouraging them based on their Bible streak/status]",
   "fastTitle": "The Fast",
