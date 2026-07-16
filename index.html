@@ -1754,17 +1754,15 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
 
 /* --- BUTTONS --- */
-.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--lime);color:var(--black) !important;font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:16px 32px;border-radius:var(--radius);border:none;cursor:pointer;position:relative;overflow:hidden;transition:var(--transition);box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(204,255,0,0.12);color:var(--lime) !important;border:1px solid rgba(204,255,0,0.25);border-top:1px solid rgba(204,255,0,0.45);border-radius:14px;font-family:var(--font-display);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 22px;box-shadow:0 4px 20px rgba(204,255,0,0.10);transition:var(--transition);cursor:pointer;position:relative;overflow:hidden}
 .btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.2)0%,transparent 60%);opacity:0;transition:opacity var(--transition-fast)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.5),0 8px 30px rgba(0,0,0,0.4)}
+.btn-primary:hover{background:rgba(204,255,0,0.2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(204,255,0,0.20)}
 .btn-primary:hover::before{opacity:1}
 .btn-primary:active{transform:translateY(0)}
-.btn-primary--arc{animation:arc-pulse 3s linear infinite}
-@keyframes arc-pulse{0%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}50%{box-shadow:0 0 60px rgba(204,255,0,0.6),0 4px 20px rgba(0,0,0,0.4)}100%{box-shadow:0 0 30px rgba(204,255,0,0.3),0 4px 20px rgba(0,0,0,0.4)}}
 
-.btn-secondary{display:inline-flex;align-items:center;gap:10px;background:var(--black);color:var(--lime) !important;font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:16px 32px;border-radius:var(--radius);border:1px solid var(--border-mid);cursor:pointer;transition:var(--transition)}
-.btn-secondary svg{color:var(--lime) !important}
-.btn-secondary:hover{border-color:rgba(204,255,0,0.4);background:rgba(204,255,0,0.06);transform:translateY(-2px)}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.8) !important;border:1px solid rgba(255,255,255,0.1);border-radius:14px;font-family:var(--font-display);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 22px;transition:var(--transition);cursor:pointer}
+.btn-secondary:hover{background:rgba(255,255,255,0.08);color:#fff !important;transform:translateY(-1px)}
+.btn-secondary:active{transform:translateY(0)}
 
 
 /* --- PSYCHO TRIGGERS & SALES POPUP --- */
@@ -2359,7 +2357,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         
             <!-- CARD 1: HERO (Span 1x2) -->
             <div class="bento-card bento-card--hero">
-                <a href="https://whealthylabel.com/new/try-hydration-powder" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <a href="https://whealthylabel.com/new/try-hydration-powder" target="_parent" style="position: absolute; inset: 0; z-index: 1;"></a>
                 <div class="badge--scarcity">Member Exclusive</div>
                 <div class="bento-image-wrap">
                     <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp" alt="WHEALTHY Water Lemonade">
@@ -2373,8 +2371,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
                 <div class="bento-ctas" style="position: relative; z-index: 2;">
-                    <a href="https://whealthylabel.com/new/try-hydration-powder" class="btn-primary">Add to Your Stack</a>
-                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                    <a href="https://whealthylabel.com/new/try-hydration-powder" target="_parent" class="btn-primary">Add to Routine</a>
+                    <a href="https://whealthylabel.com/steward-quiz" target="_parent" class="btn-secondary">Or Find Your Match &rarr;</a>
                 </div>
             </div>
             
@@ -2427,7 +2425,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         
             <!-- CARD 1: HERO (Span 1x2) -->
             <div class="bento-card bento-card--hero">
-                <a href="https://whealthylabel.com/new/try-charge-powder" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <a href="https://whealthylabel.com/new/try-charge-powder" target="_parent" style="position: absolute; inset: 0; z-index: 1;"></a>
                 <div class="badge--scarcity">Member Exclusive</div>
                 <div class="bento-image-wrap">
                     <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge Powder">
@@ -2442,8 +2440,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
                 <div class="bento-ctas" style="position: relative; z-index: 2;">
-                    <a href="https://whealthylabel.com/new/try-charge-powder" class="btn-primary">Add to Your Stack</a>
-                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                    <a href="https://whealthylabel.com/new/try-charge-powder" target="_parent" class="btn-primary">Add to Routine</a>
+                    <a href="https://whealthylabel.com/steward-quiz" target="_parent" class="btn-secondary">Or Find Your Match &rarr;</a>
                 </div>
             </div>
             
@@ -2496,7 +2494,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         
             <!-- CARD 1: HERO (Span 1x2) -->
             <div class="bento-card bento-card--hero">
-                <a href="https://whealthylabel.com/new/try-genius-guice-powder" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <a href="https://whealthylabel.com/new/try-genius-guice-powder" target="_parent" style="position: absolute; inset: 0; z-index: 1;"></a>
                 <div class="badge--scarcity">Member Exclusive</div>
                 <div class="bento-image-wrap">
                     <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice">
@@ -2511,8 +2509,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
                 <div class="bento-ctas" style="position: relative; z-index: 2;">
-                    <a href="https://whealthylabel.com/new/try-genius-guice-powder" class="btn-primary">Add to Your Stack</a>
-                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                    <a href="https://whealthylabel.com/new/try-genius-guice-powder" target="_parent" class="btn-primary">Add to Routine</a>
+                    <a href="https://whealthylabel.com/steward-quiz" target="_parent" class="btn-secondary">Or Find Your Match &rarr;</a>
                 </div>
             </div>
             
@@ -2565,7 +2563,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         
             <!-- CARD 1: HERO (Span 1x2) -->
             <div class="bento-card bento-card--hero">
-                <a href="https://whealthylabel.com/new/try-gj-coffee" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <a href="https://whealthylabel.com/new/try-gj-coffee" target="_parent" style="position: absolute; inset: 0; z-index: 1;"></a>
                 <div class="badge--scarcity">Member Exclusive</div>
                 <div class="bento-image-wrap">
                     <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="Genius Joe Coffee">
@@ -2579,8 +2577,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
                 <div class="bento-ctas" style="position: relative; z-index: 2;">
-                    <a href="https://whealthylabel.com/new/try-gj-coffee" class="btn-primary">Add to Your Stack</a>
-                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                    <a href="https://whealthylabel.com/new/try-gj-coffee" target="_parent" class="btn-primary">Add to Routine</a>
+                    <a href="https://whealthylabel.com/steward-quiz" target="_parent" class="btn-secondary">Or Find Your Match &rarr;</a>
                 </div>
             </div>
             
@@ -2633,7 +2631,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         
             <!-- CARD 1: HERO (Span 1x2) -->
             <div class="bento-card bento-card--hero">
-                <a href="https://whealthylabel.com/new/try-boss-capsules-sp" style="position: absolute; inset: 0; z-index: 1;"></a>
+                <a href="https://whealthylabel.com/new/try-boss-capsules-sp" target="_parent" style="position: absolute; inset: 0; z-index: 1;"></a>
                 <div class="badge--scarcity">Member Exclusive</div>
                 <div class="bento-image-wrap">
                     <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Capsules">
@@ -2647,8 +2645,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <div class="cta-discount-text">Use your member code (in your discount card above) at checkout for 10% off</div>
                 <div class="bento-ctas" style="position: relative; z-index: 2;">
-                    <a href="https://whealthylabel.com/new/try-boss-capsules-sp" class="btn-primary">Add to Your Stack</a>
-                    <a href="https://whealthylabel.com/steward-quiz" class="btn-secondary">Or Find Your Match &rarr;</a>
+                    <a href="https://whealthylabel.com/new/try-boss-capsules-sp" target="_parent" class="btn-primary">Add to Routine</a>
+                    <a href="https://whealthylabel.com/steward-quiz" target="_parent" class="btn-secondary">Or Find Your Match &rarr;</a>
                 </div>
             </div>
             
