@@ -185,6 +185,7 @@ Deno.serve(async (req) => {
         created_at: post.created_at,
         answered_at: post.answered_at,
         answered_note: post.answered_note,
+        answered_note_locked_at: post.answered_note_locked_at,
         display_mode: post.display_mode,
         is_mine: String(post.member_id) === String(viewer_member_id),
         pray_count_frozen: post.status === 'answered',
