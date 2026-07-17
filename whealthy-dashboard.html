@@ -6393,12 +6393,25 @@ const BUNDLE_NAMES = {
 };
 
 const ARCHETYPE_NAMES = {
+  // New Patterns (WHEALTHY Quiz Spec v2)
+  'the-morning-dependency': 'The Morning Dependency',
+  'energy-without-aim': 'Energy Without Aim',
+  'the-low-floor': 'The Low Floor',
+  'holding-it-together': 'Holding It Together',
+
+  // Retired Archetypes (for backwards compatibility)
   'owned-by-caffeine': 'Owned by Caffeine',
   'wired-but-scattered': 'Wired but Scattered',
   'sharp-until-2pm': 'Sharp Until 2PM',
   'running-on-fumes': 'Running on Fumes',
   'skeptical-steward': 'The Skeptical Steward'
 };
+
+function getArchName(key, fallbackName, defaultVal) {
+  if (!key) return fallbackName || defaultVal || null;
+  const normalizedKey = key.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return ARCHETYPE_NAMES[normalizedKey] || fallbackName || key;
+}
 
 const $ = id => document.getElementById(id);
 
@@ -6440,7 +6453,7 @@ function switchView(view) {
     document.getElementById('navDashBtn').classList.add('active');
     if (typeof triggerWelcomeCelebration === 'function' && memberDataCache) {
       const { member, recommendation } = memberDataCache;
-      const archName = recommendation && recommendation.archetype ? (ARCHETYPE_NAMES[recommendation.archetype] || recommendation.archetype_name || recommendation.archetype) : null;
+      const archName = recommendation ? getArchName(recommendation.pattern || recommendation.archetype, recommendation.pattern_name || recommendation.archetype_name) : null;
       const fullName = member ? `${member.name || ''} ${member.last_name || ''}`.trim() : 'Steward';
       triggerWelcomeCelebration(fullName, archName);
     }
@@ -8167,7 +8180,7 @@ function renderDashboard(data){
 
   // --- HERO ---
   const initials = (member.name || 'S').charAt(0).toUpperCase();
-  const archName = recommendation.archetype ? (ARCHETYPE_NAMES[recommendation.archetype] || recommendation.archetype_name || recommendation.archetype) : null;
+  const archName = recommendation ? getArchName(recommendation.pattern || recommendation.archetype, recommendation.pattern_name || recommendation.archetype_name) : null;
   $('heroCard').innerHTML = `
     <div class="dash-hero">
       <div class="dash-hero__avatar" id="dashHeroAvatar">${initials}</div>
@@ -9203,6 +9216,41 @@ function priceRowOpt(b){
 
 // Archetype mapping details (from homepage results)
 const AR = {
+  // New Patterns (WHEALTHY Quiz Spec v2)
+  'the-morning-dependency': {
+    n: ['The Morning', 'Dependency'],
+    pH: "You're Not Just <em>Tired.</em>",
+    pB: "Your morning ritual isn't preference anymore—it's dependency. You've built your entire day around something that owns the first hour of it, and every hour after is a negotiation. The Genius Joe bundle is designed to replace this dependency loop with smooth, governed focus.",
+    sH: "This Isn't <em>Weakness.</em>",
+    sB: "You didn't choose this pattern. It built itself one cup at a time over years. The dependency is chemical and behavioral, not a character flaw. You're not undisciplined. You're running an energy system that was never designed to carry the kind of responsibility you carry.",
+    sv: '73', su: '%', sl: 'of high-responsibility stewards show this exact pattern.'
+  },
+  'energy-without-aim': {
+    n: ['Energy Without', 'Aim'],
+    pH: "You're Not Lazy.<br>You're <em>Scattered.</em>",
+    pB: "You have energy, but it goes everywhere. You start the day alert and end it exhausted, but nothing landed. The Boss Bundle or Genius Guice provides a cognitive governance structure, helping you direct that energy rather than diffusing it.",
+    sH: "This Isn't a <em>Discipline</em> Problem.",
+    sB: "Stewards carrying high responsibility with fragmented energy show this exact pattern. Your system is overloaded and your energy has no governance structure. That's a systems problem, not a you problem.",
+    sv: '68', su: '%', sl: 'of stewards report energy that feels \"busy but unproductive.\"'
+  },
+  'the-low-floor': {
+    n: ['The Low', 'Floor'],
+    pH: "You're Not <em>Fine.</em>",
+    pB: "You're not crashing, just never fully on. You've gotten so good at performing at 60% that nobody can tell, but you can. The Charge Bundle is designed to lift your baseline, closing the gap between functional and fully alive. Note: A low floor isn't a failure of will. If flat energy persists despite structure, it is always worth a conversation with a professional.",
+    sH: "This Is the <em>Quietest</em> Pattern.",
+    sB: "Nobody stages an intervention for \"functional.\" But \"functional\" is not the same as \"clear.\" You have normalized a depleted baseline, and the gap between where you are and where you could be is wider than you think.",
+    sv: '77', su: '%', sl: 'of functional stewards describe themselves as \"always at 60%\".'
+  },
+  'holding-it-together': {
+    n: ['Holding It', 'Together'],
+    pH: "You're Not Failing.<br>You're Running on <em>Grit.</em>",
+    pB: "Your energy holds, but your reserves don't. Running on grit gets the job done, but it taxes the people you love before it taxes your calendar. The Boss Bundle restores the baseline, helping you govern your energy where it counts most.",
+    sH: "Grit Has a <em>Price.</em>",
+    sB: "You have the willpower to push through any day, but willpower is a finite resource. When you run out, your family and personal life pay the price before your work does. A governed baseline keeps you present for both.",
+    sv: '81', su: '%', sl: 'of high-pressure stewards report carrying their pattern alone.'
+  },
+
+  // Retired Archetypes (for backwards compatibility)
   'owned-by-caffeine': {
     n: ['Owned by', 'Caffeine'],
     pH: "You're Not Just <em>Tired.</em>",

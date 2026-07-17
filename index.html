@@ -2835,7 +2835,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <div class="bento-card bento-card--desc">
                 <h3 class="bento-heading">Discover the Difference</h3>
                 <div class="bento-text">
-                    <p>Charge is the on-demand switch. Sometimes the gap is wider than your capacity. Cotton Candy flavor, zero sugar, and natural caffeine from green tea to bridge the gap without the chemical crash of a traditional energy drink. Built to govern the hours that demand more than you have left.</p>
+                    <p>Charge is designed to lift your baseline floor, closing the gap between functional and fully alive. Cotton Candy flavor, zero sugar, and natural caffeine from green tea to sustain you without the chemical crash. Built to raise your baseline energy and support your daily rhythm.</p>
                 </div>
             </div>
             
@@ -2843,7 +2843,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <div class="bento-card bento-card--benefits">
                 <h3 class="bento-heading">Key Benefits</h3>
                 <ul class="bento-list">
-                    <li><span class="dot">&#10004;</span> <div><strong>Bridged Gaps:</strong> Natural caffeine from green tea gives you margin when yours is gone.</div></li><li><span class="dot">&#10004;</span> <div><strong>No Chemical Crash:</strong> Focus and energy without the traditional energy drink crash.</div></li><li><span class="dot">&#10004;</span> <div><strong>Sugar-Free Focus:</strong> The nostalgic taste of cotton candy without the insulin spike.</div></li>
+                    <li><span class="dot">&#10004;</span> <div><strong>Raised Baseline:</strong> Natural caffeine from green tea lifts your flat energy baseline.</div></li><li><span class="dot">&#10004;</span> <div><strong>No Chemical Crash:</strong> Focus and energy without the traditional energy drink crash.</div></li><li><span class="dot">&#10004;</span> <div><strong>Sugar-Free Focus:</strong> The nostalgic taste of cotton candy without the insulin spike.</div></li>
                 </ul>
             </div>
             
@@ -2851,7 +2851,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <div class="bento-card bento-card--perfect">
                 <h3 class="bento-heading">Perfect For</h3>
                 <ul class="bento-list">
-                    <li><span class="dot">&#10004;</span> <div><strong>The Gap Manager:</strong> Bringing focus online exactly when the margin disappears.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Late Shift:</strong> Working after hours without sacrificing tomorrow's sleep.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Pre-Workout Replacement:</strong> Clean cognitive and physical energy without the itch or the crash.</div></li>
+                    <li><span class="dot">&#10004;</span> <div><strong>The Low Floor:</strong> Lifting baseline energy when you feel functional but flat.</div></li><li><span class="dot">&#10004;</span> <div><strong>Baseline Support:</strong> Maintaining a steady foundation of focus and vitality throughout the day.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Pre-Workout Replacement:</strong> Clean cognitive and physical energy without the itch or the crash.</div></li>
                 </ul>
             </div>
             
@@ -3056,7 +3056,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <div class="bento-card bento-card--perfect">
                 <h3 class="bento-heading">Perfect For</h3>
                 <ul class="bento-list">
-                    <li><span class="dot">&#10004;</span> <div><strong>Running on Fumes:</strong> The steward at 60 percent all day who never feels fully on.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Skeptical Steward:</strong> Proof before a pitch. Take it for a week and watch your midday.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Second-Cup Loop:</strong> Holding focus at noon without reaching for the energy drink.</div></li>
+                    <li><span class="dot">&#10004;</span> <div><strong>Holding It Together:</strong> Restoring the baseline when running on grit, taxing presence.</div></li><li><span class="dot">&#10004;</span> <div><strong>Energy Without Aim:</strong> Providing midday focus and governance structure for scattered energy.</div></li><li><span class="dot">&#10004;</span> <div><strong>The Second-Cup Loop:</strong> Holding focus at noon without reaching for another stimulant.</div></li>
                 </ul>
             </div>
             
@@ -10648,7 +10648,7 @@ async function waFetchAIPersonalization() {
     }
 
     // Gather contextual state
-    const archetype = (window.REC && (window.REC.archetype_name || window.REC.archetype)) || 'Steward';
+    const archetype = (window.REC && (window.REC.pattern_name || (window.REC.pattern || (window.REC.archetype_name || window.REC.archetype)))) || 'Steward';
     
     // Fast info
     let fastInfo = 'No active fast';
@@ -11467,7 +11467,7 @@ function go(view,el,label){
     try { fetchWallCommunityState(); } catch(e) {}
     renderDash();
     if(typeof triggerWelcomeCelebration === 'function') {
-      var archName = window.REC && (window.REC.archetype_name || window.REC.archetype);
+      var archName = window.REC && (window.REC.pattern_name || (window.REC.pattern || (window.REC.archetype_name || window.REC.archetype)));
       triggerWelcomeCelebration(window.MEMBER_NAME, archName);
     }
   }
@@ -14405,6 +14405,37 @@ var selectedBundle=null;
 var claimRedirectUrl = '';
 
 var ARCHETYPE_COPY = {
+  // New Patterns (WHEALTHY Quiz Spec v2)
+  'the-morning-dependency': {
+    title: 'The Morning Dependency',
+    icon: '☕',
+    header: "You're Not Just Tired. You're Dependency-Bound.",
+    body: "Your morning ritual isn't preference anymore—it's dependency. You've built your entire day around something that owns the first hour of it, and every hour after is a negotiation. The Genius Joe bundle is designed to replace this dependency loop with smooth, governed focus.",
+    stats: "73% of high-responsibility stewards show this exact pattern."
+  },
+  'energy-without-aim': {
+    title: 'Energy Without Aim',
+    icon: '🧠',
+    header: "You're Not Lazy. You're Scattered.",
+    body: "You have energy, but it goes everywhere. You start the day alert and end it exhausted, but nothing landed. The Boss Bundle or Genius Guice provides a cognitive governance structure, helping you direct that energy rather than diffusing it.",
+    stats: "68% of stewards report energy that feels 'busy but unproductive.'"
+  },
+  'the-low-floor': {
+    title: 'The Low Floor',
+    icon: '🔋',
+    header: "You're Not Fine. You're Depleted.",
+    body: "You're not crashing, just never fully on. You've gotten so good at performing at 60% that nobody can tell, but you can. The Charge Bundle is designed to lift your baseline, closing the gap between functional and fully alive. Note: A low floor isn't a failure of will. If flat energy persists despite structure, it is always worth a conversation with a professional.",
+    stats: "77% of functional stewards describe themselves as 'always at 60%'."
+  },
+  'holding-it-together': {
+    title: 'Holding It Together',
+    icon: '⚡',
+    header: "You're Not Failing. You're Running on Grit.",
+    body: "Your energy holds, but your reserves don't. Running on grit gets the job done, but it taxes the people you love before it taxes your calendar. The Boss Bundle restores the baseline, helping you govern your energy where it counts most.",
+    stats: "81% of high-pressure stewards report carrying their pattern alone."
+  },
+
+  // Retired Archetypes (for backwards compatibility)
   'owned-by-caffeine': {
     title: 'Owned by Caffeine',
     icon: '☕',
@@ -14472,7 +14503,10 @@ function renderClaimPage(){
   document.getElementById('claimMixingCard').style.display='flex';
 
   // Render archetype badge and description from quiz result
-  var archKey = (window.REC && window.REC.archetype) || null;
+  var archKey = (window.REC && (window.REC.pattern || window.REC.archetype)) || null;
+  if(archKey) {
+    archKey = archKey.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  }
   if(archKey && ARCHETYPE_COPY[archKey]) {
     var match = ARCHETYPE_COPY[archKey];
     
@@ -14624,15 +14658,25 @@ function renderClaimPage(){
 
   // Archetype-matched social proof
   var PROOF_MAP = {
+    // New Patterns (WHEALTHY Quiz Spec v2)
+    'the-morning-dependency': {quote:'I didn\'t feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup.',name:'Marcus T.',role:'Sales Director, Father of 3',emoji:'&#128104;'},
+    'energy-without-aim': {quote:'I still had energy but it finally had <strong>direction.</strong> I stopped spinning and started finishing things.',name:'Chris M.',role:'Builder, Father',emoji:'&#127959;&#65039;'},
+    'the-low-floor': {quote:'I noticed I was <strong>more patient after work.</strong> That\'s not a supplement effect. That\'s a rhythm shift.',name:'Pastor Jerome W.',role:'Ministry Leader, Dad',emoji:'&#9962;'},
+    'holding-it-together': {quote:'I\'ve tried everything. This is the first time I could actually <strong>name what changed.</strong> Day 5 was real.',name:'Kevin W.',role:'Operations Manager, Dad of 2',emoji:'&#128737;&#65039;'},
+
+    // Retired Archetypes (for backwards compatibility)
     'owned-by-caffeine': {quote:'I didn\'t feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup.',name:'Marcus T.',role:'Sales Director, Father of 3',emoji:'&#128104;'},
     'wired-but-scattered': {quote:'I still had energy but it finally had <strong>direction.</strong> I stopped spinning and started finishing things.',name:'Chris M.',role:'Builder, Father',emoji:'&#127959;&#65039;'},
     'sharp-until-2pm': {quote:'I still had energy at <strong>4pm without the crash.</strong> I didn\'t realize how normalized the afternoon drop was.',name:'Daniel R.',role:'Founder, Husband',emoji:'&#128104;&#8205;&#128188;'},
     'running-on-fumes': {quote:'I noticed I was <strong>more patient after work.</strong> That\'s not a supplement effect. That\'s a rhythm shift.',name:'Pastor Jerome W.',role:'Ministry Leader, Dad',emoji:'&#9962;'},
     'skeptical-steward': {quote:'I\'ve tried everything. This is the first time I could actually <strong>name what changed.</strong> Day 5 was real.',name:'Kevin W.',role:'Operations Manager, Dad of 2',emoji:'&#128737;&#65039;'}
   };
-  var archKey2 = (window.REC && window.REC.archetype) || 'owned-by-caffeine';
-  var proof = PROOF_MAP[archKey2] || PROOF_MAP['owned-by-caffeine'];
-  var archData = ARCHETYPE_COPY[archKey2] || ARCHETYPE_COPY['owned-by-caffeine'];
+  var archKey2 = (window.REC && (window.REC.pattern || window.REC.archetype)) || 'the-morning-dependency';
+  if(archKey2) {
+    archKey2 = archKey2.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  }
+  var proof = PROOF_MAP[archKey2] || PROOF_MAP['the-morning-dependency'] || PROOF_MAP['owned-by-caffeine'];
+  var archData = ARCHETYPE_COPY[archKey2] || ARCHETYPE_COPY['the-morning-dependency'] || ARCHETYPE_COPY['owned-by-caffeine'];
 
   var salesHtml = '';
 
