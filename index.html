@@ -3877,6 +3877,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             postCountToday: 0,
             lastPostDate: null,
             revealPost: null,
+            revealContext: 'wall',
             prayDebounce: {},
 
             initPrayerWall: function() {
@@ -4138,11 +4139,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               }
             },
 
+            openRevealModal: function(post, context = 'wall') {
+              this.revealPost = post;
+              this.revealContext = context;
+              document.getElementById('wall-reveal-modal').style.display = 'flex';
+            },
+
             handleShareClick: function(post, btn) {
               const isOwnAnon = post.is_mine && post.display_mode === 'anonymous';
               if (isOwnAnon) {
-                this.revealPost = post;
-                document.getElementById('wall-reveal-modal').style.display = 'flex';
+                this.openRevealModal(post, 'wall');
               } else {
                 this.copyLink(post.id, btn);
               }
@@ -4249,33 +4255,55 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
                   if (res.ok) {
                     const data = await res.json();
-                    // Update cache display mode
                     post.display_mode = 'signed';
                     post.author = data.author;
 
-                    // Re-render matching cards in both lists
-                    ['wall-card-' + post.id, 'wall-pinned-card-' + post.id].forEach(id => {
-                      const card = document.getElementById(id);
-                      if (card) {
-                        const newCard = this.createCardDOM(post);
-                        if (id.startsWith('wall-pinned-card-')) newCard.id = id;
-                        card.parentNode.replaceChild(newCard, card);
-                        this.initReadMore(newCard);
-                      }
-                    });
+                    if (this.revealContext === 'testimony') {
+                      // Re-render Testimony cards in DOM
+                      ['tst-river-card-' + post.id, 'tst-top-card-' + post.id, 'tst-pinned-card-' + post.id].forEach(id => {
+                        const card = document.getElementById(id);
+                        if (card) {
+                          const newCard = window.TESTIMONY.createCardDOM(post);
+                          if (id.startsWith('tst-pinned-card-')) newCard.id = id;
+                          card.parentNode.replaceChild(newCard, card);
+                          window.TESTIMONY.initReadMore(newCard);
+                        }
+                      });
 
-                    this.closeRevealModal();
-                    // Copy signed link
-                    const btn = document.querySelector(`#wall-card-${post.id} .wall-action-btn`);
-                    this.copyLink(post.id, btn);
+                      this.closeRevealModal();
+                      const matched = document.getElementById('tst-river-card-' + post.id) || document.getElementById('tst-top-card-' + post.id);
+                      const btn = matched ? matched.querySelector('.wall-action-btn') : null;
+                      window.TESTIMONY.copyLink(post.id, btn);
+                    } else {
+                      // Re-render Prayer Wall cards in DOM
+                      ['wall-card-' + post.id, 'wall-pinned-card-' + post.id].forEach(id => {
+                        const card = document.getElementById(id);
+                        if (card) {
+                          const newCard = this.createCardDOM(post);
+                          if (id.startsWith('wall-pinned-card-')) newCard.id = id;
+                          card.parentNode.replaceChild(newCard, card);
+                          this.initReadMore(newCard);
+                        }
+                      });
+
+                      this.closeRevealModal();
+                      const btn = document.querySelector(`#wall-card-${post.id} .wall-action-btn`);
+                      this.copyLink(post.id, btn);
+                    }
                   }
                 } catch (err) {
                   console.error(err);
                 }
               } else if (action === 'share') {
                 this.closeRevealModal();
-                const btn = document.querySelector(`#wall-card-${post.id} .wall-action-btn`);
-                this.copyLink(post.id, btn);
+                if (this.revealContext === 'testimony') {
+                  const matched = document.getElementById('tst-river-card-' + post.id) || document.getElementById('tst-top-card-' + post.id);
+                  const btn = matched ? matched.querySelector('.wall-action-btn') : null;
+                  window.TESTIMONY.copyLink(post.id, btn);
+                } else {
+                  const btn = document.querySelector(`#wall-card-${post.id} .wall-action-btn`);
+                  this.copyLink(post.id, btn);
+                }
               } else {
                 this.closeRevealModal();
               }
