@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
 
     const { data, error } = await supabase
       .from('approved_members')
-      .select('email, name, archetype, archetype_name, identity_anchor, member_status')
+      .select('id, email, name, archetype, archetype_name, identity_anchor, member_status')
       .eq('email', email.trim().toLowerCase())
       .limit(1);
 
@@ -52,6 +52,7 @@ Deno.serve(async (req: Request) => {
       const member = data[0];
       return new Response(JSON.stringify({
         verified: true,
+        id: member.id,
         name: member.name,
         archetype: member.archetype,
         archetype_name: member.archetype_name,

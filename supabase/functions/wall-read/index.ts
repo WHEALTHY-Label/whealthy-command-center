@@ -35,12 +35,24 @@ Deno.serve(async (req) => {
 
     const offset = Number(cursor);
     const pageSize = Number(limit);
+    // Fetch user prays in the last 24h to populate remaining pray counts on load
+    const { data: userPrays } = await SB.from("wall_prays")
+      .select("post_id")
+      .eq("member_id", member_id)
+      .gt("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+
+    const userPraysMap: Record<string, number> = {};
+    (userPrays || []).forEach((wp: any) => {
+      userPraysMap[wp.post_id] = (userPraysMap[wp.post_id] || 0) + 1;
+    });
+
     let postsList: any[] = [];
 
     // Helper: Shared serializer from 6.0
     const serializePost = (post: any, viewer_member_id: any, isBibleView = false) => {
       const author_name = post.author_name || post.author?.[0]?.name || post.author?.name || null;
       const author_avatar_url = post.author_avatar_url || post.author?.[0]?.avatar_url || post.author?.avatar_url || null;
+      const praysToday = userPraysMap[post.id] || 0;
 
       const base: any = {
         id: post.id,
@@ -53,7 +65,8 @@ Deno.serve(async (req) => {
         answered_note: post.answered_note,
         display_mode: post.display_mode,
         is_mine: String(post.member_id) === String(viewer_member_id),
-        pray_count_frozen: post.status === 'answered'
+        pray_count_frozen: post.status === 'answered',
+        prays_remaining_today: Math.max(0, 3 - praysToday)
       };
 
       if (post.display_mode === 'signed') {

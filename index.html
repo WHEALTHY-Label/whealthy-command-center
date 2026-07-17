@@ -1617,6 +1617,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <div class="side-divider"></div>
       <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
       <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Bible 365</button>
+      <button class="sidebar-item" id="navWall" data-nav="wall" onclick="go('wall',this)"><span class="si-dot"></span> Prayer Wall</button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
@@ -3048,6 +3049,1471 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
 
 
+      <!-- ============ PRAYER WALL ============ -->
+      <div id="wallView" style="display:none">
+        <style>
+          :root {
+            --wall-bg: #080809;
+            --wall-surface: #0f1012;
+            --wall-card: #1e2024;
+            --wall-lime: #ccff00;
+            --wall-white: #ffffff;
+            --wall-body: rgba(255, 255, 255, 0.80);
+            --wall-muted: rgba(240, 241, 243, 0.60);
+            --wall-dim: rgba(240, 241, 243, 0.38);
+            --wall-glass-base: rgba(255, 255, 255, 0.04);
+            --wall-glass-mid: rgba(255, 255, 255, 0.07);
+            --wall-glass-hi: rgba(255, 255, 255, 0.10);
+            --wall-border: rgba(255, 255, 255, 0.07);
+            --wall-border-active: rgba(255, 255, 255, 0.12);
+            --wall-border-lime: rgba(204, 255, 0, 0.20);
+            --wall-border-lime-active: rgba(204, 255, 0, 0.40);
+          }
+
+          #wallView {
+            padding: 24px;
+            background-color: var(--wall-bg);
+            color: var(--wall-white);
+            font-family: 'DM Sans', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+          }
+
+          .wall-header {
+            margin-bottom: 24px;
+          }
+
+          .wall-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: clamp(28px, 4vw, 36px);
+            letter-spacing: 0.1em;
+            color: var(--wall-white);
+            margin: 0 0 6px 0;
+            text-transform: uppercase;
+          }
+
+          .wall-subline {
+            font-size: 15px;
+            color: var(--wall-muted);
+            margin: 0;
+          }
+
+          /* COMPOSER */
+          .wall-composer-box {
+            background: var(--wall-glass-mid);
+            border: 1px solid var(--wall-border);
+            border-radius: 22px;
+            padding: 16px 20px;
+            margin-bottom: 32px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+          }
+
+          .wall-composer-collapsed {
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+          }
+
+          .wall-composer-placeholder {
+            font-size: 15px;
+            color: var(--wall-muted);
+            user-select: none;
+          }
+
+          .wall-composer-form {
+            cursor: default;
+          }
+
+          .wall-composer-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--wall-border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--wall-white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px; /* Prevents iOS auto-zoom */
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            margin-bottom: 8px;
+            transition: border-color 0.2s ease;
+          }
+
+          .wall-composer-textarea:focus {
+            border-color: var(--wall-border-active);
+          }
+
+          .wall-char-count-text {
+            text-align: right;
+            font-size: 12px;
+            color: var(--wall-dim);
+            margin-bottom: 12px;
+          }
+
+          .wall-display-mode-selector {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+          }
+
+          .wall-radio-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--wall-muted);
+            user-select: none;
+          }
+
+          .wall-radio-label input[type="radio"] {
+            accent-color: var(--wall-lime);
+            width: 16px;
+            height: 16px;
+          }
+
+          .wall-composer-helper-text {
+            font-size: 13px;
+            color: var(--wall-dim);
+            margin-bottom: 16px;
+          }
+
+          .wall-signed-preview-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--wall-border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+          }
+
+          .wall-preview-avatar-container {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--wall-glass-hi);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--wall-lime);
+          }
+
+          .wall-preview-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .wall-preview-name-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--wall-white);
+          }
+
+          .wall-composer-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+          }
+
+          .wall-btn-submit {
+            background: var(--wall-lime);
+            color: #000000;
+            border: none;
+            border-radius: 14px;
+            padding: 0 24px;
+            height: 44px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+          }
+
+          .wall-btn-submit:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+          }
+
+          .wall-btn-cancel {
+            background: transparent;
+            color: var(--wall-muted);
+            border: 1px solid var(--wall-border);
+            border-radius: 14px;
+            padding: 0 20px;
+            height: 44px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+          }
+
+          .wall-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.02);
+          }
+
+          .wall-composer-limit-msg {
+            font-size: 14px;
+            color: var(--wall-muted);
+            margin-top: 12px;
+          }
+
+          /* RAILS GRID */
+          .wall-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+
+          @media (min-width: 900px) {
+            .wall-grid {
+              grid-template-columns: 1fr 1fr;
+            }
+          }
+
+          .wall-column {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .wall-rail-header {
+            margin-bottom: 20px;
+          }
+
+          .wall-rail-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 0.08em;
+            color: var(--wall-white);
+            margin: 0 0 4px 0;
+            text-transform: uppercase;
+          }
+
+          .wall-rail-subline {
+            font-size: 13px;
+            color: var(--wall-dim);
+            margin: 0;
+          }
+
+          .wall-cards-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+
+          .wall-btn-more {
+            background: var(--wall-glass-base);
+            border: 1px solid var(--wall-border);
+            color: var(--wall-muted);
+            border-radius: 14px;
+            height: 44px;
+            width: 100%;
+            margin-top: 24px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            transition: background 0.2s ease, border-color 0.2s ease;
+          }
+
+          .wall-btn-more:hover {
+            background: var(--wall-glass-mid);
+            border-color: var(--wall-border-active);
+          }
+
+          /* PRAYER CARD */
+          .wall-card {
+            background: var(--wall-card);
+            border: 1px solid var(--wall-border);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+          }
+
+          .wall-card:hover {
+            border-color: var(--wall-border-active);
+          }
+
+          .wall-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+          }
+
+          .wall-author-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .wall-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--wall-glass-hi);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--wall-lime);
+            flex-shrink: 0;
+          }
+
+          .wall-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .wall-avatar-anon {
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: var(--wall-dim);
+            font-size: 16px;
+          }
+
+          .wall-author-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wall-white);
+          }
+
+          .wall-timestamp {
+            font-size: 12px;
+            color: var(--wall-dim);
+          }
+
+          .wall-card-body {
+            position: relative;
+            margin-bottom: 20px;
+          }
+
+          .wall-card-body-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--wall-body);
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+          }
+
+          .wall-card-body-clamp {
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .wall-card-body-fade {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: linear-gradient(transparent, var(--wall-card));
+            pointer-events: none;
+          }
+
+          .wall-read-more-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--wall-lime);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 0 0 0;
+            cursor: pointer;
+            outline: none;
+          }
+
+          .wall-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+          }
+
+          .wall-pray-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 44px;
+            padding: 0 16px;
+            border-radius: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+            user-select: none;
+            outline: none;
+          }
+
+          .wall-pray-btn-available {
+            background: var(--wall-glass-hi);
+            border: 1px solid var(--wall-border-lime);
+            color: var(--wall-muted);
+          }
+
+          .wall-pray-btn-available:hover {
+            border-color: var(--wall-border-lime-active);
+            background: rgba(255, 255, 255, 0.12);
+          }
+
+          .wall-pray-btn-active {
+            background: var(--wall-glass-hi);
+            border: 1px solid var(--wall-border-lime-active);
+            color: var(--wall-white);
+          }
+
+          .wall-pray-btn-exhausted {
+            background: var(--wall-glass-base);
+            border: 1px solid var(--wall-border);
+            color: var(--wall-dim);
+            cursor: pointer;
+          }
+
+          .wall-pray-count {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            color: var(--wall-lime);
+          }
+
+          .wall-pray-subline {
+            font-size: 12px;
+            color: var(--wall-dim);
+            margin-top: 4px;
+            display: block;
+          }
+
+          .wall-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .wall-action-btn {
+            background: transparent;
+            border: none;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wall-dim);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background 0.2s ease, color 0.2s ease;
+            outline: none;
+          }
+
+          .wall-action-btn:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--wall-muted);
+          }
+
+          /* PINNED POST AREA */
+          .wall-pinned-container {
+            margin-bottom: 32px;
+            border: 1px solid var(--wall-border-lime-active);
+            border-radius: 14px;
+            padding: 24px;
+            background: rgba(204, 255, 0, 0.02);
+            position: relative;
+          }
+
+          .wall-pinned-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--wall-lime);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          .wall-pinned-dismiss {
+            background: transparent;
+            border: none;
+            color: var(--wall-dim);
+            cursor: pointer;
+            font-size: 16px;
+            outline: none;
+          }
+
+          /* REVEAL MODAL */
+          .wall-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 8, 9, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 16px;
+          }
+
+          .wall-modal-content {
+            background: var(--wall-surface);
+            border: 1px solid var(--wall-border-active);
+            border-radius: 22px;
+            padding: 32px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            overflow-y: auto;
+          }
+
+          .wall-modal-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 0.08em;
+            color: var(--wall-white);
+            margin: 0 0 16px 0;
+            text-transform: uppercase;
+            text-align: center;
+          }
+
+          .wall-modal-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--wall-body);
+            margin: 0 0 16px 0;
+            text-align: center;
+          }
+
+          .wall-modal-btn-primary {
+            background: var(--wall-lime);
+            color: #000000;
+            border: none;
+            border-radius: 14px;
+            height: 44px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            width: 100%;
+          }
+
+          .wall-modal-btn-primary:hover {
+            opacity: 0.9;
+          }
+
+          .wall-modal-btn-subline {
+            font-size: 12px;
+            color: var(--wall-dim);
+            text-align: center;
+            margin: 6px 0 16px 0;
+          }
+
+          .wall-modal-btn-secondary {
+            background: transparent;
+            border: 1px solid var(--wall-border-lime);
+            color: var(--wall-lime);
+            border-radius: 14px;
+            height: 44px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-bottom: 12px;
+            width: 100%;
+            transition: background 0.2s ease;
+          }
+
+          .wall-modal-btn-secondary:hover {
+            background: rgba(204, 255, 0, 0.05);
+          }
+
+          .wall-modal-btn-cancel {
+            background: var(--wall-glass-base);
+            border: 1px solid var(--wall-border);
+            color: var(--wall-muted);
+            border-radius: 14px;
+            height: 44px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s ease;
+          }
+
+          .wall-modal-btn-cancel:hover {
+            background: var(--wall-glass-mid);
+          }
+
+          /* ANIMATION PULSE */
+          .wall-pulse-border {
+            animation: wall-border-glow 1.5s ease-out;
+          }
+
+          @keyframes wall-border-glow {
+            0% {
+              border-color: var(--wall-lime);
+              box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
+            }
+            100% {
+              border-color: var(--wall-border);
+              box-shadow: none;
+            }
+          }
+
+          .wall-scale-pulse {
+            animation: wall-button-pulse 0.2s ease-out;
+          }
+
+          @keyframes wall-button-pulse {
+            50% { transform: scale(1.05); }
+          }
+
+          /* REDUCED MOTION */
+          @media (prefers-reduced-motion: reduce) {
+            * {
+              animation-delay: 0s !important;
+              animation-duration: 0s !important;
+              animation-iteration-count: 1 !important;
+              transition-duration: 0s !important;
+              scroll-behavior: auto !important;
+            }
+          }
+
+          /* ADDITIONAL RESPONSIVENESS */
+          @media (max-width: 1100px) {
+            .wall-grid { gap: 24px; }
+          }
+
+          @media (max-width: 900px) {
+            .wall-grid {
+              grid-template-columns: 1fr;
+            }
+            .wall-cards-list {
+              grid-template-columns: 1fr !important;
+            }
+            [data-rail="most-prayed"] .wall-card:first-child {
+              grid-column: auto !important;
+            }
+          }
+
+          @media (max-width: 768px) {
+            #wallView { padding: 16px; }
+            .wall-author-row { gap: 8px; }
+          }
+
+          @media (max-width: 640px) {
+            .wall-card-footer {
+              flex-direction: column;
+              align-items: stretch;
+              gap: 12px;
+            }
+            .wall-pray-btn {
+              width: 100%;
+              justify-content: center;
+            }
+            .wall-actions-row {
+              justify-content: flex-end;
+              width: 100%;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .wall-title { font-size: 28px; }
+            .wall-card { padding: 16px; }
+            .wall-card-body-text { font-size: 15px; }
+          }
+
+          @media (max-width: 400px) {
+            .wall-author-name {
+              max-width: 110px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        </style>
+
+        <!-- PINNED / DEEP LINK LANDING SLOT -->
+        <div id="wall-pinned" style="display:none"></div>
+
+        <!-- HEADER -->
+        <div class="wall-header">
+          <h1 class="wall-title">PRAYER WALL</h1>
+          <p class="wall-subline">What we are carrying.</p>
+        </div>
+
+        <!-- COMPOSER -->
+        <div id="wall-composer-box" class="wall-composer-box wall-composer-collapsed" onclick="WALL.expandComposer(event)">
+          <div id="wall-composer-collapsed-inner" class="wall-composer-placeholder">Bring something to the wall.</div>
+          <div id="wall-composer-expanded-inner" class="wall-composer-form" style="display:none" onclick="event.stopPropagation()">
+            <textarea id="wall-textarea" class="wall-composer-textarea" placeholder="What are you carrying?" maxlength="1000" oninput="WALL.updateCharCount(this)"></textarea>
+            <div id="wall-char-count" class="wall-char-count-text" style="display:none">0 / 1000</div>
+            
+            <div class="wall-display-mode-selector">
+              <label class="wall-radio-label">
+                <input type="radio" name="wall-display-mode" value="anonymous" checked onchange="WALL.toggleDisplayMode(this)">
+                <span>Anonymous</span>
+              </label>
+              <label class="wall-radio-label">
+                <input type="radio" name="wall-display-mode" value="signed" onchange="WALL.toggleDisplayMode(this)">
+                <span>Sign it</span>
+              </label>
+            </div>
+
+            <div id="wall-composer-helper" class="wall-composer-helper-text">
+              Your name will not appear. This posts as "A Steward."
+            </div>
+
+            <div id="wall-signed-preview" class="wall-signed-preview-box" style="display:none">
+              <div class="wall-preview-avatar-container">
+                <img id="wall-preview-avatar" class="wall-preview-avatar-img" src="" alt="" style="display:none">
+                <div id="wall-preview-initial" class="wall-preview-avatar-fallback">S</div>
+              </div>
+              <span id="wall-preview-name" class="wall-preview-name-text">Steward</span>
+            </div>
+
+            <div class="wall-composer-actions">
+              <button id="wall-post-submit-btn" class="wall-btn-submit" disabled onclick="WALL.submitPost(event)">POST</button>
+              <button class="wall-btn-cancel" onclick="WALL.collapseComposer(event)">Cancel</button>
+            </div>
+            <div id="wall-composer-limit-row" class="wall-composer-limit-msg" style="display:none"></div>
+          </div>
+        </div>
+
+        <!-- GRID LAYOUT -->
+        <div class="wall-grid">
+          <!-- NEEDS PRAYER RAIL (Desktop Left / First) -->
+          <div class="wall-column wall-column-needs">
+            <div class="wall-rail-header">
+              <h2 class="wall-rail-title">NEEDS PRAYER</h2>
+              <p class="wall-rail-subline">Nobody prays alone.</p>
+            </div>
+            <div id="wall-rail-needs-list" class="wall-cards-list" data-rail="needs-prayer"></div>
+            <div id="wall-needs-loading" class="wall-skeleton-container" style="display:none">
+              <div class="wall-skeleton-card"></div>
+              <div class="wall-skeleton-card"></div>
+              <div class="wall-skeleton-card"></div>
+            </div>
+            <button id="wall-needs-more-btn" class="wall-btn-more" style="display:none" onclick="WALL.loadMore('needs_prayer')">Show more</button>
+          </div>
+
+          <!-- MOST PRAYED RAIL (Desktop Right / Second) -->
+          <div class="wall-column wall-column-most">
+            <div class="wall-rail-header">
+              <h2 class="wall-rail-title">MOST PRAYED</h2>
+              <p class="wall-rail-subline">What the community is carrying right now.</p>
+            </div>
+            <div id="wall-rail-most-list" class="wall-cards-list" data-rail="most-prayed"></div>
+            <div id="wall-most-loading" class="wall-skeleton-container" style="display:none">
+              <div class="wall-skeleton-card"></div>
+              <div class="wall-skeleton-card"></div>
+              <div class="wall-skeleton-card"></div>
+            </div>
+            <button id="wall-most-more-btn" class="wall-btn-more" style="display:none" onclick="WALL.loadMore('most_prayed')">Show more</button>
+          </div>
+        </div>
+
+        <!-- REVEAL MODAL -->
+        <div id="wall-reveal-modal" class="wall-modal-overlay" style="display:none" onclick="WALL.closeRevealModal(event)">
+          <div class="wall-modal-content" onclick="event.stopPropagation()">
+            <h3 class="wall-modal-title">THIS PRAYER IS NOT SIGNED</h3>
+            <p class="wall-modal-text">If you share it yourself, people may connect it to you.</p>
+            <p class="wall-modal-text">If you want it seen without that, someone else can share it. Anyone on the wall can.</p>
+            <button class="wall-modal-btn-primary" onclick="WALL.revealExit('sign')">SIGN IT AND SHARE</button>
+            <div class="wall-modal-btn-subline">This cannot be undone.</div>
+            <button class="wall-modal-btn-secondary" onclick="WALL.revealExit('share')">SHARE ANYWAY</button>
+            <button class="wall-modal-btn-cancel" onclick="WALL.revealExit('cancel')">CANCEL</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          "use strict";
+
+          const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
+
+          const WALL = {
+            pages: {
+              most_prayed: 0,
+              needs_prayer: 0
+            },
+            limits: {
+              most_prayed: 12,
+              needs_prayer: 12
+            },
+            cache: {
+              most_prayed: null,
+              needs_prayer: null
+            },
+            praysRemaining: {}, // map of post_id -> remaining count
+            postCountToday: 0,
+            lastPostDate: null,
+            revealPost: null,
+            prayDebounce: {},
+
+            initPrayerWall: function() {
+              // 1. Render loaders
+              document.getElementById('wall-needs-loading').style.display = 'block';
+              document.getElementById('wall-most-loading').style.display = 'block';
+              document.getElementById('wall-rail-needs-list').innerHTML = '';
+              document.getElementById('wall-rail-most-list').innerHTML = '';
+              document.getElementById('wall-needs-more-btn').style.display = 'none';
+              document.getElementById('wall-most-more-btn').style.display = 'none';
+
+              this.pages.most_prayed = 0;
+              this.pages.needs_prayer = 0;
+
+              // 2. Fetch rails
+              this.fetchRail('most_prayed', 0, false);
+              this.fetchRail('needs_prayer', 0, false);
+            },
+
+            fetchRail: async function(view, offset, append) {
+              const limit = 12;
+              const loaderId = view === 'most_prayed' ? 'wall-most-loading' : 'wall-needs-loading';
+              const listId = view === 'most_prayed' ? 'wall-rail-most-list' : 'wall-rail-needs-list';
+              const moreBtnId = view === 'most_prayed' ? 'wall-most-more-btn' : 'wall-needs-more-btn';
+
+              const loader = document.getElementById(loaderId);
+              const list = document.getElementById(listId);
+              const moreBtn = document.getElementById(moreBtnId);
+
+              if (loader) loader.style.display = 'block';
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: view,
+                    cursor: offset,
+                    limit: limit
+                  })
+                });
+
+                if (!res.ok) throw new Error('Failed to read');
+                const payload = await res.json();
+                const posts = payload.posts || [];
+
+                if (loader) loader.style.display = 'none';
+
+                if (!append) {
+                  list.innerHTML = '';
+                  this.cache[view] = posts;
+                } else {
+                  this.cache[view] = (this.cache[view] || []).concat(posts);
+                }
+
+                if (posts.length === 0 && !append) {
+                  const emptyText = view === 'most_prayed'
+                    ? 'Nothing has been prayed for yet.'
+                    : 'Every prayer on the wall is being carried.';
+                  list.innerHTML = `<div style="padding:24px;text-align:center;color:rgba(255,255,255,0.4);font-size:14px;border:1px solid rgba(255,255,255,0.05);border-radius:14px;width:100%">${emptyText}</div>`;
+                  if (moreBtn) moreBtn.style.display = 'none';
+                  return;
+                }
+
+                posts.forEach(post => {
+                  this.praysRemaining[post.id] = post.prays_remaining_today !== undefined ? post.prays_remaining_today : 3;
+                  const card = this.createCardDOM(post);
+                  list.appendChild(card);
+                  this.initReadMore(card);
+                });
+
+                if (moreBtn) {
+                  moreBtn.style.display = posts.length < limit ? 'none' : 'block';
+                }
+
+              } catch (err) {
+                console.error(err);
+                if (loader) loader.style.display = 'none';
+                if (!append) {
+                  list.innerHTML = `<div style="padding:24px;text-align:center;color:rgba(255,255,255,0.4);font-size:14px;width:100%">The wall did not load. <a href="#" onclick="event.preventDefault(); WALL.fetchRail('${view}', ${offset}, ${append})">Try again.</a></div>`;
+                }
+              }
+            },
+
+            loadMore: function(view) {
+              const nextOffset = (view === 'most_prayed' ? ++this.pages.most_prayed : ++this.pages.needs_prayer) * 12;
+              this.fetchRail(view, nextOffset, true);
+            },
+
+            createCardDOM: function(post) {
+              const card = document.createElement('div');
+              card.className = 'wall-card';
+              card.id = 'wall-card-' + post.id;
+
+              const isSigned = post.display_mode === 'signed';
+              const name = isSigned ? (post.author?.name || 'Steward') : 'A Steward';
+              const relativeTime = this.formatRelativeTime(post.created_at);
+
+              let avatarHTML = '';
+              if (isSigned) {
+                const initial = name.charAt(0).toUpperCase();
+                avatarHTML = `
+                  <div class="wall-avatar">
+                    <img class="wall-avatar-img" src="${post.author?.avatar_url || ''}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="wall-avatar-fallback" style="display:none">${initial}</div>
+                  </div>
+                `;
+              } else {
+                avatarHTML = `
+                  <div class="wall-avatar wall-avatar-anon">&#9737;</div>
+                `;
+              }
+
+              // Hide pray button if own post
+              let prayBtnHTML = '';
+              if (!post.is_mine) {
+                const remaining = this.praysRemaining[post.id] !== undefined ? this.praysRemaining[post.id] : 3;
+                let btnClass = 'wall-pray-btn wall-pray-btn-available';
+                if (remaining === 0) {
+                  btnClass = 'wall-pray-btn wall-pray-btn-exhausted';
+                }
+                prayBtnHTML = `
+                  <div class="wall-pray-btn-wrapper">
+                    <button class="${btnClass}" onclick="WALL.handlePrayClick('${post.id}', this, event)">
+                      <span>🙏</span>
+                      <span>Prayed <span class="wall-pray-count">${post.pray_count || 0}</span></span>
+                    </button>
+                    <span class="wall-pray-subline" style="display:none"></span>
+                  </div>
+                `;
+              }
+
+              card.innerHTML = `
+                <div class="wall-card-header">
+                  <div class="wall-author-row">
+                    ${avatarHTML}
+                    <div>
+                      <div class="wall-author-name">${this.escapeHTML(name)}</div>
+                      <div class="wall-timestamp">${relativeTime}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="wall-card-body">
+                  <p class="wall-card-body-text wall-card-body-clamp">${this.escapeHTML(post.body)}</p>
+                  <div class="wall-card-body-fade"></div>
+                  <button class="wall-read-more-btn" onclick="WALL.expandBody(this)">Read more</button>
+                </div>
+                <div class="wall-card-footer">
+                  ${prayBtnHTML}
+                  <div class="wall-actions-row">
+                    <button class="wall-action-btn" title="Share link" onclick="WALL.handleShareClick(${JSON.stringify(post).replace(/"/g, '&quot;')}, this)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </button>
+                    <button class="wall-action-btn" title="Report" onclick="WALL.handleReportClick('${post.id}', this)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    </button>
+                  </div>
+                </div>
+              `;
+
+              return card;
+            },
+
+            initReadMore: function(card) {
+              const bodyText = card.querySelector('.wall-card-body-text');
+              const readMoreBtn = card.querySelector('.wall-read-more-btn');
+              const fade = card.querySelector('.wall-card-body-fade');
+
+              if (bodyText.scrollHeight > bodyText.clientHeight) {
+                readMoreBtn.style.display = 'block';
+                fade.style.display = 'block';
+              } else {
+                bodyText.classList.remove('wall-card-body-clamp');
+              }
+            },
+
+            expandBody: function(btn) {
+              const body = btn.previousElementSibling.previousElementSibling;
+              const fade = btn.previousElementSibling;
+              body.classList.remove('wall-card-body-clamp');
+              fade.style.display = 'none';
+              btn.style.display = 'none';
+            },
+
+            handlePrayClick: async function(postId, btn, event) {
+              event.stopPropagation();
+              
+              // Debounce check: block rapid clicks
+              const now = Date.now();
+              if (this.prayDebounce[postId] && (now - this.prayDebounce[postId] < 400)) {
+                return;
+              }
+              this.prayDebounce[postId] = now;
+
+              const remaining = this.praysRemaining[postId] !== undefined ? this.praysRemaining[postId] : 3;
+
+              if (remaining <= 0) {
+                // Show exhausted subline on tap
+                const subline = btn.nextElementSibling;
+                subline.textContent = 'Prayed three times today. Again tomorrow.';
+                subline.style.display = 'block';
+                setTimeout(() => { subline.style.display = 'none'; }, 3000);
+                return;
+              }
+
+              // Optimistic UI updates
+              const countEl = btn.querySelector('.wall-pray-count');
+              const currentCount = parseInt(countEl.textContent || '0', 10);
+              countEl.textContent = currentCount + 1;
+              btn.classList.add('wall-scale-pulse');
+              setTimeout(() => { btn.classList.remove('wall-scale-pulse'); }, 200);
+
+              // Decrement remaining prays locally
+              this.praysRemaining[postId] = remaining - 1;
+              if (this.praysRemaining[postId] === 0) {
+                btn.className = 'wall-pray-btn wall-pray-btn-exhausted';
+              } else {
+                btn.className = 'wall-pray-btn wall-pray-btn-active';
+              }
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-pray', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: postId
+                  })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                  if (res.status === 429) {
+                    this.praysRemaining[postId] = 0;
+                    btn.className = 'wall-pray-btn wall-pray-btn-exhausted';
+                  } else {
+                    // Revert
+                    this.praysRemaining[postId] = remaining;
+                    countEl.textContent = currentCount;
+                    btn.className = remaining === 0 ? 'wall-pray-btn wall-pray-btn-exhausted' : 'wall-pray-btn wall-pray-btn-available';
+                  }
+                  return;
+                }
+
+                // Server reconcile
+                countEl.textContent = data.pray_count;
+                this.praysRemaining[postId] = data.prays_remaining_today;
+                if (data.prays_remaining_today === 0) {
+                  btn.className = 'wall-pray-btn wall-pray-btn-exhausted';
+                }
+
+              } catch (err) {
+                console.error(err);
+                // Revert
+                this.praysRemaining[postId] = remaining;
+                countEl.textContent = currentCount;
+                btn.className = remaining === 0 ? 'wall-pray-btn wall-pray-btn-exhausted' : 'wall-pray-btn wall-pray-btn-available';
+              }
+            },
+
+            handleShareClick: function(post, btn) {
+              const isOwnAnon = post.is_mine && post.display_mode === 'anonymous';
+              if (isOwnAnon) {
+                this.revealPost = post;
+                document.getElementById('wall-reveal-modal').style.display = 'flex';
+              } else {
+                this.copyLink(post.id, btn);
+              }
+            },
+
+            copyLink: function(postId, btn) {
+              const shareUrl = `${window.location.origin}/?view=wall&post=${postId}`;
+              navigator.clipboard.writeText(shareUrl).then(() => {
+                this.flashTip(btn, 'Link copied.');
+              }).catch(() => {
+                // Fallback selection copy
+                const el = document.createElement('textarea');
+                el.value = shareUrl;
+                el.setAttribute('readonly', '');
+                el.style.position = 'absolute';
+                el.style.left = '-9999px';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                this.flashTip(btn, 'Link copied.');
+              });
+            },
+
+            flashTip: function(btn, text) {
+              const oldHTML = btn.innerHTML;
+              btn.innerHTML = `<span style="font-size:11px;font-family:'DM Sans';font-weight:600;color:var(--wall-lime)">${text}</span>`;
+              setTimeout(() => { btn.innerHTML = oldHTML; }, 2000);
+            },
+
+            handleReportClick: function(postId, btn) {
+              const confirmBtn = document.createElement('span');
+              confirmBtn.innerHTML = `
+                <span style="font-size:11px;color:rgba(255,255,255,0.4)">Report?</span>
+                <button style="background:transparent;border:none;color:var(--wall-lime);font-size:11px;font-weight:700;margin:0 4px;cursor:pointer" onclick="WALL.submitReport('${postId}', this)">YES</button>
+                <button style="background:transparent;border:none;color:rgba(255,255,255,0.4);font-size:11px;cursor:pointer" onclick="WALL.cancelReport(this)">NO</button>
+              `;
+              btn.style.display = 'none';
+              btn.parentNode.insertBefore(confirmBtn, btn);
+            },
+
+            cancelReport: function(confirmEl) {
+              const btn = confirmEl.parentNode.nextElementSibling;
+              btn.style.display = 'flex';
+              confirmEl.parentNode.removeChild(confirmEl);
+            },
+
+            submitReport: async function(postId, yesBtn) {
+              const container = yesBtn.parentNode;
+              const flagBtn = container.nextElementSibling;
+              container.innerHTML = '<span style="font-size:11px;color:var(--wall-dim)">Reporting...</span>';
+              
+              try {
+                const res = await fetch(FN_BASE + '/wall-report', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    reporter_id: window.MEMBER_ID,
+                    post_id: postId,
+                    reason: 'Flagged by community'
+                  })
+                });
+
+                if (res.ok) {
+                  container.innerHTML = '<span style="font-size:11px;color:var(--wall-dim)">Reported.</span>';
+                  const card = document.getElementById('wall-card-' + postId);
+                  if (card) card.style.opacity = '0.6';
+                } else {
+                  container.innerHTML = '<span style="font-size:11px;color:var(--wall-dim)">Failed.</span>';
+                  setTimeout(() => {
+                    flagBtn.style.display = 'flex';
+                    container.parentNode.removeChild(container);
+                  }, 2000);
+                }
+              } catch (err) {
+                console.error(err);
+                container.innerHTML = '<span style="font-size:11px;color:var(--wall-dim)">Failed.</span>';
+                setTimeout(() => {
+                  flagBtn.style.display = 'flex';
+                  container.parentNode.removeChild(container);
+                }, 2000);
+              }
+            },
+
+            closeRevealModal: function() {
+              document.getElementById('wall-reveal-modal').style.display = 'none';
+              this.revealPost = null;
+            },
+
+            revealExit: async function(action) {
+              const post = this.revealPost;
+              if (!post) return;
+
+              if (action === 'sign') {
+                try {
+                  const res = await fetch(FN_BASE + '/wall-sign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      member_id: window.MEMBER_ID,
+                      post_id: post.id
+                    })
+                  });
+
+                  if (res.ok) {
+                    const data = await res.json();
+                    // Update cache display mode
+                    post.display_mode = 'signed';
+                    post.author = data.author;
+
+                    // Re-render matching cards in both lists
+                    ['wall-card-' + post.id, 'wall-pinned-card-' + post.id].forEach(id => {
+                      const card = document.getElementById(id);
+                      if (card) {
+                        const newCard = this.createCardDOM(post);
+                        if (id.startsWith('wall-pinned-card-')) newCard.id = id;
+                        card.parentNode.replaceChild(newCard, card);
+                        this.initReadMore(newCard);
+                      }
+                    });
+
+                    this.closeRevealModal();
+                    // Copy signed link
+                    const btn = document.querySelector(`#wall-card-${post.id} .wall-action-btn`);
+                    this.copyLink(post.id, btn);
+                  }
+                } catch (err) {
+                  console.error(err);
+                }
+              } else if (action === 'share') {
+                this.closeRevealModal();
+                const btn = document.querySelector(`#wall-card-${post.id} .wall-action-btn`);
+                this.copyLink(post.id, btn);
+              } else {
+                this.closeRevealModal();
+              }
+            },
+
+            expandComposer: function(event) {
+              const box = document.getElementById('wall-composer-box');
+              if (box.classList.contains('wall-composer-collapsed')) {
+                box.classList.remove('wall-composer-collapsed');
+                document.getElementById('wall-composer-collapsed-inner').style.display = 'none';
+                document.getElementById('wall-composer-expanded-inner').style.display = 'block';
+                document.getElementById('wall-char-count').style.display = 'block';
+                
+                // Autofocus textarea
+                const tx = document.getElementById('wall-textarea');
+                tx.focus();
+                
+                // Prepopulate signed preview if needed
+                this.toggleDisplayMode(document.querySelector('input[name="wall-display-mode"]:checked'));
+              }
+            },
+
+            collapseComposer: function(event) {
+              if (event) event.stopPropagation();
+              const box = document.getElementById('wall-composer-box');
+              box.classList.add('wall-composer-collapsed');
+              document.getElementById('wall-composer-collapsed-inner').style.display = 'block';
+              document.getElementById('wall-composer-expanded-inner').style.display = 'none';
+              document.getElementById('wall-char-count').style.display = 'none';
+              
+              // Reset values
+              document.getElementById('wall-textarea').value = '';
+              document.getElementById('wall-char-count').textContent = '0 / 1000';
+              document.getElementById('wall-post-submit-btn').disabled = true;
+              
+              // Reset display mode radio to anonymous
+              const anonRadio = document.querySelector('input[name="wall-display-mode"][value="anonymous"]');
+              if (anonRadio) {
+                anonRadio.checked = true;
+                this.toggleDisplayMode(anonRadio);
+              }
+            },
+
+            updateCharCount: function(tx) {
+              const len = tx.value.length;
+              const countEl = document.getElementById('wall-char-count');
+              countEl.textContent = len + ' / 1000';
+              countEl.style.color = len > 800 ? 'var(--wall-lime)' : 'var(--wall-dim)';
+              document.getElementById('wall-post-submit-btn').disabled = len === 0;
+            },
+
+            toggleDisplayMode: function(radio) {
+              const mode = radio.value;
+              const helper = document.getElementById('wall-composer-helper');
+              const preview = document.getElementById('wall-signed-preview');
+
+              if (mode === 'anonymous') {
+                helper.textContent = 'Your name will not appear. This posts as "A Steward."';
+                preview.style.display = 'none';
+              } else {
+                helper.textContent = 'Your name and photo will appear on this prayer.';
+                
+                // Load member preview details
+                const name = window.MEMBER_NAME || 'Steward';
+                const avatarUrl = window.waSafeAvatarUrl ? window.waSafeAvatarUrl(window.waProfileMeta && window.waProfileMeta.skool_avatar_url) : '';
+
+                document.getElementById('wall-preview-name').textContent = name;
+                
+                const avImg = document.getElementById('wall-preview-avatar');
+                const avFb = document.getElementById('wall-preview-initial');
+
+                if (avatarUrl) {
+                  avImg.src = avatarUrl;
+                  avImg.style.display = 'block';
+                  avFb.style.display = 'none';
+                } else {
+                  avImg.style.display = 'none';
+                  avFb.style.display = 'flex';
+                  avFb.textContent = name.charAt(0).toUpperCase();
+                }
+                
+                preview.style.display = 'flex';
+              }
+            },
+
+            submitPost: async function(event) {
+              if (event) event.stopPropagation();
+              const tx = document.getElementById('wall-textarea');
+              const body = tx.value.trim();
+              if (!body) return;
+
+              const displayMode = document.querySelector('input[name="wall-display-mode"]:checked').value;
+              const submitBtn = document.getElementById('wall-post-submit-btn');
+              submitBtn.disabled = true;
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-post', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    body: body,
+                    display_mode: displayMode,
+                    source: 'wall'
+                  })
+                });
+
+                if (res.status === 429) {
+                  const limitRow = document.getElementById('wall-composer-limit-row');
+                  limitRow.textContent = 'You have brought three prayers to the wall today. More tomorrow.';
+                  limitRow.style.display = 'block';
+                  submitBtn.disabled = false;
+                  return;
+                }
+
+                if (!res.ok) throw new Error('Post failed');
+                const newPost = await res.json();
+
+                // Collapse composer
+                this.collapseComposer();
+
+                // Render card at the top of Needs Prayer list
+                const needsList = document.getElementById('wall-rail-needs-list');
+                const card = this.createCardDOM(newPost);
+                card.classList.add('wall-pulse-border');
+                
+                // If there's an empty state div, remove it
+                if (needsList.firstChild && needsList.firstChild.className !== 'wall-card') {
+                  needsList.innerHTML = '';
+                }
+
+                needsList.insertBefore(card, needsList.firstChild);
+                this.initReadMore(card);
+
+              } catch (err) {
+                console.error(err);
+                submitBtn.disabled = false;
+              }
+            },
+
+            openSharedPost: async function(postId) {
+              const pinnedZone = document.getElementById('wall-pinned');
+              pinnedZone.innerHTML = `
+                <div class="wall-pinned-label">
+                  <span>Shared with you</span>
+                  <button class="wall-pinned-dismiss" onclick="WALL.dismissPinned()">&#10005;</button>
+                </div>
+                <div id="wall-pinned-card-slot">
+                  <div class="wall-skeleton-card"></div>
+                </div>
+              `;
+              pinnedZone.style.display = 'block';
+              pinnedZone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'single',
+                    post_id: postId
+                  })
+                });
+
+                const slot = document.getElementById('wall-pinned-card-slot');
+
+                if (res.status === 404) {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This prayer is no longer on the wall.</div>';
+                  this.cleanURL();
+                  return;
+                }
+
+                if (!res.ok) throw new Error('Shared read failed');
+                const post = await res.json();
+
+                if (post.status === 'held') {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This prayer is under review.</div>';
+                } else if (post.status === 'archived') {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This prayer has left the wall. It was carried for 30 days.</div>';
+                } else if (post.status === 'answered') {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This prayer was answered. <a href="#" style="color:var(--wall-lime)" onclick="event.preventDefault(); go(\'testimony\')">Go to Testimony Wall</a></div>';
+                } else {
+                  // Live post
+                  this.praysRemaining[post.id] = post.prays_remaining_today !== undefined ? post.prays_remaining_today : 3;
+                  const card = this.createCardDOM(post);
+                  card.id = 'wall-pinned-card-' + post.id;
+                  card.classList.add('wall-pulse-border');
+                  slot.innerHTML = '';
+                  slot.appendChild(card);
+                  this.initReadMore(card);
+                }
+
+              } catch (err) {
+                console.error(err);
+                document.getElementById('wall-pinned-card-slot').innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">Failed to load shared prayer.</div>';
+              }
+
+              this.cleanURL();
+            },
+
+            dismissPinned: function() {
+              document.getElementById('wall-pinned').style.display = 'none';
+            },
+
+            cleanURL: function() {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('view');
+              url.searchParams.delete('post');
+              window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+            },
+
+            formatRelativeTime: function(isoString) {
+              const date = new Date(isoString);
+              const diffMs = Date.now() - date.getTime();
+              const diffMins = Math.floor(diffMs / 60000);
+              const diffHours = Math.floor(diffMins / 60);
+              const diffDays = Math.floor(diffHours / 24);
+
+              if (diffMins < 60) return diffMins <= 1 ? 'just now' : diffMins + 'm ago';
+              if (diffHours < 24) return diffHours + 'h ago';
+              return diffDays + 'd ago';
+            },
+
+            escapeHTML: function(str) {
+              if (!str) return '';
+              return str.replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#039;');
+            }
+          };
+
+          window.WALL = WALL;
+          window.initPrayerWall = () => WALL.initPrayerWall();
+
+        })();
+      </script>
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
         <div class="view-header-block">
@@ -4790,8 +6256,10 @@ window.initBible365 = async function() {
 const FN_BASE='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
 let MEMBER_EMAIL = __lsGet('wh_steward_email') || '';
 let MEMBER_NAME = '';
+let MEMBER_ID = null;
 window.MEMBER_EMAIL = MEMBER_EMAIL;
 window.MEMBER_NAME = MEMBER_NAME;
+window.MEMBER_ID = MEMBER_ID;
 
 // ════════════════════════════════════════════════════════════
 // AUTH SURFACE ENGINE
@@ -5613,6 +7081,7 @@ async function waRunGate(emailArg){
       try { __lsSet('wh_steward_email', email); } catch(e) {}
       MEMBER_EMAIL = email;
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
+      MEMBER_ID = (d.member && d.member.id) ? d.member.id : null;
       try { loadMemberDiscount(email); } catch(e) {}
       await waLoadProfileMeta();
       if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
@@ -5620,6 +7089,7 @@ async function waRunGate(emailArg){
       }
       window.MEMBER_EMAIL = MEMBER_EMAIL;
       window.MEMBER_NAME = MEMBER_NAME;
+      window.MEMBER_ID = MEMBER_ID;
       
       // Hide the gate overlay and display main content
       waCloseGate();
@@ -6050,8 +7520,8 @@ const WHY_LABEL={freedom:'breaking what owns you',direction:'seeking direction',
 /* ================== NAV ================== */
 function go(view,el,label){
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
   if(!el && view) {
@@ -6081,6 +7551,10 @@ function go(view,el,label){
   closeSidebar();
   if(view==='fast')renderFast();
   if(view==='record'){renderJournalContext();renderWall();renderMapDefault();}
+  if(view==='wall'){
+    document.getElementById('headerLine').textContent='Prayer Wall';
+    if(typeof initPrayerWall==='function') initPrayerWall();
+  }
   if(view==='dash'){
     renderDash();
     if(typeof triggerWelcomeCelebration === 'function') {
@@ -8934,13 +10408,25 @@ async function loadAndInit(){
   
   // Persist Page Routing via Location Hash
   const hash = window.location.hash.replace('#', '');
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView'};
-  if (hash && map[hash]) {
+  const params = new URLSearchParams(window.location.search);
+  const bootView = params.get('view');
+  const bootPost = params.get('post');
+  
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView'};
+  
+  if (bootView === 'wall') {
+    const el = document.getElementById('navWall');
+    go('wall', el);
+    if (bootPost && window.WALL && typeof window.WALL.openSharedPost === 'function') {
+      window.WALL.openSharedPost(bootPost);
+    }
+  } else if (hash && map[hash]) {
     const btnMap = {
       dash: 'navDash',
       record: 'navRecord',
       fast: 'navFast',
       bible: 'navBible',
+      wall: 'navWall',
       portal: 'navPortal',
       affiliate: 'navAffiliate',
       community: 'navCommunity',
