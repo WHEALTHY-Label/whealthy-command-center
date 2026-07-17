@@ -4515,6 +4515,637 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         })();
       </script>
+      <!-- ============ TESTIMONY WALL ============ -->
+      <div id="testimonyView" style="display:none">
+        <style>
+          .tst-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            color: #fff;
+          }
+          .tst-header {
+            margin-bottom: 32px;
+          }
+          .tst-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #fff;
+            margin: 0 0 6px 0;
+          }
+          .tst-subline {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            margin: 0;
+          }
+          .tst-pinned-section {
+            margin-bottom: 32px;
+            background: rgba(204, 255, 0, 0.03);
+            border: 1px solid rgba(204, 255, 0, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            display: none;
+          }
+          .tst-pinned-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--wall-lime);
+            margin-bottom: 12px;
+          }
+          .tst-grid-top {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+          }
+          .tst-river-section {
+            max-width: 680px;
+            margin: 0 auto;
+          }
+          .tst-section-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+          }
+          .tst-section-subline {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.45);
+            margin: 0 0 20px 0;
+          }
+          /* Testimony Card specific styling overrides */
+          .tst-card {
+            background: var(--wall-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: transform 0.25s ease, border-color 0.25s ease;
+          }
+          .tst-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(204, 255, 0, 0.15);
+          }
+          .tst-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+          }
+          .tst-asked-label { color: rgba(255, 255, 255, 0.4); }
+          .tst-answered-label { color: var(--wall-lime); }
+          .tst-divider {
+            height: 1px;
+            background: rgba(204, 255, 0, 0.12);
+            margin: 16px 0;
+          }
+          .tst-body-asked {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            margin: 0;
+          }
+          .tst-body-answered {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+            margin: 0;
+          }
+          .tst-elapsed {
+            font-size: 12px;
+            color: var(--wall-lime);
+            margin-top: 12px;
+          }
+          .tst-frozen-count {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wall-lime);
+            margin-top: 6px;
+            text-transform: uppercase;
+          }
+          .tst-btn-amen {
+            background: rgba(204, 255, 0, 0.04);
+            border: 1px solid rgba(204, 255, 0, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: var(--wall-lime);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+          }
+          .tst-btn-amen.active {
+            background: var(--wall-lime);
+            color: #000;
+            border-color: var(--wall-lime);
+            cursor: default;
+          }
+          @media(max-width:900px) {
+            .tst-grid-top { grid-template-columns: 1fr; }
+          }
+          @media(max-width:640px) {
+            .tst-btn-amen { width: 100%; justify-content: center; }
+          }
+          @media(prefers-reduced-motion: reduce) {
+            .tst-card, .tst-btn-amen { transition: none !important; transform: none !important; }
+          }
+        </style>
+
+        <div class="tst-container">
+          <div class="tst-header">
+            <h1 class="tst-title">TESTIMONY WALL</h1>
+            <p class="tst-subline">What He did.</p>
+          </div>
+
+          <div id="tst-pinned" class="tst-pinned-section">
+            <div class="tst-pinned-label">Shared with you</div>
+            <div id="tst-pinned-card-slot"></div>
+          </div>
+
+          <div id="tst-top-section" style="display:none">
+            <h2 class="tst-section-title">MOST CARRIED</h2>
+            <p class="tst-section-subline">The answers the community carried hardest.</p>
+            <div id="tst-top-grid" class="tst-grid-top"></div>
+          </div>
+
+          <div class="tst-river-section">
+            <h2 class="tst-section-title">EVERY ANSWER</h2>
+            <p class="tst-section-subline">Newest first. Nothing ever leaves.</p>
+            <div id="tst-river-list"></div>
+            <div id="tst-river-loading" class="wall-skeleton-container" style="display:none">
+              <div class="wall-skeleton-card"></div>
+              <div class="wall-skeleton-card"></div>
+            </div>
+            <button id="tst-more-btn" class="wall-btn-more" style="display:none" onclick="TESTIMONY.loadMore()">Show more</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          "use strict";
+
+          const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
+
+          const TESTIMONY = {
+            pages: { river: 0 },
+            limits: { river: 12 },
+            cache: { top: null, river: null },
+            amening: {},
+
+            initTestimonyWall: async function() {
+              if (this.cache.river) return; // Prevent double load
+              
+              document.getElementById('tst-river-loading').style.display = 'block';
+              document.getElementById('tst-more-btn').style.display = 'none';
+
+              await Promise.all([
+                this.fetchTopSection(),
+                this.fetchRiver(0, false)
+              ]);
+
+              document.getElementById('tst-river-loading').style.display = 'none';
+            },
+
+            fetchTopSection: async function() {
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'testimony_top'
+                  })
+                });
+
+                if (!res.ok) throw new Error('Top testimonies failed');
+                const data = await res.json();
+                const posts = data.posts || [];
+
+                const topSection = document.getElementById('tst-top-section');
+                const grid = document.getElementById('tst-top-grid');
+                grid.innerHTML = '';
+
+                if (posts.length > 0) {
+                  posts.forEach(post => {
+                    const card = this.createCardDOM(post);
+                    card.id = 'tst-top-card-' + post.id;
+                    grid.appendChild(card);
+                    this.initReadMore(card);
+                  });
+                  topSection.style.display = 'block';
+                } else {
+                  topSection.style.display = 'none';
+                }
+              } catch (err) {
+                console.error(err);
+              }
+            },
+
+            fetchRiver: async function(offset, append) {
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'testimony_river',
+                    cursor: offset,
+                    limit: this.limits.river
+                  })
+                });
+
+                if (!res.ok) throw new Error('Testimony river failed');
+                const data = await res.json();
+                const posts = data.posts || [];
+
+                const list = document.getElementById('tst-river-list');
+                if (!append) list.innerHTML = '';
+
+                if (posts.length === 0 && !append) {
+                  list.innerHTML = '<div class="wall-empty-state">The first answer will be here.</div>';
+                  return;
+                }
+
+                posts.forEach(post => {
+                  const card = this.createCardDOM(post);
+                  card.id = 'tst-river-card-' + post.id;
+                  list.appendChild(card);
+                  this.initReadMore(card);
+                });
+
+                const moreBtn = document.getElementById('tst-more-btn');
+                if (posts.length === this.limits.river) {
+                  moreBtn.style.display = 'block';
+                } else {
+                  moreBtn.style.display = 'none';
+                }
+
+                this.cache.river = true;
+
+              } catch (err) {
+                console.error(err);
+              }
+            },
+
+            loadMore: function() {
+              const nextOffset = ++this.pages.river * this.limits.river;
+              document.getElementById('tst-more-btn').style.display = 'none';
+              document.getElementById('tst-river-loading').style.display = 'block';
+              this.fetchRiver(nextOffset, true).then(() => {
+                document.getElementById('tst-river-loading').style.display = 'none';
+              });
+            },
+
+            createCardDOM: function(post) {
+              const card = document.createElement('div');
+              card.className = 'tst-card';
+
+              const isSigned = post.display_mode === 'signed';
+              const name = isSigned ? (post.author?.name || 'Steward') : 'A Steward';
+              const relativeTime = this.formatRelativeTime(post.created_at);
+
+              // Build avatar
+              let avatarHTML = '';
+              if (isSigned) {
+                const initial = name.charAt(0).toUpperCase();
+                avatarHTML = `
+                  <div class="wall-avatar">
+                    <img class="wall-avatar-img" src="${post.author?.avatar_url || ''}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="wall-avatar-fallback" style="display:none">${initial}</div>
+                  </div>
+                `;
+              } else {
+                avatarHTML = `
+                  <div class="wall-avatar wall-avatar-anon">&#9737;</div>
+                `;
+              }
+
+              // Build answered note
+              let answerHTML = '';
+              if (post.answered_note && post.answered_note.trim().length > 0) {
+                answerHTML = `
+                  <div class="tst-divider"></div>
+                  <div class="tst-label tst-answered-label">ANSWERED</div>
+                  <p class="tst-body-answered">${this.escapeHTML(post.answered_note)}</p>
+                `;
+              }
+
+              // Build elapsed days string
+              const askedDate = new Date(post.created_at);
+              const answeredDate = new Date(post.answered_at || post.created_at);
+              const diffMs = answeredDate.getTime() - askedDate.getTime();
+              const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+              let elapsedStr = 'Same day';
+              if (diffDays === 1) elapsedStr = '1 day';
+              else if (diffDays > 1) elapsedStr = `${diffDays} days`;
+
+              const askedStr = askedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+              const answeredStr = answeredDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+              const timeTrackStr = `Asked ${askedStr} · Answered ${answeredStr} · ${elapsedStr}`;
+
+              // Build Amen button states
+              let btnClass = 'tst-btn-amen';
+              if (post.has_amened) btnClass += ' active';
+              const btnLabel = post.has_amened ? `✓ AMEN · <span class="tst-amen-count">${post.amen_count || 0}</span>` : `AMEN · <span class="tst-amen-count">${post.amen_count || 0}</span>`;
+
+              card.innerHTML = `
+                <div class="wall-card-header">
+                  <div class="wall-author-row">
+                    ${avatarHTML}
+                    <div>
+                      <div class="wall-author-name">${this.escapeHTML(name)}</div>
+                      <div class="wall-timestamp">${relativeTime}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="wall-card-body">
+                  <div class="tst-label tst-asked-label">ASKED</div>
+                  <p class="tst-body-asked wall-card-body-text">${this.escapeHTML(post.body)}</p>
+                  <div class="wall-card-body-fade" style="display:none"></div>
+                  <button class="wall-read-more-btn" style="display:none" onclick="TESTIMONY.expandBody(this)">Read more</button>
+                  ${answerHTML}
+                </div>
+                <div style="padding:0 20px">
+                  <div class="tst-elapsed">${timeTrackStr}</div>
+                  <div class="tst-frozen-count">Prayed ${post.pray_count || 0} times</div>
+                </div>
+                <div class="wall-card-footer" style="margin-top:12px">
+                  <button class="${btnClass}" onclick="TESTIMONY.handleAmenClick('${post.id}', this, event)">
+                    ${btnLabel}
+                  </button>
+                  <div class="wall-actions-row">
+                    <button class="wall-action-btn" title="Share link" onclick="TESTIMONY.handleShareClick(${JSON.stringify(post).replace(/"/g, '&quot;')}, this)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </button>
+                    <button class="wall-action-btn" title="Report" onclick="TESTIMONY.handleReportClick('${post.id}', this)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    </button>
+                  </div>
+                </div>
+              `;
+
+              return card;
+            },
+
+            expandBody: function(btn) {
+              const body = btn.previousElementSibling.previousElementSibling;
+              const fade = btn.previousElementSibling;
+              body.classList.remove('wall-card-body-clamp');
+              fade.style.display = 'none';
+              btn.style.display = 'none';
+            },
+
+            initReadMore: function(card) {
+              const body = card.querySelector('.tst-body-asked');
+              const btn = card.querySelector('.wall-read-more-btn');
+              const fade = card.querySelector('.wall-card-body-fade');
+
+              if (body && btn && fade) {
+                if (body.scrollHeight > 120) {
+                  body.classList.add('wall-card-body-clamp');
+                  fade.style.display = 'block';
+                  btn.style.display = 'block';
+                } else {
+                  body.classList.remove('wall-card-body-clamp');
+                  fade.style.display = 'none';
+                  btn.style.display = 'none';
+                }
+              }
+            },
+
+            handleAmenClick: async function(postId, btn, event) {
+              event.preventDefault();
+              if (btn.classList.contains('active') || this.amening[postId]) return;
+              this.amening[postId] = true;
+
+              // Optimistic increment
+              btn.classList.add('active');
+              const countSpan = btn.querySelector('.tst-amen-count');
+              const currentCount = parseInt(countSpan.textContent) || 0;
+              countSpan.textContent = currentCount + 1;
+              btn.innerHTML = `✓ AMEN · <span class="tst-amen-count">${currentCount + 1}</span>`;
+
+              // Scale pulse animation
+              btn.style.transform = 'scale(1.05)';
+              setTimeout(() => { btn.style.transform = 'none'; }, 150);
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-amen', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: postId
+                  })
+                });
+
+                if (!res.ok) throw new Error('Amen failed');
+                const data = await res.json();
+                countSpan.textContent = data.amen_count;
+                btn.innerHTML = `✓ AMEN · <span class="tst-amen-count">${data.amen_count}</span>`;
+
+                // Update matching elements in DOM cache
+                ['tst-river-card-', 'tst-top-card-', 'tst-pinned-card-'].forEach(prefix => {
+                  const matched = document.getElementById(prefix + postId);
+                  if (matched) {
+                    const innerBtn = matched.querySelector('.tst-btn-amen');
+                    if (innerBtn) {
+                      innerBtn.classList.add('active');
+                      innerBtn.innerHTML = `✓ AMEN · <span class="tst-amen-count">${data.amen_count}</span>`;
+                    }
+                  }
+                });
+
+              } catch (err) {
+                console.error(err);
+                // Revert on fail
+                btn.classList.remove('active');
+                countSpan.textContent = currentCount;
+                btn.innerHTML = `AMEN · <span class="tst-amen-count">${currentCount}</span>`;
+              } finally {
+                this.amening[postId] = false;
+              }
+            },
+
+            handleShareClick: function(post, btn) {
+              if (post.is_mine && post.display_mode === 'anonymous') {
+                if (window.WALL && typeof window.WALL.openRevealModal === 'function') {
+                  window.WALL.openRevealModal(post, 'testimony');
+                }
+              } else {
+                this.copyLink(post.id, btn);
+              }
+            },
+
+            copyLink: function(postId, btn) {
+              const shareLink = window.location.origin + window.location.pathname + '?view=testimony&post=' + postId;
+              navigator.clipboard.writeText(shareLink).then(() => {
+                const subline = document.createElement('div');
+                subline.className = 'wall-toast-notify';
+                subline.textContent = 'Link copied to clipboard';
+                document.body.appendChild(subline);
+                setTimeout(() => { subline.classList.add('show'); }, 10);
+                setTimeout(() => { subline.classList.remove('show'); setTimeout(() => subline.remove(), 300); }, 2000);
+              }).catch(err => {
+                console.error('Failed to copy share link:', err);
+              });
+            },
+
+            handleReportClick: async function(postId, btn) {
+              if (confirm('Flag this testimony for steward review?')) {
+                try {
+                  const res = await fetch(FN_BASE + '/wall-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      member_id: window.MEMBER_ID,
+                      post_id: postId
+                    })
+                  });
+
+                  if (res.status === 409) {
+                    alert('You have already flagged this testimony.');
+                    return;
+                  }
+
+                  if (!res.ok) throw new Error('Report request failed');
+                  alert('Testimony flagged. Thank you for maintaining sanctuary standards.');
+                  
+                  const data = await res.json();
+                  if (data.status === 'held') {
+                    ['tst-river-card-', 'tst-top-card-', 'tst-pinned-card-'].forEach(prefix => {
+                      const el = document.getElementById(prefix + postId);
+                      if (el) el.remove();
+                    });
+                  }
+                } catch (err) {
+                  console.error(err);
+                }
+              }
+            },
+
+            openSharedPost: async function(postId) {
+              const pinnedZone = document.getElementById('tst-pinned');
+              const slot = document.getElementById('tst-pinned-card-slot');
+              
+              pinnedZone.style.display = 'block';
+              slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">Loading shared testimony...</div>';
+              pinnedZone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'single',
+                    post_id: postId
+                  })
+                });
+
+                if (res.status === 404) {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This testimony is no longer here.</div>';
+                  this.cleanURL();
+                  return;
+                }
+
+                if (!res.ok) throw new Error('Shared read failed');
+                const post = await res.json();
+
+                if (post.status === 'held') {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This testimony is under review.</div>';
+                } else if (post.status === 'live' || post.status === 'archived') {
+                  slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">This prayer has not been answered yet. <a href="#" style="color:var(--wall-lime)" onclick="event.preventDefault(); TESTIMONY.handoffToWall(\'' + post.id + '\')">Go to Prayer Wall</a></div>';
+                } else {
+                  const card = this.createCardDOM(post);
+                  card.id = 'tst-pinned-card-' + post.id;
+                  card.style.border = '1px solid var(--wall-lime)';
+                  card.style.boxShadow = '0 0 15px rgba(204,255,0,0.15)';
+                  slot.innerHTML = '';
+                  slot.appendChild(card);
+                  this.initReadMore(card);
+
+                  card.style.animation = 'tst-pulse-border 1s ease-out';
+                }
+              } catch (err) {
+                console.error(err);
+                slot.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.6)">Failed to load shared testimony.</div>';
+              }
+              this.cleanURL();
+            },
+
+            handoffToWall: function(postId) {
+              document.getElementById('tst-pinned').style.display = 'none';
+              const el = document.getElementById('navWall');
+              go('wall', el);
+              if (window.WALL && typeof window.WALL.openSharedPost === 'function') {
+                window.WALL.openSharedPost(postId);
+              }
+            },
+
+            cleanURL: function() {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('view');
+              url.searchParams.delete('post');
+              window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+            },
+
+            formatRelativeTime: function(isoString) {
+              const date = new Date(isoString);
+              const diffMs = Date.now() - date.getTime();
+              const diffMins = Math.floor(diffMs / 60000);
+              const diffHours = Math.floor(diffMins / 60);
+              const diffDays = Math.floor(diffHours / 24);
+
+              if (diffMins < 60) return diffMins <= 1 ? 'just now' : diffMins + 'm ago';
+              if (diffHours < 24) return diffHours + 'h ago';
+              return diffDays + 'd ago';
+            },
+
+            escapeHTML: function(str) {
+              if (!str) return '';
+              return str.replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#039;');
+            }
+          };
+
+          // Add border pulse keyframes to the document styles
+          const style = document.createElement('style');
+          style.textContent = `
+            @keyframes tst-pulse-border {
+              0% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+              50% { box-shadow: 0 0 25px rgba(204,255,0,0.6); }
+              100% { box-shadow: 0 0 15px rgba(204,255,0,0.15); }
+            }
+          `;
+          document.head.appendChild(style);
+
+          window.TESTIMONY = TESTIMONY;
+          window.initTestimonyWall = () => TESTIMONY.initTestimonyWall();
+
+        })();
+      </script>
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
         <div class="view-header-block">
