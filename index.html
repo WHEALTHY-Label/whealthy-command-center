@@ -1619,6 +1619,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Bible 365</button>
       <button class="sidebar-item" id="navWall" data-nav="wall" onclick="go('wall',this)"><span class="si-dot"></span> Prayer Wall</button>
       <button class="sidebar-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)"><span class="si-dot"></span> Testimony Wall</button>
+      <button class="sidebar-item" id="navMe" data-nav="me" onclick="go('me',this)">
+        <span class="si-dot"></span> My Prayers
+        <span class="me-badge" id="meBadge" style="display:none"></span>
+      </button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
@@ -5174,6 +5178,1109 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         })();
       </script>
+      <!-- ============ MY PRAYERS (PROFILE SURFACE) ============ -->
+      <div id="meView" style="display:none">
+        <style>
+          .me-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: clamp(16px, 4vw, 32px) 16px;
+            color: #fff;
+          }
+          .me-header {
+            margin-bottom: 24px;
+          }
+          .me-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(24px, 5vw, 32px);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #fff;
+            margin: 0 0 6px 0;
+          }
+          .me-subline {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            margin: 0;
+          }
+          .me-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+            min-height: 44px;
+          }
+          .me-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            min-height: 36px;
+          }
+          .me-tab-btn.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          }
+          .me-tab-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--wall-lime);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+            display: inline-block;
+          }
+          .me-badge {
+            width: 8px;
+            height: 8px;
+            background: var(--wall-lime);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+            display: inline-block;
+            margin-left: 6px;
+          }
+          /* Card layout overrides for quiet list */
+          .me-card {
+            background: var(--wall-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+          }
+          .me-card.me-pulse-border {
+            animation: me-pulse-border-anim 1.5s ease-in-out;
+          }
+          .me-card.me-unseen-answered {
+            border-color: rgba(204, 255, 0, 0.4);
+          }
+          .me-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .me-card-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .me-card-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+          }
+          .me-card-name {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #fff;
+          }
+          .me-card-meta {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+          }
+          .me-card-time {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+          }
+          .me-card-body {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin: 0 0 16px 0;
+            white-space: pre-wrap;
+          }
+          .me-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+          }
+          .me-card-count {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--wall-lime);
+          }
+          .me-btn-action {
+            background: rgba(204, 255, 0, 0.06);
+            border: 1px solid rgba(204, 255, 0, 0.25);
+            color: var(--wall-lime);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-family: var(--font-body);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+          }
+          .me-btn-action:hover {
+            background: var(--wall-lime);
+            color: #000;
+          }
+          .me-btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+          }
+          .me-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+          }
+          .me-btn-sign {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 4px;
+            margin-left: 8px;
+          }
+          .me-btn-sign:hover {
+            color: var(--wall-lime);
+          }
+          .me-status-held {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13.5px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.01);
+          }
+          .me-unseen-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--wall-lime);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+          }
+          .me-unseen-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--wall-lime);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
+          }
+          .me-empty-state {
+            text-align: center;
+            padding: 48px 16px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+          }
+          .me-empty-state a {
+            color: var(--wall-lime);
+            text-decoration: underline;
+            cursor: pointer;
+          }
+
+          /* Modal styling overrides to be safe on iOS and landscape */
+          .me-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9990;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+          }
+          .me-modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+          }
+          .me-modal {
+            background: #111215;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 440px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+          }
+          @media(max-height: 500px) and (orientation: landscape) {
+            .me-modal {
+              max-height: 85vh;
+              padding: 16px;
+            }
+          }
+          .me-modal-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+          }
+          .me-modal-desc {
+            font-size: 14.5px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            margin-bottom: 20px;
+          }
+          .me-modal-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 16px; /* 16px to prevent iOS zoom */
+            outline: none;
+            resize: none;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+          }
+          .me-modal-textarea:focus {
+            border-color: rgba(204, 255, 0, 0.4);
+          }
+          .me-modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+          }
+          .me-modal-btn-submit {
+            width: 100%;
+            background: var(--wall-lime);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 13.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .me-modal-btn-cancel {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .me-modal-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+          }
+
+          @keyframes me-pulse-border-anim {
+            0% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+            50% { box-shadow: 0 0 20px rgba(204,255,0,0.5); border-color: var(--wall-lime); }
+            100% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+          }
+        </style>
+
+        <div class="me-container">
+          <div class="me-header">
+            <h1 class="me-title">MY PRAYERS</h1>
+            <p class="me-subline">What you brought. What you carried.</p>
+          </div>
+
+          <div class="me-tabs">
+            <button class="me-tab-btn active" id="meTabBtnMine" onclick="ME.switchTab('mine')">My Prayers</button>
+            <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
+              Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
+            </button>
+          </div>
+
+          <!-- PANEL 1: MY PRAYERS -->
+          <div id="mePanelMine">
+            <div id="meMineList"></div>
+            <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
+              <div class="wall-skeleton-card"></div>
+            </div>
+            <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
+          </div>
+
+          <!-- PANEL 2: PRAYING FOR -->
+          <div id="mePanelWatching" style="display:none">
+            <div id="meWatchingList"></div>
+            <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
+              <div class="wall-skeleton-card"></div>
+            </div>
+            <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARK ANSWERED FLOW MODAL -->
+      <div class="me-modal-overlay" id="meAnswerModal">
+        <div class="me-modal">
+          <div class="me-modal-title" style="color:var(--wall-lime)">Answered</div>
+          <div class="me-modal-desc">What happened?</div>
+          <textarea class="me-modal-textarea" id="meAnswerTextarea" placeholder="Describe how God answered this prayer... (optional)" maxlength="1000"></textarea>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;">You can add this later or leave it blank.</div>
+          <div class="me-modal-buttons">
+            <button class="me-modal-btn-submit" id="meAnswerSubmitBtn" onclick="ME.handleSubmit()">Mark Answered</button>
+            <button class="me-modal-btn-cancel" onclick="ME.closeAnswerModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ONE-WAY SIGN CONFIRM MODAL -->
+      <div class="me-modal-overlay" id="meSignModal">
+        <div class="me-modal">
+          <div class="me-modal-title" style="color:#fff">Sign This Prayer</div>
+          <div class="me-modal-desc">
+            Your name and photo will appear on it.<br>
+            Everyone on the wall will see it.<br><br>
+            <span style="font-size:12px;color:rgba(255,255,255,0.4)">This cannot be undone.</span>
+          </div>
+          <div class="me-modal-buttons">
+            <button class="me-modal-btn-submit" id="meSignSubmitBtn" onclick="ME.submitSign()">Sign It</button>
+            <button class="me-modal-btn-cancel" onclick="ME.closeSignModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
+          const ME = {
+            mineOffset: 0,
+            watchingOffset: 0,
+            pageSize: 12,
+            activeTab: 'mine',
+            currentPostId: null,
+            currentAction: 'create', // 'create' or 'edit'
+            unseenCount: 0,
+            seenThisSession: new Set(),
+            observer: null,
+
+            init: function() {
+              if (this.observer) return;
+              this.observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const postId = card.getAttribute('data-post-id');
+                    const hasUnseen = card.getAttribute('data-unseen') === 'true';
+                    if (hasUnseen && !this.seenThisSession.has(postId)) {
+                      card.dwellTimeout = setTimeout(() => {
+                        this.markAsSeen(postId, card);
+                      }, 1000);
+                    }
+                  } else {
+                    if (entry.dwellTimeout) {
+                      clearTimeout(entry.dwellTimeout);
+                      entry.dwellTimeout = null;
+                    }
+                  }
+                });
+              }, { threshold: 0.5 });
+
+              this.recomputeBadges();
+            },
+
+            recomputeBadges: async function() {
+              if (!window.MEMBER_ID) return;
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'praying_for',
+                    limit: 100,
+                    cursor: 0
+                  })
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                const posts = data.posts || [];
+                const unseen = posts.filter(p => p.has_unseen_answer === true).length;
+                this.unseenCount = unseen;
+                this.updateBadgeUI();
+              } catch (err) {
+                console.error(err);
+              }
+            },
+
+            updateBadgeUI: function() {
+              const sidebarBadge = document.getElementById('meBadge');
+              const tabDot = document.getElementById('meTabWatchingDot');
+              if (sidebarBadge) {
+                sidebarBadge.style.display = this.unseenCount > 0 ? 'inline-block' : 'none';
+              }
+              if (tabDot) {
+                tabDot.style.display = this.unseenCount > 0 ? 'inline-block' : 'none';
+              }
+            },
+
+            switchTab: function(tab) {
+              this.activeTab = tab;
+              document.getElementById('meTabBtnMine').classList.toggle('active', tab === 'mine');
+              document.getElementById('meTabBtnWatching').classList.toggle('active', tab === 'watching');
+              document.getElementById('mePanelMine').style.display = tab === 'mine' ? 'block' : 'none';
+              document.getElementById('mePanelWatching').style.display = tab === 'watching' ? 'block' : 'none';
+
+              if (tab === 'mine' && this.mineOffset === 0) {
+                this.loadMine(0);
+              } else if (tab === 'watching' && this.watchingOffset === 0) {
+                this.loadWatching(0);
+              }
+            },
+
+            loadMine: async function(offset) {
+              if (!window.MEMBER_ID) return;
+              const loader = document.getElementById('meMineLoading');
+              const moreBtn = document.getElementById('meMineMoreBtn');
+              if (loader) loader.style.display = 'block';
+              if (moreBtn) moreBtn.style.display = 'none';
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'my_prayers',
+                    limit: this.pageSize,
+                    cursor: offset
+                  })
+                });
+                if (!res.ok) throw new Error('Failed to load my prayers');
+                const data = await res.json();
+                const posts = data.posts || [];
+
+                const list = document.getElementById('meMineList');
+                if (offset === 0) list.innerHTML = '';
+
+                if (posts.length === 0 && offset === 0) {
+                  list.innerHTML = `<div class="me-empty-state">You have not brought anything to the wall. <a onclick="go('wall')">Brings yours here</a></div>`;
+                } else {
+                  posts.forEach(p => {
+                    const card = this.createMineCardDOM(p);
+                    list.appendChild(card);
+                  });
+                }
+
+                this.mineOffset = offset + posts.length;
+                if (moreBtn) moreBtn.style.display = posts.length === this.pageSize ? 'block' : 'none';
+              } catch (err) {
+                console.error(err);
+              } finally {
+                if (loader) loader.style.display = 'none';
+              }
+            },
+
+            loadMineMore: function() {
+              this.loadMine(this.mineOffset);
+            },
+
+            loadWatching: async function(offset) {
+              if (!window.MEMBER_ID) return;
+              const loader = document.getElementById('meWatchingLoading');
+              const moreBtn = document.getElementById('meWatchingMoreBtn');
+              if (loader) loader.style.display = 'block';
+              if (moreBtn) moreBtn.style.display = 'none';
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-read', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    view: 'praying_for',
+                    limit: this.pageSize,
+                    cursor: offset
+                  })
+                });
+                if (!res.ok) throw new Error('Failed to load watchlist');
+                const data = await res.json();
+                let posts = data.posts || [];
+
+                posts = posts.filter(p => p.status !== 'held');
+
+                posts.sort((a, b) => {
+                  const aUnseen = a.has_unseen_answer === true && !this.seenThisSession.has(a.id);
+                  const bUnseen = b.has_unseen_answer === true && !this.seenThisSession.has(b.id);
+                  if (aUnseen && !bUnseen) return -1;
+                  if (!aUnseen && bUnseen) return 1;
+                  return new Date(b.created_at) - new Date(a.created_at);
+                });
+
+                const list = document.getElementById('meWatchingList');
+                if (offset === 0) list.innerHTML = '';
+
+                if (posts.length === 0 && offset === 0) {
+                  list.innerHTML = `<div class="me-empty-state">You have not prayed for anything yet. <a onclick="go('wall')">Visit the wall</a></div>`;
+                } else {
+                  posts.forEach(p => {
+                    const card = this.createWatchingCardDOM(p);
+                    list.appendChild(card);
+                    if (p.has_unseen_answer === true && !this.seenThisSession.has(p.id)) {
+                      this.observer.observe(card);
+                    }
+                  });
+                }
+
+                this.watchingOffset = offset + posts.length;
+                if (moreBtn) moreBtn.style.display = posts.length === this.pageSize ? 'block' : 'none';
+              } catch (err) {
+                console.error(err);
+              } finally {
+                if (loader) loader.style.display = 'none';
+              }
+            },
+
+            loadWatchingMore: function() {
+              this.loadWatching(this.watchingOffset);
+            },
+
+            markAsSeen: async function(postId, card) {
+              if (!window.MEMBER_ID) return;
+              this.seenThisSession.add(postId);
+              this.observer.unobserve(card);
+
+              try {
+                await fetch(FN_BASE + '/wall-seen', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: postId
+                  })
+                });
+                this.unseenCount = Math.max(0, this.unseenCount - 1);
+                this.updateBadgeUI();
+              } catch (err) {
+                console.error(err);
+              }
+            },
+
+            createMineCardDOM: function(post) {
+              const card = document.createElement('div');
+              card.className = 'me-card';
+              card.setAttribute('data-post-id', post.id);
+
+              if (post.status === 'held') {
+                card.innerHTML = `
+                  <div class="me-card-header">
+                    <div class="me-card-author">
+                      <div class="me-card-name">${post.display_mode === 'anonymous' ? 'A Steward' : this.escapeHTML(post.author?.name || 'Steward')}</div>
+                      <span class="me-card-anonymous-badge">${post.display_mode === 'anonymous' ? '· Anonymous' : '· Signed'}</span>
+                    </div>
+                    <div class="me-card-time">${this.formatRelativeTime(post.created_at)}</div>
+                  </div>
+                  <div class="me-card-body">${this.escapeHTML(post.body)}</div>
+                  <div class="me-status-held">This prayer is under review.</div>
+                `;
+                return card;
+              }
+
+              if (post.status === 'answered') {
+                const askDate = new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                const ansDate = new Date(post.answered_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                
+                let elapsedStr = '';
+                if (post.created_at && post.answered_at) {
+                  const diff = new Date(post.answered_at) - new Date(post.created_at);
+                  const days = Math.round(diff / (1000 * 60 * 60 * 24));
+                  elapsedStr = ` · ${days} ${days === 1 ? 'day' : 'days'}`;
+                }
+
+                const locks = post.answered_note_locked_at;
+                const isEditable = locks && new Date() < new Date(locks);
+                
+                let editSection = '';
+                if (isEditable) {
+                  const diffMs = new Date(locks) - Date.now();
+                  const hoursLeft = Math.ceil(diffMs / (1000 * 60 * 60));
+                  editSection = `
+                    <div class="me-card-footer" style="margin-top:16px;">
+                      <button class="me-btn-action me-btn-secondary" onclick="ME.openEditNoteModal('${post.id}', \`${this.escapeBackticks(post.answered_note || '')}\`)">Edit Note</button>
+                      <div class="me-edit-window-line">You can edit this note for ${hoursLeft} more ${hoursLeft === 1 ? 'hour' : 'hours'}.</div>
+                    </div>
+                  `;
+                } else if (!post.answered_note && locks && new Date() < new Date(locks)) {
+                  editSection = `
+                    <div class="me-card-footer" style="margin-top:16px;">
+                      <button class="me-btn-action me-btn-secondary" onclick="ME.openEditNoteModal('${post.id}', '')">Add Note</button>
+                    </div>
+                  `;
+                }
+
+                const isAnonymous = post.display_mode === 'anonymous';
+                const signBtn = isAnonymous ? `<button class="me-btn-sign" onclick="ME.openSignModal('${post.id}')">Sign it</button>` : '';
+
+                card.innerHTML = `
+                  <div class="me-card-header">
+                    <div class="me-card-author">
+                      <div class="me-card-name">${isAnonymous ? 'A Steward' : this.escapeHTML(post.author?.name || 'Steward')}</div>
+                      <span class="me-card-anonymous-badge">${isAnonymous ? '· Anonymous' : '· Signed'}</span>
+                      ${signBtn}
+                    </div>
+                    <div class="me-card-time">${this.formatRelativeTime(post.created_at)}</div>
+                  </div>
+                  
+                  <div class="tst-label tst-asked-label">Asked</div>
+                  <div class="tst-body-asked">${this.escapeHTML(post.body)}</div>
+                  
+                  <div class="tst-divider"></div>
+                  
+                  <div class="tst-label tst-answered-label">Answered</div>
+                  <div class="tst-body-answered">${post.answered_note ? this.escapeHTML(post.answered_note) : '<em style="color:rgba(255,255,255,0.3)">Marked answered without a note.</em>'}</div>
+                  
+                  <div class="tst-elapsed">Asked ${askDate} · Answered ${ansDate}${elapsedStr}</div>
+                  <div class="tst-frozen-count">Prayed ${post.pray_count || 0}</div>
+
+                  ${editSection}
+                `;
+                return card;
+              }
+
+              const isArchived = post.status === 'archived';
+              const isAnonymous = post.display_mode === 'anonymous';
+              const signBtn = isAnonymous ? `<button class="me-btn-sign" onclick="ME.openSignModal('${post.id}')">Sign it</button>` : '';
+              
+              const archivedLine = isArchived ? `<div class="me-card-archived-line">This prayer left the wall. It was carried for 30 days.</div>` : '';
+
+              card.innerHTML = `
+                <div class="me-card-header">
+                  <div class="me-card-author">
+                    <div class="me-card-name">${isAnonymous ? 'A Steward' : this.escapeHTML(post.author?.name || 'Steward')}</div>
+                    <span class="me-card-anonymous-badge">${isAnonymous ? '· Anonymous' : '· Signed'}</span>
+                    ${signBtn}
+                  </div>
+                  <div class="me-card-time">${this.formatRelativeTime(post.created_at)}</div>
+                </div>
+
+                ${archivedLine}
+                <div class="me-card-body">${this.escapeHTML(post.body)}</div>
+
+                <div class="me-card-footer">
+                  <div class="me-card-count">Prayed ${post.pray_count || 0}</div>
+                  <button class="me-btn-action" onclick="ME.openAnswerModal('${post.id}')">Mark Answered</button>
+                </div>
+              `;
+              return card;
+            },
+
+            createWatchingCardDOM: function(post) {
+              const card = document.createElement('div');
+              card.className = 'me-card';
+              card.setAttribute('data-post-id', post.id);
+
+              const isUnseen = post.has_unseen_answer === true && !this.seenThisSession.has(post.id);
+              card.setAttribute('data-unseen', isUnseen ? 'true' : 'false');
+              
+              if (isUnseen) {
+                card.classList.add('me-unseen-answered');
+              }
+
+              if (post.status === 'answered') {
+                const askDate = new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                const ansDate = new Date(post.answered_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                
+                let elapsedStr = '';
+                if (post.created_at && post.answered_at) {
+                  const diff = new Date(post.answered_at) - new Date(post.created_at);
+                  const days = Math.round(diff / (1000 * 60 * 60 * 24));
+                  elapsedStr = ` · ${days} ${days === 1 ? 'day' : 'days'}`;
+                }
+
+                const isAnonymous = post.display_mode === 'anonymous';
+                
+                const unseenHeader = isUnseen ? `
+                  <div class="me-unseen-indicator">
+                    <span class="me-unseen-dot"></span> Answered
+                  </div>
+                ` : '';
+
+                const amenedClass = post.has_amened ? 'active' : '';
+                const amenedText = post.has_amened ? '✓ Amen' : 'Amen';
+
+                card.innerHTML = `
+                  ${unseenHeader}
+                  <div class="me-card-header">
+                    <div class="me-card-author">
+                      <div class="me-card-avatar">${(post.author?.name || 'S').charAt(0).toUpperCase()}</div>
+                      <div class="me-card-name">${isAnonymous ? 'A Steward' : this.escapeHTML(post.author?.name || 'Steward')}</div>
+                    </div>
+                    <div class="me-card-time">${this.formatRelativeTime(post.created_at)}</div>
+                  </div>
+                  
+                  <div class="tst-label tst-asked-label">Asked</div>
+                  <div class="tst-body-asked">${this.escapeHTML(post.body)}</div>
+                  
+                  <div class="tst-divider"></div>
+                  
+                  <div class="tst-label tst-answered-label">Answered</div>
+                  <div class="tst-body-answered">${post.answered_note ? this.escapeHTML(post.answered_note) : '<em style="color:rgba(255,255,255,0.3)">Marked answered without a note.</em>'}</div>
+                  
+                  <div class="tst-elapsed">Asked ${askDate} · Answered ${ansDate}${elapsedStr}</div>
+                  
+                  <div class="me-card-footer" style="margin-top:16px;">
+                    <button class="tst-btn-amen ${amenedClass}" onclick="ME.handleAmenClick(this, '${post.id}')">
+                      ${amenedText} · ${post.amen_count || 0}
+                    </button>
+                  </div>
+                `;
+                return card;
+              }
+
+              const isArchived = post.status === 'archived';
+              const isAnonymous = post.display_mode === 'anonymous';
+              
+              const archivedLine = isArchived ? `<div class="me-card-archived-line">This prayer left the wall.</div>` : '';
+              
+              let prayButton = '';
+              if (!isArchived) {
+                const remaining = post.prays_remaining_today !== undefined ? post.prays_remaining_today : 3;
+                const activeClass = remaining === 0 ? 'active' : '';
+                const remainingText = remaining === 0 ? '✓ Carried' : `Carry · ${remaining} left`;
+                
+                prayButton = `
+                  <button class="wall-btn-pray ${activeClass}" onclick="ME.handlePrayClick(this, '${post.id}')">
+                    <span>${remainingText}</span>
+                    <span class="wall-btn-pray-count">${post.pray_count || 0}</span>
+                  </button>
+                `;
+              } else {
+                prayButton = `<div class="me-card-count">Prayed ${post.pray_count || 0}</div>`;
+              }
+
+              card.innerHTML = `
+                <div class="me-card-header">
+                  <div class="me-card-author">
+                    <div class="me-card-avatar">${(post.author?.name || 'S').charAt(0).toUpperCase()}</div>
+                    <div class="me-card-name">${isAnonymous ? 'A Steward' : this.escapeHTML(post.author?.name || 'Steward')}</div>
+                  </div>
+                  <div class="me-card-time">${this.formatRelativeTime(post.created_at)}</div>
+                </div>
+
+                ${archivedLine}
+                <div class="me-card-body">${this.escapeHTML(post.body)}</div>
+
+                <div class="me-card-footer">
+                  ${prayButton}
+                </div>
+              `;
+              return card;
+            },
+
+            openAnswerModal: function(postId) {
+              this.currentPostId = postId;
+              this.currentAction = 'create';
+              document.getElementById('meAnswerTextarea').value = '';
+              document.getElementById('meAnswerModal').classList.add('open');
+            },
+
+            closeAnswerModal: function() {
+              document.getElementById('meAnswerModal').classList.remove('open');
+            },
+
+            openEditNoteModal: function(postId, currentNote) {
+              this.currentPostId = postId;
+              this.currentAction = 'edit';
+              document.getElementById('meAnswerTextarea').value = currentNote;
+              document.getElementById('meAnswerModal').classList.add('open');
+            },
+
+            handleSubmit: function() {
+              if (this.currentAction === 'edit') {
+                this.submitEditNote();
+              } else {
+                this.submitAnswer();
+              }
+            },
+
+            submitAnswer: async function() {
+              if (!window.MEMBER_ID || !this.currentPostId) return;
+              const note = document.getElementById('meAnswerTextarea').value;
+              const submitBtn = document.getElementById('meAnswerSubmitBtn');
+              submitBtn.disabled = true;
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-answer', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: this.currentPostId,
+                    note: note
+                  })
+                });
+
+                if (!res.ok) {
+                  const err = await res.json();
+                  throw new Error(err.error || 'Failed to mark answered');
+                }
+
+                const post = await res.json();
+                const oldCard = document.querySelector(`.me-card[data-post-id="${post.id}"]`);
+                if (oldCard) {
+                  const newCard = this.createMineCardDOM(post);
+                  oldCard.replaceWith(newCard);
+                  newCard.classList.add('me-pulse-border');
+                }
+                
+                this.closeAnswerModal();
+                this.recomputeBadges();
+              } catch (err) {
+                alert(err.message);
+              } finally {
+                submitBtn.disabled = false;
+              }
+            },
+
+            submitEditNote: async function() {
+              if (!window.MEMBER_ID || !this.currentPostId) return;
+              const note = document.getElementById('meAnswerTextarea').value;
+              const submitBtn = document.getElementById('meAnswerSubmitBtn');
+              submitBtn.disabled = true;
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-answer-edit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: this.currentPostId,
+                    note: note
+                  })
+                });
+
+                if (res.status === 409) {
+                  alert("The edit window has closed.");
+                  this.closeAnswerModal();
+                  this.loadMine(0);
+                  return;
+                }
+
+                if (!res.ok) {
+                  const err = await res.json();
+                  throw new Error(err.error || 'Failed to edit note');
+                }
+
+                const post = await res.json();
+                const oldCard = document.querySelector(`.me-card[data-post-id="${post.id}"]`);
+                if (oldCard) {
+                  const newCard = this.createMineCardDOM(post);
+                  oldCard.replaceWith(newCard);
+                  newCard.classList.add('me-pulse-border');
+                }
+
+                this.closeAnswerModal();
+              } catch (err) {
+                alert(err.message);
+              } finally {
+                submitBtn.disabled = false;
+              }
+            },
+
+            openSignModal: function(postId) {
+              this.currentPostId = postId;
+              document.getElementById('meSignModal').classList.add('open');
+            },
+
+            closeSignModal: function() {
+              document.getElementById('meSignModal').classList.remove('open');
+            },
+
+            submitSign: async function() {
+              if (!window.MEMBER_ID || !this.currentPostId) return;
+              const submitBtn = document.getElementById('meSignSubmitBtn');
+              submitBtn.disabled = true;
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-sign', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: this.currentPostId
+                  })
+                });
+
+                if (!res.ok) {
+                  const err = await res.json();
+                  throw new Error(err.error || 'Failed to sign');
+                }
+
+                const post = await res.json();
+                const oldCard = document.querySelector(`.me-card[data-post-id="${post.id}"]`);
+                if (oldCard) {
+                  const newCard = this.createMineCardDOM(post);
+                  oldCard.replaceWith(newCard);
+                  newCard.classList.add('me-pulse-border');
+                }
+
+                this.closeSignModal();
+              } catch (err) {
+                alert(err.message);
+              } finally {
+                submitBtn.disabled = false;
+              }
+            },
+
+            handleAmenClick: async function(btn, postId) {
+              if (!window.MEMBER_ID || btn.classList.contains('active')) return;
+
+              btn.classList.add('active');
+              const parts = btn.textContent.trim().split('·');
+              let count = parseInt(parts[1] || '0') + 1;
+              btn.innerHTML = `✓ Amen · ${count}`;
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-amen', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: postId
+                  })
+                });
+                if (!res.ok) throw new Error('Amen failed');
+                const data = await res.json();
+                btn.innerHTML = `✓ Amen · ${data.amen_count}`;
+              } catch (err) {
+                console.error(err);
+                btn.classList.remove('active');
+                btn.innerHTML = `Amen · ${count - 1}`;
+              }
+            },
+
+            handlePrayClick: async function(btn, postId) {
+              if (!window.MEMBER_ID || btn.classList.contains('active')) return;
+
+              btn.classList.add('active');
+              const countEl = btn.querySelector('.wall-btn-pray-count');
+              let count = parseInt(countEl.textContent.trim()) + 1;
+              countEl.textContent = count;
+              
+              const labelEl = btn.querySelector('span:first-child');
+              labelEl.textContent = '✓ Carried';
+
+              try {
+                const res = await fetch(FN_BASE + '/wall-pray', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    member_id: window.MEMBER_ID,
+                    post_id: postId
+                  })
+                });
+                if (!res.ok) throw new Error('Pray failed');
+                const data = await res.json();
+                countEl.textContent = data.pray_count;
+              } catch (err) {
+                console.error(err);
+                btn.classList.remove('active');
+                countEl.textContent = count - 1;
+                labelEl.textContent = 'Carry · 3 left';
+              }
+            },
+
+            formatRelativeTime: function(isoString) {
+              const date = new Date(isoString);
+              const diffMs = Date.now() - date.getTime();
+              const diffMins = Math.floor(diffMs / 60000);
+              const diffHours = Math.floor(diffMins / 60);
+              const diffDays = Math.floor(diffHours / 24);
+
+              if (diffMins < 60) return diffMins <= 1 ? 'just now' : diffMins + 'm ago';
+              if (diffHours < 24) return diffHours + 'h ago';
+              return diffDays + 'd ago';
+            },
+
+            escapeHTML: function(str) {
+              if (!str) return '';
+              return str.replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#039;');
+            },
+
+            escapeBackticks: function(str) {
+              if (!str) return '';
+              return str.replace(/`/g, '\\`');
+            }
+          };
+
+          window.ME = ME;
+          window.initMe = () => {
+            ME.mineOffset = 0;
+            ME.watchingOffset = 0;
+            ME.switchTab('mine');
+            ME.init();
+          };
+        })();
+      </script>
+
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
         <div class="view-header-block">
@@ -7760,6 +8867,9 @@ async function waRunGate(emailArg){
       
       // Load and initialize Command Center
       await loadAndInit();
+      if (window.ME && typeof window.ME.recomputeBadges === 'function') {
+        window.ME.recomputeBadges();
+      }
       return;
     }
     if (status === 'lapsed'){ waOpenGate('doorB'); return; }
@@ -8180,8 +9290,8 @@ const WHY_LABEL={freedom:'breaking what owns you',direction:'seeking direction',
 /* ================== NAV ================== */
 function go(view,el,label){
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
   if(!el && view) {
@@ -8218,6 +9328,10 @@ function go(view,el,label){
   if(view==='testimony'){
     document.getElementById('headerLine').textContent='Testimony Wall';
     if(typeof initTestimonyWall==='function') initTestimonyWall();
+  }
+  if(view==='me'){
+    document.getElementById('headerLine').textContent='My Prayers';
+    if(typeof initMe==='function') initMe();
   }
   if(view==='dash'){
     renderDash();
@@ -11076,7 +12190,7 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
@@ -11098,6 +12212,7 @@ async function loadAndInit(){
       bible: 'navBible',
       wall: 'navWall',
       testimony: 'navTestimony',
+      me: 'navMe',
       portal: 'navPortal',
       affiliate: 'navAffiliate',
       community: 'navCommunity',
