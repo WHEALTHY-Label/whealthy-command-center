@@ -1618,6 +1618,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
       <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Bible 365</button>
       <button class="sidebar-item" id="navWall" data-nav="wall" onclick="go('wall',this)"><span class="si-dot"></span> Prayer Wall</button>
+      <button class="sidebar-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)"><span class="si-dot"></span> Testimony Wall</button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
@@ -7520,8 +7521,8 @@ const WHY_LABEL={freedom:'breaking what owns you',direction:'seeking direction',
 /* ================== NAV ================== */
 function go(view,el,label){
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
   if(!el && view) {
@@ -7554,6 +7555,10 @@ function go(view,el,label){
   if(view==='wall'){
     document.getElementById('headerLine').textContent='Prayer Wall';
     if(typeof initPrayerWall==='function') initPrayerWall();
+  }
+  if(view==='testimony'){
+    document.getElementById('headerLine').textContent='Testimony Wall';
+    if(typeof initTestimonyWall==='function') initTestimonyWall();
   }
   if(view==='dash'){
     renderDash();
@@ -10412,13 +10417,19 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
     go('wall', el);
     if (bootPost && window.WALL && typeof window.WALL.openSharedPost === 'function') {
       window.WALL.openSharedPost(bootPost);
+    }
+  } else if (bootView === 'testimony') {
+    const el = document.getElementById('navTestimony');
+    go('testimony', el);
+    if (bootPost && window.TESTIMONY && typeof window.TESTIMONY.openSharedPost === 'function') {
+      window.TESTIMONY.openSharedPost(bootPost);
     }
   } else if (hash && map[hash]) {
     const btnMap = {
@@ -10427,6 +10438,7 @@ async function loadAndInit(){
       fast: 'navFast',
       bible: 'navBible',
       wall: 'navWall',
+      testimony: 'navTestimony',
       portal: 'navPortal',
       affiliate: 'navAffiliate',
       community: 'navCommunity',
