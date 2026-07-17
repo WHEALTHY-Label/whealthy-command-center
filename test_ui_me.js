@@ -128,6 +128,19 @@ const path = require('path');
       display_mode: "anonymous",
       created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
       author: { name: "Jake" }
+    },
+    {
+      id: "mine-post-4",
+      member_id: "1",
+      body: "This is my answered prayer without a note.",
+      status: "answered",
+      pray_count: 3,
+      display_mode: "anonymous",
+      created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+      answered_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      answered_note: null,
+      answered_note_locked_at: locksAt,
+      author: { name: "Jake" }
     }
   ];
 
@@ -280,8 +293,8 @@ const path = require('path');
   const mineCards = page.locator('#meMineList .me-card');
   const countMine = await mineCards.count();
   console.log(`Found ${countMine} cards under My Prayers.`);
-  if (countMine !== 3) {
-    throw new Error(`Expected 3 cards, but found ${countMine}`);
+  if (countMine !== 4) {
+    throw new Error(`Expected 4 cards, but found ${countMine}`);
   }
 
   // Verify held post layout
@@ -318,7 +331,6 @@ const path = require('path');
   console.log("Mark answered modal successfully dismissed!");
 
   // Test edit note flow
-  console.log("Testing edit note flow...");
   const secondCardEditBtn = page.locator('#meMineList .me-card:nth-child(2) .me-btn-action');
   await secondCardEditBtn.click();
   await page.waitForSelector('#meAnswerModal.open', { state: 'visible', timeout: 2000 });
@@ -327,6 +339,14 @@ const path = require('path');
   await page.click('#meAnswerSubmitBtn');
   await page.waitForSelector('#meAnswerModal.open', { state: 'hidden', timeout: 2000 });
   console.log("Edit note modal successfully dismissed!");
+
+  // Verify Add Note button on card 4
+  console.log("Verifying Add Note button label on answered card without note...");
+  const addNoteText = await page.textContent('#meMineList .me-card:nth-child(4) .me-btn-action');
+  console.log("Add Note button text:", addNoteText.trim());
+  if (addNoteText.trim() !== "Add Note") {
+    throw new Error("Expected button to read 'Add Note' but got: " + addNoteText);
+  }
 
   // Switch to Watching tab
   console.log("Switching to 'Praying For' tab...");

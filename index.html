@@ -5858,16 +5858,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 if (isEditable) {
                   const diffMs = new Date(locks) - Date.now();
                   const hoursLeft = Math.ceil(diffMs / (1000 * 60 * 60));
+                  const btnLabel = post.answered_note ? 'Edit Note' : 'Add Note';
                   editSection = `
                     <div class="me-card-footer" style="margin-top:16px;">
-                      <button class="me-btn-action me-btn-secondary" onclick="ME.openEditNoteModal('${post.id}', \`${this.escapeBackticks(post.answered_note || '')}\`)">Edit Note</button>
+                      <button class="me-btn-action me-btn-secondary" onclick="ME.openEditNoteModal('${post.id}', \`${this.escapeBackticks(post.answered_note || '')}\`)">${btnLabel}</button>
                       <div class="me-edit-window-line">You can edit this note for ${hoursLeft} more ${hoursLeft === 1 ? 'hour' : 'hours'}.</div>
-                    </div>
-                  `;
-                } else if (!post.answered_note && locks && new Date() < new Date(locks)) {
-                  editSection = `
-                    <div class="me-card-footer" style="margin-top:16px;">
-                      <button class="me-btn-action me-btn-secondary" onclick="ME.openEditNoteModal('${post.id}', '')">Add Note</button>
                     </div>
                   `;
                 }
