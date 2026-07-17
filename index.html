@@ -33,10 +33,16 @@ textarea,input,select{font-size:16px}
 
 /* Shell */
 .dash-container{display:flex;min-height:100svh;position:relative;background:#07080a}
-.dash-sidebar{width:260px;background:#0b0c0e;border-right:1px solid rgba(255,255,255,0.04);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:110;padding:24px 16px;transition:transform .3s cubic-bezier(0.16,1,0.3,1)}
-.sidebar-brand{padding:8px 12px;margin-bottom:24px}
+.dash-sidebar{width:260px;background:#0b0c0e;border-right:1px solid rgba(255,255,255,0.04);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:110;transition:transform .3s cubic-bezier(0.16,1,0.3,1);overflow:hidden}
+.sidebar-brand{padding:24px 20px 12px 20px;margin-bottom:8px;box-sizing:border-box;flex-shrink:0}
 .sidebar-brand-title{font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff}
 .sidebar-brand-sub{font-size:11px;color:rgba(255,255,255,0.55);margin-top:2px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:0 16px 16px 16px;display:flex;flex-direction:column;gap:4px;-webkit-overflow-scrolling:touch}
+.sidebar-nav::-webkit-scrollbar{width:6px}
+.sidebar-nav::-webkit-scrollbar-track{background:rgba(255,255,255,0.01)}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.sidebar-nav::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.3)}
+.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.04);background:#0b0c0e;display:flex;flex-direction:column;gap:8px;flex-shrink:0;width:100%;box-sizing:border-box}
 .sidebar-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;background:transparent;border-radius:8px;color:#b5b7bc;font-size:15px;font-weight:600;text-align:left;transition:all .2s}
 .sidebar-item:hover{background:rgba(255,255,255,0.03);color:#fff}
 .sidebar-item.active{background:#1f2023;color:#fff}
@@ -123,7 +129,7 @@ textarea,input,select{font-size:16px}
 .header-cta-title{display:block;font-size:11px;font-weight:700;color:var(--lime);letter-spacing:.06em}
 .header-cta-subtitle{display:block;font-size:10px;color:rgba(255,255,255,0.4)}
 
-.sidebar-user{margin-top:auto;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px}
+.sidebar-user{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px}
 .sidebar-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--lime-dim),var(--lime-soft));border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--lime);flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 0 10px rgba(204,255,0,0.1)}
 .wh-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 .sidebar-close{display:none;position:absolute;top:16px;right:12px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:18px;align-items:center;justify-content:center}
@@ -506,7 +512,8 @@ textarea,input,select{font-size:16px}
 @keyframes blinkc{50%{opacity:0}}
 
 @media(max-width:1023px){
-  .dash-sidebar{transform:translateX(-270px);box-shadow:20px 0 60px rgba(0,0,0,0.6);padding-top:calc(24px + env(safe-area-inset-top))}
+  .dash-sidebar{transform:translateX(-270px);box-shadow:20px 0 60px rgba(0,0,0,0.6)}
+  .sidebar-brand{padding-top:calc(24px + env(safe-area-inset-top))}
   .dash-sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
   .mobile-header{display:flex}
@@ -1608,7 +1615,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <div class="sidebar-brand-title" style="font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:#fff;">W<span style="color:#ccff00;">HEAL</span>THY</div>
       <div class="sidebar-brand-sub" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">Steward's OS</div>
     </div>
-    <nav style="display:flex;flex-direction:column;gap:4px;flex:1">
+    <nav class="sidebar-nav">
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
       <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
@@ -1628,14 +1635,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
     </nav>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" id="sidebarAvatar">S</div>
-      <div>
-        <div style="font-size:12px;font-weight:600;color:#fff" id="sidebarName">Steward</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4)" id="sidebarEmail">Member</div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#fff" id="sidebarName">Steward</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4)" id="sidebarEmail">Member</div>
+        </div>
       </div>
+      <button class="logout-btn" onclick="handleLogout()">&#10140; Log Out</button>
     </div>
-    <button class="logout-btn" onclick="handleLogout()">&#10140; Log Out</button>
   </aside>
 
   <main class="dash-content">
@@ -11402,6 +11411,9 @@ window.applyProductExclusions = function() {
 
 /* ================== NAV ================== */
 function go(view,el,label){
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
   window.location.hash = view;
   ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
   const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView'};
@@ -11745,12 +11757,71 @@ function restoreDraft(){
 }
 
 /* ================== VOICE COMMAND LAYER PIPELINE ================== */
+window.getWhealthyVoice = function() {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices() || [];
+  const saved = localStorage.getItem('whealthyVoice');
+  if (saved) {
+    const match = voices.find(v => v.name === saved);
+    if (match) return match;
+  }
+  const preferred = ['Google US English', 'Daniel', 'Samantha', 'Microsoft David', 'Microsoft Zira'];
+  for (const name of preferred) {
+    const match = voices.find(v => v.name.includes(name) && /en/i.test(v.lang));
+    if (match) return match;
+  }
+  const natural = voices.find(x => /en/i.test(x.lang) && /natural/i.test(x.name));
+  if (natural) return natural;
+  const english = voices.find(x => /en/i.test(x.lang));
+  if (english) return english;
+  return voices[0] || null;
+};
+
+window.populateVoices = function(selectEl) {
+  if (!('speechSynthesis' in window) || !selectEl) return;
+  const voices = window.speechSynthesis.getVoices() || [];
+  const englishVoices = voices.filter(x => /en/i.test(x.lang));
+  const saved = localStorage.getItem('whealthyVoice') || '';
+  
+  let activeVoiceName = saved;
+  if (!activeVoiceName) {
+    const def = window.getWhealthyVoice();
+    if (def) activeVoiceName = def.name;
+  }
+  
+  let h = '';
+  englishVoices.forEach(v => {
+    const isSelected = v.name === activeVoiceName;
+    h += '<option value="' + v.name + '"' + (isSelected ? ' selected' : '') + '>' + v.name + '</option>';
+  });
+  selectEl.innerHTML = h;
+};
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = function() {
+    const vp = document.getElementById('voicePicker');
+    if (vp) window.populateVoices(vp);
+  };
+}
+
+window.changeVoice = function(val) {
+  localStorage.setItem('whealthyVoice', val);
+  if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      if (typeof window.speakVerse === 'function') {
+        window.speakVerse();
+      }
+    }, 100);
+  }
+};
+
 window.speak = function(text) {
   if (!('speechSynthesis' in window) || !text) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.rate = 0.95;
-  const v = (window.speechSynthesis.getVoices() || []).find(x => /en/i.test(x.lang) && /natural/i.test(x.name)) || (window.speechSynthesis.getVoices() || []).find(x => /en/i.test(x.lang));
-  if (v) u.voice = v;
+  const voice = window.getWhealthyVoice();
+  if (voice) u.voice = voice;
   window.speechSynthesis.speak(u);
 };
 
@@ -12486,6 +12557,8 @@ const WEIGHT_RX=/\b(weight|pounds|lbs|fat|slim|skinny|calories|diet)\b/i;
 let W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,
   anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false,
   safetyDiabetic:false,safetyBP:false,safetyEating:false,activePrayers:null,attachedPrayerId:null,attachedNewBody:"",attachedNewCategory:"",takingOn:[]};
+window.W = W;
+window.renderWizard = renderWizard;
 
 function exclusions(){
   const ex=new Set();
@@ -12806,12 +12879,20 @@ window.wizBack=function(){wizDir='back';W.step=Math.max(1,W.step-1);renderWizard
 async function loadAttachPrayers() {
   if (W.activePrayers) return;
   try {
-    const res = await fetch(FN_BASE + '/prayers-read?email=' + MEMBER_EMAIL + '&view=mirror', {
-      headers: { 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    const res = await fetch(FN_BASE + '/prayers-read', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+      body: JSON.stringify({ email: MEMBER_EMAIL, view: 'mirror' })
     });
     if (res.status === 200) {
       const data = await res.json();
-      W.activePrayers = data || [];
+      const flat = [];
+      for (const cat in data) {
+        if (Array.isArray(data[cat])) {
+          flat.push(...data[cat]);
+        }
+      }
+      W.activePrayers = flat;
     }
   } catch (e) {
     console.error("Failed to load active prayers for attach:", e);
@@ -12823,6 +12904,47 @@ window.selectAttachPrayer = function(id) {
   W.attachedPrayerId = id;
   W.attachedNewBody = '';
   W.attachedNewCategory = '';
+  renderWizard();
+};
+
+window.onAttachPrayerBodyInput = function(el) {
+  W.attachedNewBody = el.value;
+  W.attachedPrayerId = null;
+  
+  // Unselect active prayers in the UI
+  document.querySelectorAll('#fastRoot .tile').forEach(tile => {
+    if (tile.getAttribute('onclick') && tile.getAttribute('onclick').includes('selectAttachPrayer')) {
+      tile.classList.remove('sel');
+    }
+  });
+
+  const catRow = document.getElementById('newAttachPrayerCategoryRow');
+  if (catRow) {
+    catRow.style.display = el.value.trim().length > 0 ? 'block' : 'none';
+  }
+
+  const nextBtn = document.querySelector('.wiz-nav .btn-lime');
+  if (nextBtn) {
+    const isNewValid = W.attachedNewBody.trim().length > 0 && W.attachedNewCategory;
+    const canNext = W.attachedPrayerId || isNewValid;
+    nextBtn.disabled = !canNext;
+  }
+};
+
+window.selectAttachNewCategory = function(cat) {
+  W.attachedNewCategory = cat;
+  W.attachedPrayerId = null;
+  renderWizard();
+};
+
+window.setRecordConsent = function(val) {
+  W.recordConsent = val;
+  W.anchorReasons = null;
+  renderWizard();
+};
+
+window.setCarried = function(val) {
+  W.carried = val;
   renderWizard();
 };
 
@@ -12880,6 +13002,7 @@ let wizDir='next',lastWizStep=0;
 function stag(entering,ix){return entering?(' pop-in" style="animation-delay:'+(ix*38)+'ms"'):'"';}
 
 function renderWizard(){
+  window.renderWizard = renderWizard;
   const root=document.getElementById('fastRoot');
   const entering=W.step!==lastWizStep;lastWizStep=W.step;
   const slideCls=entering?(wizDir==='back'?'slide-l':'slide-r'):'';
@@ -12953,17 +13076,17 @@ function renderWizard(){
     
     // Create new prayer request
     h+='<div class="grp-label" style="margin-top:20px;">Or write a new prayer request</div>';
-    h+='<textarea class="free-input" id="newAttachPrayerBody" placeholder="What are you praying forward for during this fast?" style="width:100%; height:80px; margin-bottom:12px;" oninput="W.attachedNewBody=this.value; W.attachedPrayerId=null; renderWizard();">' + W.attachedNewBody + '</textarea>';
+    h+='<textarea class="free-input" id="newAttachPrayerBody" placeholder="What are you praying forward for during this fast?" style="width:100%; height:80px; margin-bottom:12px;" oninput="onAttachPrayerBodyInput(this)">' + W.attachedNewBody + '</textarea>';
     
-    if (W.attachedNewBody.trim().length > 0) {
-      h+='<div class="grp-label" style="color:var(--lime)">Select category (Required for new prayer)</div>'+
-         '<div class="pill-row">';
-      ['marriage', 'children', 'finances', 'health', 'work', 'temptation', 'other'].forEach(cat => {
-        const isSel = W.attachedNewCategory === cat;
-        h+='<button class="pill'+(isSel?' sel':'')+'" onclick="W.attachedNewCategory=\''+cat+'\'; W.attachedPrayerId=null; renderWizard();">' + cat + '</button>';
-      });
-      h+='</div>';
-    }
+    const showCat = W.attachedNewBody.trim().length > 0;
+    h+='<div id="newAttachPrayerCategoryRow" style="display:' + (showCat ? 'block' : 'none') + ';">'+
+       '  <div class="grp-label" style="color:var(--lime)">Select category (Required for new prayer)</div>'+
+       '  <div class="pill-row">';
+    ['marriage', 'children', 'finances', 'health', 'work', 'temptation', 'other'].forEach(cat => {
+      const isSel = W.attachedNewCategory === cat;
+      h+='<button class="pill'+(isSel?' sel':'')+'" onclick="selectAttachNewCategory(\''+cat+'\')">' + cat + '</button>';
+    });
+    h+='</div></div>';
     
     const isNewValid = W.attachedNewBody.trim().length > 0 && W.attachedNewCategory;
     const canNext = W.attachedPrayerId || isNewValid;
@@ -13002,8 +13125,8 @@ function renderWizard(){
   }
   else if(W.step===7){
     h+='<div class="q-title">Should your record shape this?</div><div class="q-sub">Your journal already knows your real rhythms. With permission, the builder reads it to set honest anchors instead of fantasy ones, and to name what your prayer weeks should carry.</div>'+
-      '<div class="tile-grid"><button class="tile'+(W.recordConsent?' sel':'')+'" onclick="W.recordConsent=true;W.anchorReasons=null;renderWizard()">Yes, read my record<small>Anchors and prayer focus set from what is actually true</small></button>'+
-      '<button class="tile'+(!W.recordConsent?' sel':'')+'" onclick="W.recordConsent=false;W.anchorReasons=null;renderWizard()">No, keep it separate<small>The plan uses only what I set by hand</small></button></div>';
+      '<div class="tile-grid"><button class="tile'+(W.recordConsent?' sel':'')+'" onclick="setRecordConsent(true)">Yes, read my record<small>Anchors and prayer focus set from what is actually true</small></button>'+
+      '<button class="tile'+(!W.recordConsent?' sel':'')+'" onclick="setRecordConsent(false)">No, keep it separate<small>The plan uses only what I set by hand</small></button></div>';
     h+=wizNav(true);
   }
   else if(W.step===8){
@@ -13022,52 +13145,75 @@ function renderWizard(){
   }
   else if(W.step===9){
     h+='<div class="q-title">Who carries it with you?</div><div class="q-sub">Fasting in secret is honored here. So is not carrying it alone.</div><div class="tile-grid">'+
-      [['alone','Alone before God','Kept between you and Him'],['brother','With my covenant brother','He sees the day count, never the contents'],['cohort','With a cohort','The structure shared, the contents private']].map((c,ix)=>'<button class="tile'+(W.carried===c[0]?' sel':'')+stag(entering,ix)+' onclick="W.carried=\''+c[0]+'\';renderWizard()">'+c[1]+'<small>'+c[2]+'</small></button>').join('')+'</div>';
+      [['alone','Alone before God','Kept between you and Him'],['brother','With my covenant brother','He sees the day count, never the contents'],['cohort','With a cohort','The structure shared, the contents private']].map((c,ix)=>'<button class="tile'+(W.carried===c[0]?' sel':'')+stag(entering,ix)+' onclick="setCarried(\''+c[0]+'\')">'+c[1]+'<small>'+c[2]+'</small></button>').join('')+'</div>';
     h+=wizNav(true);
   }
   else if(W.step===10){
     h+='<div class="q-title">Confirm your commitments</div><div class="q-sub">Review the two lists. Either list may be empty. We will never ask you to justify one against the other.</div>';
-    h+='<div style="margin-bottom:24px;">'+
-       '  <div class="grp-label" style="color:var(--lime); font-size:16px;">Setting Down (Removal)</div>'+
-       '  <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">';
+    
+    h+='<div class="commitments-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:24px;">';
+    
+    // Setting Down (Removal) column
+    h+='  <div class="commitment-col" style="background:rgba(255,255,255,0.015); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">'+
+       '    <div>'+
+       '      <div class="grp-label" style="color:var(--lime); font-size:16px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">'+
+       '        <span>Setting Down (Removal)</span>'+
+       '        <span style="font-size:12px; opacity:0.6;">' + W.laid.length + ' items</span>'+
+       '      </div>'+
+       '      <div style="display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; padding-right:4px; margin-bottom:16px;">';
     if (W.laid.length === 0) {
-      h+='  <div style="font-style:italic; color:var(--text-dim); font-size:14px;">No items on the removal list.</div>';
+      h+='      <div style="font-style:italic; color:var(--text-dim); font-size:14px; text-align:center; padding:20px 0;">No items on the removal list.</div>';
     } else {
       W.laid.forEach(item => {
-        h+='  <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px 14px; border:1px solid rgba(255,255,255,0.06); border-radius:8px;">'+
-           '    <span style="color:#fff; font-size:14px;">' + item + '</span>'+
-           '    <button class="ref-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="togLay(\''+item.replace(/'/g,"\\'")+'\')">Remove</button>'+
-           '  </div>';
+        h+='      <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px 14px; border:1px solid rgba(255,255,255,0.06); border-radius:8px;">'+
+           '        <span style="color:#fff; font-size:14px;">' + item + '</span>'+
+           '        <button class="ref-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="removeLaid(\''+item.replace(/'/g,"\\'")+'\')">Remove</button>'+
+           '      </div>';
       });
     }
-    h+='  </div>'+
-       '</div>';
+    h+='      </div>'+
+       '    </div>'+
+       '    <div style="display:flex; gap:8px; margin-top:auto; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05);">'+
+       '      <input class="free-input" id="settingDownCustomInput" placeholder="Add custom removal..." style="flex:1; margin:0; font-size:14px; height:40px;" onkeypress="if(event.key===\'Enter\') addCustomLaid()">'+
+       '      <button class="btn-lime" style="padding:0 14px; font-size:13px; height:40px; margin:0; border-radius:8px; font-weight:600;" onclick="addCustomLaid()">Add</button>'+
+       '    </div>'+
+       '  </div>';
+
+    // Taking On (Additions) column
     const defaultTakes = [];
     if (W.anchors.movement) defaultTakes.push("Morning movement");
     if (W.anchors.laps > 0) defaultTakes.push("Daily walk (" + W.anchors.laps + " laps)");
     if (W.anchors.journal > 0) defaultTakes.push("Daily journal (" + W.anchors.journal + " minutes)");
     if (W.anchors.prayer) defaultTakes.push("Morning & Night Prayer");
     const allTakes = [...defaultTakes, ...W.takingOn];
-    h+='<div style="margin-bottom:24px;">'+
-       '  <div class="grp-label" style="color:var(--lime); font-size:16px;">Taking On (Additions)</div>'+
-       '  <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">';
+
+    h+='  <div class="commitment-col" style="background:rgba(255,255,255,0.015); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">'+
+       '    <div>'+
+       '      <div class="grp-label" style="color:var(--lime); font-size:16px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">'+
+       '        <span>Taking On (Additions)</span>'+
+       '        <span style="font-size:12px; opacity:0.6;">' + allTakes.length + ' items</span>'+
+       '      </div>'+
+       '      <div style="display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; padding-right:4px; margin-bottom:16px;">';
     if (allTakes.length === 0) {
-      h+='  <div style="font-style:italic; color:var(--text-dim); font-size:14px;">No items on the additions list.</div>';
+      h+='      <div style="font-style:italic; color:var(--text-dim); font-size:14px; text-align:center; padding:20px 0;">No items on the additions list.</div>';
     } else {
       allTakes.forEach((item, idx) => {
         const isCustom = idx >= defaultTakes.length;
-        h+='  <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px 14px; border:1px solid rgba(255,255,255,0.06); border-radius:8px;">'+
-           '    <span style="color:#fff; font-size:14px;">' + item + '</span>'+
-           '    ' + (isCustom ? '<button class="ref-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="W.takingOn.splice('+(idx - defaultTakes.length)+', 1); renderWizard();">Remove</button>' : '<span style="font-size:12px; color:var(--text-dim);">Anchor</span>') +
-           '  </div>';
+        h+='      <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px 14px; border:1px solid rgba(255,255,255,0.06); border-radius:8px;">'+
+           '        <span style="color:#fff; font-size:14px;">' + item + '</span>'+
+           '        ' + (isCustom ? '<button class="ref-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="removeTakingOn('+(idx - defaultTakes.length)+')">Remove</button>' : '<span style="font-size:11px; color:var(--text-dim); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Anchor</span>') +
+           '      </div>';
       });
     }
-    h+='  </div>'+
-       '  <div style="display:flex; gap:8px; margin-top:12px;">'+
-       '    <input class="free-input" id="takeOnCustomInput" placeholder="Add something you are taking on..." style="flex:1; margin:0; font-size:14px;">'+
-       '    <button class="btn-lime" style="padding:0 16px; font-size:14px; height:42px; margin:0; border-radius:8px;" onclick="const val=document.getElementById(\'takeOnCustomInput\')?.value.trim(); if(val){W.takingOn.push(val); renderWizard();}">Add</button>'+
-       '  </div>'+
-       '</div>';
+    h+='      </div>'+
+       '    </div>'+
+       '    <div style="display:flex; gap:8px; margin-top:auto; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05);">'+
+       '      <input class="free-input" id="takeOnCustomInput" placeholder="Add custom addition..." style="flex:1; margin:0; font-size:14px; height:40px;" onkeypress="if(event.key===\'Enter\') addCustomTakingOn()">'+
+       '      <button class="btn-lime" style="padding:0 14px; font-size:13px; height:40px; margin:0; border-radius:8px; font-weight:600;" onclick="addCustomTakingOn()">Add</button>'+
+       '    </div>'+
+       '  </div>';
+       
+    h+='</div>'; // end commitments-container
     h+=wizNav(true, 'Structure My Fast');
   }
 
@@ -13080,6 +13226,50 @@ window.freeLay=function(el){
   if(WEIGHT_RX.test(v)){W.freeGuard='weight';el.value='';renderWizard();return;}
   if(FOOD_ABSTAIN.test(v)){W.freeGuard='food';W.structureOnly=true;}
   if(!W.laid.includes(v))W.laid.push(v);
+  renderWizard();
+};
+window.addCustomLaid = function() {
+  const el = document.getElementById('settingDownCustomInput');
+  if (!el) return;
+  const val = el.value.trim();
+  if (!val) return;
+  if (WEIGHT_RX.test(val)) {
+    W.freeGuard = 'weight';
+    el.value = '';
+    renderWizard();
+    return;
+  }
+  if (FOOD_ABSTAIN.test(val)) {
+    W.freeGuard = 'food';
+    W.structureOnly = true;
+  }
+  if (!W.laid.includes(val)) {
+    W.laid.push(val);
+  }
+  el.value = '';
+  renderWizard();
+};
+window.removeLaid = function(item) {
+  const x = W.laid.indexOf(item);
+  if (x !== -1) {
+    W.laid.splice(x, 1);
+    if (item === 'Coffee') W.caffScope = null;
+  }
+  renderWizard();
+};
+window.addCustomTakingOn = function() {
+  const el = document.getElementById('takeOnCustomInput');
+  if (!el) return;
+  const val = el.value.trim();
+  if (!val) return;
+  if (!W.takingOn.includes(val)) {
+    W.takingOn.push(val);
+  }
+  el.value = '';
+  renderWizard();
+};
+window.removeTakingOn = function(idx) {
+  W.takingOn.splice(idx, 1);
   renderWizard();
 };
 window.setCaff=function(s){W.caffScope=s;renderWizard();};
@@ -13298,6 +13488,11 @@ function renderReveal(root){
   h+='<div class="g-card reveal"><div class="plan-sec-title">The Phases</div>'+
      P.phases.map(p=>'<div class="phase-block"><div class="ph-days">Days '+p.from+' to '+p.to+' &#183; '+p.theme+'</div><h4>'+p.name+'</h4><p>'+p.goal+'</p><p style="margin-top:6px;font-style:italic;color:var(--text-dim)">Milestone: '+p.milestone+'</p></div>').join('')+'</div>';
   h+='<div class="g-card reveal"><div class="plan-sec-title">The Prayer Plan</div>'+
+     '<div class="pray-header-row" style="display:flex; flex-wrap:wrap; gap:8px 14px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--lime); margin-bottom:8px;">'+
+     '  <span style="min-width:118px; color:var(--text-dim);">Week</span>'+
+     '  <span style="flex:1; min-width:110px;">Morning Prayer</span>'+
+     '  <span style="flex:1; min-width:110px;">Night Prayer</span>'+
+     '</div>'+
      P.prayer_plan.map(w=>'<div class="pray-row"><span class="pray-week">Week '+w.week+'<small>'+w.theme+'</small></span>'+
        '<button class="ref-btn" onclick="openVerse(this,\''+w.morning+'\')">&#9728; '+w.morning+'</button>'+
        '<button class="ref-btn" onclick="openVerse(this,\''+w.night+'\')">&#9789; '+w.night+'</button></div>').join('')+
@@ -13309,7 +13504,7 @@ function renderReveal(root){
   if(F.product_state==='unequipped'&&!S.equipDismissed){
     h+='<div class="g-card equip-card reveal"><div class="plan-sec-title">Equip the Fast</div>'+
        '<p class="g-body">Your plan sets a '+F.anchors.oz+' oz hydration rhythm. Stewards run it with a governed routine. Optional, and your fast is complete without it.</p>'+
-       '<div class="g-actions" style="margin-top:14px"><button class="btn-lime">Find What Fits</button><button class="btn-ghost" onclick="dismissEquip()">Not During This Fast</button></div></div>';
+       '<div class="g-actions" style="margin-top:14px"><button class="btn-lime" onclick="go(\'portal\',document.getElementById(\'navPortal\'))">Find What Fits</button><button class="btn-ghost" onclick="dismissEquip()">Not During This Fast</button></div></div>';
   }
   if(F.product_state==='lapsed'){
     h+='<div class="g-card reveal"><p class="g-body" style="font-size:12.5px">Your next bundle is claimable in the Command Center whenever you are ready. Your fast needs nothing to begin.</p></div>';
@@ -13336,6 +13531,7 @@ window.discardFast=async function(){
   W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,
     anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false,
     safetyDiabetic:false,safetyBP:false,safetyEating:false,activePrayers:null,attachedPrayerId:null,attachedNewBody:"",attachedNewCategory:"",takingOn:[]};
+  window.W = W;
   renderFast();
 };
 window.dismissEquip=async function(){
@@ -13358,18 +13554,52 @@ window.openVerse=async function(btn,ref){
     const d=await r.json();
     if(!d.verses||!d.verses.length)throw new Error();
     lastVerseText=d.verses.map(v=>v.text.trim()).join(' ');
-    panel.innerHTML='<div class="vref"><span>'+(d.reference||ref)+'</span><button class="speak-btn" onclick="speakVerse()">&#9658; Read aloud</button></div>'+
+    panel.innerHTML='<div class="vref"><span>'+(d.reference||ref)+'</span><div style="display:flex;align-items:center;gap:8px;"><select class="voice-select" id="voicePicker" onchange="window.changeVoice(this.value)" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:4px;font-size:11px;padding:4px 8px;outline:none;max-width:140px;height:28px;"></select><button class="speak-btn" id="speakBtn" onclick="speakVerse()">&#9658; Read aloud</button></div></div>'+
       d.verses.map((v,i)=>'<span class="v-line" style="animation-delay:'+(i*90)+'ms"><span style="color:var(--lime);font-size:10px;vertical-align:super;margin-right:3px;font-weight:700">'+v.verse+'</span>'+v.text.trim()+' </span>').join('');
+    const vp = document.getElementById('voicePicker');
+    if (vp) window.populateVoices(vp);
   }catch(e){
     panel.innerHTML='<div class="vref">'+ref+'</div><p style="color:var(--text-dim);font-size:13px">The passage could not load in this preview. In the live dashboard it renders through the same pipeline as Bible 365. Open '+ref+' in your Bible tonight.</p>';
   }
 };
 window.speakVerse=function(){
   if(!('speechSynthesis' in window)||!lastVerseText)return;
-  window.speechSynthesis.cancel();
+  const btn = document.getElementById('speakBtn');
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    if (btn) {
+      btn.innerHTML = '&#9658; Read aloud';
+      btn.style.background = 'rgba(204,255,0,0.08)';
+      btn.style.color = 'var(--lime)';
+      btn.style.borderColor = 'rgba(204,255,0,0.2)';
+    }
+    return;
+  }
   const u=new SpeechSynthesisUtterance(lastVerseText);u.rate=0.95;
-  const v=(window.speechSynthesis.getVoices()||[]).find(x=>/en/i.test(x.lang)&&/natural/i.test(x.name))||(window.speechSynthesis.getVoices()||[]).find(x=>/en/i.test(x.lang));
-  if(v)u.voice=v;
+  const voice=window.getWhealthyVoice();
+  if(voice)u.voice=voice;
+  u.onend = function() {
+    if (btn) {
+      btn.innerHTML = '&#9658; Read aloud';
+      btn.style.background = 'rgba(204,255,0,0.08)';
+      btn.style.color = 'var(--lime)';
+      btn.style.borderColor = 'rgba(204,255,0,0.2)';
+    }
+  };
+  u.onerror = function() {
+    if (btn) {
+      btn.innerHTML = '&#9658; Read aloud';
+      btn.style.background = 'rgba(204,255,0,0.08)';
+      btn.style.color = 'var(--lime)';
+      btn.style.borderColor = 'rgba(204,255,0,0.2)';
+    }
+  };
+  if (btn) {
+    btn.innerHTML = '&#9632; Stop reading';
+    btn.style.background = 'rgba(255, 69, 58, 0.1)';
+    btn.style.color = '#ff453a';
+    btn.style.borderColor = 'rgba(255, 69, 58, 0.3)';
+  }
   window.speechSynthesis.speak(u);
 };
 
@@ -13419,9 +13649,14 @@ async function renderDaily(root){
      '<div class="day-focus">'+focus+'</div></div>';
   h+=briefHtml;
   h+='<div class="g-card"><div class="plan-sec-title">This Week\u2019s Passages</div>'+
+     '<div class="pray-header-row" style="display:flex; flex-wrap:wrap; gap:8px 14px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--lime); margin-bottom:8px;">'+
+     '  <span style="min-width:118px; color:var(--text-dim);">Week</span>'+
+     '  <span style="flex:1; min-width:110px;">Morning Prayer</span>'+
+     '  <span style="flex:1; min-width:110px;">Night Prayer</span>'+
+     '</div>'+
      '<div class="pray-row"><span class="pray-week">Week '+wk.week+'<small>'+wk.theme+'</small></span>'+
-     '<button class="ref-btn" onclick="openVerse(this,\''+wk.morning+'\')">&#9728; Morning: '+wk.morning+'</button>'+
-     '<button class="ref-btn" onclick="openVerse(this,\''+wk.night+'\')">&#9789; Night: '+wk.night+'</button></div>'+
+     '<button class="ref-btn" onclick="openVerse(this,\''+wk.morning+'\')">&#9728; '+wk.morning+'</button>'+
+     '<button class="ref-btn" onclick="openVerse(this,\''+wk.night+'\')">&#9789; '+wk.night+'</button></div>'+
      '<div class="verse-panel"></div></div>';
 
   // Tonight's Journal section (no checklist)
