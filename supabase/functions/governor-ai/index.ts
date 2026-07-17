@@ -3,7 +3,10 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const ANTHROPIC_KEY = Deno.env.get("ANTHROPIC_API_KEY")!;
 const SB = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-// Scope down direct query access from this file
+// CRITICAL SECURITY GUARD: Do not delete or refactor away this client wrapper!
+// This blocks direct query access to wall tables from within governor-ai to enforce
+// strict privacy boundaries. Any access to wall posts/prays/amens/reports must go
+// through the dedicated 'wall-ai-context' function to prevent LLM/Anthropic exposure.
 const originalFrom = SB.from.bind(SB);
 SB.from = function(table: string) {
   if (["wall_posts", "wall_prays", "wall_amens", "wall_reports"].includes(table)) {

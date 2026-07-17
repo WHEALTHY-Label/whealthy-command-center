@@ -1619,6 +1619,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Bible 365</button>
       <button class="sidebar-item" id="navWall" data-nav="wall" onclick="go('wall',this)"><span class="si-dot"></span> Prayer Wall</button>
       <button class="sidebar-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)"><span class="si-dot"></span> Testimony Wall</button>
+      <button class="sidebar-item" id="navPrayer" onclick="go('prayer',this)"><span class="si-dot"></span> Prayer</button>
       <button class="sidebar-item" id="navMe" data-nav="me" onclick="go('me',this)">
         <span class="si-dot"></span> My Prayers
         <span class="me-badge" id="meBadge" style="display:none"></span>
@@ -1912,7 +1913,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
               <div style="align-self:flex-end; font-family:var(--font-display); font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:8px;" id="bible_weekLabel">Verse of the Day</div>
               
-              <h2 style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--lime); margin:0 0 16px;" id="bible_heroRef">Psalm 23:1-3</h2>
+              <h2 style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--lime); margin:0 0 16px; display:flex; align-items:center; gap:12px;" id="bible_heroRefContainer">
+                <span id="bible_heroRef">Psalm 23:1-3</span>
+                <button id="bible_btnShowBookIntro" onclick="showBookIntro(true)" style="background:rgba(204,255,0,0.1); border:1px solid rgba(204,204,0,0.25); color:var(--lime); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:4px 8px; border-radius:4px; cursor:pointer; display:none; min-height:auto;">Book Intro</button>
+              </h2>
               
               <blockquote style="margin:0 0 20px; font-family: 'Outfit', 'DM Sans', sans-serif; font-size:28px; font-weight:700; font-style:italic; line-height:1.35; color:#fff; letter-spacing:-0.02em;" id="bible_verseQuote">
                 "The Lord is my shepherd; I shall not want. He maketh me to lie down in green pastures: he leadeth me beside the still waters."
@@ -1933,8 +1937,18 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
               <!-- Collapsible Reflection Journal Input -->
               <div id="bible_reflectionContainer" style="display:none; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.08);">
-                <label style="display:block; font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Daily Reflection Journal</label>
-                <textarea id="bible_reflectionText" placeholder="Write down your thoughts, prayers, or insights from today's scripture..." style="width:100%; height:120px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:#fff; font-size:14px; line-height:1.5; resize:none; outline:none; margin-bottom:12px; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                <label style="display:block; font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Daily Reflection Journal</label>
+                
+                <div style="margin-bottom:14px;">
+                  <label style="display:block; font-size:11px; font-weight:700; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">What does it say?</label>
+                  <textarea id="bible_reflectionSaid" placeholder="Summarize or quote what the passage says..." style="width:100%; height:80px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:#fff; font-size:14px; line-height:1.5; resize:none; outline:none; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                  <label style="display:block; font-size:11px; font-weight:700; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">What will you do?</label>
+                  <textarea id="bible_reflectionWillDo" placeholder="What actions will they carry out in response?" style="width:100%; height:80px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:#fff; font-size:14px; line-height:1.5; resize:none; outline:none; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                </div>
+
                 <div style="display:flex; align-items:flex-start; gap:8px; margin:0 0 12px; user-select:none;">
                   <input type="checkbox" checked id="bible_sharePersonalization" style="accent-color:var(--lime); margin-top:2px; cursor:pointer;">
                   <label for="bible_sharePersonalization" style="color:rgba(255,255,255,0.6); font-size:11px; line-height:1.4; cursor:pointer;">Share reflections privately with WHEALTHY to customize my OS experience.</label>
@@ -2036,17 +2050,29 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
           </div>
 
-          <!-- Bottom: Year Progress Bar Card -->
-          <div class="g-card" style="padding: 24px; margin-top: 24px;">
-            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
-              <div>
-                <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; color:#fff; letter-spacing:0.05em; text-transform:uppercase; margin:0;" id="bible_progressYearTitle">2026 Year Journey</h3>
-                <div style="font-size:11px; font-weight:600; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.02em; margin-top:2px;" id="bible_progressPercentSub">0% of the way through the Living Word</div>
+          <!-- Book Intro Overlay -->
+          <div id="bible_bookIntroOverlay" class="overlay">
+            <div class="g-card" style="max-width:500px; width:100%; text-align:left; padding:36px; position:relative; max-height:85vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.08); background: #0e1013;">
+              <button onclick="document.getElementById('bible_bookIntroOverlay').classList.remove('open');" style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.4); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; min-height:auto" class="bible-intro-close">&times;</button>
+              <div style="font-family:var(--font-display); font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Book Introduction</div>
+              <div style="font-family:var(--font-display); font-weight:700; font-size:28px; letter-spacing:.04em; text-transform:uppercase; color:var(--text); margin-bottom:20px; line-height:1.1" id="bible_introBookName">Genesis</div>
+              
+              <div style="margin-bottom:16px;">
+                <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">What this is</div>
+                <p id="bible_introWhatThisIs" style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; margin:0;"></p>
               </div>
-              <span style="font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--lime);" id="bible_progressFraction">0 / 365 Days</span>
-            </div>
-            <div style="height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
-              <div id="bible_progressFill" style="height:100%; background:var(--lime); width:0%; transition:width 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 0 10px rgba(204,255,0,0.4);"></div>
+              
+              <div style="margin-bottom:16px;">
+                <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Who it's for</div>
+                <p id="bible_introWhoItsFor" style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; margin:0;"></p>
+              </div>
+              
+              <div style="margin-bottom:24px;">
+                <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">What to watch for</div>
+                <p id="bible_introWhatToWatchFor" style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; margin:0;"></p>
+              </div>
+              
+              <button class="btn-lime" onclick="dismissBookIntro()" style="width:100%; padding:14px; border-radius:8px;">Continue Reading</button>
             </div>
           </div>
 
@@ -6349,6 +6375,312 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         })();
       </script>
 
+      <!-- ============ PRAYER PILLAR ============ -->
+      <div id="prayerView" style="display:none">
+        <style>
+          .pr-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: clamp(16px, 4vw, 32px) 16px;
+            color: #fff;
+          }
+          .pr-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+          }
+          .pr-tab {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s, border-bottom 0.2s;
+          }
+          .pr-tab.active {
+            color: var(--lime);
+            border-bottom: 2px solid var(--lime);
+          }
+          .pr-tab.suggested::after {
+            content: " •";
+            color: var(--lime);
+          }
+          .pr-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: clamp(16px, 4vw, 24px);
+            margin-bottom: 24px;
+          }
+          .pr-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #fff;
+            margin: 0 0 8px 0;
+          }
+          .pr-teaching {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.5;
+            margin-bottom: 20px;
+          }
+          .pr-field {
+            margin-bottom: 20px;
+          }
+          .pr-label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 8px;
+          }
+          .pr-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+          }
+          .pr-input:focus {
+            border-color: var(--lime);
+          }
+          .pr-input-small {
+            max-width: 320px;
+          }
+          .pr-textarea {
+            min-height: 120px;
+            resize: vertical;
+          }
+          .pr-nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+          }
+          .pr-btn {
+            background: var(--lime);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            transition: opacity 0.2s;
+          }
+          .pr-btn:hover {
+            opacity: 0.9;
+          }
+          .pr-btn-ghost {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+          }
+          .pr-btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+          }
+          .pr-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+          }
+          .pr-surfaced-list {
+            margin-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 16px;
+          }
+          .pr-surfaced-card {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+          }
+          .pr-surfaced-body {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+          }
+          .pr-surfaced-carry {
+            font-size: 11px;
+            padding: 6px 12px;
+            min-height: 32px;
+          }
+          .pr-rotation-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+          }
+          .pr-rotation-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: var(--font-display);
+            transition: background 0.2s;
+          }
+          .pr-rotation-btn.active {
+            background: var(--lime);
+            color: #000;
+            border-color: var(--lime);
+          }
+          .pr-category-section {
+            margin-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 24px;
+          }
+          .pr-category-title {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--lime);
+            margin-bottom: 16px;
+          }
+          .pr-category-empty {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
+          }
+          .pr-list-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+          }
+          .pr-list-card-body {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: #fff;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            padding-right: 28px;
+            word-wrap: break-word;
+          }
+          .pr-list-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+          }
+          .pr-card-actions {
+            display: flex;
+            gap: 8px;
+          }
+          .pr-card-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: var(--font-display);
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+          }
+          .pr-card-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+          }
+          .pr-card-btn-danger {
+            border-color: rgba(255, 0, 0, 0.2);
+            color: rgba(255, 100, 100, 0.8);
+          }
+          .pr-card-btn-danger:hover {
+            background: rgba(255, 0, 0, 0.05);
+            border-color: rgba(255, 0, 0, 0.4);
+          }
+          .pr-pin-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            transition: color 0.2s;
+          }
+          .pr-pin-btn:hover {
+            color: rgba(255, 255, 255, 0.6);
+          }
+          .pr-pin-btn.pinned {
+            color: var(--lime);
+          }
+          .pr-add-form {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+          }
+          .pr-form-title {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #fff;
+            margin: 0 0 16px 0;
+          }
+        </style>
+
+        <div class="pr-container">
+          <div class="pr-tabs" id="prTabs">
+            <button class="pr-tab" id="prTabMorning" onclick="PRAYER.switchPass('morning')">Morning</button>
+            <button class="pr-tab" id="prTabMidday" onclick="PRAYER.switchPass('midday')">Midday</button>
+            <button class="pr-tab" id="prTabEvening" onclick="PRAYER.switchPass('evening')">Evening</button>
+            <button class="pr-tab" id="prTabMirror" onclick="PRAYER.switchPass('mirror')">Mirror</button>
+            <button class="pr-tab" id="prTabAnswered" onclick="PRAYER.switchPass('answered')">Answered</button>
+          </div>
+
+          <div id="prPassContent"></div>
+          <div id="listView" style="display:none"></div>
+          <div id="prAnsweredContent" style="display:none"></div>
+        </div>
+      </div>
+
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
         <div class="view-header-block">
@@ -7165,18 +7497,25 @@ window.toggleReflectionInput = function() {
   const isHidden = container.style.display === 'none';
   container.style.display = isHidden ? 'block' : 'none';
   if (isHidden) {
-    document.getElementById('bible_reflectionText').focus();
+    const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
+    const cur = reflections[currentDay] || {};
+    const saidEl = document.getElementById('bible_reflectionSaid');
+    const willDoEl = document.getElementById('bible_reflectionWillDo');
+    if (saidEl) saidEl.value = cur.said || cur.text || '';
+    if (willDoEl) willDoEl.value = cur.will_do || '';
+    if (saidEl) saidEl.focus();
   }
 };
 
 window.saveReflectionJournal = function() {
-  const text = document.getElementById('bible_reflectionText').value.trim();
+  const said = document.getElementById('bible_reflectionSaid')?.value.trim() || '';
+  const will_do = document.getElementById('bible_reflectionWillDo')?.value.trim() || '';
   const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
   const shareCheckbox = document.getElementById('bible_sharePersonalization');
   const share = shareCheckbox ? shareCheckbox.checked : true;
 
-  if (text) {
-    reflections[currentDay] = { text: text, share: share };
+  if (said || will_do) {
+    reflections[currentDay] = { said: said, will_do: will_do, share: share };
     speak('Reflection saved');
   } else {
     delete reflections[currentDay];
@@ -7185,15 +7524,16 @@ window.saveReflectionJournal = function() {
   
   // Update task checkbox
   const chk = document.getElementById('bible_taskReflectCheck');
-  if (chk) chk.classList.toggle('checked', !!text);
+  if (chk) chk.classList.toggle('checked', !!(said || will_do));
   
   // Append to daily journal draft if appropriate
+  const text = [said, will_do].filter(Boolean).join('\n\n');
   const recordTa = document.getElementById('transcript') || document.getElementById('dashTranscript');
   if (recordTa && text && !recordTa.value.includes(text)) {
     if (recordTa.value.trim()) {
-      recordTa.value += '\n\nReflection: ' + text;
+      recordTa.value += '\n\nReflection:\n' + text;
     } else {
-      recordTa.value = 'Reflection: ' + text;
+      recordTa.value = 'Reflection:\n' + text;
     }
     if (typeof persistDraft === 'function') persistDraft();
     const fileBtn = document.getElementById('fileBtn') || document.getElementById('dashFileBtn');
@@ -7201,7 +7541,7 @@ window.saveReflectionJournal = function() {
   }
 
   // Send to Supabase API
-  if (MEMBER_EMAIL && text) {
+  if (MEMBER_EMAIL && (said || will_do)) {
     const scriptureRef = document.getElementById('bible_heroRef') ? document.getElementById('bible_heroRef').textContent : '';
     try {
       fetch(FN_BASE + '/governor-state', {
@@ -7212,7 +7552,8 @@ window.saveReflectionJournal = function() {
           email: MEMBER_EMAIL,
           day_number: currentDay,
           scripture_ref: scriptureRef,
-          text: text,
+          said: said,
+          will_do: will_do,
           share_personalization: share
         })
       });
@@ -7400,6 +7741,43 @@ window.handleBibleFeedPray = async function(btn, postId) {
   }
 };
 
+function getBookName(ref) {
+  if (!ref) return '';
+  return ref.split(/\s\d/)[0].trim();
+}
+
+window.showBookIntro = function(force) {
+  const reading = READINGS[currentDay-1];
+  if (!reading) return;
+  const book = getBookName(reading.ref);
+  const intros = JSON.parse(localStorage.getItem('wh_book_intros') || '[]');
+  const intro = intros.find(i => i.book.toLowerCase() === book.toLowerCase());
+  
+  if (intro) {
+    document.getElementById('bible_introBookName').textContent = intro.book;
+    document.getElementById('bible_introWhatThisIs').textContent = intro.what_this_is;
+    document.getElementById('bible_introWhoItsFor').textContent = intro.who_its_for;
+    document.getElementById('bible_introWhatToWatchFor').textContent = intro.what_to_watch_for;
+    document.getElementById('bible_bookIntroOverlay').classList.add('open');
+  } else {
+    if (force) {
+      console.log("No intro available for " + book);
+    }
+  }
+};
+
+window.dismissBookIntro = function() {
+  const reading = READINGS[currentDay-1];
+  if (!reading) return;
+  const book = getBookName(reading.ref);
+  const seenIntros = JSON.parse(localStorage.getItem('wh_book_intros_seen') || '[]');
+  if (!seenIntros.includes(book)) {
+    seenIntros.push(book);
+    localStorage.setItem('wh_book_intros_seen', JSON.stringify(seenIntros));
+  }
+  document.getElementById('bible_bookIntroOverlay').classList.remove('open');
+};
+
 function renderHero(){
   const reading=READINGS[currentDay-1];
   if(!reading)return;
@@ -7431,15 +7809,24 @@ function renderHero(){
   // Checkbox: Reflection Journaling
   const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
   const reflectionVal = reflections[currentDay] || '';
-  const reflectionText = typeof reflectionVal === 'object' ? (reflectionVal.text || '') : reflectionVal;
+  let reflectionSaid = '';
+  let reflectionWillDo = '';
+  if (typeof reflectionVal === 'object') {
+    reflectionSaid = reflectionVal.said || reflectionVal.text || '';
+    reflectionWillDo = reflectionVal.will_do || '';
+  } else {
+    reflectionSaid = reflectionVal || '';
+  }
   const reflectionShare = typeof reflectionVal === 'object' ? (reflectionVal.share !== false) : true;
 
   const taskReflectCheck = document.getElementById('bible_taskReflectCheck');
   if (taskReflectCheck) {
-    taskReflectCheck.classList.toggle('checked', !!reflectionText);
+    taskReflectCheck.classList.toggle('checked', !!(reflectionSaid || reflectionWillDo));
   }
-  const reflectInput = document.getElementById('bible_reflectionText');
-  if (reflectInput) reflectInput.value = reflectionText;
+  const reflectSaidInput = document.getElementById('bible_reflectionSaid');
+  if (reflectSaidInput) reflectSaidInput.value = reflectionSaid;
+  const reflectWillDoInput = document.getElementById('bible_reflectionWillDo');
+  if (reflectWillDoInput) reflectWillDoInput.value = reflectionWillDo;
   const reflectShare = document.getElementById('bible_sharePersonalization');
   if (reflectShare) reflectShare.checked = reflectionShare;
 
@@ -7453,6 +7840,23 @@ function renderHero(){
   const drawer = document.getElementById('bible_communityPrayerDrawer');
   if (drawer) {
     drawer.style.display = isPrayerDone ? 'block' : 'none';
+  }
+
+  // Book Intros display toggle & auto-surface
+  const book = getBookName(reading.ref);
+  const intros = JSON.parse(localStorage.getItem('wh_book_intros') || '[]');
+  const intro = intros.find(i => i.book.toLowerCase() === book.toLowerCase());
+  const btnShowIntro = document.getElementById('bible_btnShowBookIntro');
+  if (btnShowIntro) {
+    btnShowIntro.style.display = intro ? 'inline-block' : 'none';
+  }
+  
+  if (intro) {
+    const firstDayOfBook = READINGS.find(r => getBookName(r.ref).toLowerCase() === book.toLowerCase())?.day || 1;
+    const seenIntros = JSON.parse(localStorage.getItem('wh_book_intros_seen') || '[]');
+    if (currentDay === firstDayOfBook && !seenIntros.includes(book)) {
+      showBookIntro(false);
+    }
   }
 
   // Update navigation buttons
@@ -7485,27 +7889,6 @@ function renderHero(){
     } else {
       streakDesc.textContent = `Excellent streak! You've achieved your milestone of ${milestone} days.`;
     }
-  }
-
-  // Yearly progress calculation
-  const completedCount = state.completed.length;
-  const pct = completedCount / 365 * 100;
-  
-  const progressFill = document.getElementById('bible_progressFill');
-  if (progressFill) progressFill.style.width = pct.toFixed(1) + '%';
-  
-  const progressYearTitle = document.getElementById('bible_progressYearTitle');
-  if (progressYearTitle) {
-    const year = new Date().getFullYear();
-    progressYearTitle.textContent = `${year} Year Journey`;
-  }
-  const progressPercentSub = document.getElementById('bible_progressPercentSub');
-  if (progressPercentSub) {
-    progressPercentSub.textContent = `${pct.toFixed(0)}% of the way through the Living Word`;
-  }
-  const progressFraction = document.getElementById('bible_progressFraction');
-  if (progressFraction) {
-    progressFraction.textContent = `${completedCount} / 365 Days`;
   }
 
   // Scroll gate
@@ -7655,19 +8038,19 @@ function onScriptureScroll(){
   if(scrollTop+5>=scrollHeight){
     if(!scrollGateUnlocked){
       scrollGateUnlocked=true;
-      const btn=$('bible_toggleBtn');
+      const btn=$('bible_taskReadCheck') || $('bible_toggleBtn');
       if(btn) {
         btn.classList.remove('scroll-locked');
         btn.style.pointerEvents='';
+        
+        // Unlock animation
+        btn.classList.remove('just-unlocked');
+        void btn.offsetWidth;
+        btn.classList.add('just-unlocked');
+        setTimeout(()=>btn.classList.remove('just-unlocked'),600);
       }
       const hint = $('bible_scrollGateHint');
       if(hint) hint.classList.remove('visible');
-
-      // Unlock animation
-      btn.classList.remove('just-unlocked');
-      void btn.offsetWidth;
-      btn.classList.add('just-unlocked');
-      setTimeout(()=>btn.classList.remove('just-unlocked'),600);
     }
   }
 }
@@ -7679,10 +8062,10 @@ $('bible_scriptureBody').addEventListener('scroll',onScriptureScroll,{passive:tr
 // COMPLETION TOGGLE
 // ══════════════════════════════════════
 function toggleCompletion(){
-  const btn=$('bible_toggleBtn');
+  const btn=$('bible_taskReadCheck') || $('bible_toggleBtn');
 
   // If scroll-gated and trying to mark complete, block
-  if(btn.classList.contains('scroll-locked'))return;
+  if(btn && btn.classList.contains('scroll-locked'))return;
 
   const idx=state.completed.indexOf(currentDay);
   if(idx===-1){
@@ -7715,8 +8098,7 @@ function toggleCompletion(){
 // ══════════════════════════════════════
 function prevDay(){if(currentDay>1){currentDay--;renderHero()}}
 function nextDay(){
-  const todayMax=getTodayDayNumber();
-  if(currentDay<365&&currentDay<todayMax){currentDay++;renderHero()}
+  if(currentDay<365){currentDay++;renderHero()}
 }
 
 // ══════════════════════════════════════
@@ -8207,6 +8589,1558 @@ let MEMBER_ID = null;
 window.MEMBER_EMAIL = MEMBER_EMAIL;
 window.MEMBER_NAME = MEMBER_NAME;
 window.MEMBER_ID = MEMBER_ID;
+
+  const MOVEMENTS = [
+    {
+      num: 1,
+      name: "Our Father in heaven",
+      prompt: "Who are you talking to right now?",
+      teaching: "The first word is Our, not my. Even alone in a room, they are praying in the plural. They were never alone in it.",
+      inputType: "text"
+    },
+    {
+      num: 2,
+      name: "Hallowed be your name",
+      prompt: "What is true about Him today that you need to be true?",
+      teaching: "It is not flattery before a favor. A steward who says who God is out loud has just resized their own problem without touching the problem.",
+      inputType: "text"
+    },
+    {
+      num: 3,
+      name: "Your kingdom come, your will be done",
+      prompt: "What are you holding that is not yours to decide?",
+      teaching: "On earth as in heaven means here. This house, this decision, this week. Not someday and not somewhere else.",
+      inputType: "textarea"
+    },
+    {
+      num: 4,
+      name: "Give us this day our daily bread",
+      prompt: "What do you need today?",
+      teaching: "Daily bread is permission and limit in the same breath. They are allowed to ask. They are asked to ask for today.",
+      inputType: "text-small",
+      surfacedList: true
+    },
+    {
+      num: 5,
+      name: "Forgive us our debts, as we forgive our debtors",
+      prompt: "Forgiveness",
+      teaching: "confession and release in one breath.",
+      customScreen: "movement5"
+    },
+    {
+      num: 6,
+      name: "Lead us not into temptation, but deliver us from evil",
+      prompt: "Where are you likely to fall today?",
+      teaching: "Most stewards pray this after they fall, as damage control. The prayer puts it before, on purpose. They already know where they are weak. Name it before they get there.",
+      inputType: "text"
+    }
+  ];
+
+  const PRAYER = {
+    activePass: 'morning',
+    morningStep: 1,
+    morningData: {},
+    middayStep: 1,
+    middayInputVal: '',
+    eveningData: {},
+    editingPrayerId: null,
+    publishingPrayerId: null,
+    closingPrayerId: null,
+    closeStateSelected: {},
+    unawareEmptySeen: false,
+    cachedMirrorData: null,
+
+    async init() {
+      const hr = new Date().getHours();
+      let suggested = 'morning';
+      if (hr >= 11 && hr < 17) suggested = 'midday';
+      else if (hr >= 17) suggested = 'evening';
+
+      ['Morning', 'Midday', 'Evening', 'Mirror', 'Answered'].forEach(pass => {
+        const tab = document.getElementById('prTab' + pass);
+        if (tab) {
+          if (pass.toLowerCase() === suggested) {
+            tab.classList.add('suggested');
+          } else {
+            tab.classList.remove('suggested');
+          }
+        }
+      });
+
+      try {
+        const res = await fetch(FN_BASE + '/prayer-state', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'get'
+          })
+        });
+        const data = await res.json();
+        console.log("PRAYER.init: get state response status:", res.status, "data:", JSON.stringify(data));
+        if (res.status === 200) {
+          this.unawareEmptySeen = !!data.unaware_empty_seen;
+          console.log("PRAYER.init: set unawareEmptySeen to:", this.unawareEmptySeen);
+        }
+      } catch (e) {
+        console.error("Failed to load persisted unaware_empty_seen state:", e);
+      }
+
+      this.switchPass(suggested);
+    },
+
+    switchPass(pass) {
+      this.activePass = pass;
+      document.querySelectorAll('.pr-tab').forEach(t => t.classList.remove('active'));
+
+      const tabId = 'prTab' + pass.charAt(0).toUpperCase() + pass.slice(1);
+      const tabEl = document.getElementById(tabId);
+      if (tabEl) tabEl.classList.add('active');
+
+      const passContent = document.getElementById('prPassContent');
+      const listView = document.getElementById('listView');
+      const prAnsweredContent = document.getElementById('prAnsweredContent');
+
+      if (pass === 'mirror') {
+        if (passContent) passContent.style.display = 'none';
+        if (prAnsweredContent) prAnsweredContent.style.display = 'none';
+        if (listView) listView.style.display = 'block';
+        this.renderMirror(true);
+      } else if (pass === 'answered') {
+        if (passContent) passContent.style.display = 'none';
+        if (listView) listView.style.display = 'none';
+        if (prAnsweredContent) prAnsweredContent.style.display = 'block';
+        this.renderAnswered();
+      } else {
+        if (passContent) passContent.style.display = 'block';
+        if (listView) listView.style.display = 'none';
+        if (prAnsweredContent) prAnsweredContent.style.display = 'none';
+
+        if (pass === 'morning') {
+          this.morningStep = 1;
+          this.renderMorningStep();
+        } else if (pass === 'midday') {
+          this.loadMiddayState();
+        } else if (pass === 'evening') {
+          this.eveningData = { m6: '', m5a: '', m5b: '', m4: '' };
+          this.renderEveningPass();
+        }
+      }
+    },
+
+    renderMorningStep() {
+      const container = document.getElementById('prPassContent');
+      if (!container) return;
+
+      const mov = MOVEMENTS[this.morningStep - 1];
+      const valKey = 'm' + this.morningStep;
+
+      let inputHtml = '';
+      if (mov.customScreen === "movement5") {
+        const valA = this.morningData['m5a'] || '';
+        const valB = this.morningData['m5b'] || '';
+        inputHtml = `
+          <div class="pr-field">
+            <label class="pr-label">What do you need forgiven?</label>
+            <input class="pr-input" type="text" id="prM5a" value="${valA.replace(/"/g, '&quot;')}" placeholder="Name their debt..." oninput="PRAYER.morningData['m5a']=this.value">
+          </div>
+          <div class="pr-field">
+            <label class="pr-label">Who are you still holding something against?</label>
+            <input class="pr-input" type="text" id="prM5b" value="${valB.replace(/"/g, '&quot;')}" placeholder="Name the steward or debtor..." oninput="PRAYER.morningData['m5b']=this.value">
+          </div>
+        `;
+      } else if (mov.inputType === "textarea") {
+        const val = this.morningData[valKey] || '';
+        inputHtml = `
+          <div class="pr-field">
+            <textarea class="pr-input pr-textarea" id="prInput" placeholder="Write their response..." oninput="PRAYER.morningData['${valKey}']=this.value">${val}</textarea>
+          </div>
+        `;
+      } else {
+        const val = this.morningData[valKey] || '';
+        const isSmall = mov.inputType === 'text-small';
+        let carryBtnHtml = '';
+        if (mov.num === 4) {
+          carryBtnHtml = `
+            <div style="margin-top: 8px;">
+              <button class="pr-btn pr-btn-ghost" style="font-size: 11px; padding: 6px 12px; min-height: 32px;" onclick="PRAYER.carryBreadToMirror(document.getElementById('prInput').value)">Carry this</button>
+            </div>
+          `;
+        }
+        inputHtml = `
+          <div class="pr-field">
+            <input class="pr-input ${isSmall ? 'pr-input-small' : ''}" type="text" id="prInput" value="${val.replace(/"/g, '&quot;')}" placeholder="Write their response..." oninput="PRAYER.morningData['${valKey}']=this.value">
+            ${carryBtnHtml}
+          </div>
+        `;
+      }
+
+      let listHtml = '';
+      if (mov.surfacedList) {
+        listHtml = `
+          <div class="pr-surfaced-list">
+            <label class="pr-label">📖 Surfaced from their Closet today:</label>
+            <div id="prDailySurfaced">Loading their list...</div>
+          </div>
+        `;
+        this.fetchDailySurfaced();
+      }
+
+      container.innerHTML = `
+        <div class="pr-card">
+          <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+            Movement ${mov.num} of 6
+          </div>
+          <h2 class="pr-title">${mov.name}</h2>
+          <div class="pr-teaching">${mov.teaching}</div>
+
+          <div class="pr-field">
+            <label class="pr-label">${mov.customScreen ? 'Reflection' : mov.prompt}</label>
+            ${inputHtml}
+          </div>
+
+          ${listHtml}
+
+          <div class="pr-nav-row">
+            <button class="pr-btn pr-btn-ghost" ${this.morningStep === 1 ? 'disabled' : ''} onclick="PRAYER.prevMorningStep()">Back</button>
+            <button class="pr-btn" onclick="PRAYER.nextMorningStep()">${this.morningStep === 6 ? 'Finish' : 'Next'}</button>
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const inp = document.getElementById('prInput') || document.getElementById('prM5a');
+        if (inp) inp.focus();
+      }, 50);
+    },
+
+    prevMorningStep() {
+      if (this.morningStep > 1) {
+        this.morningStep--;
+        this.renderMorningStep();
+      }
+    },
+
+    nextMorningStep() {
+      if (this.morningStep < 6) {
+        this.morningStep++;
+        this.renderMorningStep();
+      } else {
+        this.morningData = {};
+        this.morningStep = 1;
+        go('dash');
+      }
+    },
+
+    async fetchDailySurfaced() {
+      try {
+        const res = await fetch(FN_BASE + '/prayers-read', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            view: 'daily'
+          })
+        });
+        const data = await res.json();
+        const listDiv = document.getElementById('prDailySurfaced');
+        if (!listDiv) return;
+
+        if (res.status !== 200 || !Array.isArray(data)) {
+          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Unable to retrieve daily prayers.</div>';
+          return;
+        }
+
+        if (data.length === 0) {
+          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Their prayer closet is currently empty.</div>';
+          return;
+        }
+
+        listDiv.innerHTML = data.map(p => `
+          <div class="pr-surfaced-card">
+            <div class="pr-surfaced-body">${p.body}</div>
+            <button class="pr-btn pr-btn-ghost pr-surfaced-carry" onclick="PRAYER.carryBreadToMirror('${p.body.replace(/'/g, "\\'")}')">Carry</button>
+          </div>
+        `).join('');
+
+      } catch (e) {
+        console.error(e);
+        const listDiv = document.getElementById('prDailySurfaced');
+        if (listDiv) {
+          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Unable to retrieve daily prayers.</div>';
+        }
+      }
+    },
+
+    carryToWall(text) {
+      go('wall');
+      setTimeout(() => {
+        const wallTextArea = document.querySelector('#wallView textarea, #wallView #postBody');
+        if (wallTextArea) {
+          wallTextArea.value = text;
+          wallTextArea.focus();
+        } else {
+          navigator.clipboard.writeText(text);
+        }
+      }, 100);
+    },
+
+    async loadMiddayState() {
+      const container = document.getElementById('prPassContent');
+      if (container) container.innerHTML = '<div style="padding: 20px; color: rgba(255,255,255,0.4);">Loading their midday rotation...</div>';
+
+      try {
+        const res = await fetch(FN_BASE + '/prayer-state', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'get'
+          })
+        });
+        const data = await res.json();
+        if (res.status === 200 && data.midday_next_movement) {
+          this.middayStep = data.midday_next_movement;
+        } else {
+          this.middayStep = 1;
+        }
+        this.renderMiddayPass();
+      } catch (e) {
+        console.error(e);
+        this.middayStep = 1;
+        this.renderMiddayPass();
+      }
+    },
+
+    renderMiddayPass() {
+      const container = document.getElementById('prPassContent');
+      if (!container) return;
+
+      const mov = MOVEMENTS[this.middayStep - 1];
+
+      let inputHtml = '';
+      if (mov.customScreen === "movement5") {
+        inputHtml = `
+          <div class="pr-field">
+            <label class="pr-label">What do you need forgiven?</label>
+            <input class="pr-input" type="text" id="prMid5a" placeholder="Name their debt...">
+          </div>
+          <div class="pr-field">
+            <label class="pr-label">Who are you still holding something against?</label>
+            <input class="pr-input" type="text" id="prMid5b" placeholder="Name the steward or debtor...">
+          </div>
+        `;
+      } else if (mov.inputType === "textarea") {
+        inputHtml = `
+          <div class="pr-field">
+            <textarea class="pr-input pr-textarea" id="prMidInput" placeholder="Write their response..."></textarea>
+          </div>
+        `;
+      } else {
+        const isSmall = mov.inputType === 'text-small';
+        let carryBtnHtml = '';
+        if (mov.num === 4) {
+          carryBtnHtml = `
+            <div style="margin-top: 8px;">
+              <button class="pr-btn pr-btn-ghost" style="font-size: 11px; padding: 6px 12px; min-height: 32px;" onclick="PRAYER.carryBreadToMirror(document.getElementById('prMidInput').value)">Carry this</button>
+            </div>
+          `;
+        }
+        inputHtml = `
+          <div class="pr-field">
+            <input class="pr-input ${isSmall ? 'pr-input-small' : ''}" type="text" id="prMidInput" placeholder="Write their response...">
+            ${carryBtnHtml}
+          </div>
+        `;
+      }
+
+      let listHtml = '';
+      if (mov.surfacedList) {
+        listHtml = `
+          <div class="pr-surfaced-list">
+            <label class="pr-label">📖 Surfaced from their Closet today:</label>
+            <div id="prDailySurfacedMidday">Loading their list...</div>
+          </div>
+        `;
+        this.fetchDailySurfacedMidday();
+      }
+
+      const overrideButtons = [1, 2, 3, 4, 5, 6].map(n => `
+        <button class="pr-rotation-btn ${n === this.middayStep ? 'active' : ''}" onclick="PRAYER.overrideRotation(${n})">
+          M${n}
+        </button>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="pr-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em;">
+              Midday Rotation
+            </span>
+            <span style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em;">
+              Movement ${mov.num} of 6
+            </span>
+          </div>
+          <h2 class="pr-title">${mov.name}</h2>
+          <div class="pr-teaching">${mov.teaching}</div>
+
+          <div class="pr-field">
+            <label class="pr-label">${mov.customScreen ? 'Reflection' : mov.prompt}</label>
+            ${inputHtml}
+          </div>
+
+          ${listHtml}
+
+          <div style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
+            <label class="pr-label">Rotation Select</label>
+            <div class="pr-rotation-controls">${overrideButtons}</div>
+          </div>
+
+          <div class="pr-nav-row" style="margin-top: 24px;">
+            <div></div>
+            <button class="pr-btn" id="prMidSubmitBtn" onclick="PRAYER.submitMidday()">Done</button>
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const inp = document.getElementById('prMidInput') || document.getElementById('prMid5a');
+        if (inp) inp.focus();
+      }, 50);
+    },
+
+    async fetchDailySurfacedMidday() {
+      try {
+        const res = await fetch(FN_BASE + '/prayers-read', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            view: 'daily'
+          })
+        });
+        const data = await res.json();
+        const listDiv = document.getElementById('prDailySurfacedMidday');
+        if (!listDiv) return;
+
+        if (res.status !== 200 || !Array.isArray(data)) {
+          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Unable to retrieve daily prayers.</div>';
+          return;
+        }
+
+        if (data.length === 0) {
+          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Their prayer closet is currently empty.</div>';
+          return;
+        }
+
+        listDiv.innerHTML = data.map(p => `
+          <div class="pr-surfaced-card">
+            <div class="pr-surfaced-body">${p.body}</div>
+            <button class="pr-btn pr-btn-ghost pr-surfaced-carry" onclick="PRAYER.carryBreadToMirror('${p.body.replace(/'/g, "\\'")}')">Carry</button>
+          </div>
+        `).join('');
+
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    async overrideRotation(num) {
+      try {
+        const res = await fetch(FN_BASE + '/prayer-state', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'jump',
+            movement: num
+          })
+        });
+        const data = await res.json();
+        if (res.status === 200 && data.midday_next_movement) {
+          this.middayStep = data.midday_next_movement;
+          this.renderMiddayPass();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    async submitMidday() {
+      const btn = document.getElementById('prMidSubmitBtn');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch(FN_BASE + '/prayer-state', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'advance'
+          })
+        });
+        const data = await res.json();
+        if (res.status === 200 && data.midday_next_movement) {
+          this.middayStep = data.midday_next_movement;
+        }
+        go('dash');
+      } catch (e) {
+        console.error(e);
+        go('dash');
+      }
+    },
+
+    renderEveningPass() {
+      const container = document.getElementById('prPassContent');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div id="prEveningMilestone"></div>
+        <div class="pr-card">
+          <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+            Evening Review
+          </div>
+          <h2 class="pr-title">Reflect and Record</h2>
+          <div class="pr-teaching">They now know how the day actually went. Revisit the movements in light of today's path.</div>
+
+          <div class="pr-field">
+            <label class="pr-label">Movement 6: You named where you were likely to fall. Did it come? What happened?</label>
+            <textarea class="pr-input pr-textarea" id="prEvM6" placeholder="Write their response..." oninput="PRAYER.eveningData.m6=this.value"></textarea>
+          </div>
+
+          <div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 24px 0; padding-top: 16px;">
+            <label class="pr-label">Movement 5: Confession & Forgiveness</label>
+            <div class="pr-field">
+              <label class="pr-label" style="font-size:10px; color:rgba(255,255,255,0.3)">Anything today you need forgiven?</label>
+              <input class="pr-input" type="text" id="prEvM5a" placeholder="Name their debt..." oninput="PRAYER.eveningData.m5a=this.value">
+            </div>
+            <div class="pr-field">
+              <label class="pr-label" style="font-size:10px; color:rgba(255,255,255,0.3)">Anyone you are still holding something against?</label>
+              <input class="pr-input" type="text" id="prEvM5b" placeholder="Name the steward or debtor..." oninput="PRAYER.eveningData.m5b=this.value">
+            </div>
+          </div>
+
+          <div class="pr-field" style="border-top: 1px solid rgba(255,255,255,0.06); margin: 24px 0; padding-top: 16px;">
+            <label class="pr-label">Movement 4: What did you need today. What happened?</label>
+            <textarea class="pr-input pr-textarea" id="prEvM4" placeholder="Write their response..." oninput="PRAYER.eveningData.m4=this.value"></textarea>
+          </div>
+
+          <div class="pr-nav-row" style="margin-top: 24px;">
+            <div></div>
+            <button class="pr-btn" id="prEvSubmitBtn" onclick="PRAYER.saveEveningReview()">Keep in the Record</button>
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const inp = document.getElementById('prEvM6');
+        if (inp) inp.focus();
+      }, 50);
+
+      this.loadEveningMilestone();
+    },
+
+    async saveEveningReview() {
+      const btn = document.getElementById('prEvSubmitBtn');
+      if (btn) btn.disabled = true;
+
+      const m6 = (this.eveningData.m6 || '').trim();
+      const m5a = (this.eveningData.m5a || '').trim();
+      const m5b = (this.eveningData.m5b || '').trim();
+      const m4 = (this.eveningData.m4 || '').trim();
+
+      const parts = [];
+      if (m6) parts.push(`Movement 6 (Protection): ${m6}`);
+      if (m5a || m5b) {
+        const m5_parts = [];
+        if (m5a) m5_parts.push(`Need forgiven: ${m5a}`);
+        if (m5b) m5_parts.push(`Holding against: ${m5b}`);
+        parts.push(`Movement 5 (Forgiveness): ${m5_parts.join(' / ')}`);
+      }
+      if (m4) parts.push(`Movement 4 (Daily Bread): ${m4}`);
+
+      if (parts.length === 0) {
+        go('dash');
+        return;
+      }
+
+      const combinedText = parts.join('\n\n');
+      const d = typeof activeFastDay === 'function' ? activeFastDay() : null;
+
+      try {
+        const entry = {
+          date: realToday(),
+          text: combinedText,
+          fastDay: d || null,
+          tone: 'mixed',
+          scribe: null,
+          resurface: null,
+          pending: false
+        };
+
+        if (window.S && Array.isArray(S.entries)) {
+          S.entries = S.entries.filter(e => e.date !== entry.date);
+          S.entries.push(entry);
+        }
+
+        await saveEntry(
+          realToday(),
+          combinedText,
+          'mixed',
+          S.fast ? S.fast.id : null,
+          d,
+          null,
+          null
+        );
+
+        if (typeof updateMeta === 'function') updateMeta();
+        if (typeof renderJournalContext === 'function') renderJournalContext();
+
+        go('dash');
+      } catch (e) {
+        console.error(e);
+        go('dash');
+      }
+    },
+
+    getElapsedTimeText(askedOnStr) {
+      if (!askedOnStr) return '';
+      const askedDate = new Date(askedOnStr);
+      const today = new Date();
+      
+      askedDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      
+      const diffTime = today.getTime() - askedDate.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 0) return 'Asked today';
+      if (diffDays === 1) return 'Asked 1 day ago';
+      if (diffDays < 30) return `Asked ${diffDays} days ago`;
+      
+      const diffMonths = Math.floor(diffDays / 30.43);
+      if (diffMonths <= 1) return 'Asked 1 month ago';
+      return `Asked ${diffMonths} months ago`;
+    },
+
+    async renderMirror(forceFetch = true) {
+      const container = document.getElementById('listView');
+      if (!container) return;
+
+      const renderHtml = (data) => {
+        const listContent = document.getElementById('prMirrorListContent');
+        if (!listContent) return;
+
+        const categories = [
+          { key: 'household', label: 'Their household' },
+          { key: 'soul', label: 'Their own soul' },
+          { key: 'provision', label: 'Provision' },
+          { key: 'brothers', label: 'The people around them' },
+          { key: 'unaware', label: 'One who does not know' }
+        ];
+
+        let html = '';
+        categories.forEach(cat => {
+          const items = (data[cat.key] || []).filter(p => p.state === 'not_yet');
+          
+          html += `
+            <div class="pr-category-section" id="prCat-${cat.key}">
+              <div class="pr-category-title">${cat.label}</div>
+          `;
+
+          if (items.length === 0) {
+            if (cat.key === 'unaware') {
+              if (!this.unawareEmptySeen) {
+                this.unawareEmptySeen = true;
+                html += `<div class="pr-category-empty">This one is empty.</div>`;
+                fetch(FN_BASE + '/prayer-state', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON}`
+                  },
+                  body: JSON.stringify({
+                    email: MEMBER_EMAIL,
+                    action: 'seen_unaware'
+                  })
+                }).then(async r => {
+                  const d = await r.json();
+                  console.log("seen_unaware response status:", r.status, "data:", JSON.stringify(d));
+                }).catch(e => console.error("Failed to persist seen_unaware state:", e));
+              }
+            }
+          } else {
+            items.forEach(p => {
+              const isClosing = this.closingPrayerId === p.id;
+              const isEditing = this.editingPrayerId === p.id;
+              const isPublishing = this.publishingPrayerId === p.id;
+              const elapsed = this.getElapsedTimeText(p.asked_on);
+              
+              html += `
+                <div class="pr-list-card" id="prCard-${p.id}">
+                  <div style="position: absolute; top: 12px; right: 12px;">
+                    <button class="pr-pin-btn ${p.pinned ? 'pinned' : ''}" onclick="PRAYER.togglePin('${p.id}', ${p.pinned})">
+                      ★
+                    </button>
+                  </div>
+              `;
+
+              if (isEditing) {
+                html += `
+                  <div class="pr-field">
+                    <textarea class="pr-input pr-textarea" id="prEditBody-${p.id}" maxlength="1000">${p.body}</textarea>
+                  </div>
+                  <div class="pr-card-actions">
+                    <button class="pr-card-btn" onclick="PRAYER.saveEdit('${p.id}', document.getElementById('prEditBody-${p.id}').value)">Save</button>
+                    <button class="pr-card-btn" onclick="PRAYER.cancelEdit()">Cancel</button>
+                  </div>
+                `;
+              } else if (isClosing) {
+                const selected = this.closeStateSelected[p.id] || '';
+                const yesActive = selected === 'yes';
+                const noActive = selected === 'no';
+                html += `
+                  <div class="pr-list-card-body" style="font-weight: 500; font-size: 13px; margin-bottom: 8px;">Closing: ${p.body}</div>
+                  <div class="pr-field">
+                    <label class="pr-label">Is this answered yes or no?</label>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                      <button class="pr-btn pr-btn-ghost" id="prCloseStateYes-${p.id}" onclick="PRAYER.setCloseState('${p.id}', 'yes')" style="flex: 1; padding: 6px; border-color: ${yesActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${yesActive ? 'var(--lime)' : '#fff'}">Yes</button>
+                      <button class="pr-btn pr-btn-ghost" id="prCloseStateNo-${p.id}" onclick="PRAYER.setCloseState('${p.id}', 'no')" style="flex: 1; padding: 6px; border-color: ${noActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${noActive ? 'var(--lime)' : '#fff'}">No</button>
+                    </div>
+                    <label class="pr-label">Outcome (Sentence about what happened)</label>
+                    <textarea class="pr-input pr-textarea" id="prCloseOutcome-${p.id}" placeholder="Sentence about what happened..." maxlength="1000"></textarea>
+                  </div>
+                  <div class="pr-card-actions" style="margin-top: 12px;">
+                    <button class="pr-card-btn" onclick="PRAYER.submitClose('${p.id}')">Save</button>
+                    <button class="pr-card-btn" onclick="PRAYER.cancelClose()">Cancel</button>
+                  </div>
+                `;
+              } else {
+                html += `
+                  <div class="pr-list-card-body">${p.body}</div>
+                  <div class="pr-list-card-meta">
+                    <div>${elapsed}</div>
+                    <div class="pr-card-actions">
+                      <button class="pr-card-btn" onclick="PRAYER.startEdit('${p.id}')">Edit</button>
+                      <button class="pr-card-btn" onclick="PRAYER.startClose('${p.id}')">Close</button>
+                `;
+
+                // Delete guard: not_yet and not published
+                if (p.state === 'not_yet' && !p.wall_post_id) {
+                  html += `<button class="pr-card-btn pr-card-btn-danger" onclick="PRAYER.deletePrayer('${p.id}')">Delete</button>`;
+                }
+
+                // Publish guard: not unaware category
+                if (cat.key !== 'unaware') {
+                  if (!p.wall_post_id) {
+                    if (isPublishing) {
+                      html += `
+                        <span style="font-size: 11px; margin-right: 4px; color: rgba(255,255,255,0.6)">Publish:</span>
+                        <button class="pr-card-btn" onclick="PRAYER.publishPrayer('${p.id}', 'signed')">Signed</button>
+                        <button class="pr-card-btn" onclick="PRAYER.publishPrayer('${p.id}', 'anonymous')">Anon</button>
+                        <button class="pr-card-btn" onclick="PRAYER.cancelPublish()">Cancel</button>
+                      `;
+                    } else {
+                      html += `<button class="pr-card-btn" onclick="PRAYER.startPublish('${p.id}')">Publish</button>`;
+                    }
+                  } else {
+                    html += `<button class="pr-card-btn" onclick="PRAYER.unpublishPrayer('${p.id}')">Unpublish</button>`;
+                  }
+                }
+
+                html += `
+                    </div>
+                  </div>
+                `;
+              }
+
+              html += `
+                </div>
+              `;
+            });
+          }
+
+          html += `
+            </div>
+          `;
+        });
+
+        listContent.innerHTML = html;
+      };
+
+      // Ensure form structure is in place
+      const headerForm = document.getElementById('prAddForm');
+      if (!headerForm) {
+        container.innerHTML = `
+          <div class="pr-card">
+            <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+              Carrying List
+            </div>
+            <h2 class="pr-title">The Closet Mirror</h2>
+            <div class="pr-teaching">The itemized shape of what you are currently under.</div>
+
+            <div class="pr-add-form" id="prAddForm">
+              <h3 class="pr-form-title">Carry a New Weight</h3>
+              <div class="pr-field">
+                <label class="pr-label">What are you carrying?</label>
+                <textarea class="pr-input pr-textarea" id="prAddBody" placeholder="Write their request..." maxlength="1000" minlength="1"></textarea>
+              </div>
+              <div class="pr-field">
+                <label class="pr-label">Category</label>
+                <select class="pr-input" id="prAddCategory">
+                  <option value="" disabled selected>Select a category...</option>
+                  <option value="household">Their household (Spouse, kids, home)</option>
+                  <option value="soul">Their own soul (Their sin, their weakness)</option>
+                  <option value="provision">Provision (Work, money, the weight of providing)</option>
+                  <option value="brothers">The people around them (The ones they carry)</option>
+                  <option value="unaware">One who does not know (One person who does not know they are being prayed for)</option>
+                </select>
+              </div>
+              <div class="pr-nav-row" style="margin-top: 16px;">
+                <div></div>
+                <button class="pr-btn" id="prAddSubmitBtn" onclick="PRAYER.submitAddHand()">Carry Weight</button>
+              </div>
+            </div>
+
+            <div id="prMirrorListContent" style="color: rgba(255,255,255,0.4); font-size:14px;">Loading closet mirror...</div>
+          </div>
+        `;
+      }
+
+      if (!forceFetch && this.cachedMirrorData) {
+        renderHtml(this.cachedMirrorData);
+        return;
+      }
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-read', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            view: 'mirror'
+          })
+        });
+
+        const data = await res.json();
+        if (res.status !== 200 || typeof data !== 'object' || data === null || Array.isArray(data)) {
+          const listContent = document.getElementById('prMirrorListContent');
+          if (listContent) listContent.innerHTML = 'Unable to load their closet mirror.';
+          return;
+        }
+
+        this.cachedMirrorData = data;
+        renderHtml(data);
+
+      } catch (e) {
+        console.error(e);
+        const listContent = document.getElementById('prMirrorListContent');
+        if (listContent) {
+          listContent.innerHTML = 'Unable to load their closet mirror.';
+        }
+      }
+    },
+
+    startEdit(id) {
+      this.editingPrayerId = id;
+      this.renderMirror(false);
+    },
+
+    cancelEdit() {
+      this.editingPrayerId = null;
+      this.renderMirror(false);
+    },
+
+    startPublish(id) {
+      this.publishingPrayerId = id;
+      this.renderMirror(false);
+    },
+
+    cancelPublish() {
+      this.publishingPrayerId = null;
+      this.renderMirror(false);
+    },
+
+    async submitAddHand() {
+      const bodyEl = document.getElementById('prAddBody');
+      const catEl = document.getElementById('prAddCategory');
+      const btn = document.getElementById('prAddSubmitBtn');
+      if (!bodyEl || !catEl) return;
+
+      const body = bodyEl.value.trim();
+      const category = catEl.value;
+
+      if (!body) {
+        alert("Please write the prayer request.");
+        return;
+      }
+      if (!category) {
+        alert("Please select a category.");
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'create',
+            body,
+            category
+          })
+        });
+
+        if (res.status === 200) {
+          bodyEl.value = '';
+          catEl.selectedIndex = 0;
+          this.renderMirror(true);
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to save prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    },
+
+    async saveEdit(id, newBody) {
+      const body = newBody.trim();
+      if (!body) {
+        alert("Prayer request body cannot be empty.");
+        return;
+      }
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'update',
+            id,
+            body
+          })
+        });
+
+        if (res.status === 200) {
+          this.editingPrayerId = null;
+          this.renderMirror(true);
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to update prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      }
+    },
+
+    async deletePrayer(id) {
+      if (!confirm("Are you sure you want to delete this carry entry?")) return;
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'delete',
+            id
+          })
+        });
+
+        if (res.status === 200) {
+          this.renderMirror(true);
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to delete prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      }
+    },
+
+    async publishPrayer(id, display_mode) {
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'publish',
+            id,
+            display_mode
+          })
+        });
+
+        if (res.status === 200) {
+          this.publishingPrayerId = null;
+          this.renderMirror(true);
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to publish prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      }
+    },
+
+    async unpublishPrayer(id) {
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'unpublish',
+            id
+          })
+        });
+
+        if (res.status === 200) {
+          this.renderMirror(true);
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to unpublish prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      }
+    },
+
+    async togglePin(id, isPinned) {
+      const action = isPinned ? 'unpin' : 'pin';
+      console.log("togglePin called", id, isPinned, "action:", action);
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action,
+            id
+          })
+        });
+
+        if (res.status === 200) {
+          this.renderMirror(true);
+        } else {
+          console.error("Toggle pin failed:", res.status, await res.text());
+        }
+      } catch (e) {
+        console.error("Toggle pin error:", e);
+      }
+    },
+
+    carryBreadToMirror(text) {
+      this.switchPass('mirror');
+      setTimeout(() => {
+        const bodyEl = document.getElementById('prAddBody');
+        if (bodyEl) {
+          bodyEl.value = text;
+          bodyEl.focus();
+        }
+      }, 50);
+    },
+
+    startClose(id) {
+      this.closingPrayerId = id;
+      this.renderMirror(false);
+    },
+
+    cancelClose() {
+      this.closingPrayerId = null;
+      this.renderMirror(false);
+    },
+
+    setCloseState(id, val) {
+      this.closeStateSelected[id] = val;
+      const yesBtn = document.getElementById(`prCloseStateYes-${id}`);
+      const noBtn = document.getElementById(`prCloseStateNo-${id}`);
+      if (yesBtn && noBtn) {
+        if (val === 'yes') {
+          yesBtn.style.borderColor = 'var(--lime)';
+          yesBtn.style.color = 'var(--lime)';
+          noBtn.style.borderColor = 'rgba(255,255,255,0.15)';
+          noBtn.style.color = '#fff';
+        } else {
+          noBtn.style.borderColor = 'var(--lime)';
+          noBtn.style.color = 'var(--lime)';
+          yesBtn.style.borderColor = 'rgba(255,255,255,0.15)';
+          yesBtn.style.color = '#fff';
+        }
+      }
+    },
+
+    async submitClose(id) {
+      const state = this.closeStateSelected[id];
+      if (!state) {
+        alert("Please select whether this request was answered 'yes' or 'no'.");
+        return;
+      }
+      const outcome = document.getElementById(`prCloseOutcome-${id}`).value.trim();
+      if (!outcome) {
+        alert("Outcome is required. Please write what happened.");
+        return;
+      }
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'close',
+            id,
+            state,
+            outcome
+          })
+        });
+
+        const data = await res.json();
+        if (res.status !== 200) {
+          alert("Close failed: " + data.error);
+          return;
+        }
+
+        let bodyText = 'closed prayer';
+        if (this.cachedMirrorData) {
+          for (const cat in this.cachedMirrorData) {
+            const found = this.cachedMirrorData[cat].find(p => p.id === id);
+            if (found) {
+              bodyText = found.body;
+              break;
+            }
+          }
+        }
+
+        this.closingPrayerId = null;
+        delete this.closeStateSelected[id];
+
+        if (state === 'no') {
+          this.offerRecordHandoff(bodyText, outcome);
+        } else {
+          this.renderMirror(true);
+        }
+
+      } catch (e) {
+        console.error(e);
+        alert("An error occurred while closing the prayer.");
+      }
+    },
+
+    offerRecordHandoff(bodyText, outcome) {
+      const overlay = document.createElement('div');
+      overlay.className = 'pr-handoff-overlay';
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.background = 'rgba(0, 0, 0, 0.75)';
+      overlay.style.backdropFilter = 'blur(8px)';
+      overlay.style.webkitBackdropFilter = 'blur(8px)';
+      overlay.style.zIndex = '9999';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.pointerEvents = 'auto';
+
+      overlay.innerHTML = `
+        <div class="pr-card" style="width: 90%; max-width: 450px; position: relative;">
+          <h3 class="pr-title" style="margin-bottom: 8px;">Keep in the Record?</h3>
+          <div class="pr-teaching" style="margin-bottom: 16px;">
+            A 'no' is an invitation to sit and process. Would you like to save this reflection to your daily Record journal?
+          </div>
+          <div class="pr-field">
+            <textarea class="pr-input pr-textarea" id="prRecordHandoffText" style="height: 100px;"></textarea>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;">
+            <button class="pr-btn pr-btn-ghost" id="prHandoffCancel" style="padding: 6px 12px; min-height: 36px;">Skip</button>
+            <button class="pr-btn" id="prHandoffSave" style="padding: 6px 12px; min-height: 36px;">Save to Record</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      const txtArea = overlay.querySelector('#prRecordHandoffText');
+      if (txtArea) {
+        txtArea.value = `Outcome: ${outcome}`;
+      }
+
+      overlay.querySelector('#prHandoffCancel').onclick = () => {
+        overlay.remove();
+        this.renderMirror(true);
+      };
+
+      overlay.querySelector('#prHandoffSave').onclick = async () => {
+        const text = overlay.querySelector('#prRecordHandoffText').value.trim();
+        if (text) {
+          const entry = {
+            date: realToday(),
+            text,
+            fastId: S.fast ? S.fast.id : null,
+            fastDay: null,
+            tone: 'mixed',
+            scribe: null,
+            resurface: null,
+            pending: false
+          };
+
+          if (window.S && Array.isArray(S.entries)) {
+            S.entries = S.entries.filter(e => e.date !== entry.date);
+            S.entries.push(entry);
+          }
+
+          saveEntry(realToday(), text, 'mixed', S.fast ? S.fast.id : null, null, null, null).catch(e => {
+            console.error("Handoff save error:", e);
+          });
+        }
+        overlay.remove();
+        this.renderMirror(true);
+      };
+    },
+
+    async reopenPrayer(id) {
+      if (!confirm("Would you like to reopen this prayer and move it back to your active list?")) return;
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'reopen',
+            id
+          })
+        });
+
+        if (res.status === 200) {
+          if (this.activePass === 'answered') {
+            this.renderAnswered();
+          } else {
+            this.renderMirror(true);
+          }
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to reopen prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      }
+    },
+
+    async renderAnswered() {
+      const container = document.getElementById('prAnsweredContent');
+      if (!container) return;
+
+      container.innerHTML = `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0;">Loading answers...</div>`;
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-read', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            view: 'answered',
+            limit: 100
+          })
+        });
+
+        const data = await res.json();
+        if (res.status !== 200) {
+          container.innerHTML = `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0;">Unable to retrieve answered prayers.</div>`;
+          return;
+        }
+
+        const prayers = data.prayers || [];
+        const yesCount = data.yesCount || 0;
+
+        let html = `
+          <div class="pr-card">
+            <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+              Answer Log
+            </div>
+            <h2 class="pr-title">The Evidence</h2>
+            <div class="pr-teaching">The record of what happened to each thing on your list.</div>
+            
+            <div style="margin-top: 16px; font-weight: 700; font-size: 14px; color: var(--lime);" id="yesCountDiv">
+              ${yesCount} Yes ${yesCount === 1 ? 'Answer' : 'Answers'}
+            </div>
+            <div style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;"></div>
+            
+            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;" id="answeredListContainer">
+        `;
+
+        if (prayers.length === 0) {
+          html += `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0; text-align: center;">No answered prayers in the log.</div>`;
+        } else {
+          prayers.forEach(p => {
+            const elapsed = this.getElapsedTimeText(p.asked_on);
+            const closeDate = p.closed_on ? new Date(p.closed_on).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+            const isYes = p.state === 'yes';
+
+            html += `
+              <div class="pr-list-card" style="border-left: 3px solid ${isYes ? 'var(--lime)' : 'rgba(255,255,255,0.3)'}; position: relative;">
+                <div class="pr-list-card-body" style="margin-bottom: 8px;">${p.body}</div>
+                <div style="font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 12px; font-style: italic; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 4px;">
+                  Outcome: ${p.outcome}
+                </div>
+                <div class="pr-list-card-meta">
+                  <div>
+                    <span style="font-weight: 700; color: ${isYes ? 'var(--lime)' : 'rgba(255,255,255,0.6)'}; text-transform: uppercase; font-size: 11px; margin-right: 8px;">
+                      ${isYes ? 'Yes' : 'No'}
+                    </span>
+                    Asked ${elapsed}. Answered ${closeDate}.
+                  </div>
+                  <div class="pr-card-actions">
+                    <button class="pr-card-btn" onclick="PRAYER.reopenPrayer('${p.id}')">Reopen</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        html += `
+            </div>
+          </div>
+        `;
+
+        container.innerHTML = html;
+
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0;">An error occurred while loading answers.</div>`;
+      }
+    },
+
+    async loadEveningMilestone() {
+      if (this.milestoneAskPrayer) {
+        this.renderMilestoneAskCard();
+        return;
+      }
+      this.milestoneAskPrayer = null;
+      this.milestoneCloseState = '';
+
+      const milestoneDiv = document.getElementById('prEveningMilestone');
+      if (milestoneDiv) milestoneDiv.innerHTML = '';
+
+      console.log("Milestone check: MEMBER_EMAIL is:", MEMBER_EMAIL);
+      try {
+        const res = await fetch(FN_BASE + '/prayers-read', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            view: 'milestone'
+          })
+        });
+
+        const data = await res.json();
+        console.log("Milestone check: status:", res.status, "data:", JSON.stringify(data));
+        if (res.status === 200 && data && data.prayer) {
+          this.milestoneAskPrayer = data.prayer;
+          this.milestoneMilestoneNum = data.milestone;
+
+          fetch(FN_BASE + '/prayers-write', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${SUPABASE_ANON}`
+            },
+            body: JSON.stringify({
+              email: MEMBER_EMAIL,
+              action: 'milestone_shown',
+              id: data.prayer.id,
+              milestone: data.milestone
+            })
+          }).catch(e => console.error("Failed to mark milestone shown:", e));
+
+          this.renderMilestoneAskCard();
+        }
+      } catch (e) {
+        console.error("Failed to load evening milestone ask:", e);
+      }
+    },
+
+    renderMilestoneAskCard() {
+      const milestoneDiv = document.getElementById('prEveningMilestone');
+      if (!milestoneDiv || !this.milestoneAskPrayer) return;
+
+      const p = this.milestoneAskPrayer;
+      const milestone = this.milestoneMilestoneNum;
+
+      let promptText = '';
+      if (milestone >= 365) {
+        const years = Math.round(milestone / 365);
+        const yearWord = years === 1 ? 'year' : 'years';
+        promptText = `${years === 1 ? 'One' : years} ${yearWord} ago today you asked for this.`;
+      } else {
+        const daysWord = milestone === 90 ? 'ninety' : (milestone === 30 ? 'thirty' : milestone);
+        promptText = `You asked for this ${daysWord} days ago. Anything?`;
+      }
+
+      const selected = this.milestoneCloseState;
+      const yesActive = selected === 'yes';
+      const noActive = selected === 'no';
+
+      let inputHtml = '';
+      if (selected === 'yes' || selected === 'no') {
+        inputHtml = `
+          <div class="pr-field" style="margin-top: 12px;">
+            <label class="pr-label">Outcome (Sentence about what happened)</label>
+            <textarea class="pr-input pr-textarea" id="prMilestoneOutcome" placeholder="Sentence about what happened..." maxlength="1000"></textarea>
+            <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;">
+              <button class="pr-btn" style="font-size: 11px; padding: 4px 10px; min-height: 28px;" onclick="PRAYER.submitMilestoneClose()">Save</button>
+            </div>
+          </div>
+        `;
+      }
+
+      milestoneDiv.innerHTML = `
+        <div class="pr-list-card pr-milestone-card" style="border: 1px solid var(--lime); background: rgba(142, 230, 24, 0.03); margin-bottom: 24px;">
+          <div style="font-size: 10px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+            Prayer Milestone
+          </div>
+          <div class="pr-list-card-body" style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">
+            "${p.body}"
+          </div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">
+            ${promptText}
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="pr-btn pr-btn-ghost" id="prMilestoneBtnYes" onclick="PRAYER.setMilestoneCloseState('yes')" style="padding: 4px 12px; min-height: 28px; border-color: ${yesActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${yesActive ? 'var(--lime)' : '#fff'}">Yes</button>
+            <button class="pr-btn pr-btn-ghost" id="prMilestoneBtnNo" onclick="PRAYER.setMilestoneCloseState('no')" style="padding: 4px 12px; min-height: 28px; border-color: ${noActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${noActive ? 'var(--lime)' : '#fff'}">No</button>
+            <button class="pr-btn pr-btn-ghost" onclick="PRAYER.dismissMilestoneAsk()" style="padding: 4px 12px; min-height: 28px; border-color: rgba(255,255,255,0.15);">Still waiting</button>
+          </div>
+          ${inputHtml}
+        </div>
+      `;
+    },
+
+    setMilestoneCloseState(val) {
+      this.milestoneCloseState = val;
+      this.renderMilestoneAskCard();
+    },
+
+    async submitMilestoneClose() {
+      const p = this.milestoneAskPrayer;
+      if (!p) return;
+      const state = this.milestoneCloseState;
+      const outcome = document.getElementById('prMilestoneOutcome').value.trim();
+
+      if (!outcome) {
+        alert("Outcome is required. Please write what happened.");
+        return;
+      }
+
+      try {
+        const res = await fetch(FN_BASE + '/prayers-write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify({
+            email: MEMBER_EMAIL,
+            action: 'close',
+            id: p.id,
+            state,
+            outcome
+          })
+        });
+
+        if (res.status === 200) {
+          const outcomeWritten = outcome;
+          const bodyText = p.body;
+          this.milestoneAskPrayer = null;
+          this.milestoneCloseState = '';
+          const milestoneDiv = document.getElementById('prEveningMilestone');
+          if (milestoneDiv) milestoneDiv.innerHTML = '';
+
+          if (state === 'no') {
+            this.offerRecordHandoff(bodyText, outcomeWritten);
+          }
+        } else {
+          const err = await res.json();
+          alert(err.error || "Unable to close milestone prayer.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error encountered.");
+      }
+    },
+
+    dismissMilestoneAsk() {
+      this.milestoneAskPrayer = null;
+      this.milestoneCloseState = '';
+      const milestoneDiv = document.getElementById('prEveningMilestone');
+      if (milestoneDiv) milestoneDiv.innerHTML = '';
+    }
+  };
+
+  window.PRAYER = PRAYER;
+  window.initPrayerPillar = () => PRAYER.init();
 
 // ════════════════════════════════════════════════════════════
 // AUTH SURFACE ENGINE
@@ -9199,6 +11133,7 @@ window.showGateFallback = showGateFallback;
 const KEY='record_fast_v2';
 let S={entries:[],fast:null,equipDismissed:false,
   draft:null, prefs:{scribeStyle:'full',missed:0,landed:0}, history:[], lastScribeLines:[], profile:null};
+window.S = S;
 let productState='equipped';
 let BUNDLE={key:'genius-guice',name:'Genius Guice + Hydration',afternoon:'Genius Guice',allday:'Hydration Powder'};
 
@@ -9217,6 +11152,9 @@ async function load(){
     if(d.ok){
       S.entries = d.entries || [];
       S.fast = d.fast || null;
+      if (S.fast) {
+        S.fast.taking_on = S.fast.taking_on || (S.fast.plan && S.fast.plan.taking_on) || [];
+      }
       S.history = d.history || [];
       S.prefs = d.prefs || {scribeStyle:'full',missed:0,landed:0};
       S.profile = d.profile || null;
@@ -9225,16 +11163,14 @@ async function load(){
       if (d.reflections) {
         const refs = {};
         d.reflections.forEach(r => {
-          refs[r.day_number] = { text: r.text, share: r.share_personalization };
+          refs[r.day_number] = { text: r.text, said: r.said, will_do: r.will_do, share: r.share_personalization };
         });
         localStorage.setItem('wh_bible_reflections', JSON.stringify(refs));
       }
-      if(S.fast) {
-        S.fast.kept = {};
-        (d.fast_days || []).forEach(row => {
-          S.fast.kept[row.day_date] = row.rules_kept || [];
-        });
+      if (d.book_intros) {
+        localStorage.setItem('wh_book_intros', JSON.stringify(d.book_intros));
       }
+
       productState = d.product_state || 'unequipped';
       window._bundleName = d.bundle_name || null;
       window._nextEligible = d.next_eligible_date || null;
@@ -9310,35 +11246,7 @@ async function saveFast() {
     console.error(e);
   }
 }
-let saveKeptT = null;
-function saveKeptDebounced(fast_id, day_number, day_date, rules_kept) {
-  clearTimeout(saveKeptT);
-  saveKeptT = setTimeout(async () => {
-    try {
-      const r = await fetch(FN_BASE + '/governor-state', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'save_kept',
-          email: MEMBER_EMAIL,
-          fast_id,
-          day_number,
-          day_date,
-          rules_kept,
-          tz_offset_min: new Date().getTimezoneOffset()
-        })
-      });
-      const d = await r.json();
-      if (!d.ok && d.error === 'report_not_open') {
-        alert("The Command Center gate is closed. Keeping rules only opens after 8:45 PM local time.");
-        await load();
-        if (document.getElementById('fastView').style.display !== 'none') renderFast();
-      }
-    } catch(e) {
-      console.error(e);
-    }
-  }, 800);
-}
+// saveKeptDebounced removed (Page 5 compliance overhaul)
 async function endFast(status, ended_day, history_row) {
   try {
     const r = await fetch(FN_BASE + '/governor-state', {
@@ -9484,11 +11392,19 @@ function matchFast(whys,exp){
 }
 const WHY_LABEL={freedom:'breaking what owns you',direction:'seeking direction',nearness:'drawing near',intercession:'standing in for someone',repentance:'repentance and reset',preparation:'preparing for what is coming'};
 
+window.applyProductExclusions = function() {
+  const ex = exclusions();
+  const joe = document.getElementById('genius-joe');
+  if (joe) joe.style.display = ex.has('Genius Joe') ? 'none' : '';
+  const chg = document.getElementById('charge');
+  if (chg) chg.style.display = ex.has('Charge') ? 'none' : '';
+};
+
 /* ================== NAV ================== */
 function go(view,el,label){
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
   if(!el && view) {
@@ -9511,6 +11427,7 @@ function go(view,el,label){
     document.getElementById('headerLine').textContent=labels[view]||'Module';
     if(view==='tryall'){
       try { loadMemberDiscount(MEMBER_EMAIL); } catch(e) {}
+      applyProductExclusions();
     }
   } else {
     setHeaderFocus(view);
@@ -9529,6 +11446,10 @@ function go(view,el,label){
   if(view==='me'){
     document.getElementById('headerLine').textContent='My Prayers';
     if(typeof initMe==='function') initMe();
+  }
+  if(view==='prayer'){
+    document.getElementById('headerLine').textContent='Prayer';
+    if(typeof initPrayerPillar==='function') initPrayerPillar();
   }
   if(view==='dash'){
     try { fetchWallCommunityState(); } catch(e) {}
@@ -10189,7 +12110,7 @@ function voiceFastDirective() {
   const d = activeFastDay();
   if (d && S.fast.plan) {
     const ph = fastPhaseFor(d);
-    const focusArr = (S.fast.plan.focus && S.fast.plan.focus[ph.name]) || ['Full routine. No exceptions.'];
+    const focusArr = (S.fast.plan.focus && ph && S.fast.plan.focus[ph.name]) || ['Full routine. No exceptions.'];
     const focus = focusArr[(d - 1) % focusArr.length];
     speak(focus);
   } else {
@@ -10209,33 +12130,11 @@ async function voiceFastPassage(which) {
 }
 
 function voiceFastProgress() {
-  const stats = ruleKeptStats(99);
-  const comfort = (S.profile && S.profile.scripture_comfort) || 1;
-  if (comfort >= 3) {
-    speak("You have kept the routine on " + stats.keptPercent + " percent of days. Small, steady things matter. Luke 16:10 reminds us: whoever can be trusted with very little can also be trusted with much.");
-  } else {
-    speak("You have kept the routine on " + stats.keptPercent + " percent of days. Small, steady things matter. Do not despise the day of small beginnings.");
-  }
+  speak("The fast does not track checklist compliance. Your routine is a guideline, and the journal is where you own your progress honestly.");
 }
 
 async function voiceMarkReport(slots) {
-  if (!reportOpen()) {
-    speak("The report opens at 8:45 PM. Right now the job is the schedule.");
-    return;
-  }
-  if (slots && slots.rules_kept && slots.rules_kept.length > 0) {
-    const d = activeFastDay();
-    const todayStr = realToday();
-    if (S.fast) {
-      if (!S.fast.kept) S.fast.kept = {};
-      S.fast.kept[todayStr] = slots.rules_kept;
-      await saveKept(S.fast.id, d, todayStr, slots.rules_kept);
-      speak("Report recorded. Marked: " + slots.rules_kept.join(', ') + ".");
-      renderFast();
-    }
-  } else {
-    speak("Let's mark your report. Did you keep your rules today?");
-  }
+  speak("Daily checklist compliance tracking is removed. To record how the day went, speak or write your evening entry in the journal.");
 }
 
 function voiceBrokenRule() {
@@ -10401,33 +12300,17 @@ function nowNext(){
   return {nowR,nextR};
 }
 function fmtMins(mins){const h=Math.floor(mins/60),m=mins%60;return (h?h+'h ':'')+m+'m';}
-function ruleKeptStats(lastN){
-  /* returns per-rule miss counts over the last N filed fast days */
-  if(!S.fast||!S.fast.kept)return null;
-  const dates=Object.keys(S.fast.kept).sort().slice(-lastN);
-  if(dates.length===0)return null;
-  const rules=S.fast.plan.rules;const miss=rules.map(()=>0);
-  dates.forEach(dt=>{rules.forEach((r,i)=>{if(!(S.fast.kept[dt]||[]).includes(i))miss[i]++;});});
-  return {dates,miss};
-}
-function brokenRule(){
-  const st=ruleKeptStats(3);
-  if(!st||st.dates.length<2)return null;
-  let idx=-1,mx=1;
-  st.miss.forEach((m,i)=>{if(m>=2&&m>mx){mx=m;idx=i;}});
-  return idx>=0?{index:idx,rule:S.fast.plan.rules[idx]}:null;
-}
+function ruleKeptStats(lastN){ return null; }
+function brokenRule(){ return null; }
 
-/* Journal fast mode (adaptive prompt targets the broken rule, item 16) */
+/* Journal fast mode (non-adaptive prompt, Page 5 compliance overhaul) */
 function renderJournalContext(){
   const chip=document.getElementById('fastModeChip');
   const d=activeFastDay();
   if(d&&S.fast.plan){
     const ph=fastPhaseFor(d);
     chip.innerHTML='<div class="draft-chip" style="color:var(--lime);border-color:rgba(204,255,0,0.3)">Fast Mode &#183; Day '+d+' of '+S.fast.duration+(ph?' &#183; '+ph.name:'')+'</div>';
-    const br=brokenRule();
     let prompt=ph&&S.fast.plan.journal_prompts&&S.fast.plan.journal_prompts[ph.name];
-    if(br)prompt='What is making this the fight right now: '+br.rule.replace(/\.$/,'')+'?';
     if(prompt)document.getElementById('officeLine').innerHTML='<b>'+prompt+'</b>';
   } else {
     chip.innerHTML='';
@@ -10601,12 +12484,16 @@ const FOOD_ABSTAIN=/\b(no food|all food|water only|nothing but water|total fast|
 const WEIGHT_RX=/\b(weight|pounds|lbs|fat|slim|skinny|calories|diet)\b/i;
 
 let W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,
-  anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false};
+  anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false,
+  safetyDiabetic:false,safetyBP:false,safetyEating:false,activePrayers:null,attachedPrayerId:null,attachedNewBody:"",attachedNewCategory:"",takingOn:[]};
 
 function exclusions(){
   const ex=new Set();
-  if(W.laid.includes('Coffee')){if(W.caffScope==='all'){ex.add('Genius Joe');ex.add('Charge');}else ex.add('Genius Joe');}
-  if(W.laid.includes('Energy drinks'))ex.add('Charge');
+  const laid = (S.fast && S.fast.laid) ? S.fast.laid : (W.laid || []);
+  const caffScope = (S.fast && S.fast.caffScope) ? S.fast.caffScope : W.caffScope;
+  if(laid.includes('Coffee')){if(caffScope==='all'){ex.add('Genius Joe');ex.add('Charge');}else ex.add('Genius Joe');}
+  if(laid.includes('Energy drinks'))ex.add('Charge');
+  if(S.fast && S.fast.exclusions) S.fast.exclusions.forEach(e => ex.add(e));
   return ex;
 }
 /* Anchors recommended from pattern + record + history (items 22, 23) */
@@ -10636,9 +12523,36 @@ function readinessRead(){
 function renderFast(){
   updateNavBadge();
   const root=document.getElementById('fastRoot');
-  if(S.fast&&S.fast.status==='active'){renderDaily(root);return;}
+  if(S.fast&&S.fast.status==='active'){
+    const F=S.fast;
+    const day=Math.floor((new Date(realToday())-new Date(F.start_date))/86400000)+1;
+    if(F.duration && day>F.duration){
+      F.status='completed';
+      F.ended_day=F.duration;
+      endFast('completed', F.duration, {model:F.plan.fast_name,duration:F.duration,ended_day:F.duration,finished:true,weak_rule:null});
+      renderClosedFast(root);
+      return;
+    }
+    if(!F.duration) {
+      const lastOpened = F.last_opened_at ? new Date(F.last_opened_at) : new Date(F.start_date);
+      const daysSinceOpened = Math.floor((new Date(realToday()) - lastOpened) / 86400000);
+      const daysRunning = Math.floor((new Date(realToday()) - new Date(F.start_date)) / 86400000) + 1;
+      const lapseThreshold = Math.max(7, Math.floor(daysRunning * 0.5));
+      if (daysSinceOpened >= lapseThreshold) {
+        F.status = 'lapsed';
+        F.ended_day = daysRunning - daysSinceOpened;
+        endFast('lapsed', F.ended_day, {model:F.plan.fast_name,duration:0,ended_day:F.ended_day,finished:false,weak_rule:null});
+        renderClosedFast(root);
+        return;
+      }
+      F.last_opened_at = realToday();
+      saveFast();
+    }
+    renderDaily(root);
+    return;
+  }
   if(S.fast&&S.fast.status==='revealed'){renderReveal(root);return;}
-  if(S.fast&&(S.fast.status==='completed'||S.fast.status==='ended_early')){renderClosedFast(root);return;}
+  if(S.fast&&(S.fast.status==='completed'||S.fast.status==='ended_early'||S.fast.status==='lapsed')){renderClosedFast(root);return;}
   renderThreshold(root);
 }
 
@@ -10801,6 +12715,10 @@ function renderDash(){
     h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Recommended Protocol</div>';
     h+='<div style="display:flex;gap:16px;flex-wrap:wrap">';
     recBundle2.products.forEach(function(p){
+      const ex = exclusions();
+      if (ex.has(p.name)) {
+        return;
+      }
       h+='<div style="flex:1;min-width:140px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:24px;text-align:center">';
       h+='<img src="'+p.img+'" alt="'+p.name+'" style="height:160px;object-fit:contain;margin-bottom:20px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5))">';
       h+='<div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:8px">'+p.name+'</div>';
@@ -10877,13 +12795,86 @@ window.showGate=function(){
 };
 window.ackGate=function(){W.step=1;W.ackAt=new Date().toISOString();renderWizard();};
 
-function prog(){let h='<div class="step-progress">';for(let i=1;i<=7;i++)h+='<i class="'+(W.step>=i?'on':'')+'"></i>';return h+'</div>';}
+function prog(){let h='<div class="step-progress">';for(let i=1;i<=10;i++)h+='<i class="'+(W.step>=i?'on':'')+'"></i>';return h+'</div>';}
 function wizNav(canNext,nextLabel){
   return '<div class="wiz-nav">'+(W.step>1?'<button class="btn-ghost" onclick="wizBack()">Back</button>':'<span></span>')+
+    prog()+
     '<button class="btn-lime" '+(canNext?'':'disabled')+' onclick="wizNext()">'+(nextLabel||'Next')+'</button></div>';
 }
 window.wizBack=function(){wizDir='back';W.step=Math.max(1,W.step-1);renderWizard();};
-window.wizNext=function(){if(W.step===7){forge();return;}wizDir='next';W.step++;renderWizard();};
+
+async function loadAttachPrayers() {
+  if (W.activePrayers) return;
+  try {
+    const res = await fetch(FN_BASE + '/prayers-read?email=' + MEMBER_EMAIL + '&view=mirror', {
+      headers: { 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    });
+    if (res.status === 200) {
+      const data = await res.json();
+      W.activePrayers = data || [];
+    }
+  } catch (e) {
+    console.error("Failed to load active prayers for attach:", e);
+    W.activePrayers = [];
+  }
+}
+
+window.selectAttachPrayer = function(id) {
+  W.attachedPrayerId = id;
+  W.attachedNewBody = '';
+  W.attachedNewCategory = '';
+  renderWizard();
+};
+
+window.skipAttachPrayer = function() {
+  W.attachedPrayerId = null;
+  W.attachedNewBody = '';
+  W.attachedNewCategory = '';
+  renderWizard();
+  wizNext();
+};
+
+window.updateSafetyWarning = function() {
+  const isDiabetic = document.getElementById('gateDiabetic')?.checked;
+  const isBP = document.getElementById('gateBP')?.checked;
+  const isEating = document.getElementById('gateEating')?.checked;
+  const warnDiv = document.getElementById('safetyWarning');
+  if (warnDiv) {
+    if (isDiabetic || isBP || isEating) {
+      warnDiv.style.display = 'block';
+    } else {
+      warnDiv.style.display = 'none';
+    }
+  }
+};
+
+window.wizNext=async function(){
+  if(W.step===4){
+    const btn = document.querySelector('.wiz-nav .btn-lime');
+    if (btn) btn.disabled = true;
+    await loadAttachPrayers();
+    if (btn) btn.disabled = false;
+  }
+  if (W.step === 5) {
+    const newBody = (W.attachedNewBody || "").trim();
+    const newCat = W.attachedNewCategory || "";
+    if (newBody.length > 0 && !newCat) {
+      alert("Please select a category for your new prayer request.");
+      return;
+    }
+    if (newCat && !newBody.length) {
+      alert("Please write the prayer request details before choosing a category.");
+      return;
+    }
+  }
+  if(W.step===10){
+    forge();
+    return;
+  }
+  wizDir='next';
+  W.step++;
+  renderWizard();
+};
 
 let wizDir='next',lastWizStep=0;
 function stag(entering,ix){return entering?(' pop-in" style="animation-delay:'+(ix*38)+'ms"'):'"';}
@@ -10923,6 +12914,67 @@ function renderWizard(){
     h+=wizNav(!!W.exp);
   }
   else if(W.step===4){
+    h+='<div class="q-title">Safety Gate</div><div class="q-sub">Please review these medical checks before choosing your fast pattern. Your safety before God is first.</div>'+
+       '<div style="text-align:left; display:flex; flex-direction:column; gap:16px; margin:24px 0;">'+
+       '  <label style="display:flex; align-items:center; gap:12px; cursor:pointer; font-size:15px; color:#fff;">'+
+       '    <input type="checkbox" id="gateDiabetic" '+(W.safetyDiabetic?'checked':'')+' onchange="W.safetyDiabetic=this.checked; updateSafetyWarning();" style="width:18px; height:18px;">'+
+       '    <span>I am managing diabetes or metabolic conditions</span>'+
+       '  </label>'+
+       '  <label style="display:flex; align-items:center; gap:12px; cursor:pointer; font-size:15px; color:#fff;">'+
+       '    <input type="checkbox" id="gateBP" '+(W.safetyBP?'checked':'')+' onchange="W.safetyBP=this.checked; updateSafetyWarning();" style="width:18px; height:18px;">'+
+       '    <span>I take blood pressure medications</span>'+
+       '  </label>'+
+       '  <label style="display:flex; align-items:center; gap:12px; cursor:pointer; font-size:15px; color:#fff;">'+
+       '    <input type="checkbox" id="gateEating" '+(W.safetyEating?'checked':'')+' onchange="W.safetyEating=this.checked; updateSafetyWarning();" style="width:18px; height:18px;">'+
+       '    <span>I have a history of eating disorders or disordered eating</span>'+
+       '  </label>'+
+       '</div>'+
+       '<div id="safetyWarning" class="guard-card" style="display:'+(W.safetyDiabetic||W.safetyBP||W.safetyEating?'block':'none')+'; margin-bottom:20px;">'+
+       '  <b>Notice:</b> Based on your checks, we recommend consulting a doctor before initiating any food or metabolic fast. You may still proceed with the builder, but please prioritize your health and wisdom.'+
+       '</div>';
+    h+=wizNav(true);
+  }
+  else if(W.step===5){
+    h+='<div class="q-title">Attach a prayer request</div><div class="q-sub">Attach an active prayer request to this fast. When the fast ends, you can record what happened directly to the prayer.</div>';
+    
+    // Existing prayers
+    if (W.activePrayers && W.activePrayers.length > 0) {
+      h+='<div class="grp-label">Choose an active prayer request</div>';
+      W.activePrayers.forEach(p => {
+        const isSel = W.attachedPrayerId === p.id;
+        h+='<div class="tile'+(isSel?' sel':'')+'" onclick="selectAttachPrayer(\''+p.id+'\')" style="display:block; margin-bottom:8px; text-align:left; cursor:pointer;">'+
+           '  <div style="font-size:12px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">' + (p.category || 'Request') + '</div>'+
+           '  <div style="font-size:14px; line-height:1.4; color:#fff;">' + p.body + '</div>'+
+           '</div>';
+      });
+    } else {
+      h+='<p class="g-body" style="font-style:italic;">No active prayer requests found in your Closet Mirror.</p>';
+    }
+    
+    // Create new prayer request
+    h+='<div class="grp-label" style="margin-top:20px;">Or write a new prayer request</div>';
+    h+='<textarea class="free-input" id="newAttachPrayerBody" placeholder="What are you praying forward for during this fast?" style="width:100%; height:80px; margin-bottom:12px;" oninput="W.attachedNewBody=this.value; W.attachedPrayerId=null; renderWizard();">' + W.attachedNewBody + '</textarea>';
+    
+    if (W.attachedNewBody.trim().length > 0) {
+      h+='<div class="grp-label" style="color:var(--lime)">Select category (Required for new prayer)</div>'+
+         '<div class="pill-row">';
+      ['marriage', 'children', 'finances', 'health', 'work', 'temptation', 'other'].forEach(cat => {
+        const isSel = W.attachedNewCategory === cat;
+        h+='<button class="pill'+(isSel?' sel':'')+'" onclick="W.attachedNewCategory=\''+cat+'\'; W.attachedPrayerId=null; renderWizard();">' + cat + '</button>';
+      });
+      h+='</div>';
+    }
+    
+    const isNewValid = W.attachedNewBody.trim().length > 0 && W.attachedNewCategory;
+    const canNext = W.attachedPrayerId || isNewValid;
+    
+    h+='<div class="wiz-nav">'+
+       '  <button class="btn-ghost" onclick="wizBack()">Back</button>'+
+       '  <button class="btn-ghost" onclick="skipAttachPrayer()">Skip Attachment</button>'+
+       '  <button class="btn-lime" ' + (canNext ? '' : 'disabled') + ' onclick="wizNext()">Next</button>'+
+       '</div>';
+  }
+  else if(W.step===6){
     if(!W.matched){const m=matchFast(W.whys,W.exp);W.matched=m.primary;W.matchAlt=m.alt;W.dur=m.primary.days;}
     const f=W.matched;
     h+='<div class="q-title">Your fast, from scripture.</div><div class="q-sub">Based on what you carry and why, this is the pattern that fits. You can accept it or choose another.</div>';
@@ -10933,7 +12985,6 @@ function renderWizard(){
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">'+f.refs.map(r=>'<button class="ref-btn" onclick="openVerse(this,\''+r+'\')">'+r+'</button>').join('')+'</div>'+
       '<div style="margin-top:12px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff">Recommended length: '+f.days+' days</div>'+
     '</div>';
-    /* reasoning both ways, item 15 */
     if(W.matchAlt){
       h+='<div class="reason-line"><b>'+W.matchAlt.title+'</b> also fit what you carry. But you marked '+(WHY_LABEL[W.whys[0]]||W.whys[0])+' first, and '+f.figure+'\u2019s pattern holds '+f.days+' days for exactly that.</div>';
     }
@@ -10949,13 +13000,13 @@ function renderWizard(){
     h+='<div class="grp-label">Start date</div><input class="free-input" type="date" id="startDate" value="'+(W.start||dayKey(1))+'" onchange="W.start=this.value" style="margin-top:4px;max-width:220px">';
     h+=wizNav(true,'Accept This Fast');
   }
-  else if(W.step===5){
+  else if(W.step===7){
     h+='<div class="q-title">Should your record shape this?</div><div class="q-sub">Your journal already knows your real rhythms. With permission, the builder reads it to set honest anchors instead of fantasy ones, and to name what your prayer weeks should carry.</div>'+
       '<div class="tile-grid"><button class="tile'+(W.recordConsent?' sel':'')+'" onclick="W.recordConsent=true;W.anchorReasons=null;renderWizard()">Yes, read my record<small>Anchors and prayer focus set from what is actually true</small></button>'+
       '<button class="tile'+(!W.recordConsent?' sel':'')+'" onclick="W.recordConsent=false;W.anchorReasons=null;renderWizard()">No, keep it separate<small>The plan uses only what I set by hand</small></button></div>';
     h+=wizNav(true);
   }
-  else if(W.step===6){
+  else if(W.step===8){
     if(!W.anchorReasons)recommendAnchors();
     const a=W.anchors,r=W.anchorReasons;
     h+='<div class="q-title">Your recommended rhythm.</div><div class="q-sub">Set from your pattern'+(W.recordConsent?', your record,':'')+(S.history.length?' your last fast,':'')+' and what you own. Reviewed, not built from scratch. Adjust anything that does not fit.</div>';
@@ -10969,10 +13020,55 @@ function renderWizard(){
     h+='<div class="grace">Miss a rule, note it in your journal, own it, and get back on track the next morning. Do not quit the fast over one bad day.</div>';
     h+=wizNav(true);
   }
-  else if(W.step===7){
+  else if(W.step===9){
     h+='<div class="q-title">Who carries it with you?</div><div class="q-sub">Fasting in secret is honored here. So is not carrying it alone.</div><div class="tile-grid">'+
       [['alone','Alone before God','Kept between you and Him'],['brother','With my covenant brother','He sees the day count, never the contents'],['cohort','With a cohort','The structure shared, the contents private']].map((c,ix)=>'<button class="tile'+(W.carried===c[0]?' sel':'')+stag(entering,ix)+' onclick="W.carried=\''+c[0]+'\';renderWizard()">'+c[1]+'<small>'+c[2]+'</small></button>').join('')+'</div>';
-    h+=wizNav(true,'Structure My Fast');
+    h+=wizNav(true);
+  }
+  else if(W.step===10){
+    h+='<div class="q-title">Confirm your commitments</div><div class="q-sub">Review the two lists. Either list may be empty. We will never ask you to justify one against the other.</div>';
+    h+='<div style="margin-bottom:24px;">'+
+       '  <div class="grp-label" style="color:var(--lime); font-size:16px;">Setting Down (Removal)</div>'+
+       '  <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">';
+    if (W.laid.length === 0) {
+      h+='  <div style="font-style:italic; color:var(--text-dim); font-size:14px;">No items on the removal list.</div>';
+    } else {
+      W.laid.forEach(item => {
+        h+='  <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px 14px; border:1px solid rgba(255,255,255,0.06); border-radius:8px;">'+
+           '    <span style="color:#fff; font-size:14px;">' + item + '</span>'+
+           '    <button class="ref-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="togLay(\''+item.replace(/'/g,"\\'")+'\')">Remove</button>'+
+           '  </div>';
+      });
+    }
+    h+='  </div>'+
+       '</div>';
+    const defaultTakes = [];
+    if (W.anchors.movement) defaultTakes.push("Morning movement");
+    if (W.anchors.laps > 0) defaultTakes.push("Daily walk (" + W.anchors.laps + " laps)");
+    if (W.anchors.journal > 0) defaultTakes.push("Daily journal (" + W.anchors.journal + " minutes)");
+    if (W.anchors.prayer) defaultTakes.push("Morning & Night Prayer");
+    const allTakes = [...defaultTakes, ...W.takingOn];
+    h+='<div style="margin-bottom:24px;">'+
+       '  <div class="grp-label" style="color:var(--lime); font-size:16px;">Taking On (Additions)</div>'+
+       '  <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">';
+    if (allTakes.length === 0) {
+      h+='  <div style="font-style:italic; color:var(--text-dim); font-size:14px;">No items on the additions list.</div>';
+    } else {
+      allTakes.forEach((item, idx) => {
+        const isCustom = idx >= defaultTakes.length;
+        h+='  <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px 14px; border:1px solid rgba(255,255,255,0.06); border-radius:8px;">'+
+           '    <span style="color:#fff; font-size:14px;">' + item + '</span>'+
+           '    ' + (isCustom ? '<button class="ref-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="W.takingOn.splice('+(idx - defaultTakes.length)+', 1); renderWizard();">Remove</button>' : '<span style="font-size:12px; color:var(--text-dim);">Anchor</span>') +
+           '  </div>';
+      });
+    }
+    h+='  </div>'+
+       '  <div style="display:flex; gap:8px; margin-top:12px;">'+
+       '    <input class="free-input" id="takeOnCustomInput" placeholder="Add something you are taking on..." style="flex:1; margin:0; font-size:14px;">'+
+       '    <button class="btn-lime" style="padding:0 16px; font-size:14px; height:42px; margin:0; border-radius:8px;" onclick="const val=document.getElementById(\'takeOnCustomInput\')?.value.trim(); if(val){W.takingOn.push(val); renderWizard();}">Add</button>'+
+       '  </div>'+
+       '</div>';
+    h+=wizNav(true, 'Structure My Fast');
   }
 
   h+='</div><div class="verse-panel" id="wizVerse" style="margin-top:-12px"></div>';
@@ -11079,15 +13175,51 @@ Return JSON:
     if(!validRef(w.night)){const wr=LIB.why[primaryWhy]||LIB.why.nearness;w.night=wr[i%wr.length];}
     if(weeks===1&&LIB.constants.close.includes(w.night)){const wr=LIB.why[primaryWhy]||LIB.why.nearness;w.night=wr[0];}
   });
-  forgeOn=false;
+  let finalPrayerId = W.attachedPrayerId;
+  let attachedPrayerBody = "";
+  if (finalPrayerId) {
+    const existing = W.activePrayers && W.activePrayers.find(p => p.id === finalPrayerId);
+    if (existing) attachedPrayerBody = existing.body;
+  }
+  
+  if (!finalPrayerId && W.attachedNewBody.trim().length > 0) {
+    try {
+      const res = await fetch(FN_BASE + '/prayers-write', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SUPABASE_ANON}`
+        },
+        body: JSON.stringify({
+          email: MEMBER_EMAIL,
+          action: 'create',
+          body: W.attachedNewBody.trim(),
+          category: W.attachedNewCategory
+        })
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        if (data && data.id) {
+          finalPrayerId = data.id;
+          attachedPrayerBody = W.attachedNewBody.trim();
+        }
+      }
+    } catch (e) {
+      console.error("Failed to create new attached prayer:", e);
+    }
+  }
 
   S.fast={status:'revealed',whys:W.whys.slice(),why:primaryWhy,fast_model:{id:F.id,title:F.title,figure:F.figure,refs:F.refs},
     laid:W.laid.slice(),exclusions:[...ex],duration:W.dur,
     start_date:W.start||dayKey(1),anchors:{...W.anchors},carried:W.carried,ack_at:W.ackAt,
     product_state:productState,structure_only:!!W.structureOnly,lastPhase:null,briefs:{},
+    prayer_id:finalPrayerId,
+    attached_prayer_body:attachedPrayerBody,
+    taking_on:W.takingOn.slice(),
     plan:{fast_name:A.fast_name,model_line:A.model_line||F.line,rules:A.rules,daily_schedule:A.daily_schedule,
       phases:phases.map(p=>({...p,goal:(A.phase_goals||{})[p.name]||'',milestone:(A.milestones||{})[p.name]||''})),
-      prayer_plan:B.prayer_plan,journal_prompts:B.journal_prompts,focus:B.focus,after:A.after}};
+      prayer_plan:B.prayer_plan,journal_prompts:B.journal_prompts,focus:B.focus,after:A.after,
+      taking_on:W.takingOn.slice()}};
   await saveFast();
   renderFast();
 }
@@ -11156,7 +13288,13 @@ function renderReveal(root){
      P.rules.map((r,i)=>'<div class="rule-item"><span class="rule-num">'+(i+1)+'</span><span>'+r+'</span></div>').join('')+
      '<div class="grace">Miss a rule, note it in your journal, own it, and get back on track the next morning. Do not quit the fast over one bad day.</div></div>';
   h+='<div class="g-card reveal"><div class="plan-sec-title">The Daily Schedule</div>'+
-     P.daily_schedule.map(s=>'<div class="sched-row"><span class="sched-time">'+s.time+'</span><span class="sched-act">'+s.action+'</span></div>').join('')+'</div>';
+     P.daily_schedule.filter(s => {
+       const act = s.action || "";
+       const ex = exclusions();
+       if (ex.has('Genius Joe') && (act.includes('Genius Joe') || act.toLowerCase().includes('coffee'))) return false;
+       if (ex.has('Charge') && (act.includes('Charge') || act.toLowerCase().includes('energy drink'))) return false;
+       return true;
+     }).map(s=>'<div class="sched-row"><span class="sched-time">'+s.time+'</span><span class="sched-act">'+s.action+'</span></div>').join('')+'</div>';
   h+='<div class="g-card reveal"><div class="plan-sec-title">The Phases</div>'+
      P.phases.map(p=>'<div class="phase-block"><div class="ph-days">Days '+p.from+' to '+p.to+' &#183; '+p.theme+'</div><h4>'+p.name+'</h4><p>'+p.goal+'</p><p style="margin-top:6px;font-style:italic;color:var(--text-dim)">Milestone: '+p.milestone+'</p></div>').join('')+'</div>';
   h+='<div class="g-card reveal"><div class="plan-sec-title">The Prayer Plan</div>'+
@@ -11184,7 +13322,6 @@ function renderReveal(root){
 window.beginFast=async function(){
   S.fast.status='active';
   if(new Date(S.fast.start_date)>new Date(realToday()))S.fast.start_date=realToday();
-  S.fast.kept={};
   await saveFast();
   ceremony('Day 1','The fast is begun. Carry it well.',2800);
   renderFast();renderJournalContext();
@@ -11196,7 +13333,9 @@ window.discardFast=async function(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({action:'discard_fast',email:MEMBER_EMAIL})
   });
-  W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false};
+  W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,
+    anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false,
+    safetyDiabetic:false,safetyBP:false,safetyEating:false,activePrayers:null,attachedPrayerId:null,attachedNewBody:"",attachedNewCategory:"",takingOn:[]};
   renderFast();
 };
 window.dismissEquip=async function(){
@@ -11238,37 +13377,37 @@ window.speakVerse=function(){
 async function renderDaily(root){
   const F=S.fast,P=F.plan;
   const day=Math.floor((new Date(realToday())-new Date(F.start_date))/86400000)+1;
-  if(day>F.duration){renderComplete(root);return;}
+  if(day>F.duration){
+    F.status='completed';
+    F.ended_day=F.duration;
+    await endFast('completed', F.duration, {model:P.fast_name,duration:F.duration,ended_day:F.duration,finished:true,weak_rule:null});
+    renderClosedFast(root);
+    return;
+  }
   if(day<1){root.innerHTML='<div class="g-card fade" style="text-align:center"><div class="g-title">'+P.fast_name+'</div><p class="g-body">Day 1 begins '+niceDate(F.start_date)+'. The plan is set.</p></div>';return;}
   const ph=fastPhaseFor(day)||P.phases[0];
   const week=Math.min(Math.ceil(day/7),P.prayer_plan.length);
   const wk=P.prayer_plan[week-1];
-  const br=brokenRule();
-  const focusArr=(P.focus&&P.focus[ph.name])||['Full routine. No exceptions.'];
+  const focusArr=(P.focus&&ph&&P.focus[ph.name])||['Full routine. No exceptions.'];
   let focus=focusArr[(day-1)%focusArr.length];
-  let adapted=false;
-  if(br){focus='Today has one target: '+br.rule.replace(/\.$/,'')+'. Everything else is already holding.';adapted=true;}
-  const keptKey=realToday();
-  const kept=(F.kept&&F.kept[keptKey])||[];
-  const rules=P.rules;
 
   /* Phase transition briefing (item 17) */
   let briefHtml='';
-  if(F.lastPhase&&F.lastPhase!==ph.name&&!F.briefs[ph.name]){
+  if(F.lastPhase&&ph&&F.lastPhase!==ph.name&&F.briefs&&!F.briefs[ph.name]){
     ceremony(ph.name,'Days '+ph.from+' to '+ph.to+'. '+ph.goal,3200);
     briefHtml='<div class="brief-card"><h5>'+ph.name+' begins</h5>'+skel('Reading your '+F.lastPhase+' data',[90,75])+'</div>';
     generatePhaseBrief(F.lastPhase,ph);
-  } else if(F.briefs[ph.name]){
+  } else if(F.briefs&&ph&&F.briefs[ph.name]){
     briefHtml='<div class="brief-card"><h5>'+ph.name+' briefing</h5><p>'+F.briefs[ph.name]+'</p></div>';
   }
-  if(F.lastPhase!==ph.name){F.lastPhase=ph.name;await saveFast();}
+  if(ph&&F.lastPhase!==ph.name){F.lastPhase=ph.name;await saveFast();}
 
   /* Day strip (item 5) */
   let strip='<div class="day-strip">';
   for(let i=1;i<=Math.min(day,F.duration);i++){
     const d2=new Date(F.start_date+'T00:00:00');d2.setDate(d2.getDate()+i-1);
     const key=d2.toISOString().split('T')[0];
-    const filed=S.entries.some(e=>!e.burned&&e.date===key&&e.fastDay)||(F.kept&&F.kept[key]&&F.kept[key].length>0);
+    const filed=S.entries.some(e=>!e.burned&&e.date===key&&e.fastDay);
     strip+='<div class="dchip'+(filed?' filed':'')+(i===day?' today':'')+'"'+(i===day?' id="chipToday"':'')+'>'+i+'</div>';
   }
   strip+='</div>';
@@ -11276,143 +13415,154 @@ async function renderDaily(root){
   let h='<div class="fade">';
   h+='<div class="g-card"><div class="g-eyebrow">'+P.fast_name+'</div>'+
      '<div class="day-hero"><div class="dnum" id="dnum">'+day+'</div><div class="dof">Day '+day+' of '+F.duration+'</div>'+
-     '<div class="dphase">'+ph.name+' &#183; '+ph.theme+'</div>'+strip+'</div>'+
-     '<div class="day-focus'+(adapted?' adapted':'')+'">'+focus+'</div></div>';
+     '<div class="dphase">'+(ph?(ph.name+' &#183; '+ph.theme):'')+'</div>'+strip+'</div>'+
+     '<div class="day-focus">'+focus+'</div></div>';
   h+=briefHtml;
   h+='<div class="g-card"><div class="plan-sec-title">This Week\u2019s Passages</div>'+
      '<div class="pray-row"><span class="pray-week">Week '+wk.week+'<small>'+wk.theme+'</small></span>'+
      '<button class="ref-btn" onclick="openVerse(this,\''+wk.morning+'\')">&#9728; Morning: '+wk.morning+'</button>'+
      '<button class="ref-btn" onclick="openVerse(this,\''+wk.night+'\')">&#9789; Night: '+wk.night+'</button></div>'+
      '<div class="verse-panel"></div></div>';
-  if(reportOpen()){
-    h+='<div class="g-card" id="keepCard"><div class="plan-sec-title">Tonight\u2019s Report</div>'+
-       '<div class="keep-meter"><i id="keepFill"></i></div><div class="keep-count" id="keepCount"></div>'+
-       '<p class="g-body" style="margin-bottom:14px">Tap what you kept. Then file your entry, the journal prompt is already in fast mode.</p>'+
-       rules.map((r,i)=>'<div class="check-row'+(kept.includes(i)?' kept':'')+'" onclick="togKept(this,'+i+')"><span>'+r+'</span><div class="check-box">&#10003;</div></div>').join('')+
-       '<div class="grace" style="margin-top:14px">Missed one? Note it in your journal, own it, back on track tomorrow morning. One bad day does not end a fast.</div>'+
-       '<div class="g-actions" style="margin-top:16px"><button class="btn-lime" onclick="go(\'record\',document.getElementById(\'navRecord\'))">File Tonight\u2019s Entry</button></div></div>';
-  } else {
-    const nn=nowNext();
-    h+='<div class="g-card"><div class="plan-sec-title">Tonight\u2019s Report</div>'+
-       '<p class="g-body" style="margin-bottom:14px">The day is still being lived. The report opens at 8:45 PM, when there is a whole day to answer for. Right now the job is the schedule, not the scorecard.</p>'+
-       (nn.nowR?'<div class="sched-now"><span class="tag">Now</span><span class="txt"><b>'+nn.nowR.time+'</b>'+nn.nowR.action+'</span></div>':'')+
-       (nn.nextR?'<div class="sched-now next"><span class="tag">Next</span><span class="txt"><b>'+nn.nextR.time+'</b>'+nn.nextR.action+'</span></div>':'')+
-       '<div class="gate-count">Report opens in <b id="gateCount">'+fmtMins(minsToOpen())+'</b></div></div>';
-  }
-  h+='<div class="g-actions" style="justify-content:center;margin-bottom:8px"><button class="demo-toggle" onclick="endEarly()">End my fast</button></div>';
-  h+='<div class="plan-footer">Structure, not health advice. You may end your fast at any time.</div></div>';
+
+  // Tonight's Journal section (no checklist)
+  h+='<div class="g-card"><div class="plan-sec-title">Tonight\u2019s Journal</div>'+
+     '<p class="g-body" style="font-style:italic; margin-bottom:16px;">Daily Prompt: ' + ((P.journal_prompts && P.journal_prompts[ph.name]) || 'Write what today showed.') + '</p>'+
+     '<div class="g-actions"><button class="btn-lime" onclick="go(\'record\',document.getElementById(\'navRecord\'))">File Tonight\u2019s Entry</button></div></div>';
+
+  // Always show daily schedule
+  const nn=nowNext();
+  h+='<div class="g-card"><div class="plan-sec-title">Your Daily Schedule</div>'+
+     (nn.nowR?'<div class="sched-now"><span class="tag">Now</span><span class="txt"><b>'+nn.nowR.time+'</b>'+nn.nowR.action+'</span></div>':'')+
+     (nn.nextR?'<div class="sched-now next"><span class="tag">Next</span><span class="txt"><b>'+nn.nextR.time+'</b>'+nn.nextR.action+'</span></div>':'')+'</div>';
+
+  h+='<div class="g-actions" style="justify-content:center;margin-bottom:8px"><button class="demo-toggle" id="btnEndFastEarly" onclick="endEarly()">Stop Fast</button></div>';
+  h+='<div class="plan-footer">Structure, not health advice. You may stop your fast at any time.</div></div>';
   root.innerHTML=h;
   countUp(document.getElementById('dnum'),day);
-  if(reportOpen())updateKeepMeter(kept.length,rules.length);
-  clearInterval(gateIv);
-  if(!reportOpen()){
-    gateIv=setInterval(()=>{
-      const el=document.getElementById('gateCount');
-      if(!el){clearInterval(gateIv);return;}
-      if(reportOpen()){clearInterval(gateIv);renderFast();return;}
-      el.textContent=fmtMins(minsToOpen());
-    },30000);
-  }
 }
-let gateIv=null;
-function updateKeepMeter(n,total){
-  const f=document.getElementById('keepFill'),c=document.getElementById('keepCount');
-  if(f)f.style.width=(total?Math.round(n/total*100):0)+'%';
-  if(c)c.textContent=n+' of '+total+' held tonight';
-}
+
 async function generatePhaseBrief(prevName,ph){
   const F=S.fast;
-  const st=ruleKeptStats(99)||{dates:[],miss:F.plan.rules.map(()=>0)};
-  const held=F.plan.rules.filter((r,i)=>st.miss[i]===0);
-  const cost=F.plan.rules.filter((r,i)=>st.miss[i]>=2);
   const prompt=`A steward's fast just moved from ${prevName} into ${ph.name} (days ${ph.from} to ${ph.to}).
-His ${prevName} data: rules that held every filed day: ${held.join('; ')||'none fully'}. Rules that cost him: ${cost.join('; ')||'none repeatedly'}. Days filed: ${st.dates.length}.
 Recent journal lines: ${S.entries.filter(e=>e.fastDay&&!e.burned).slice(-3).map(e=>'"'+e.text.slice(0,90)+'"').join(' ')||'none'}
-Write his 2 to 3 sentence briefing for the new phase, built from that data. Name what held, name the fight, set the phase's one aim. No shame, no flattery.
+Write his 2 to 3 sentence briefing for the new phase, built from that data. Set the phase's one aim. No shame, no flattery.
 Return JSON: {"brief":"..."}`;
   let out;
-  try{out=await ask('phase_brief',prompt);}catch(e){out={brief:(held.length?'What held in '+prevName+': '+held[0].toLowerCase().replace(/\.$/,'')+'. ':'')+(cost.length?'The fight is '+cost[0].toLowerCase().replace(/\.$/,'')+'. ':'')+ph.name+' has one aim: '+ph.goal.toLowerCase()};}
+  try{out=await ask('phase_brief',prompt);}catch(e){out={brief:ph.name+' has one aim: '+ph.goal.toLowerCase()};}
   F.briefs[ph.name]=out.brief;
   await saveFast();
   if(document.getElementById('fastView').style.display!=='none')renderFast();
 }
-window.togKept=async function(el,i){
-  const k=realToday();
-  if(!S.fast.kept)S.fast.kept={};
-  if(!S.fast.kept[k])S.fast.kept[k]=[];
-  const arr=S.fast.kept[k];const x=arr.indexOf(i);
-  if(x===-1){arr.push(i);vib(8);}else arr.splice(x,1);
-  el.classList.add('bounce');setTimeout(()=>el.classList.remove('bounce'),320);
-  saveKeptDebounced(S.fast.id, activeFastDay(), k, arr);
-  el.classList.toggle('kept',arr.includes(i));
-  updateKeepMeter(arr.length,S.fast.plan.rules.length);
-  const chip=document.getElementById('chipToday');
-  if(chip)chip.classList.toggle('filed',arr.length>0||S.entries.some(e=>!e.burned&&e.date===k&&e.fastDay));
-  if(arr.length===S.fast.plan.rules.length){
-    const card=document.getElementById('keepCard');
-    if(card){card.classList.add('breathe');setTimeout(()=>card.classList.remove('breathe'),1700);}
-    vib([10,60,14]);
-  }
-  renderJournalContext();
-};
+
 window.endEarly=async function(){
   const day=activeFastDay()||0;
-  const st=ruleKeptStats(99);
-  let weak=null;
-  if(st){let mx=0,idx=-1;st.miss.forEach((m,i)=>{if(m>mx){mx=m;idx=i;}});if(idx>=0&&mx>0)weak=S.fast.plan.rules[idx];}
-  const histRow = {model:S.fast.plan.fast_name,duration:S.fast.duration,ended_day:day,finished:false,weak_rule:weak};
-  S.history.push(histRow);
-  S.fast.status='ended_early';S.fast.ended_day=day;
-  await endFast('ended_early', day, histRow);
-  ceremony('Fast Closed',day+' days are in your record and they count. The builder is here when you are ready again.',3400);
-  renderFast();renderJournalContext();updateNavBadge();
+  S.fast.status='ended_early';
+  S.fast.ended_day=day;
+  await endFast('ended_early', day, {model:S.fast.plan.fast_name,duration:S.fast.duration,ended_day:day,finished:false,weak_rule:null});
+  renderFast();
+  renderJournalContext();
+  updateNavBadge();
 };
 
-/* Completion synthesis (item 21) */
-async function renderComplete(root){
-  const F=S.fast;
-  if(F.status!=='completed'){
-    F.status='completed';
-    const st=ruleKeptStats(99);
-    let weak=null;
-    if(st){let mx=0,idx=-1;st.miss.forEach((m,i)=>{if(m>mx){mx=m;idx=i;}});if(idx>=0&&mx>0)weak=F.plan.rules[idx];}
-    S.history.push({model:F.plan.fast_name,duration:F.duration,ended_day:F.duration,finished:true,weak_rule:weak});
-    await saveFast();
+window.submitFastReport = async function() {
+  const text = document.getElementById('fastReportWhatHappened')?.value.trim();
+  if (!text) {
+    alert("Please write a reflection on what happened during this fast.");
+    return;
   }
-  updateNavBadge();
-  let synth=F.synthesis;
-  root.innerHTML='<div class="g-card fade" style="text-align:center;padding:44px 24px">'+
-    '<div class="plan-name" style="font-size:clamp(24px,6vw,40px)">'+F.plan.fast_name+'<br><em>Finished.</em></div>'+
-    '<p class="g-body" style="max-width:420px;margin:14px auto">Open 2 Timothy 4:7 and Psalm 118:24 tonight. The race is finished.</p>'+
-    '<div id="synthSlot" style="text-align:left;max-width:520px;margin:20px auto">'+(synth?'<div class="brief-card"><h5>What the record shows</h5><p>'+synth+'</p></div>':skel('Writing the story of your fast from the record',[92,85,90,60]))+'</div>'+
-    '<p class="g-body" style="max-width:420px;margin:0 auto 22px;font-style:italic">Final entry: What did God show me in '+F.duration+' days? What habits am I keeping for life?</p>'+
-    '<div class="g-actions" style="justify-content:center"><button class="btn-lime" onclick="go(\'record\',document.getElementById(\'navRecord\'))">Write the Final Entry</button>'+
-    '<button class="btn-ghost" onclick="discardFast()">Build a New Fast</button></div></div>';
-  if(!synth){
-    const fastEntries=S.entries.filter(e=>e.fastDay&&!e.burned);
-    const first=fastEntries[0],last=fastEntries[fastEntries.length-1];
-    const st=ruleKeptStats(99)||{dates:[],miss:[]};
-    const prompt=`A steward finished ${F.plan.fast_name}, ${F.duration} days, following ${F.fast_model.title}.
-Day 1 entry: ${first?'"'+first.text+'"':'not filed'}
-Latest entry: ${last?'"'+last.text+'"':'not filed'}
-Days with reports filed: ${st.dates.length} of ${F.duration}. Rules that broke most: ${(S.history[S.history.length-1]||{}).weak_rule||'none repeatedly'}.
-Write the story of this fast in 3 to 4 sentences, from his own evidence: what changed between the first entry and the last, what held, what the record shows he should carry forward. His words where possible, quoted. No flattery, no shame.
-Return JSON: {"synthesis":"..."}`;
-    let out;
-    try{out=await ask('synthesis',prompt);}catch(e){out={synthesis:'You filed '+st.dates.length+' reports across '+F.duration+' days. The record holds the whole arc, Day 1 to the finish. Read them side by side tonight. That is the story, in your own words.'};}
-    F.synthesis=out.synthesis;
-    await endFast('completed', F.duration, {model:F.plan.fast_name,duration:F.duration,ended_day:F.duration,finished:true,weak_rule:null});
-    const slot=document.getElementById('synthSlot');
-    if(slot)slot.innerHTML='<div class="brief-card"><h5>What the record shows</h5><p>'+out.synthesis+'</p></div>';
+  
+  const btn = document.getElementById('btnSubmitFastReport');
+  if (btn) btn.disabled = true;
+  
+  try {
+    const journalText = text + "\n\n(Fast Report for " + S.fast.plan.fast_name + ")";
+    await saveEntry(journalText, 'neutral', false); 
+  } catch (e) {
+    console.error("Failed to save fast report to Record:", e);
   }
-}
+  
+  S.fast.plan.report_filed = true;
+  await saveFast();
+  
+  const attachedId = S.fast.prayer_id;
+  if (attachedId) {
+    const choice = confirm("Would you like to close or update the attached prayer request based on this fast?");
+    if (choice) {
+      go('prayer');
+      PRAYER.switchPass('mirror');
+      setTimeout(() => {
+        const btnClose = document.querySelector(`[data-close-id="${attachedId}"]`);
+        if (btnClose) {
+          btnClose.click();
+        } else {
+          alert("Please locate the card in the Closet Mirror below to file your answer outcome.");
+        }
+      }, 500);
+    }
+  }
+  
+  renderFast();
+};
+
 function renderClosedFast(root){
   const F=S.fast;
-  if(F.status==='completed'){renderComplete(root);return;}
-  root.innerHTML='<div class="g-card fade" style="text-align:center;padding:36px 24px">'+
-    '<div class="g-title">Fast Closed</div>'+
-    '<p class="g-body" style="max-width:400px;margin:0 auto 20px">'+(F.ended_day||0)+' days of '+F.plan.fast_name+' are in your record and they count. The builder is here when you are ready.</p>'+
-    '<div class="g-actions" style="justify-content:center"><button class="btn-lime" onclick="discardFast()">Build a New Fast</button></div></div>';
+  
+  if (F.plan && F.plan.report_filed) {
+    const elapsed = F.ended_day || F.duration || 0;
+    root.innerHTML = '<div class="g-card fade" style="text-align:center;padding:36px 24px">'+
+      '<div class="g-title">Fast Closed</div>'+
+      '<p class="g-body" style="max-width:400px;margin:0 auto 20px">' + elapsed + ' days of ' + F.plan.fast_name + ' are in your record and they count.</p>'+
+      '<div class="g-actions" style="justify-content:center"><button class="btn-lime" id="btnBuildNewFast" onclick="discardFast()">Restart</button></div></div>';
+    return;
+  }
+  
+  const elapsed = F.ended_day || 0;
+  const seeking = F.attached_prayer_body || (F.whys && F.whys.map(w => WHY_LABEL[w] || w).join(', ')) || 'Nearness before God';
+  
+  const tookOn = [];
+  if (F.anchors) {
+    if (F.anchors.wake) tookOn.push("Wake up by " + fmtTime(F.anchors.wake));
+    if (F.anchors.lights) tookOn.push("Lights out by " + fmtTime(F.anchors.lights));
+    if (F.anchors.oz) tookOn.push(F.anchors.oz + " oz of hydration daily");
+    if (F.anchors.movement) tookOn.push("Morning movement");
+    if (F.anchors.laps) tookOn.push("Daily walk (" + F.anchors.laps + " laps)");
+    if (F.anchors.journal) tookOn.push("Daily journal (" + F.anchors.journal + " minutes)");
+    if (F.anchors.prayer) tookOn.push("Prayer twice daily");
+  }
+  if (F.taking_on && F.taking_on.length > 0) {
+    F.taking_on.forEach(item => tookOn.push(item));
+  }
+  
+  let h = '<div class="g-card fade" style="max-width:540px; margin:0 auto; padding:32px 24px;">'+
+    '<div class="plan-name" style="font-size:28px; text-transform:uppercase; color:var(--lime); text-align:center; margin-bottom:12px;">' + F.plan.fast_name + '</div>'+
+    '<div style="font-size:14px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); text-align:center; margin-bottom:24px;">Fast Closed &middot; ' + elapsed + ' days elapsed</div>'+
+    
+    '<div style="margin-bottom:20px;">'+
+      '<div class="grp-label">What you were seeking</div>'+
+      '<p class="g-body" style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);">' + seeking + '</p>'+
+    '</div>'+
+    
+    '<div style="margin-bottom:20px;">'+
+      '<div class="grp-label">What you set down</div>'+
+      '<p class="g-body" style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);">' + (F.laid && F.laid.length ? F.laid.join(', ') : 'Nothing') + '</p>'+
+    '</div>'+
+    
+    '<div style="margin-bottom:20px;">'+
+      '<div class="grp-label">What you took on</div>'+
+      '<p class="g-body" style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);">' + (tookOn.length ? tookOn.join(', ') : 'Nothing') + '</p>'+
+    '</div>'+
+    
+    '<div style="margin-bottom:24px; border-top:1px solid rgba(255,255,255,0.06); padding-top:20px;">'+
+      '<div class="grp-label" style="font-size:16px; color:#fff; margin-bottom:8px;">What happened?</div>'+
+      '<textarea class="free-input" id="fastReportWhatHappened" placeholder="Write honestly about what these days showed you before God..." style="width:100%; height:120px; font-size:14px; line-height:1.5;"></textarea>'+
+    '</div>'+
+    
+    '<div class="g-actions">'+
+      '<button class="btn-lime" id="btnSubmitFastReport" onclick="submitFastReport()" style="width:100%;">File Report</button>'+
+    '</div>'+
+    '</div>';
+    
+  root.innerHTML = h;
 }
 
 /* ================== CLAIM BUNDLE MODAL ================== */
@@ -11681,17 +13831,9 @@ window.renderGlancePage = function() {
         <h3 style="color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em;">Bible 365</h3>
         <p style="color: #b5b7bc; font-size: 13px; line-height: 1.5; margin-bottom: 12px;">${bibleBody}</p>
         
-        <!-- VISUAL READING PROGRESS RING -->
-        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);">
-          <svg width="46" height="46" viewBox="0 0 36 36" style="transform: rotate(-90deg); flex-shrink:0;">
-            <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" />
-            <circle cx="18" cy="18" r="16" fill="none" stroke="var(--lime)" stroke-width="3" 
-              stroke-dasharray="${Math.min((bibleStreak / 365) * 100, 100)}, 100" style="filter: drop-shadow(0 0 4px var(--lime));" />
-          </svg>
-          <div>
-            <div style="font-size: 14px; font-weight: 700; color: #fff; font-family: var(--font-display);">Day ${bibleStreak} <span style="color:#b5b7bc; font-size:11px;">/ 365</span></div>
-            <div style="font-size: 10px; font-weight: 600; color: var(--lime); text-transform: uppercase; letter-spacing: 0.05em; margin-top:2px;">Plan Active</div>
-          </div>
+        <!-- STREAK INDICATOR -->
+        <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 11px; font-weight: 700; color: #b5b7bc; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; background: rgba(255,255,255,0.03); border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">${bibleStreak} Day Streak</span>
         </div>
       </div>
       <button class="g-card-btn" onclick="go('bible', document.getElementById('navBible'))">Study Today</button>
@@ -12495,6 +14637,7 @@ async function loadAndInit(){
       wall: 'navWall',
       testimony: 'navTestimony',
       me: 'navMe',
+      prayer: 'navPrayer',
       portal: 'navPortal',
       affiliate: 'navAffiliate',
       community: 'navCommunity',
@@ -12942,7 +15085,7 @@ async function loadAndInit(){
 .capture-sheet-overlay.open{pointer-events:none !important}
 .capture-sheet-overlay .capture-sheet{
   position:relative !important;
-  pointer-events:auto !important;
+  pointer-events:none !important;
   bottom:auto !important;left:auto !important;right:auto !important;
   width:min(360px, calc(100vw - 32px)) !important;
   max-width:360px !important;
@@ -12956,6 +15099,7 @@ async function loadAndInit(){
   transition:transform .35s cubic-bezier(0.23,1,0.32,1), opacity .3s ease !important;
 }
 .capture-sheet-overlay.open .capture-sheet{
+  pointer-events:auto !important;
   transform:translateY(0) scale(1) !important;
   opacity:1;
 }

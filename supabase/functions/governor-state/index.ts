@@ -76,14 +76,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Check if fast has active fast days checklist
-      let fast_days = [];
-      if (fast && fast.id) {
-        const { data: fd } = await SB.from("fast_days")
-          .select("*")
-          .eq("fast_id", fast.id);
-        if (fd) fast_days = fd;
-      }
+      // Removed fast_days checklist load (Page 5 compliance overhaul)
 
       // 6. Load member profile
       let { data: profile } = await SB.from("member_profile")
@@ -142,11 +135,14 @@ Deno.serve(async (req) => {
         .select("*")
         .eq("member_email", cleanEmail);
 
+      // Load Book Intros
+      const { data: bookIntros } = await SB.from("book_intros").select("*");
+
       return json({
         ok: true,
         entries: entries || [],
         fast: fast || null,
-        fast_days: fast_days,
+        fast_days: [],
         history: history || [],
         prefs: prefs,
         product_state,
@@ -157,7 +153,8 @@ Deno.serve(async (req) => {
         recommendation,
         affiliate_ref_id,
         referral_count,
-        reflections: reflections || []
+        reflections: reflections || [],
+        book_intros: bookIntros || []
       });
     }
 
@@ -229,7 +226,8 @@ Deno.serve(async (req) => {
         ack_timestamp: fast.ack_timestamp || new Date().toISOString(),
         ended_day: fast.ended_day,
         created_at: fast.created_at || new Date().toISOString(),
-        ended_at: fast.ended_at
+        ended_at: fast.ended_at,
+        prayer_id: fast.prayer_id
       }, { onConflict: "id" });
       if (error) return json({ ok: false, error: error.message }, 200);
       return json({ ok: true });
@@ -245,26 +243,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "save_kept") {
-      const { fast_id, day_number, day_date, rules_kept, tz_offset_min } = payload;
-
-      // Enforce the 8:45 PM local time gate
-      if (tz_offset_min !== undefined) {
-        const localMinutes = (Date.now() / 60000 - tz_offset_min) % 1440;
-        const local = ((localMinutes % 1440) + 1440) % 1440;
-        if (local < 20 * 60 + 45) {
-          return json({ ok: false, error: "report_not_open" }, 200);
-        }
-      }
-
-      const { error } = await SB.from("fast_days").upsert({
-        fast_id,
-        member_email: cleanEmail,
-        day_number,
-        day_date,
-        rules_kept,
-        filed_at: new Date().toISOString()
-      }, { onConflict: "fast_id, day_date" });
-      if (error) return json({ ok: false, error: error.message }, 200);
+      // Compliance tracking disabled (Page 5 compliance overhaul). Return OK directly.
       return json({ ok: true });
     }
 
@@ -384,15 +363,22 @@ Deno.serve(async (req) => {
     }
 
     if (action === "save_reflection") {
-      const { day_number, scripture_ref, text, share_personalization } = payload;
-      const { data, error } = await SB.from("bible_reflections").upsert({
+      const { day_number, scripture_ref, text, said, will_do, share_personalization } = payload;
+      const upsertData: Record<string, any> = {
         member_email: cleanEmail,
         day_number,
         scripture_ref,
-        text,
         share_personalization,
         created_at: new Date().toISOString()
-      }, { onConflict: "member_email, day_number" }).select();
+      };
+      if (text !== undefined) upsertData.text = text;
+      if (said !== undefined) upsertData.said = said;
+      if (will_do !== undefined) upsertData.will_do = will_do;
+
+      const { data, error } = await SB.from("bible_reflections").upsert(
+        upsertData,
+        { onConflict: "member_email, day_number" }
+      ).select();
       if (error) return json({ ok: false, error: error.message }, 200);
       return json({ ok: true, data });
     }
