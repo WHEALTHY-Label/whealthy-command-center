@@ -3,6 +3,15 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const ANTHROPIC_KEY = Deno.env.get("ANTHROPIC_API_KEY")!;
 const SB = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
+// Scope down direct query access from this file
+const originalFrom = SB.from.bind(SB);
+SB.from = function(table: string) {
+  if (["wall_posts", "wall_prays", "wall_amens", "wall_reports"].includes(table)) {
+    throw new Error(`Access to table ${table} is forbidden from governor-ai`);
+  }
+  return originalFrom(table);
+};
+
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, content-type",
@@ -53,6 +62,7 @@ const MAX_TOKENS: Record<string, number> = {
   scribe: 700, threads: 700, fast_identity: 700, fast_schedule: 700,
   fast_phases: 600, fast_scripture: 900, phase_brief: 400, synthesis: 500,
   intent_router: 450, profile_update: 500,
+  notification_voice: 300, watchlist_synthesis: 400, record_wall_nudge: 300
 };
 
 const BANNED = /\b(supplement|boost|biohack|hustle|beast mode|stimulant|miracle|cure|diet|weight loss)\b/i;
@@ -61,7 +71,7 @@ const EM_DASH = /\u2014/;
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
   try {
-    const { email, task, prompt, scripture_whitelist } = await req.json();
+    const { email, task, prompt, scripture_whitelist, allow_community_directive } = await req.json();
 
     // Member validation, house pattern
     const { data: member } = await SB.from("approved_members")
@@ -72,7 +82,145 @@ Deno.serve(async (req) => {
 
     if (!MAX_TOKENS[task]) return json({ error: "unknown_task" }, 400);
 
-    const systemPrompt = task === "intent_router" ? ROUTER_SYSTEM : (task === "profile_update" ? PROFILE_SYSTEM : RULES);
+    let systemPrompt = task === "intent_router" ? ROUTER_SYSTEM : (task === "profile_update" ? PROFILE_SYSTEM : RULES);
+    let promptText = prompt;
+
+    if (task === "notification_voice") {
+      try {
+        const resCtx = await fetch(Deno.env.get("SUPABASE_URL") + "/functions/v1/wall-ai-context", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": req.headers.get("Authorization") || ""
+          },
+          body: JSON.stringify({ email, scope: "own" })
+        });
+        if (!resCtx.ok) throw new Error("Failed to load wall-ai-context");
+        const ctxData = await resCtx.json();
+        const payloadObj = JSON.parse(prompt);
+        const postMeta = (ctxData.watchlist || []).find((w: any) => w.id === payloadObj.postId);
+        if (!postMeta) {
+          return json({ ok: true, out: { text: "" } });
+        }
+
+        systemPrompt = `You are the notification voice for the WHEALTHY prayer watchlist.
+Write one line marking that a prayer this steward carried has been answered.
+You do not know what the prayer was about. Do not speculate.
+Do not congratulate. Do not celebrate. Do not use exclamation marks.
+State what happened. Under 12 words.
+Never use an em dash.
+Return ONLY a valid JSON object matching this schema exactly (no preamble, no markdown blocks):
+{ "text": "[your sentence]" }`;
+
+        promptText = `Steward watchlist metadata for this prayer:
+- my_pray_count: ${postMeta.my_pray_count}
+- days_elapsed: ${postMeta.days_elapsed}
+- pray_count: ${postMeta.pray_count}`;
+      } catch (e) {
+        console.error("[governor-ai] notification_voice failed:", e);
+        return json({ ok: true, out: { text: "" } });
+      }
+    } else if (task === "watchlist_synthesis") {
+      try {
+        const resCtx = await fetch(Deno.env.get("SUPABASE_URL") + "/functions/v1/wall-ai-context", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": req.headers.get("Authorization") || ""
+          },
+          body: JSON.stringify({ email, scope: "own" })
+        });
+        if (!resCtx.ok) throw new Error("Failed to load wall-ai-context");
+        const ctxData = await resCtx.json();
+
+        const list = (ctxData.watchlist || []).map((w: any) => ({
+          status: w.status,
+          days_since_prayed: w.days_since_prayed,
+          my_pray_count: w.my_pray_count,
+          days_elapsed: w.days_elapsed
+        }));
+
+        systemPrompt = `You analyze a steward's prayer watchlist. Metadata only.
+You do not know what any of these prayers are about. You cannot know. Do not speculate about content.
+Reflect the shape back: how much they have carried, what has been answered, what is still open.
+Two to three sentences. No advice. No suggestion of what to do next.
+Do not tell them to pray for anything. Do not tell them anyone needs them.
+Never use an em dash.
+Return ONLY a valid JSON object matching this schema exactly (no preamble, no markdown blocks):
+{ "text": "[your synthesis reflection]" }`;
+
+        promptText = `Watchlist metadata:
+${JSON.stringify(list)}`;
+      } catch (e) {
+        console.error("[governor-ai] watchlist_synthesis failed:", e);
+        return json({ ok: true, out: { text: "" } });
+      }
+    } else if (task === "record_wall_nudge") {
+      try {
+        systemPrompt = `You analyze a steward's journal record for a recurring burden or weight.
+Evaluate if there is a recurring theme across 3+ entries spanning 14+ days.
+If there is no recurring theme or it doesn't span 14+ days, you must return showNudge = false.
+If there is a recurring theme:
+- The nudge names that a pattern exists, not what the pattern is. "This keeps coming up" is a mirror.
+- Do not write a prayer. Do not draft anything. Do not summarize what they wrote. Do not tell them to post. Do not tell them it would help.
+- Return exactly: "This keeps coming up. You do not have to carry it alone."
+- Never use an em dash.
+Return ONLY valid JSON matching this schema:
+{ "showNudge": boolean, "text": "This keeps coming up. You do not have to carry it alone." }`;
+
+        const payloadObj = JSON.parse(prompt);
+        promptText = `Journal entries:
+${JSON.stringify(payloadObj.entries || [])}`;
+      } catch (e) {
+        console.error("[governor-ai] record_wall_nudge failed:", e);
+        return json({ ok: true, out: { showNudge: false } });
+      }
+    } else if (task === "synthesis" && allow_community_directive) {
+      try {
+        const resComm = await fetch(Deno.env.get("SUPABASE_URL") + "/functions/v1/wall-ai-context", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": req.headers.get("Authorization") || ""
+          },
+          body: JSON.stringify({ email, scope: "community" })
+        });
+        const commData = resComm.ok ? await resComm.json() : null;
+
+        const resOwn = await fetch(Deno.env.get("SUPABASE_URL") + "/functions/v1/wall-ai-context", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": req.headers.get("Authorization") || ""
+          },
+          body: JSON.stringify({ email, scope: "own" })
+        });
+        const ownData = resOwn.ok ? await resOwn.json() : null;
+
+        if (commData && ownData) {
+          const hasLivePost = (ownData.posts || []).some((p: any) => p.status === 'live');
+          const isCommunityHeavy = (commData.top_post_pray_count >= 25 || commData.prays_last_24h >= 50);
+
+          if (isCommunityHeavy && !hasLivePost) {
+            promptText += `\n\nCommunity Wall Context:
+- Steward has active live post on wall: no
+- Community is carrying heavy weight: yes
+- Community prays last 24h: ${commData.prays_last_24h}
+- Community live posts: ${commData.live_post_count}
+
+Instruction for Daily Directive Wall Awareness:
+You MUST append a low-urgency community focus sentence to the generated "dailyDirective" (e.g. "Take 2 minutes to carry someone else's burden on the wall today.").
+Rules for this sentence:
+- Keep it brief, low-urgency, and gentle.
+- Do NOT mention any counts, numbers, or specific statistics.
+- Do NOT say "47 people need you" or create false urgency.
+- Never use an em dash.`;
+          }
+        }
+      } catch (e) {
+        console.warn("[governor-ai] failed to append wall context to synthesis:", e);
+      }
+    }
 
     // One attempt plus one retry on parse failure
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -87,7 +235,7 @@ Deno.serve(async (req) => {
           model: "claude-sonnet-5",
           max_tokens: MAX_TOKENS[task],
           system: systemPrompt,
-          messages: [{ role: "user", content: prompt }],
+          messages: [{ role: "user", content: promptText }],
         }),
       });
       const data = await r.json();

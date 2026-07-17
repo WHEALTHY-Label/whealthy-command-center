@@ -5560,6 +5560,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
           <!-- PANEL 2: PRAYING FOR -->
           <div id="mePanelWatching" style="display:none">
+            <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
             <div id="meWatchingList"></div>
             <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
               <div class="wall-skeleton-card"></div>
@@ -5742,6 +5743,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               if (moreBtn) moreBtn.style.display = 'none';
 
               try {
+                if (offset === 0) {
+                  this.checkWatchingSynthesis();
+                }
+
                 const res = await fetch(FN_BASE + '/wall-read', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -5794,6 +5799,42 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               this.loadWatching(this.watchingOffset);
             },
 
+            checkWatchingSynthesis: async function() {
+              const container = document.getElementById('meWatchingSynthesis');
+              if (!container) return;
+              container.style.display = 'none';
+
+              const lastSynth = localStorage.getItem('wh_watchlist_synth_shown_at');
+              if (lastSynth) {
+                const daysSinceSynth = (Date.now() - new Date(lastSynth).getTime()) / (24 * 60 * 60 * 1000);
+                if (daysSinceSynth < 7) return;
+              }
+
+              try {
+                const resCtx = await fetch(FN_BASE + '/wall-ai-context', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: window.MEMBER_EMAIL, scope: 'own' })
+                });
+                if (!resCtx.ok) return;
+                const ctxData = await resCtx.json();
+                const watchlist = ctxData.watchlist || [];
+
+                if (watchlist.length < 5) return;
+                const hasAnswered = watchlist.some(w => w.status === 'answered');
+                if (!hasAnswered) return;
+
+                const res = await ask('watchlist_synthesis', '');
+                if (res && res.text) {
+                  container.innerHTML = `<div style="font-family:'DM Sans', sans-serif; font-size:13.5px; color:var(--text); line-height:1.6;">${res.text}</div>`;
+                  container.style.display = 'block';
+                  localStorage.setItem('wh_watchlist_synth_shown_at', new Date().toISOString());
+                }
+              } catch (e) {
+                console.warn('[Watchlist Synth] check failed:', e);
+              }
+            },
+
             markAsSeen: async function(postId, card) {
               if (!window.MEMBER_ID) return;
               this.seenThisSession.add(postId);
@@ -5812,6 +5853,33 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 this.updateBadgeUI();
               } catch (err) {
                 console.error(err);
+              }
+            },
+
+            fetchNotificationVoice: async function(post) {
+              const lineEl = document.getElementById(`voice-line-${post.id}`);
+              if (!lineEl) return;
+              
+              const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('timeout')), 3000)
+              );
+              
+              const fetchPromise = (async () => {
+                const res = await ask('notification_voice', JSON.stringify({ postId: post.id }));
+                if (res && res.text) {
+                  return res.text;
+                }
+                throw new Error('malformed');
+              })();
+              
+              try {
+                const text = await Promise.race([fetchPromise, timeoutPromise]);
+                if (text && text.trim()) {
+                  lineEl.textContent = text.trim();
+                  lineEl.style.display = 'block';
+                }
+              } catch (e) {
+                console.warn('[Notification Voice] failed or timed out:', e);
               }
             },
 
@@ -5949,11 +6017,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   </div>
                 ` : '';
 
+                const voiceLineEl = isUnseen ? `
+                  <div class="me-voice-notification-line" id="voice-line-${post.id}" style="display:none; font-family:'DM Sans', sans-serif; font-size:13px; font-weight:500; color:var(--wall-lime); margin-bottom:12px; line-height:1.4;"></div>
+                ` : '';
+
                 const amenedClass = post.has_amened ? 'active' : '';
                 const amenedText = post.has_amened ? '✓ Amen' : 'Amen';
 
                 card.innerHTML = `
                   ${unseenHeader}
+                  ${voiceLineEl}
                   <div class="me-card-header">
                     <div class="me-card-author">
                       <div class="me-card-avatar">${(post.author?.name || 'S').charAt(0).toUpperCase()}</div>
@@ -5978,6 +6051,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     </button>
                   </div>
                 `;
+
+                if (isUnseen) {
+                  setTimeout(() => { this.fetchNotificationVoice(post); }, 0);
+                }
+
                 return card;
               }
 
@@ -6450,6 +6528,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <p class="view-header-subtitle" id="recordSubtitle">Your words, kept.</p>
           </div>
         </div>
+
+        <div id="recordWallNudge" class="scribe-line" style="display:none; margin-bottom:24px;"></div>
 
         <div class="g-card">
           <div class="g-eyebrow">The Record</div>
@@ -8704,9 +8784,19 @@ Return ONLY a valid JSON object matching this schema exactly (no preamble, no ma
   "leaderboardSubtitle": "[A brief dynamic 1-sentence summary of their active streaks and overall OS momentum]"
 }`;
 
-    const res = await ask('synthesis', systemPrompt);
+    const lastDailyCommNudge = localStorage.getItem('wh_daily_comm_nudge_shown_at');
+    const allowCommunityDirective = !lastDailyCommNudge || 
+      ((Date.now() - new Date(lastDailyCommNudge).getTime()) / (24 * 60 * 60 * 1000) >= 5);
+
+    const res = await ask('synthesis', systemPrompt, null, allowCommunityDirective);
     if (res) {
       window.aiPersonalizations = res;
+      
+      // If dailyDirective was returned and contains words suggesting wall awareness, update the timestamp
+      if (res.dailyDirective && (res.dailyDirective.toLowerCase().includes('wall') || res.dailyDirective.toLowerCase().includes('burden') || res.dailyDirective.toLowerCase().includes('carry'))) {
+        localStorage.setItem('wh_daily_comm_nudge_shown_at', new Date().toISOString());
+      }
+
       // Re-personalize current view to apply AI changes instantly
       const hash = window.location.hash.replace('#', '') || 'dash';
       personalizePageHeader(hash);
@@ -9298,14 +9388,21 @@ Voice rules, strict:
 - Never write, quote, or paraphrase scripture text. You may only select references from lists provided to you.
 - The scribe keeps a person's words sacred. Name what recurs, state what the record shows, never interpret motives, never advise unless asked. Mirror the person's own idiom and repeated phrases back when the record supports it.
 - No shame, no flattery. Warm, direct, brief.`;
-async function ask(task,prompt,scriptureWhitelist){
+async function ask(task,prompt,scriptureWhitelist,allowCommunityDirective){
   const r=await fetch(FN_BASE+'/governor-ai',{method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({email:MEMBER_EMAIL,task,prompt,scripture_whitelist:scriptureWhitelist||null})});
+    body:JSON.stringify({
+      email:MEMBER_EMAIL,
+      task,
+      prompt,
+      scripture_whitelist:scriptureWhitelist||null,
+      allow_community_directive:allowCommunityDirective||null
+    })});
   const d=await r.json();
   if(!d.ok)throw new Error(d.error||'ai_failed');
   return d.out;
 }
+window.ask = ask;
 function entriesBlock(){return S.entries.filter(e=>!e.burned).map(e=>`[${e.date}]${e.fastDay?' (fast day '+e.fastDay+')':''} ${e.text}`).join('\n');}
 
 /* ================== SCRIPTURE LIBRARY ================== */
@@ -9420,7 +9517,7 @@ function go(view,el,label){
   }
   closeSidebar();
   if(view==='fast')renderFast();
-  if(view==='record'){renderJournalContext();renderWall();renderMapDefault();}
+  if(view==='record'){renderJournalContext();renderWall();renderMapDefault(); try { checkRecordWallNudge(); } catch(e) {} }
   if(view==='wall'){
     document.getElementById('headerLine').textContent='Prayer Wall';
     if(typeof initPrayerWall==='function') initPrayerWall();
@@ -9434,6 +9531,7 @@ function go(view,el,label){
     if(typeof initMe==='function') initMe();
   }
   if(view==='dash'){
+    try { fetchWallCommunityState(); } catch(e) {}
     renderDash();
     if(typeof triggerWelcomeCelebration === 'function') {
       var archName = window.REC && (window.REC.archetype_name || window.REC.archetype);
@@ -10544,6 +10642,76 @@ function renderFast(){
   renderThreshold(root);
 }
 
+async function checkRecordWallNudge() {
+  const container = document.getElementById('recordWallNudge');
+  if (!container) return;
+  container.style.display = 'none';
+
+  // 1. Gate: 3+ entries and first entry was at least 14 days ago
+  const liveEntries = S.entries.filter(e => !e.burned);
+  if (liveEntries.length < 3) return;
+  
+  const dates = liveEntries.map(e => new Date(e.date));
+  const minDate = new Date(Math.min(...dates));
+  const daysSinceFirst = (Date.now() - minDate.getTime()) / (24 * 60 * 60 * 1000);
+  if (daysSinceFirst < 14) return;
+
+  // 2. Gate: Not shown in the last 30 days
+  const lastShown = localStorage.getItem('wh_record_nudge_shown_at');
+  if (lastShown) {
+    const daysSinceShown = (Date.now() - new Date(lastShown).getTime()) / (24 * 60 * 60 * 1000);
+    if (daysSinceShown < 30) return;
+  }
+
+  try {
+    // 3. Gate: The steward has no live post on the wall
+    const resCtx = await fetch(FN_BASE + '/wall-ai-context', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: window.MEMBER_EMAIL, scope: 'own' })
+    });
+    if (!resCtx.ok) return;
+    const ctxData = await resCtx.json();
+    const hasLivePost = (ctxData.posts || []).some(p => p.status === 'live');
+    if (hasLivePost) return;
+
+    // 4. Gate: Ask governor-ai if there is a recurring theme across 3+ entries over 14+ days
+    const prompt = JSON.stringify({
+      entries: liveEntries.map(e => ({ date: e.date, text: e.text }))
+    });
+    const res = await ask('record_wall_nudge', prompt);
+    if (res && res.showNudge) {
+      container.innerHTML = `${res.text} <a href="#" onclick="go('wall'); return false;" style="color:var(--lime); text-decoration:underline; font-weight:700; margin-left:6px;">Go to the Wall</a>`;
+      container.style.display = 'block';
+      localStorage.setItem('wh_record_nudge_shown_at', new Date().toISOString());
+    }
+  } catch (e) {
+    console.warn('[Record Nudge] check failed:', e);
+  }
+}
+window.checkRecordWallNudge = checkRecordWallNudge;
+
+async function fetchWallCommunityState() {
+  if (!window.MEMBER_EMAIL) return;
+  try {
+    const res = await fetch(FN_BASE + '/wall-ai-context', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: window.MEMBER_EMAIL, scope: 'community' })
+    });
+    if (!res.ok) throw new Error('Failed to fetch wall-ai-context');
+    const data = await res.json();
+    const oldVal = window.wallCommunityState ? window.wallCommunityState.live_post_count : null;
+    window.wallCommunityState = data;
+    if (data.live_post_count !== oldVal) {
+      renderDash();
+    }
+  } catch(e) {
+    console.warn('[Wall Community State] failed:', e);
+  }
+}
+window.fetchWallCommunityState = fetchWallCommunityState;
+
 /* ================== DASHBOARD HOME ================== */
 function renderDash(){
   var root=document.getElementById('dashRoot');
@@ -10566,6 +10734,19 @@ function renderDash(){
     h+='<div class="directive-banner__text" id="dashDirectiveText">'+directiveText+'</div>';
   }
   h+='</div></div>';
+
+  /* ── WALL NUDGE CARD ── */
+  if (window.wallCommunityState && window.wallCommunityState.live_post_count > 0) {
+    h+='<div id="dashWallNudgeCard" class="g-card" style="margin-top:24px; border: 1px solid rgba(204,255,0,0.15); background: radial-gradient(circle at top right, rgba(204,255,0,0.03), transparent 60%), #0e1013;">';
+    h+='<div class="dash-card__head" style="margin-bottom:8px;"><div class="dash-card__icon" style="color:var(--lime); font-size:16px;">&#128065;</div><div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">The Wall</div></div>';
+    h+='<div class="dash-card__body" style="padding:0;">';
+    h+='<p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.45; margin:0 0 16px; font-family:\'DM Sans\', sans-serif;">Stewards are carrying things right now.</p>';
+    h+='<button class="btn-ghost" onclick="go(\'wall\')" style="padding:10px 16px; font-size:12px; border-radius:8px; border: 1px solid rgba(204,255,0,0.3); color:var(--lime); width:auto; text-transform:uppercase; font-family:var(--font-display); font-weight:700; cursor:pointer;" onmouseover="this.style.background=\'rgba(204,255,0,0.08)\'" onmouseout="this.style.background=\'transparent\'">';
+    h+='Go to the Wall';
+    h+='</button>';
+    h+='</div>';
+    h+='</div>';
+  }
 
 
   /* ── YOUR BUNDLE (matching dashboard bundleCard) ── */
@@ -12280,6 +12461,7 @@ async function loadAndInit(){
   updateClaimBadge();
   checkClaimModal();
   initSR();updateMeta();renderJournalContext();renderWall();renderMapDefault();updateNavBadge();restoreDraft();
+  try { fetchWallCommunityState(); } catch(e) {}
   renderDash();setHeaderFocus('dash');
   if(window.hideBootLoader)hideBootLoader();
   setTimeout(waFetchAIPersonalization, 150);
