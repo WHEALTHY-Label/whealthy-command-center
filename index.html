@@ -2007,6 +2007,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     <div style="margin-bottom:16px;">
                       <label style="display:block; font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">Request Prayer</label>
                       <textarea id="bible_prayerRequestText" placeholder="Write down your prayer request..." style="width:100%; height:60px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 12px; color:#fff; font-size:12px; line-height:1.4; resize:none; outline:none; margin-bottom:12px; transition:border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.3)';"></textarea>
+                      <div style="display:flex; gap:16px; margin-bottom:12px; font-size:12px; color:rgba(255,255,255,0.6); user-select:none;">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                          <input type="radio" name="bible-display-mode" value="anonymous" checked style="accent-color:var(--lime); width:14px; height:14px; cursor:pointer;">
+                          Anonymous
+                        </label>
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                          <input type="radio" name="bible-display-mode" value="signed" style="accent-color:var(--lime); width:14px; height:14px; cursor:pointer;">
+                          Signed
+                        </label>
+                      </div>
                       <button class="btn-lime" onclick="logPrayerRequest()" style="padding:6px 12px; font-size:11px; border-radius:6px; width:auto; border-color:var(--lime);">Log Request</button>
                     </div>
 
@@ -7163,6 +7173,7 @@ window.logPrayerRequest = async function() {
   const text = document.getElementById('bible_prayerRequestText').value.trim();
   if (!text) return;
 
+  const displayMode = document.querySelector('input[name="bible-display-mode"]:checked')?.value || 'anonymous';
   const btn = document.querySelector('#bible_communityPrayerDrawer button.btn-lime');
   if (btn) btn.disabled = true;
 
@@ -7173,8 +7184,8 @@ window.logPrayerRequest = async function() {
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
         body: text,
-        display_mode: 'signed',
-        source: 'bible'
+        display_mode: displayMode,
+        source: 'bible365'
       })
     });
     if (!res.ok) throw new Error('Failed to post prayer request');
@@ -7234,12 +7245,13 @@ window.fetchBibleFeed = async function() {
     list.innerHTML = posts.map(p => {
       const isAnonymous = p.display_mode === 'anonymous';
       const authorName = isAnonymous ? 'A Steward' : (p.author?.name || 'Steward');
-      const hasPrayed = p.prays_remaining_today < 3;
-      const btnClass = hasPrayed ? 'btn-lime' : 'btn-ghost';
-      const btnText = hasPrayed ? '🙏 Prayed' : '🙏 Pray';
-      const btnStyle = hasPrayed 
-        ? "padding:6px 12px; font-size:11px; border-radius:6px; width:auto; white-space:nowrap; background:var(--lime); border-color:var(--lime); color:#000;" 
-        : "padding:6px 12px; font-size:11px; border-radius:6px; width:auto; white-space:nowrap; background:rgba(255,255,255,0.04); border-color:transparent; color:#fff;";
+      const hasRemaining = p.prays_remaining_today > 0;
+      const btnClass = hasRemaining ? 'btn-ghost' : 'btn-lime';
+      const btnText = hasRemaining ? '🙏 Pray' : '🙏 Prayed';
+      const btnDisabled = hasRemaining ? '' : 'disabled';
+      const btnStyle = hasRemaining 
+        ? "padding:6px 12px; font-size:11px; border-radius:6px; width:auto; white-space:nowrap; background:rgba(255,255,255,0.04); border-color:transparent; color:#fff;" 
+        : "padding:6px 12px; font-size:11px; border-radius:6px; width:auto; white-space:nowrap; background:var(--lime); border-color:var(--lime); color:#000;";
 
       return `
         <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
@@ -7247,7 +7259,7 @@ window.fetchBibleFeed = async function() {
             <span style="color:#fff; font-size:11px; font-weight:700; display:block; margin-bottom:2px;">${authorName}</span>
             <p style="color:rgba(255,255,255,0.6); font-size:11.5px; line-height:1.45; margin:0; word-break:break-word;">${esc(p.body)}</p>
           </div>
-          <button class="${btnClass}" onclick="handleBibleFeedPray(this, '${p.id}')" style="${btnStyle}">
+          <button class="${btnClass}" ${btnDisabled} data-remaining="${p.prays_remaining_today}" onclick="handleBibleFeedPray(this, '${p.id}')" style="${btnStyle}">
             ${btnText}
           </button>
         </div>
@@ -7261,15 +7273,11 @@ window.fetchBibleFeed = async function() {
 
 window.handleBibleFeedPray = async function(btn, postId) {
   if (!window.MEMBER_ID) return;
-  if (btn.classList.contains('btn-lime')) return;
+  let remaining = parseInt(btn.getAttribute('data-remaining') || '3', 10);
+  if (remaining <= 0) return;
 
-  btn.classList.remove('btn-ghost');
-  btn.classList.add('btn-lime');
-  btn.style.background = 'var(--lime)';
-  btn.style.color = '#000';
-  btn.style.borderColor = 'var(--lime)';
-  btn.textContent = '🙏 Prayed';
-  speak('Prayed over');
+  remaining--;
+  btn.setAttribute('data-remaining', remaining);
 
   const prayersDone = JSON.parse(localStorage.getItem('wh_bible_prayers_completed') || '{}');
   prayersDone[currentDay] = true;
@@ -7277,6 +7285,17 @@ window.handleBibleFeedPray = async function(btn, postId) {
   
   const chk = document.getElementById('bible_taskCommunityCheck');
   if (chk) chk.classList.add('checked');
+
+  if (remaining === 0) {
+    btn.disabled = true;
+    btn.className = 'btn-lime';
+    btn.style.background = 'var(--lime)';
+    btn.style.color = '#000';
+    btn.style.borderColor = 'var(--lime)';
+    btn.textContent = '🙏 Prayed';
+  } else {
+    speak('Prayed');
+  }
 
   try {
     const res = await fetch(FN_BASE + '/wall-pray', {
@@ -7290,8 +7309,10 @@ window.handleBibleFeedPray = async function(btn, postId) {
     if (!res.ok) throw new Error('Pray failed');
   } catch (err) {
     console.error(err);
-    btn.classList.remove('btn-lime');
-    btn.classList.add('btn-ghost');
+    remaining++;
+    btn.setAttribute('data-remaining', remaining);
+    btn.disabled = false;
+    btn.className = 'btn-ghost';
     btn.style.background = 'rgba(255,255,255,0.04)';
     btn.style.color = '#fff';
     btn.style.borderColor = 'transparent';

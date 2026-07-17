@@ -140,7 +140,7 @@ const path = require('path');
       display_mode: "signed",
       created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
       author: { name: "Sarah" },
-      prays_remaining_today: 3
+      prays_remaining_today: 1
     },
     {
       id: "bible-post-2",
@@ -150,7 +150,7 @@ const path = require('path');
       display_mode: "anonymous",
       created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
       author: { name: "A Steward" },
-      prays_remaining_today: 2 // already prayed by viewer
+      prays_remaining_today: 0 // already prayed 3 times, should start disabled
     }
   ];
 
@@ -174,10 +174,23 @@ const path = require('path');
   });
 
   let lastPostedBody = null;
+  let lastPostedDisplayMode = null;
   await page.route('**/functions/v1/wall-post', async route => {
     const payload = JSON.parse(route.request().postData());
     console.log("Mocking wall-post request with body:", payload.body);
+    
+    if (payload.source !== 'bible365') {
+      console.log("TEST FAILURE: source must be exactly 'bible365', got:", payload.source);
+      await route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: "Constraint violation: source must be bible365" })
+      });
+      return;
+    }
+
     lastPostedBody = payload.body;
+    lastPostedDisplayMode = payload.display_mode;
     
     // Add to mock feed
     const newPost = {
@@ -293,26 +306,36 @@ const path = require('path');
     throw new Error("Button labels do not match expected '🙏 Pray' and '🙏 Prayed'");
   }
 
-  // Click '🙏 Pray' button on first card
+  // Click '🙏 Pray' button on first card (which has 1 pray left)
   console.log("Clicking '🙏 Pray' button on first card...");
   await page.click('#bible_communityFeedList div:first-child button');
   
-  // Verify optimistic update (should change to Prayed and carry no count)
-  await page.waitForTimeout(500); // short wait for state change
+  // Verify optimistic update transitions to disabled "🙏 Prayed" since remaining reaches 0
+  await page.waitForTimeout(500); // wait for state change
   const button1TextAfterClick = await page.textContent('#bible_communityFeedList div:first-child button');
   console.log("Button 1 text after click:", button1TextAfterClick.trim());
   if (button1TextAfterClick.trim() !== "🙏 Prayed" || /\d/.test(button1TextAfterClick)) {
     throw new Error("Button optimistic state failed or shows numbers after click");
   }
 
+  const isBtn1Disabled = await page.locator('#bible_communityFeedList div:first-child button').isDisabled();
+  console.log("Button 1 is disabled:", isBtn1Disabled);
+  if (!isBtn1Disabled) {
+    throw new Error("Button 1 should be disabled after remaining prays reaches 0");
+  }
+
   if (prayedPostId !== "bible-post-1") {
     throw new Error("Prayed endpoint did not receive the correct postId");
   }
 
-  // Submit a new prayer request
+  // Submit a new prayer request with 'signed' selected
   console.log("Entering a new prayer request...");
   await page.fill('#bible_prayerRequestText', 'NEW PRAYER REQUEST FROM BIBLE VIEW');
   
+  // Select 'signed' radio button
+  console.log("Selecting 'signed' display mode...");
+  await page.click('input[name="bible-display-mode"][value="signed"]');
+
   // Set up response waiters to prevent race conditions
   const postResponsePromise = page.waitForResponse('**/functions/v1/wall-post');
   const readResponsePromise = page.waitForResponse('**/functions/v1/wall-read');
@@ -328,6 +351,11 @@ const path = require('path');
   console.log("Top feed text:", topFeedText);
   if (!topFeedText.includes("NEW PRAYER REQUEST FROM BIBLE VIEW")) {
     throw new Error("Feed did not load new request correctly");
+  }
+
+  console.log("Verifying display mode and source parameter values...");
+  if (lastPostedDisplayMode !== 'signed') {
+    throw new Error("Expected display mode to be signed, got: " + lastPostedDisplayMode);
   }
 
   // Take screenshot
