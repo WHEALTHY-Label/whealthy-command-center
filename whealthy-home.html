@@ -34,12 +34,69 @@
 .results-price__per{font-size:18px;color:rgba(255,255,255,0.6)}
 .results-price__unlock{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;margin:12px auto 0;max-width:360px}
 .results-price__strike{text-decoration:line-through;color:rgba(255,255,255,0.4)}
-.results-price__rows{margin-top:20px;text-align:left;border-top:1px solid rgba(255,255,255,0.08);padding-top:12px}
-.results-price__row{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:rgba(255,255,255,0.6);padding:7px 0}
-.results-price__row--you{color:#fff;font-weight:700}
-.results-price__row--you span:last-child{color:var(--lime)}
 .results-price__foot{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.42);line-height:1.5}
 @media(max-width:520px){.results-price{margin:24px 16px;padding:22px 18px}.results-price__amount{font-size:42px}}
+
+.result-container { padding-bottom: 96px !important; }
+.proof-stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px 8px; margin: 24px auto; max-width: 600px; text-align: center; gap: 12px; }
+.proof-stats__item { flex: 1; }
+.proof-stats__value { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--lime); margin-bottom: 4px; }
+.proof-stats__label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.3; }
+@media (max-width: 520px) {
+  .proof-stats { flex-direction: column; padding: 16px; margin: 24px 16px; }
+  .proof-stats__item:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; margin-bottom: 12px; }
+}
+.testimonial-band { background: var(--lime); color: #080809; padding: 48px 24px; text-align: center; margin: 40px 0; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+.testimonial-band__quote { font-family: var(--font-display); font-size: 32px; font-weight: 700; line-height: 1.25; max-width: 800px; margin: 0 auto 16px; text-transform: uppercase; }
+.testimonial-band__quote strong { background: #080809; color: var(--lime); padding: 2px 6px; }
+.testimonial-band__attr { font-size: 14px; font-weight: 500; opacity: 0.8; letter-spacing: 0.05em; }
+@media (max-width: 768px) { .testimonial-band__quote { font-size: 24px; } }
+.price-anchor { margin: 24px auto 32px; text-align: center; max-width: 480px; font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+.price-anchor strong { color: var(--lime); }
+.price-anchor__strike { text-decoration: line-through; color: rgba(255,255,255,0.4); margin-left: 4px; }
+.price-anchor__btn-wrap { margin-top: 16px; }
+.review-videos { max-width: 680px; margin: 48px auto; padding: 0 16px; text-align: center; }
+.review-videos__title { font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 24px; color: #fff; text-transform: uppercase; }
+.review-videos__grid { display: flex; justify-content: center; gap: 24px; }
+.review-videos__col { flex: 1; max-width: 300px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.review-videos__label { font-size: 12px; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.08em; }
+.review-videos__frame-wrap { position: relative; width: 100%; padding-top: 177.77%; border-radius: 12px; overflow: hidden; border: 1px solid var(--lime); background: #000; }
+.review-videos__frame-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.review-videos__placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; border: 2px dashed rgba(204,255,0,0.4); background: rgba(204,255,0,0.02); color: rgba(255,255,255,0.7); box-sizing: border-box; }
+.review-videos__placeholder-icon { font-size: 32px; margin-bottom: 12px; color: var(--lime); }
+.review-videos__placeholder-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.review-videos__placeholder-desc { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.3; }
+@media (max-width: 600px) {
+  .review-videos__grid { flex-direction: column; align-items: center; gap: 32px; }
+  .review-videos__col { max-width: 260px; }
+}
+.value-stack { max-width: 480px; margin: 48px auto; padding: 32px 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; text-align: left; }
+.value-stack__title { font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--lime); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+.value-stack__sub { font-family: var(--font-display); font-size: 24px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; text-align: center; color: #fff; }
+.value-stack__rows { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.value-stack__row { display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
+.value-stack__row span:first-child { flex: 1; }
+.value-stack__row span:last-child { white-space: nowrap; }
+.value-stack__row--total { font-weight: 700; font-size: 15px; color: #fff; border-bottom: none; padding-top: 8px; align-items: baseline; }
+.value-stack__row--total span:last-child { color: var(--lime); font-size: 24px; font-family: var(--font-display); white-space: nowrap; }
+.value-stack__ctas { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.who-its-for { max-width: 680px; margin: 48px auto; padding: 0 24px; text-align: left; }
+.who-its-for__title { font-family: var(--font-display); font-size: 24px; font-weight: 700; text-transform: uppercase; text-align: center; margin-bottom: 32px; color: #fff; letter-spacing: 0.05em; }
+.who-its-for__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.who-its-for__col-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.who-its-for__col-title--yes { color: var(--lime); }
+.who-its-for__col-title--skip { color: rgba(255,255,255,0.4); }
+.who-its-for__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.who-its-for__item { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.7); display: flex; align-items: flex-start; gap: 8px; }
+.who-its-for__item span:first-child { margin-top: 2px; }
+@media (max-width: 600px) { .who-its-for__grid { grid-template-columns: 1fr; gap: 28px; } }
+.sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(8,8,9,0.95); border-top: 1px solid rgba(255,255,255,0.08); padding: 12px 24px; z-index: 9; display: flex; justify-content: center; gap: 16px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transform: translateY(100%); transition: transform 0.3s ease; }
+.sticky-bar--show { transform: translateY(0); }
+.sticky-bar__btn { flex: 1; max-width: 240px; padding: 12px 16px !important; font-size: 13px !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; justify-content: center !important; }
+@media (max-width: 520px) {
+  .sticky-bar { padding: 10px 16px; gap: 8px; }
+  .sticky-bar__btn { font-size: 11px !important; padding: 10px 8px !important; }
+}
 
 /* ============================================
    SHIPPING NOTICES
@@ -3016,7 +3073,54 @@ const BUNDLE_PRICES = {
   'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 }
 };
 
+const PROOF_MAP = {
+  'the-morning-dependency': {quote:'I didn\'t feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup.',name:'Marcus T.',role:'Sales Director, Father of 3',emoji:'&#128104;'},
+  'energy-without-aim': {quote:'I still had energy but it finally had <strong>direction.</strong> I stopped spinning and started finishing things.',name:'Chris M.',role:'Builder, Father',emoji:'&#127959;&#65039;'},
+  'the-low-floor': {quote:'I noticed I was <strong>more patient after work.</strong> That\'s not a supplement effect. That\'s a rhythm shift.',name:'Pastor Jerome W.',role:'Ministry Leader, Dad',emoji:'&#9962;'},
+  'holding-it-together': {quote:'I\'ve tried everything. This is the first time I could actually <strong>name what changed.</strong> Day 5 was real.',name:'Kevin W.',role:'Operations Manager, Dad of 2',emoji:'&#128737;&#65039;'}
+};
+
+const REVIEW_VIDEOS = {
+  'Charge Powder': 'https://www.youtube.com/embed/nPEV9WZCc2s'
+};
+
 const money = function(val) { return '$' + val.toFixed(2); };
+
+function proofStatsBlock(bp) {
+  return '<div class="proof-stats">'
+  +   '<div class="proof-stats__item">'
+  +     '<div class="proof-stats__value">' + money(bp.retail) + '</div>'
+  +     '<div class="proof-stats__label">value in your matched routine</div>'
+  +   '</div>'
+  +   '<div class="proof-stats__item">'
+  +     '<div class="proof-stats__value">' + money(bp.member) + '/mo</div>'
+  +     '<div class="proof-stats__label">your member price · 10% off</div>'
+  +   '</div>'
+  +   '<div class="proof-stats__item">'
+  +     '<div class="proof-stats__value">' + money(bp.retail - bp.member) + '</div>'
+  +     '<div class="proof-stats__label">under buying it the old way</div>'
+  +   '</div>'
+  + '</div>';
+}
+
+function testimonialBand(archKey) {
+  var normKey = archKey === 'morning-dependency' ? 'the-morning-dependency' :
+                archKey === 'low-floor' ? 'the-low-floor' :
+                archKey;
+  var proof = PROOF_MAP[normKey] || PROOF_MAP['the-morning-dependency'];
+  return '<div class="testimonial-band">'
+  +   '<div class="testimonial-band__quote">"' + proof.quote + '"</div>'
+  +   '<div class="testimonial-band__attr">' + proof.emoji + ' ' + proof.name + ' · ' + proof.role + ' · same pattern</div>'
+  + '</div>';
+}
+
+function priceAnchorBlock(bp, isSteward) {
+  var btnHtml = isSteward ? '<div class="price-anchor__btn-wrap"><button class="btn-primary" onclick="joinStewards()">Join Free · Get 10% Off</button></div>' : '';
+  return '<div class="price-anchor">'
+  +   'Your governed routine, as a member: <strong>' + money(bp.member) + '/mo</strong> <span class="price-anchor__strike">' + money(bp.tryPrice) + ' non-member</span>'
+  +   btnHtml
+  + '</div>';
+}
 
 function resultsPriceBlock(bundleKey){
   var bp = BUNDLE_PRICES[bundleKey] || BUNDLE_PRICES['charge'];
@@ -3024,14 +3128,87 @@ function resultsPriceBlock(bundleKey){
   + '<div class="results-price">'
   +   '<div class="results-price__label">Your member price</div>'
   +   '<div class="results-price__hero"><span class="results-price__amount">' + money(bp.member) + '</span><span class="results-price__per">/mo</span></div>'
-  +   '<div class="results-price__unlock">Join the Stewards free to unlock your 10% code. Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>.</div>'
-  +   '<div class="results-price__rows">'
-  +     '<div class="results-price__row"><span>Both products, bought separately</span><span class="results-price__strike">' + money(bp.retail) + '/mo</span></div>'
-  +     '<div class="results-price__row"><span>The bundle (non-member)</span><span>' + money(bp.tryPrice) + '/mo</span></div>'
-  +     '<div class="results-price__row results-price__row--you"><span>Your price as a member</span><span>' + money(bp.member) + '/mo</span></div>'
-  +   '</div>'
-  +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping · billed monthly · cancel anytime · ' + money(bp.retail - bp.member) + '/mo under buying them apart</div>'
+  +   '<div class="results-price__unlock">Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>. Join the Stewards free to unlock your 10% code.</div>'
+  +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping · billed monthly · cancel anytime</div>'
   + '</div>';
+}
+
+function reviewVideosSection(bundle) {
+  var gridHtml = bundle.products.map(function(p) {
+    var embedUrl = REVIEW_VIDEOS[p.name];
+    var frameHtml = '';
+    if (embedUrl) {
+      frameHtml = '<iframe src="' + embedUrl + '" allowfullscreen loading="lazy"></iframe>';
+    } else {
+      frameHtml = '<div class="review-videos__placeholder">'
+      +   '<div class="review-videos__placeholder-icon">▶</div>'
+      +   '<div class="review-videos__placeholder-title">Video placeholder</div>'
+      +   '<div class="review-videos__placeholder-desc">Real member review video — to be added</div>'
+      + '</div>';
+    }
+    return '<div class="review-videos__col">'
+    +   '<div class="review-videos__label">' + p.name + '</div>'
+    +   '<div class="review-videos__frame-wrap">' + frameHtml + '</div>'
+    + '</div>';
+  }).join('');
+
+  return '<div class="review-videos">'
+  +   '<h3 class="review-videos__title">REAL STEWARDS. REAL REVIEWS.</h3>'
+  +   '<div class="review-videos__grid">' + gridHtml + '</div>'
+  + '</div>';
+}
+
+function valueStackSection(cfgName, bp) {
+  return '<div class="value-stack">'
+  +   '<div class="value-stack__title">EVERYTHING YOU\'RE GETTING</div>'
+  +   '<div class="value-stack__sub">MORE THAN A ROUTINE</div>'
+  +   '<div class="value-stack__rows">'
+  +     '<div class="value-stack__row"><span>Matched routine (' + cfgName + ') shipped monthly</span><span>' + money(bp.retail) + '/mo</span></div>'
+  +     '<div class="value-stack__row"><span>Governance system (archetype daily directives & app)</span><span>Included</span></div>'
+  +     '<div class="value-stack__row"><span>The Stewards community</span><span>Free forever</span></div>'
+  +     '<div class="value-stack__row"><span>The disciplines</span><span>Included</span></div>'
+  +     '<div class="value-stack__row value-stack__row--total"><span>Total value / Member price</span><span><span style="text-decoration: line-through; font-size: 15px; color: rgba(255,255,255,0.4); margin-right: 8px;">' + money(bp.retail) + '</span>' + money(bp.member) + '/mo</span></div>'
+  +   '</div>'
+  +   '<div class="value-stack__ctas">'
+  +     '<button class="btn-primary" onclick="joinStewards()" style="justify-content: center;">Join Free · ' + money(bp.member) + '/mo · 10% Off</button>'
+  +     '<button class="btn-primary btn-primary--outline" onclick="openPurchasePopup()" style="justify-content: center;">Buy the Bundle · ' + money(bp.tryPrice) + '/mo</button>'
+  +   '</div>'
+  + '</div>';
+}
+
+function whoItsForSection() {
+  return '<div class="who-its-for">'
+  +   '<h3 class="who-its-for__title">BUILT FOR THE ONES WHO CARRY</h3>'
+  +   '<div class="who-its-for__grid">'
+  +     '<div class="who-its-for__col">'
+  +       '<div class="who-its-for__col-title who-its-for__col-title--yes"><span>✔</span> THIS IS FOR YOU IF:</div>'
+  +       '<ul class="who-its-for__list">'
+  +         '<li class="who-its-for__item"><span>✔</span> You carry family, work, and faith at the same time and feel the load.</li>'
+  +         '<li class="who-its-for__item"><span>✔</span> You want a daily system to govern your energy rather than borrowing it.</li>'
+  +         '<li class="who-its-for__item"><span>✔</span> You want a community of high-character people sharing the weight.</li>'
+  +       '</ul>'
+  +     '</div>'
+  +     '<div class="who-its-for__col">'
+  +       '<div class="who-its-for__col-title who-its-for__col-title--skip"><span>✖</span> SKIP THIS IF:</div>'
+  +       '<ul class="who-its-for__list">'
+  +         '<li class="who-its-for__item"><span>✖</span> You are just looking for a caffeine pill or a cheap energy drink.</li>'
+  +         '<li class="who-its-for__item"><span>✖</span> You prefer carrying your season\'s weight alone without a team.</li>'
+  +         '<li class="who-its-for__item"><span>✖</span> You don\'t want to build long-term daily health disciplines.</li>'
+  +       '</ul>'
+  +     '</div>'
+  +   '</div>'
+  + '</div>';
+}
+
+function stickyBottomBar(bp, isSteward, cfgName) {
+  var buttonsHtml = '';
+  if (isSteward) {
+    buttonsHtml = '<button class="btn-primary btn-primary--outline sticky-bar__btn" onclick="openPurchasePopup()">Buy the Bundle · ' + money(bp.tryPrice) + '/mo</button>'
+    + '<button class="btn-primary sticky-bar__btn" onclick="joinStewards()">Join Free · ' + money(bp.member) + '/mo</button>';
+  } else {
+    buttonsHtml = '<button class="btn-primary sticky-bar__btn" onclick="openPurchasePopup()" style="max-width: 320px;">Buy ' + cfgName + ' · ' + money(bp.tryPrice) + '/mo</button>';
+  }
+  return '<div id="resultStickyBar" class="sticky-bar">' + buttonsHtml + '</div>';
 }
 
 const SEASON_DESCRIPTORS={
@@ -4121,6 +4298,8 @@ function showFullResult(result, bundleKey){
   </div>
 </div>
 
+${proofStatsBlock(bp)}
+
 <!-- ===== S2: THE PATTERN (Archetype underneath) ===== -->
 <div class="s2-pattern">
   <p class="s2-pattern__leadin">And underneath that weight, your energy is running a pattern. It has a name.</p>
@@ -4132,6 +4311,8 @@ function showFullResult(result, bundleKey){
   </div>
   <p class="s2-pattern__close">The pattern makes sense, given what you carry.</p>
 </div>
+
+${testimonialBand(result.key)}
 
 ${stewardTurnHtml}
 
@@ -4151,6 +4332,8 @@ ${stewardTurnHtml}
   </div>
   ${costSection}
 </div>
+
+${priceAnchorBlock(bp, isSteward)}
 
 <!-- ===== S5: GOVERNANCE (echo card) ===== -->
 <div class="s5-governance">
@@ -4184,6 +4367,12 @@ ${stewardTurnHtml}
 
 ${resultsPriceBlock(bundleKey)}
 
+${reviewVideosSection(bundle)}
+
+${valueStackSection(cfg.name, bp)}
+
+${whoItsForSection()}
+
 ${decisionHtml}
 
 ${communityHtml}
@@ -4200,6 +4389,22 @@ ${communityHtml}
 
 </div>`;
 
+  // Remove any existing sticky bar
+  const existingSticky = document.getElementById('resultStickyBar');
+  if (existingSticky) existingSticky.remove();
+
+  // Create new sticky bar element
+  const sticky = document.createElement('div');
+  sticky.id = 'resultStickyBar';
+  sticky.className = 'sticky-bar';
+  if (isSteward) {
+    sticky.innerHTML = '<button class="btn-primary sticky-bar__btn" onclick="openPurchasePopup()">Buy the Bundle · ' + money(bp.tryPrice) + '/mo</button>'
+    + '<button class="btn-primary btn-primary--outline sticky-bar__btn" onclick="joinStewards()">Join Free · ' + money(bp.member) + '/mo</button>';
+  } else {
+    sticky.innerHTML = '<button class="btn-primary sticky-bar__btn" onclick="openPurchasePopup()" style="max-width: 320px;">Buy ' + cfg.name + ' · ' + money(bp.tryPrice) + '/mo</button>';
+  }
+  document.body.appendChild(sticky);
+
   // Initialize card glow effects
   if(window._initCardGlows)window._initCardGlows();
 
@@ -4214,29 +4419,19 @@ ${communityHtml}
     },300);
   }
 
-  // Dual-lane/Single-lane sticky bar
-  const existingSticky=document.getElementById('resultSticky');
-  if(existingSticky)existingSticky.remove();
-  const sticky=document.createElement('div');
-  sticky.className=isSteward ? 'result-sticky result-sticky--dual' : 'result-sticky';
-  sticky.id='resultSticky';
-  if(isSteward){
-    sticky.innerHTML=`<button class="result-sticky__buy btn-primary" onclick="openPurchasePopup()">Buy the Bundle</button><button class="result-sticky__join btn-primary btn-primary--outline" onclick="joinStewards()">Join Free</button>`;
-  } else {
-    sticky.innerHTML=`<button class="result-sticky__buy btn-primary" onclick="openPurchasePopup()" style="width:100%; justify-content:center;">Buy the Bundle</button>`;
-  }
-  document.body.appendChild(sticky);
-
-  setTimeout(()=>{
-    const quizCard=document.getElementById('quizCard');
+  // Scroll listener for sticky bar
+  const quizCard=document.getElementById('quizCard');
+  const s2El=quizCard ? quizCard.querySelector('.s2-pattern') : null;
+  if(quizCard && s2El){
     quizCard.addEventListener('scroll',function onResultScroll(){
-      if(quizCard.scrollTop>600){
-        sticky.classList.add('visible');
+      const triggerPos = s2El.offsetTop + s2El.offsetHeight;
+      if(quizCard.scrollTop > triggerPos){
+        sticky.classList.add('sticky-bar--show');
       } else {
-        sticky.classList.remove('visible');
+        sticky.classList.remove('sticky-bar--show');
       }
     },{passive:true});
-  },500);
+  }
 }
 
 /* Purchase Popup */

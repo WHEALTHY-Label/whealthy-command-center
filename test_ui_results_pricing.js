@@ -40,33 +40,67 @@ console.log("=== RUNNING QUIZ RESULTS PRICING TESTS ===");
       showFullResult(resultObj, 'genius-joe');
     });
 
-    // 1. Verify results-price block visibility and values
-    console.log("Checking price block elements...");
-    await page.waitForSelector('.results-price', { state: 'visible', timeout: 3000 });
+    // 1. Verify S1 Hero has no stat bar regressions and is visible
+    await page.waitForSelector('.s1-identity', { state: 'visible', timeout: 3000 });
 
+    // 2. Verify NEW Proof Stat Bar (directly under S1)
+    console.log("Checking proof stat bar...");
+    const statsValueLocator = page.locator('.proof-stats__value');
+    const stat1 = await statsValueLocator.nth(0).textContent();
+    const stat2 = await statsValueLocator.nth(1).textContent();
+    const stat3 = await statsValueLocator.nth(2).textContent();
+    console.log(`Stats: Val1=${stat1}, Val2=${stat2}, Val3=${stat3}`);
+    if (stat1 !== '$84.98') throw new Error("Incorrect retail value in stats: " + stat1);
+    if (stat2 !== '$57.60/mo') throw new Error("Incorrect member price in stats: " + stat2);
+    if (stat3 !== '$27.38') throw new Error("Incorrect difference value in stats: " + stat3);
+
+    // 3. Verify testimonial band quote matching the archetype
+    console.log("Checking testimonial band...");
+    const testimonialQuote = await page.locator('.testimonial-band__quote').textContent();
+    console.log("Testimonial: " + testimonialQuote);
+    if (!testimonialQuote.includes("I didn't feel hyped. I just felt clear.")) {
+      throw new Error("Testimonial quote mismatch: " + testimonialQuote);
+    }
+
+    // 4. Verify NEW price anchor line below S4 cost
+    console.log("Checking price anchor below S4...");
+    const anchorText = await page.locator('.price-anchor').textContent();
+    console.log("Price anchor: " + anchorText);
+    if (!anchorText.includes('$57.60/mo') || !anchorText.includes('$64.00 non-member')) {
+      throw new Error("Price anchor text mismatch: " + anchorText);
+    }
+
+    // 5. Verify simplified results-price block (NO comparison rows)
+    console.log("Checking simplified results-price block...");
+    const rowsCount = await page.locator('.results-price__rows').count();
+    if (rowsCount !== 0) {
+      throw new Error("Simplified results pricing block should NOT contain comparison rows table.");
+    }
     const heroPrice = await page.locator('.results-price__amount').textContent();
-    console.log("Member Hero Price: " + heroPrice);
-    if (heroPrice !== '$57.60') throw new Error("Incorrect member hero price: " + heroPrice);
+    if (heroPrice !== '$57.60') throw new Error("Incorrect simplified member hero price: " + heroPrice);
 
-    const nonMemberPrice = await page.locator('.results-price__strike').first().textContent();
-    console.log("Non-member price (struck): " + nonMemberPrice);
-    if (nonMemberPrice !== '$64.00/mo') throw new Error("Incorrect non-member strike price: " + nonMemberPrice);
+    // 6. Verify who it's for section exists
+    console.log("Checking who-it's-for section...");
+    const whoTitle = await page.locator('.who-its-for__title').textContent();
+    if (whoTitle !== 'BUILT FOR THE ONES WHO CARRY') {
+      throw new Error("Who it's for section missing or title mismatch: " + whoTitle);
+    }
 
-    // 2. Verify CTA buttons pricing updates in S7
+    // 7. Verify CTA buttons pricing updates in S7
     console.log("Checking S7 CTA buttons...");
     const buyButtonText = await page.locator('.s7-decision__path--quiet .s7-decision__btn').textContent();
-    console.log("Buy Button: " + buyButtonText);
+    console.log("S7 Buy Button: " + buyButtonText);
     if (!buyButtonText.includes('Buy the Bundle · $64.00/mo')) {
       throw new Error("S7 Buy button price mismatch: " + buyButtonText);
     }
 
     const joinButtonText = await page.locator('.s7-decision__path--join .s7-decision__btn').textContent();
-    console.log("Join Button: " + joinButtonText);
+    console.log("S7 Join Button: " + joinButtonText);
     if (!joinButtonText.includes('Join Free · $57.60/mo · 10% off')) {
       throw new Error("S7 Join button price mismatch: " + joinButtonText);
     }
 
-    // 3. Verify CTA buttons pricing updates in S9
+    // 8. Verify CTA buttons pricing updates in S9
     console.log("Checking S9 CTA buttons...");
     const s9JoinButton = await page.locator('.s9-final__buttons .btn-primary').textContent();
     console.log("S9 Join Button: " + s9JoinButton);
@@ -80,28 +114,75 @@ console.log("=== RUNNING QUIZ RESULTS PRICING TESTS ===");
       throw new Error("S9 Buy button price mismatch: " + s9BuyButton);
     }
 
-    console.log("✅ Verified: 'genius-joe' pricing values match the source of truth.");
-
-    // Now switch and render another bundle to verify dynamic updates ('boss')
-    console.log("Testing dynamic pricing update with 'boss' bundle...");
-    await page.evaluate(() => {
-      const resultObj = { key: 'holding-it-together', id: 'steward' };
-      showFullResult(resultObj, 'boss');
-    });
-
-    await page.waitForTimeout(200);
-
-    const bossHeroPrice = await page.locator('.results-price__amount').textContent();
-    console.log("Boss Member Hero Price: " + bossHeroPrice);
-    if (bossHeroPrice !== '$49.50') throw new Error("Incorrect boss member hero price: " + bossHeroPrice);
-
-    const bossBuyButton = await page.locator('.s7-decision__path--quiet .s7-decision__btn').textContent();
-    console.log("Boss Buy Button: " + bossBuyButton);
-    if (!bossBuyButton.includes('Buy the Bundle · $55.00/mo')) {
-      throw new Error("Boss S7 Buy button price mismatch: " + bossBuyButton);
+    // 9. Scroll past S2 and verify sticky bottom decision bar visibility and values
+    console.log("Verifying sticky bottom bar scroll and prices...");
+    const stickySelector = '#resultStickyBar';
+    await page.waitForSelector(stickySelector, { state: 'attached', timeout: 3000 });
+    
+    // Initially sticky bar should not be visible (should not have class sticky-bar--show)
+    const isInitiallyVisible = await page.locator(stickySelector).evaluate(el => el.classList.contains('sticky-bar--show'));
+    if (isInitiallyVisible) {
+      throw new Error("Sticky bar should not be shown before scrolling past S2.");
     }
 
-    console.log("✅ Verified: 'boss' pricing values match the source of truth.");
+    // Scroll past S2 dynamically and log values
+    await page.evaluate(() => {
+      const card = document.getElementById('quizCard');
+      const s2 = card.querySelector('.s2-pattern');
+      const trigger = s2.offsetTop + s2.offsetHeight;
+      card.scrollTop = trigger + 500; // Scroll extra to be safe
+      console.log(`SCROLL DEBUG: offsetTop=${s2.offsetTop}, offsetHeight=${s2.offsetHeight}, trigger=${trigger}, scrollTop=${card.scrollTop}`);
+    });
+    await page.waitForTimeout(500);
+
+    const checkVisible = await page.locator(stickySelector).evaluate(el => ({
+      classes: el.className,
+      classList: Array.from(el.classList),
+      display: window.getComputedStyle(el).display,
+      bottom: window.getComputedStyle(el).bottom
+    }));
+    console.log("STICKY STATE:", JSON.stringify(checkVisible));
+
+    const isShownAfterScroll = await page.locator(stickySelector).evaluate(el => el.classList.contains('sticky-bar--show'));
+    if (!isShownAfterScroll) {
+      throw new Error("Sticky bar failed to show after scroll past S2.");
+    }
+
+    const stickyBuyBtn = await page.locator(`${stickySelector} button`).nth(0).textContent();
+    const stickyJoinBtn = await page.locator(`${stickySelector} button`).nth(1).textContent();
+    console.log(`Sticky Buttons: Buy="${stickyBuyBtn}", Join="${stickyJoinBtn}"`);
+    if (!stickyBuyBtn.includes('Buy the Bundle · $64.00/mo')) {
+      throw new Error("Sticky Buy button price mismatch: " + stickyBuyBtn);
+    }
+    if (!stickyJoinBtn.includes('Join Free · $57.60/mo')) {
+      throw new Error("Sticky Join button price mismatch: " + stickyJoinBtn);
+    }
+
+    console.log("✅ Verified: 'genius-joe' pricing and skeletal layout match spec.");
+
+    // 10. Test Charge Powder bundle to verify review video section embeds (1 iframe + 1 placeholder)
+    console.log("Testing review video section dynamically on 'charge' bundle...");
+    await page.evaluate(() => {
+      const resultObj = { key: 'energy-without-aim', id: 'steward' };
+      showFullResult(resultObj, 'charge');
+    });
+
+    await page.waitForTimeout(300);
+
+    const chargeRetail = await statsValueLocator.nth(0).textContent();
+    const chargeMember = await statsValueLocator.nth(1).textContent();
+    console.log(`Charge Stats: Retail=${chargeRetail}, Member=${chargeMember}`);
+    if (chargeRetail !== '$84.98') throw new Error("Incorrect Charge retail price: " + chargeRetail);
+    if (chargeMember !== '$54.00/mo') throw new Error("Incorrect Charge member price: " + chargeMember);
+
+    // Verify 1 iframe and 1 placeholder
+    const iframeCount = await page.locator('.review-videos__frame-wrap iframe').count();
+    const placeholderCount = await page.locator('.review-videos__placeholder').count();
+    console.log(`Video items: Iframe count=${iframeCount}, Placeholder count=${placeholderCount}`);
+    if (iframeCount !== 1) throw new Error(`Expected exactly 1 YouTube review iframe for Charge Powder, got ${iframeCount}`);
+    if (placeholderCount !== 1) throw new Error(`Expected exactly 1 review placeholder for Hydration Powder, got ${placeholderCount}`);
+
+    console.log("✅ Verified: 'charge' review section renders 1 video iframe + 1 placeholder correctly.");
   }
 
   try {
