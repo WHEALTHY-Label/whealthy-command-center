@@ -11389,6 +11389,154 @@ async function reloadLedger() {
 }
 window.reloadLedger = reloadLedger;
 
+window.handleJoinCohortTap = async function() {
+  const btn = document.getElementById('btnJoinCohort');
+  const input = document.getElementById('joinCohortIdInput');
+  const errDiv = document.getElementById('joinCohortError');
+  if (!btn || !input) return;
+
+  const cohortId = input.value.trim();
+  if (!cohortId) {
+    if (errDiv) {
+      errDiv.textContent = "Please enter a valid Cohort ID.";
+      errDiv.style.display = 'block';
+    }
+    return;
+  }
+
+  if (!btn.dataset.armed) {
+    btn.dataset.armed = '1';
+    btn.dataset.label = btn.innerHTML;
+    btn.innerHTML = 'Tap again to confirm';
+    btn.style.borderColor = 'var(--lime)';
+    setTimeout(() => {
+      if (btn.dataset.armed) {
+        delete btn.dataset.armed;
+        btn.innerHTML = btn.dataset.label;
+      }
+    }, 4000);
+    return;
+  }
+
+  delete btn.dataset.armed;
+  btn.disabled = true;
+  if (errDiv) errDiv.style.display = 'none';
+
+  try {
+    const res = await fetch(FN_BASE + '/cohort-join', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL,
+        cohort_id: cohortId
+      })
+    });
+    const d = await res.json();
+    if (!res.ok || d.error) {
+      throw new Error(d.error || 'Failed to join cohort');
+    }
+
+    S.fast.cohort_id = cohortId;
+    await saveFast();
+    renderFast();
+  } catch (e) {
+    if (errDiv) {
+      errDiv.textContent = e.message;
+      errDiv.style.display = 'block';
+    }
+    btn.disabled = false;
+    btn.innerHTML = btn.dataset.label || 'Join Cohort';
+  }
+};
+
+window.loadCohortBoard = async function(cohortId) {
+  const container = document.getElementById('cohortBoardContainer');
+  if (!container) return;
+
+  try {
+    const res = await fetch(FN_BASE + '/cohort-board', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cohort_id: cohortId })
+    });
+    const d = await res.json();
+    if (!res.ok || d.error) {
+      throw new Error(d.error || 'Failed to load cohort board');
+    }
+
+    let html = `<div class="plan-sec-title">${escapeHtml(d.cohort)}</div>` +
+      `<div style="font-size:12px; color:var(--text-dim); margin-bottom:16px; text-transform:uppercase; letter-spacing:0.05em;">Day ${d.day} of ${d.of} &middot; Status: ${d.status}</div>`;
+
+    if (!d.members || d.members.length === 0) {
+      html += `<p class="g-body" style="font-style:italic; text-align:center; padding:12px 0;">No cohort members have filed entries yet.</p>`;
+    } else {
+      const myDisplayName = deriveCohortDisplayName(window.MEMBER_NAME);
+      html += `<div style="display:flex; flex-direction:column; gap:8px;">`;
+      d.members.forEach(m => {
+        const isMe = m.name === myDisplayName;
+        html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid ${isMe ? 'var(--lime)' : 'rgba(255,255,255,0.06)'}; border-radius:8px; ${isMe ? 'color:var(--lime); font-weight:700;' : ''}">` +
+          `  <span>${escapeHtml(m.name)}${isMe ? ' (You)' : ''}</span>` +
+          `  <span style="font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.02em;">${m.days_kept} days kept</span>` +
+          `</div>`;
+      });
+      html += `</div>`;
+    }
+
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<div class="plan-sec-title">Cohort Challenge</div>` +
+      `<p class="g-body" style="color:var(--text-dim);">${escapeHtml(e.message)}</p>`;
+  }
+};
+
+window.submitCohortTestimony = async function() {
+  const text = document.getElementById('cohortTestimonyText')?.value.trim();
+  if (!text) {
+    alert("Please write a testimony first.");
+    return;
+  }
+  const displayMode = document.getElementById('cohortTestimonyDisplayMode')?.value || 'name';
+  const btn = document.getElementById('btnPostCohortTestimony');
+  if (btn) btn.disabled = true;
+
+  try {
+    const res = await fetch(FN_BASE + '/wall-post', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        member_id: window.MEMBER_ID,
+        body: text,
+        display_mode: displayMode,
+        source: 'challenge'
+      })
+    });
+    if (!res.ok) throw new Error('Failed to post testimony');
+    
+    const container = document.getElementById('cohortTestimonyContainer');
+    if (container) {
+      container.innerHTML = '<div style="color:var(--lime); text-align:center; padding:16px; font-weight:700;">Testimony posted to the Prayer Wall!</div>';
+    }
+  } catch (e) {
+    alert("Error: " + e.message);
+    if (btn) btn.disabled = false;
+  }
+};
+
+function deriveCohortDisplayName(fullName) {
+  const n = (fullName || '').trim();
+  const first = n.split(/\s+/)[0] || 'Steward';
+  let initial = '';
+  const parts = n.split(/\s+/);
+  if (parts.length > 1) {
+    initial = parts[parts.length - 1][0];
+  }
+  return initial ? `${first} ${initial.toUpperCase()}` : first;
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 async function load(){
   try{
     const r=await fetch(FN_BASE+'/governor-state',{method:'POST',
@@ -12862,6 +13010,7 @@ function renderFast(){
       F.ended_day=F.duration;
       endFast('completed', F.duration, {model:F.plan.fast_name,duration:F.duration,ended_day:F.duration,finished:true,weak_rule:null});
       renderClosedFast(root);
+      if (F.cohort_id) loadCohortBoard(F.cohort_id);
       return;
     }
     if(!F.duration) {
@@ -12874,12 +13023,14 @@ function renderFast(){
         F.ended_day = daysRunning - daysSinceOpened;
         endFast('lapsed', F.ended_day, {model:F.plan.fast_name,duration:0,ended_day:F.ended_day,finished:false,weak_rule:null});
         renderClosedFast(root);
+        if (F.cohort_id) loadCohortBoard(F.cohort_id);
         return;
       }
       F.last_opened_at = realToday();
       saveFast();
     }
     renderDaily(root);
+    if (F.cohort_id) loadCohortBoard(F.cohort_id);
     try { renderChainChip('fast-chain-container', 'fast'); } catch(e) {}
     return;
   }
@@ -12890,6 +13041,7 @@ function renderFast(){
   }
   if(S.fast&&(S.fast.status==='completed'||S.fast.status==='ended_early'||S.fast.status==='lapsed')){
     renderClosedFast(root);
+    if (S.fast.cohort_id) loadCohortBoard(S.fast.cohort_id);
     try { renderChainChip('fast-chain-container', 'fast'); } catch(e) {}
     return;
   }
@@ -13949,6 +14101,22 @@ async function renderDaily(root){
      '<button class="ref-btn" onclick="openVerse(this,\''+wk.night+'\')">&#9789; '+wk.night+'</button></div>'+
      '<div class="verse-panel"></div></div>';
 
+  let cohortHtml = '';
+  if (F.cohort_id) {
+    cohortHtml = '<div id="cohortBoardContainer" class="g-card">Loading Cohort board...</div>';
+  } else {
+    cohortHtml = '<div id="cohortBoardContainer" class="g-card">' +
+      '<div class="plan-sec-title">Cohort Challenge</div>' +
+      '<p class="g-body" style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">Fast together. Enter the Cohort ID below to join your group:</p>' +
+      '<input type="text" id="joinCohortIdInput" placeholder="Enter Cohort ID..." class="free-input" style="width:100%; margin-bottom:12px; font-size:14px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:10px 12px;">' +
+      '<div class="g-actions" style="margin-top:8px;">' +
+      '  <button class="btn-lime" id="btnJoinCohort" onclick="handleJoinCohortTap()" style="width:100%;">Join Challenge</button>' +
+      '</div>' +
+      '<div id="joinCohortError" style="font-size:12px; color:var(--text-dim); margin-top:8px; display:none; text-align:center;"></div>' +
+      '</div>';
+  }
+  h += cohortHtml;
+
   // Tonight's Journal section (no checklist)
   h+='<div class="g-card"><div class="plan-sec-title">Tonight\u2019s Journal</div>'+
      '<p class="g-body" style="font-style:italic; margin-bottom:16px;">Daily Prompt: ' + ((P.journal_prompts && P.journal_prompts[ph.name]) || 'Write what today showed.') + '</p>'+
@@ -14034,10 +14202,32 @@ function renderClosedFast(root){
   
   if (F.plan && F.plan.report_filed) {
     const elapsed = F.ended_day || F.duration || 0;
-    root.innerHTML = '<div class="g-card fade" style="text-align:center;padding:36px 24px">'+
+    let closedHtml = '<div class="g-card fade" style="text-align:center;padding:36px 24px">'+
       '<div class="g-title">Fast Closed</div>'+
       '<p class="g-body" style="max-width:400px;margin:0 auto 20px">' + elapsed + ' days of ' + F.plan.fast_name + ' are in your record and they count.</p>'+
-      '<div class="g-actions" style="justify-content:center"><button class="btn-lime" id="btnBuildNewFast" onclick="discardFast()">Restart</button></div></div>';
+      '<div class="g-actions" style="justify-content:center;margin-bottom:16px;"><button class="btn-lime" id="btnBuildNewFast" onclick="discardFast()">Restart</button></div>';
+    
+    if (F.cohort_id) {
+      closedHtml += '<div id="cohortBoardContainer" class="g-card" style="text-align:left; margin-top:20px;">Loading Cohort board...</div>' +
+        '<div id="cohortTestimonyContainer" class="g-card" style="text-align:left; margin-top:20px;">' +
+        '  <div class="plan-sec-title">Share Cohort Testimony</div>' +
+        '  <p class="g-body" style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">Consistent stewardship compounds when shared. Would you like to post a testimony of this cohort fast to the Prayer Wall?</p>' +
+        '  <textarea id="cohortTestimonyText" class="free-input" placeholder="Share what this cohort challenge showed you before God..." style="width:100%; height:100px; font-size:14px; margin-bottom:12px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:10px 12px;"></textarea>' +
+        '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">' +
+        '    <span style="font-size:12px; color:var(--text-dim);">Post as</span>' +
+        '    <select id="cohortTestimonyDisplayMode" class="free-input" style="width:auto; padding:4px 8px; font-size:12px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff;">' +
+        '      <option value="name">My Name</option>' +
+        '      <option value="anonymous">Anonymous</option>' +
+        '    </select>' +
+        '  </div>' +
+        '  <div class="g-actions">' +
+        '    <button class="btn-lime" id="btnPostCohortTestimony" onclick="submitCohortTestimony()" style="width:100%;">Post to Prayer Wall</button>' +
+        '  </div>' +
+        '  <div style="font-size:12px; color:var(--text-dim); margin-top:8px; text-align:center;">Only if you want to. The app never posts for you.</div>' +
+        '</div>';
+    }
+    closedHtml += '</div>';
+    root.innerHTML = closedHtml;
     return;
   }
   
@@ -14060,9 +14250,13 @@ function renderClosedFast(root){
   
   let h = '<div class="g-card fade" style="max-width:540px; margin:0 auto; padding:32px 24px;">'+
     '<div class="plan-name" style="font-size:28px; text-transform:uppercase; color:var(--lime); text-align:center; margin-bottom:12px;">' + F.plan.fast_name + '</div>'+
-    '<div style="font-size:14px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); text-align:center; margin-bottom:24px;">Fast Closed &middot; ' + elapsed + ' days elapsed</div>'+
-    
-    '<div style="margin-bottom:20px;">'+
+    '<div style="font-size:14px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); text-align:center; margin-bottom:24px;">Fast Closed &middot; ' + elapsed + ' days elapsed</div>';
+
+  if (F.cohort_id) {
+    h += '<div id="cohortBoardContainer" class="g-card" style="margin-bottom:20px;">Loading Cohort board...</div>';
+  }
+
+  h += '<div style="margin-bottom:20px;">'+
       '<div class="grp-label">What you were seeking</div>'+
       '<p class="g-body" style="background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);">' + seeking + '</p>'+
     '</div>'+
