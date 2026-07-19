@@ -11476,7 +11476,7 @@ window.loadCohortBoard = async function(cohortId) {
         const isMe = m.name === myDisplayName;
         html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(255,255,255,0.02); border:1px solid ${isMe ? 'var(--lime)' : 'rgba(255,255,255,0.06)'}; border-radius:8px; ${isMe ? 'color:var(--lime); font-weight:700;' : ''}">` +
           `  <span>${escapeHtml(m.name)}${isMe ? ' (You)' : ''}</span>` +
-          `  <span style="font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.02em;">${m.days_kept} days kept</span>` +
+          `  <span style="font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.02em;">${m.days_kept} ${m.days_kept === 1 ? 'day' : 'days'} kept</span>` +
           `</div>`;
       });
       html += `</div>`;
