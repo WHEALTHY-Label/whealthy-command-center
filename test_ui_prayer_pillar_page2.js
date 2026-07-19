@@ -102,14 +102,22 @@ console.log("=== RUNNING PRAYER SURFACE (PAGE 2) INTEGRATION TESTS ===");
     const morningPassWrites = [];
     await page.route('**/functions/v1/**', async (route) => {
       const request = route.request();
+      const url = request.url();
       if (request.method() === 'POST') {
-        const url = request.url();
         let postData = {};
         try {
           postData = JSON.parse(request.postData() || '{}');
         } catch (e) {}
         if (url.includes('prayers-write') || (url.includes('prayer-state') && (postData.action === 'advance' || postData.action === 'jump'))) {
           morningPassWrites.push({ url, postData });
+        }
+        if (url.includes('prayer-state')) {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ ok: true, midday_next_movement: postData.movement || 3 })
+          });
+          return;
         }
       }
       await route.continue();

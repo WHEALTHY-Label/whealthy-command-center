@@ -54,6 +54,71 @@ try {
 
     await page.setViewportSize({ width: 375, height: 812 });
     
+    let milestoneCount = 0;
+    await page.route('**/functions/v1/prayers-read', async (route) => {
+      const request = route.request();
+      if (request.method() === 'POST') {
+        let postData = {};
+        try {
+          postData = JSON.parse(request.postData() || '{}');
+        } catch (e) {}
+        if (postData.view === 'milestone') {
+          milestoneCount++;
+          if (milestoneCount === 1) {
+            await route.fulfill({
+              status: 200,
+              contentType: 'application/json',
+              body: JSON.stringify({
+                prayer: {
+                  id: "mock-milestone-365",
+                  body: "One year ago today you asked for this.",
+                  category: "family",
+                  created_at: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                milestone: 365
+              })
+            });
+            return;
+          } else {
+            await route.fulfill({
+              status: 200,
+              contentType: 'application/json',
+              body: JSON.stringify({
+                prayer: {
+                  id: "mock-milestone-90",
+                  body: "Ninety days ago you asked for this.",
+                  category: "work",
+                  created_at: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                milestone: 90
+              })
+            });
+            return;
+          }
+        }
+      }
+      await route.continue();
+    });
+
+    await page.route('**/functions/v1/prayers-write', async (route) => {
+      const request = route.request();
+      if (request.method() === 'POST') {
+        let postData = {};
+        try {
+          postData = JSON.parse(request.postData() || '{}');
+        } catch (e) {}
+        if (postData.action === 'milestone_shown' || postData.action === 'milestone_dismiss' || postData.action === 'milestone_close') {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ ok: true })
+          });
+          return;
+        }
+      }
+      await route.continue();
+    });
+
     console.log("Navigating to page with mocked session...");
     await page.goto('http://localhost:12345/whealthy-command-center-repo/index.html', { waitUntil: 'networkidle' });
     await page.waitForTimeout(3000);

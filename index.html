@@ -58,6 +58,8 @@ textarea,input,select{font-size:16px}
 .sidebar-sub-item{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:transparent;border:none;border-radius:6px;color:#8c8f96;font-size:13px;font-weight:600;text-align:left;transition:all .2s;cursor:pointer;}
 .sidebar-sub-item:hover{color:#fff;background:rgba(255,255,255,0.02)}
 .sidebar-sub-item.active{color:var(--lime);background:rgba(204,255,0,0.05);font-weight:700}
+.nav-section-title{font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.25);padding:14px 12px 6px 12px;margin-top:6px;user-select:none}
+.nav-section-title:first-of-type{margin-top:0}
 
 /* ── Claim Bundle Modal ── */
 .claim-modal-overlay{position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease}
@@ -1701,35 +1703,46 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <div class="sidebar-brand-sub" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">Steward's OS</div>
     </div>
     <nav class="sidebar-nav">
+      <!-- Section 1 — General -->
+      <div class="nav-section-title">General</div>
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
+      <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
+      <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
+      <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
+      <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> The Record</button>
+
+      <!-- Section 2 — Disciplines -->
+      <div class="nav-section-title">Disciplines</div>
       
-      <!-- Core Disciplines -->
-      <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> THE WORD</button>
-      
-      <button class="sidebar-item" id="navPrayer" onclick="go('prayer',this)"><span class="si-dot"></span> PRAYER</button>
+      <!-- Prayer -->
+      <button class="sidebar-item" id="navPrayer" onclick="go('prayer',this)"><span class="si-dot"></span> Prayer</button>
       <div class="sidebar-sub-nav">
         <button class="sidebar-sub-item" id="navWall" data-nav="wall" onclick="go('wall',this)">Prayer Wall</button>
         <button class="sidebar-sub-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)">Testimony Wall</button>
+        <button class="sidebar-sub-item" id="navMe" data-nav="me" onclick="go('me',this)">My Prayers <span id="meBadge" style="display:none; width:6px; height:6px; background:var(--wall-lime); border-radius:50%; margin-left:6px; box-shadow:0 0 8px rgba(204,255,0,0.6);"></span></button>
       </div>
 
-      <button class="sidebar-item" id="navFast" onclick="go('fast',this)"><span class="si-dot"></span> THE FAST <span class="si-day" id="navDayBadge" style="display:none"></span></button>
-      
-      <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> THE RECORD</button>
-      
-      <button class="sidebar-item" id="navMe" data-nav="me" onclick="go('me',this)">
-        <span class="si-dot"></span> Me
-        <span class="me-badge" id="meBadge" style="display:none"></span>
-      </button>
+      <!-- Scripture -->
+      <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Scripture</button>
+      <div class="sidebar-sub-nav">
+        <button class="sidebar-sub-item" id="navBible365" onclick="go('bible',this)">Bible 365</button>
+      </div>
 
-      <div class="side-divider"></div>
+      <!-- Fasting -->
+      <button class="sidebar-item" id="navFast" onclick="go('fast',this)"><span class="si-dot"></span> Fasting <span class="si-day" id="navDayBadge" style="display:none"></span></button>
+      <div class="sidebar-sub-nav">
+        <button class="sidebar-sub-item" id="navFastSub" onclick="go('fast',this)">The Fast</button>
+        <button class="sidebar-sub-item" id="navCohort" onclick="go('cohort',this)">Cohort Challenge</button>
+      </div>
 
-      <!-- Other Features -->
-      <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
-      <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
-      <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
-      <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
-      <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Links</button>
+      <!-- Circles -->
+      <button class="sidebar-item" id="navCircle" onclick="go('circle',this)"><span class="si-dot"></span> Circles</button>
+
+      <!-- Section 3 — Community and More -->
+      <div class="nav-section-title">Community & More</div>
       <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
+      <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Center</button>
+      <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
@@ -1761,15 +1774,23 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ DASHBOARD ============ -->
       <div id="dashView">
-        <div class="view-header-block dynamic-welcome-header" style="overflow:visible;position:relative;">
+        <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-bottom: 24px; position: relative; overflow: visible; padding: 20px 24px;">
           <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
-          <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden;position:relative;">
-            <span class="welcome-pulse"></span>
-            &#9638;
+          
+          <!-- Top Row: Avatar and Name (dashTitle) -->
+          <div style="display: flex; align-items: center; gap: 12px; z-index: 2;">
+            <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden;position:relative; margin: 0; flex-shrink: 0;">
+              <span class="welcome-pulse"></span>
+              &#9638;
+            </div>
+            <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display);">Steward Command Center</h1>
+            <p id="dashSubtitle" style="display: none;"></p>
           </div>
-          <div style="z-index:2">
-            <h1 class="view-header-title welcome-greeting-title" id="dashTitle">Steward Command Center</h1>
-            <p class="view-header-subtitle welcome-greeting-subtitle" id="dashSubtitle">Welcome back. Access your daily focus and OS controls.</p>
+          
+          <!-- Bottom Row: Daily Directive -->
+          <div style="z-index: 2; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+            <div class="directive-banner__label" style="margin: 0;">Daily Directive</div>
+            <div class="directive-banner__text" id="dashDirectiveText" style="font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.5; margin: 0; font-weight: 500;">Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.</div>
           </div>
         </div>
         <div id="dashRoot"></div>
@@ -5681,7 +5702,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
               Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
             </button>
-            <button class="me-tab-btn" id="meTabBtnCircle" onclick="ME.switchTab('circle')">Steward Circle</button>
           </div>
 
           <!-- PANEL 1: MY PRAYERS -->
@@ -5701,11 +5721,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <div class="wall-skeleton-card"></div>
             </div>
             <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
-          </div>
-
-          <!-- PANEL 3: STEWARD CIRCLE -->
-          <div id="mePanelCircle" style="display:none">
-            <div id="meCircleContent"></div>
           </div>
         </div>
       </div>
@@ -5818,17 +5833,13 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               this.activeTab = tab;
               document.getElementById('meTabBtnMine').classList.toggle('active', tab === 'mine');
               document.getElementById('meTabBtnWatching').classList.toggle('active', tab === 'watching');
-              document.getElementById('meTabBtnCircle').classList.toggle('active', tab === 'circle');
               document.getElementById('mePanelMine').style.display = tab === 'mine' ? 'block' : 'none';
               document.getElementById('mePanelWatching').style.display = tab === 'watching' ? 'block' : 'none';
-              document.getElementById('mePanelCircle').style.display = tab === 'circle' ? 'block' : 'none';
 
               if (tab === 'mine' && this.mineOffset === 0) {
                 this.loadMine(0);
               } else if (tab === 'watching' && this.watchingOffset === 0) {
                 this.loadWatching(0);
-              } else if (tab === 'circle') {
-                if (typeof window.loadMeCircle === 'function') window.loadMeCircle();
               }
             },
 
@@ -7189,23 +7200,30 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <!-- ============ COMMUNITY ============ -->
       <div id="communityView" style="display:none">
         <div class="view-header-block">
-          <div class="view-header-icon-box">&#9876;</div>
+          <div class="view-header-icon-box">👥</div>
           <div>
             <h1 class="view-header-title" id="communityTitle">Community</h1>
             <p class="view-header-subtitle" id="communitySubtitle">Iron sharpens iron.</p>
           </div>
         </div>
-        <div class="g-card" style="text-align:center;padding:36px 24px;max-width:680px;margin:0 auto;">
-          <div style="font-size:40px;margin-bottom:12px">&#129309;</div>
-          <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
-          <p class="g-body" style="max-width:480px;margin:0 auto 24px;color:rgba(255,255,255,0.6);line-height:1.55;">Connect with fellow Stewards on Skool. Accountability partners, group challenges, and community support.</p>
+        
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <!-- Community Feed Container -->
+          <div id="communityFeedContainer" style="display:none"></div>
           
-          <!-- Clickthrough screenshot with glowing edges -->
-          <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:block;margin:0 auto 28px;max-width:540px;border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(204,255,0,0.15);border:1px solid rgba(204,255,0,0.25);transition:transform 0.3s ease, box-shadow 0.3s ease;text-decoration:none;" onmouseover="this.style.transform='scale(1.015)';this.style.boxShadow='0 0 25px rgba(204,255,0,0.3)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 20px rgba(204,255,0,0.15)';">
-            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/Screenshot_2026-07-16_at_3.25.52PM-4233600.png?format=webp" alt="WHEALTHY Community" style="width:100%;height:auto;display:block;opacity:0.95;transition:opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.95';">
-          </a>
+          <!-- Static Promo (shown if feed is empty) -->
+          <div id="communityPromoCard" class="g-card" style="text-align:center;padding:36px 24px;">
+            <div style="font-size:40px;margin-bottom:12px">&#129309;</div>
+            <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
+            <p class="g-body" style="max-width:480px;margin:0 auto 24px;color:rgba(255,255,255,0.6);line-height:1.55;">Connect with fellow Stewards on Skool. Accountability partners, group challenges, and community support.</p>
+            
+            <!-- Clickthrough screenshot with glowing edges -->
+            <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:block;margin:0 auto 28px;max-width:540px;border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(204,255,0,0.15);border:1px solid rgba(204,255,0,0.25);transition:transform 0.3s ease, box-shadow 0.3s ease;text-decoration:none;" onmouseover="this.style.transform='scale(1.015)';this.style.boxShadow='0 0 25px rgba(204,255,0,0.3)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 20px rgba(204,255,0,0.15)';">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/Screenshot_2026-07-16_at_3.25.52PM-4233600.png?format=webp" alt="WHEALTHY Community" style="width:100%;height:auto;display:block;opacity:0.95;transition:opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.95';">
+            </a>
 
-          <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;padding:12px 32px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;">Open Skool Community</a>
+            <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;padding:12px 32px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;">Open Skool Community</a>
+          </div>
         </div>
       </div>
 
@@ -7385,6 +7403,34 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div id="fastQuietStateContainer" style="margin-bottom: 20px;"></div>
         <div id="fastRoot"></div>
 
+      </div>
+
+      <!-- ============ CIRCLES ============ -->
+      <div id="circleView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">👥</div>
+          <div>
+            <h1 class="view-header-title">Circles</h1>
+            <p class="view-header-subtitle">Your Steward Circle. Bible, body, and business.</p>
+          </div>
+        </div>
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <div id="meCircleContent"></div>
+        </div>
+      </div>
+
+      <!-- ============ COHORT CHALLENGE ============ -->
+      <div id="cohortView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">🏆</div>
+          <div>
+            <h1 class="view-header-title">Cohort Challenge</h1>
+            <p class="view-header-subtitle">Fast together. Carry the weight beside your brothers.</p>
+          </div>
+        </div>
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <div id="cohortViewContent"></div>
+        </div>
       </div>
 
     </div>
@@ -9376,11 +9422,15 @@ window.MEMBER_ID = MEMBER_ID;
         } else {
           this.middayStep = 1;
         }
-        this.renderMiddayPass();
+        if (this.activePass === 'midday') {
+          this.renderMiddayPass();
+        }
       } catch (e) {
         console.error(e);
         this.middayStep = 1;
-        this.renderMiddayPass();
+        if (this.activePass === 'midday') {
+          this.renderMiddayPass();
+        }
       }
     },
 
@@ -11813,6 +11863,7 @@ window.handleJoinCohortTap = async function() {
     S.fast.cohort_id = cohortId;
     await saveFast();
     renderFast();
+    if (typeof window.renderCohortView === 'function') window.renderCohortView();
   } catch (e) {
     if (errDiv) {
       errDiv.textContent = e.message;
@@ -11906,6 +11957,80 @@ function deriveCohortDisplayName(fullName) {
   }
   return initial ? `${first} ${initial.toUpperCase()}` : first;
 }
+
+window.renderCohortView = function() {
+  const container = document.getElementById('cohortViewContent');
+  if (!container) return;
+
+  const F = S.fast;
+  if (!F || !F.plan) {
+    container.innerHTML = `
+      <div class="g-card" style="text-align:center; padding:32px 16px;">
+        <div style="font-size:36px; margin-bottom:12px;">🏆</div>
+        <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin-bottom:8px;">No Active Fast</h3>
+        <p class="g-body" style="color:rgba(255,255,255,0.6); max-width:320px; margin:0 auto 16px;">Cohort challenges are tied to active fasts. Start a fast first to join a group challenge.</p>
+        <button class="btn-lime" onclick="go('fast')">Start Fasting</button>
+      </div>
+    `;
+    return;
+  }
+
+  if (F.status === 'completed' || F.status === 'ended_early') {
+    let closedHtml = '';
+    if (F.cohort_id) {
+      closedHtml += `
+        <div id="cohortBoardContainer" class="g-card" style="margin-bottom:20px;">Loading Cohort board...</div>
+        <div id="cohortTestimonyContainer" class="g-card" style="text-align:left;">
+          <div class="plan-sec-title">Share Cohort Testimony</div>
+          <p class="g-body" style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">Consistent stewardship compounds when shared. Would you like to post a testimony of this cohort fast to the Prayer Wall?</p>
+          <textarea id="cohortTestimonyText" class="free-input" placeholder="Share what this cohort challenge showed you before God..." style="width:100%; height:100px; font-size:14px; margin-bottom:12px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:10px 12px;"></textarea>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <span style="font-size:12px; color:var(--text-dim);">Post as</span>
+            <select id="cohortTestimonyDisplayMode" class="free-input" style="width:auto; padding:4px 8px; font-size:12px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff;">
+              <option value="name">My Name</option>
+              <option value="anonymous">Anonymous</option>
+            </select>
+          </div>
+          <div class="g-actions">
+            <button class="btn-lime" id="btnPostCohortTestimony" onclick="submitCohortTestimony()" style="width:100%;">Post to Prayer Wall</button>
+          </div>
+          <div style="font-size:12px; color:var(--text-dim); margin-top:8px; text-align:center;">Only if you want to. The app never posts for you.</div>
+        </div>
+      `;
+    } else {
+      closedHtml += `
+        <div class="g-card" style="text-align:center; padding:32px 16px;">
+          <div style="font-size:36px; margin-bottom:12px;">🏆</div>
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin-bottom:8px;">Fast Closed</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.6); max-width:320px; margin:0 auto 16px;">Your fast has ended. You were not in a cohort during this fast.</p>
+          <button class="btn-lime" onclick="go('fast')">Restart Fasting</button>
+        </div>
+      `;
+    }
+    container.innerHTML = closedHtml;
+    if (F.cohort_id) {
+      window.loadCohortBoard(F.cohort_id);
+    }
+    return;
+  }
+
+  if (F.cohort_id) {
+    container.innerHTML = `<div id="cohortBoardContainer" class="g-card">Loading Cohort board...</div>`;
+    window.loadCohortBoard(F.cohort_id);
+  } else {
+    container.innerHTML = `
+      <div id="cohortBoardContainer" class="g-card">
+        <div class="plan-sec-title">Cohort Challenge</div>
+        <p class="g-body" style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">Fast together. Enter the Cohort ID below to join your group:</p>
+        <input type="text" id="joinCohortIdInput" placeholder="Enter Cohort ID..." class="free-input" style="width:100%; margin-bottom:12px; font-size:14px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:10px 12px;">
+        <div class="g-actions" style="margin-top:8px;">
+          <button class="btn-lime" id="btnJoinCohort" onclick="handleJoinCohortTap()" style="width:100%;">Join Challenge</button>
+        </div>
+        <div id="joinCohortError" style="font-size:12px; color:var(--text-dim); margin-top:8px; display:none; text-align:center;"></div>
+      </div>
+    `;
+  }
+};
 
 function escapeHtml(str) {
   return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -12339,8 +12464,8 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   document.querySelectorAll('.sidebar-item, .sidebar-sub-item').forEach(b=>b.classList.remove('active'));
   if(!el && view) {
@@ -12382,6 +12507,18 @@ function go(view,el,label){
   if(view==='me'){
     document.getElementById('headerLine').textContent='My Prayers';
     if(typeof initMe==='function') initMe();
+  }
+  if(view==='circle'){
+    document.getElementById('headerLine').textContent='Circles';
+    if(typeof window.loadMeCircle==='function') window.loadMeCircle();
+  }
+  if(view==='cohort'){
+    document.getElementById('headerLine').textContent='Cohort Challenge';
+    if(typeof window.renderCohortView==='function') window.renderCohortView();
+  }
+  if(view==='community'){
+    document.getElementById('headerLine').textContent='Community';
+    if(typeof window.loadCommunityViewFeed==='function') window.loadCommunityViewFeed();
   }
   if(view==='prayer'){
     document.getElementById('headerLine').textContent='Prayer';
@@ -13209,7 +13346,9 @@ function voiceNav(destination) {
     community: 'community', bible: 'bible',
     affiliate: 'affiliate', leaderboard: 'leaderboard', claim: 'claim',
     prayer: 'prayer', wall: 'wall', testimony: 'testimony', me: 'me',
-    portal: 'portal', tryall: 'tryall'
+    portal: 'portal', tryall: 'tryall',
+    circle: 'circle', circles: 'circle',
+    cohort: 'cohort', challenge: 'cohort'
   };
   const dest = map[(destination || '').toLowerCase()] || 'dash';
   const el = document.getElementById('nav' + dest.charAt(0).toUpperCase() + dest.slice(1));
@@ -13661,75 +13800,8 @@ function renderDash(){
   var d=activeFastDay();
   var h='<div class="fade">';
 
-  /* ── DAILY DIRECTIVE (lime-bordered banner like dashboard) ── */
-  h+='<div class="directive-banner">';
-  h+='<div class="directive-banner__icon">&#127919;</div>';
-  h+='<div>';
-  h+='<div class="directive-banner__label">Daily Directive</div>';
-  if(d&&S.fast.plan){
-    var ph=fastPhaseFor(d);
-    var focusArr=(S.fast.plan.focus&&ph&&S.fast.plan.focus[ph.name])||['Full routine. No exceptions.'];
-    var br=brokenRule();
-    var focus=br?('Today has one target: '+br.rule.replace(/\.$/,'')+'.'):focusArr[(d-1)%focusArr.length];
-    h+='<div class="directive-banner__text" id="dashDirectiveText">Day '+d+' of '+S.fast.duration+' &middot; '+focus+'</div>';
-  } else {
-    var directiveText = (window.aiPersonalizations && window.aiPersonalizations.dailyDirective) || 'Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.';
-    h+='<div class="directive-banner__text" id="dashDirectiveText">'+directiveText+'</div>';
-  }
-  h+='</div></div>';
-
-  /* ── TODAY'S DISCIPLINES CARD ── */
-  h+='<div class="g-card" style="margin-top:24px">';
-  h+='<div class="dash-card__head" style="margin-bottom:8px;"><div class="dash-card__icon" style="color:var(--lime); font-size:16px;">⚡</div><div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Today\'s disciplines</div></div>';
-  h+='<div class="dash-card__body" style="padding:0;">';
-  
-  // Calculate kept disciplines dynamically
-  const todayStr = realToday();
-  const todayEntry = window.CHIPS_DATA && window.CHIPS_DATA.days && window.CHIPS_DATA.days.find(d => d.date === todayStr);
-  let keptCount = 0;
-  if (todayEntry) {
-    if (todayEntry.word === true) keptCount++;
-    if (todayEntry.prayer === true) keptCount++;
-    if (todayEntry.fast === true) keptCount++;
-    if (todayEntry.record === true) keptCount++;
-  }
-  const countNames = ["Zero", "One", "Two", "Three", "Four"];
-  const countName = countNames[keptCount] || "Zero";
-  h+='<p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.45; margin:0 0 12px; font-family:\'DM Sans\', sans-serif;">' + countName + ' of four disciplines kept today</p>';
-  h+='<div id="rhythm-chain-container"></div>';
-
-  // Discipline Status Cards Grid
-  h+='<div class="disciplines-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px;">' +
-     window.drawDisciplineCard('THE WORD', 'word', 'bible', 'navBible') +
-     window.drawDisciplineCard('PRAYER', 'prayer', 'prayer', 'navPrayer') +
-     window.drawDisciplineCard('THE FAST', 'fast', 'fast', 'navFast') +
-     window.drawDisciplineCard('THE RECORD', 'record', 'record', 'navRecord') +
-     '</div>';
-
-  h+='</div></div>';
-
-  /* ── STEWARD CIRCLE CARD CONTAINER ── */
-  h+='<div id="dashCircleContainer" style="margin-top:24px"></div>';
-
-  /* ── COMMUNITY FEED CARD CONTAINER ── */
-  h+='<div id="dashCommunityFeedContainer" style="margin-top:24px"></div>';
-
-  /* ── WALL NUDGE CARD ── */
-  if (window.wallCommunityState && window.wallCommunityState.live_post_count > 0) {
-    h+='<div id="dashWallNudgeCard" class="g-card" style="margin-top:24px; border: 1px solid rgba(204,255,0,0.15); background: radial-gradient(circle at top right, rgba(204,255,0,0.03), transparent 60%), #0e1013;">';
-    h+='<div class="dash-card__head" style="margin-bottom:8px;"><div class="dash-card__icon" style="color:var(--lime); font-size:16px;">&#128065;</div><div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">The Wall</div></div>';
-    h+='<div class="dash-card__body" style="padding:0;">';
-    h+='<p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.45; margin:0 0 16px; font-family:\'DM Sans\', sans-serif;">Stewards are carrying things right now.</p>';
-    h+='<button class="btn-ghost" onclick="go(\'wall\')" style="padding:10px 16px; font-size:12px; border-radius:8px; border: 1px solid rgba(204,255,0,0.3); color:var(--lime); width:auto; text-transform:uppercase; font-family:var(--font-display); font-weight:700; cursor:pointer;" onmouseover="this.style.background=\'rgba(204,255,0,0.08)\'" onmouseout="this.style.background=\'transparent\'">';
-    h+='Go to the Wall';
-    h+='</button>';
-    h+='</div>';
-    h+='</div>';
-  }
-
-
   /* ── YOUR BUNDLE (matching dashboard bundleCard) ── */
-  h+='<div class="g-card" style="margin-top:24px">';
+  h+='<div class="g-card">';
   h+='<div class="dash-card__head"><div class="dash-card__icon">&#128230;</div><div class="dash-card__title">Your Bundle</div></div>';
   h+='<div class="dash-card__body">';
   h+='<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between">';
@@ -13798,31 +13870,61 @@ function renderDash(){
   h+='</div>'; // end card body
   h+='</div>'; // end card
 
-  /* ── TONIGHT'S ENTRY (mic wiring PRESERVED — all IDs intact) ── */
-  h+='<div class="g-card" style="text-align: center;"><div class="plan-sec-title" style="text-align: left;">Tonight\'s Entry</div>';
-  var filedToday=S.entries.some(function(e){return !e.burned&&e.date===realToday();});
-  if(filedToday){
-    h+='<p class="g-body" style="text-align: left;">Report filed, day governed. Tomorrow\u2019s directive already knows what today showed.</p>';
-  } else {
-    var sub2 = 'Two minutes, spoken, before the day fades. Edit anything before filing.';
-    if(d&&S.fast.plan){
-      sub2 = 'Day ' + d + ' of your fast. Close the day while it is still honest in your memory.';
-    }
-    h+='<p class="g-body" style="text-align: left; margin-bottom: 24px;">'+sub2+'</p>'+
-       '<div class="recorder" style="margin: 24px auto; display: flex; flex-direction: column; align-items: center; justify-content: center;">'+
-       '  <div class="mic-wrap" id="dashMicWrap" style="margin: 0 auto;">'+
-       '    <div class="mic-ring" id="dashRing1"></div>'+
-       '    <div class="mic-ring" id="dashRing2"></div>'+
-       '    <button class="mic-btn" id="dashMicBtn" onclick="toggleMic(\'dash\')" aria-label="Record entry">'+
-       '      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>'+
-       '    </button>'+
-       '  </div>'+
-       '  <div class="mic-state" id="dashMicState" style="margin-top: 12px;">Tap to speak</div>'+
-       '</div>'+
-       '<textarea class="transcript" id="dashTranscript" placeholder="Your words land here. Edit anything, they stay yours." style="margin: 16px auto; max-width: 500px; display: none;"></textarea>'+
-       '<div class="g-actions" style="justify-content: center; margin-top: 12px;"><button class="btn-lime" id="dashFileBtn" onclick="triggerFile(\'dash\')" style="display:none; width: 100%; max-width: 500px; margin: 0 auto;">File Tonight\'s Entry</button></div>'+
-       '<p class="demo-note" id="dashSrNote" style="margin-top: 16px; font-size: 11px; color: var(--text-dim);"></p>';
+  /* ── TODAY'S DISCIPLINES CARD ── */
+  h+='<div class="g-card" style="margin-top:24px">';
+  h+='<div class="dash-card__head" style="margin-bottom:8px;"><div class="dash-card__icon" style="color:var(--lime); font-size:16px;">⚡</div><div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Today\'s disciplines</div></div>';
+  h+='<div class="dash-card__body" style="padding:0;">';
+  
+  // Calculate kept disciplines dynamically
+  const todayStr = realToday();
+  const todayEntry = window.CHIPS_DATA && window.CHIPS_DATA.days && window.CHIPS_DATA.days.find(d => d.date === todayStr);
+  let keptCount = 0;
+  if (todayEntry) {
+    if (todayEntry.word === true) keptCount++;
+    if (todayEntry.prayer === true) keptCount++;
+    if (todayEntry.fast === true) keptCount++;
+    if (todayEntry.record === true) keptCount++;
   }
+  const countNames = ["Zero", "One", "Two", "Three", "Four"];
+  const countName = countNames[keptCount] || "Zero";
+  h+='<p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.45; margin:0 0 12px; font-family:\'DM Sans\', sans-serif;">' + countName + ' of four disciplines kept today</p>';
+  h+='<div id="rhythm-chain-container"></div>';
+
+  // Discipline Status Cards Grid
+  h+='<div class="disciplines-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px;">' +
+     window.drawDisciplineCard('THE WORD', 'word', 'bible', 'navBible') +
+     window.drawDisciplineCard('PRAYER', 'prayer', 'prayer', 'navPrayer') +
+     window.drawDisciplineCard('THE FAST', 'fast', 'fast', 'navFast') +
+     window.drawDisciplineCard('THE RECORD', 'record', 'record', 'navRecord') +
+     '</div>';
+
+  h+='</div></div>';
+
+  /* ── STEWARD CIRCLE CARD CONTAINER ── */
+  h+='<div id="dashCircleContainer" style="margin-top:24px"></div>';
+
+  /* ── WALL NUDGE CARD ── */
+  if (window.wallCommunityState && window.wallCommunityState.live_post_count > 0) {
+    h+='<div id="dashWallNudgeCard" class="g-card" style="margin-top:24px; border: 1px solid rgba(204,255,0,0.15); background: radial-gradient(circle at top right, rgba(204,255,0,0.03), transparent 60%), #0e1013;">';
+    h+='<div class="dash-card__head" style="margin-bottom:8px;"><div class="dash-card__icon" style="color:var(--lime); font-size:16px;">&#128065;</div><div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">The Wall</div></div>';
+    h+='<div class="dash-card__body" style="padding:0;">';
+    h+='<p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.45; margin:0 0 16px; font-family:\'DM Sans\', sans-serif;">Stewards are carrying things right now.</p>';
+    h+='<button class="btn-ghost" onclick="go(\'wall\')" style="padding:10px 16px; font-size:12px; border-radius:8px; border: 1px solid rgba(204,255,0,0.3); color:var(--lime); width:auto; text-transform:uppercase; font-family:var(--font-display); font-weight:700; cursor:pointer;" onmouseover="this.style.background=\'rgba(204,255,0,0.08)\'" onmouseout="this.style.background=\'transparent\'">';
+    h+='Go to the Wall';
+    h+='</button>';
+    h+='</div>';
+    h+='</div>';
+  }
+
+  /* ── COMMUNITY NUDGE CARD ── */
+  h+='<div class="g-card" style="margin-top:24px; border: 1px solid rgba(255,255,255,0.04);">';
+  h+='<div class="dash-card__head" style="margin-bottom:8px;"><div class="dash-card__icon" style="color:var(--lime); font-size:16px;">👥</div><div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Steward Fellowship</div></div>';
+  h+='<div class="dash-card__body" style="padding:0;">';
+  h+='<p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.45; margin:0 0 16px; font-family:\'DM Sans\', sans-serif;">Accountability partners, group challenges, and private community discussion.</p>';
+  h+='<button class="btn-ghost" onclick="go(\'community\')" style="padding:10px 16px; font-size:12px; border-radius:8px; border: 1px solid rgba(204,255,0,0.3); color:var(--lime); width:auto; text-transform:uppercase; font-family:var(--font-display); font-weight:700; cursor:pointer;" onmouseover="this.style.background=\'rgba(204,255,0,0.08)\'" onmouseout="this.style.background=\'transparent\'">';
+  h+='Open Community';
+  h+='</button>';
+  h+='</div>';
   h+='</div>';
 
   /* ── RECORD SNAPSHOT ── */
@@ -13833,9 +13935,25 @@ function renderDash(){
 
   h+='</div>';
   root.innerHTML=h;
+
+  // Update the Daily Directive in the merged welcome card
+  var directiveText = '';
+  if (d && S.fast.plan) {
+    var ph = fastPhaseFor(d);
+    var focusArr = (S.fast.plan.focus && ph && S.fast.plan.focus[ph.name]) || ['Full routine. No exceptions.'];
+    var br = brokenRule();
+    var focus = br ? ('Today has one target: ' + br.rule.replace(/\.$/, '') + '.') : focusArr[(d - 1) % focusArr.length];
+    directiveText = 'Day ' + d + ' of ' + S.fast.duration + ' &middot; ' + focus;
+  } else {
+    directiveText = (window.aiPersonalizations && window.aiPersonalizations.dailyDirective) || 'Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.';
+  }
+  const directiveEl = document.getElementById('dashDirectiveText');
+  if (directiveEl) {
+    directiveEl.innerHTML = directiveText;
+  }
+
   try { renderChainChip('rhythm-chain-container', 'rhythm'); } catch(e) {}
   try { window.loadDashboardCircle(); } catch(e) {}
-  try { window.loadDashboardCommunityFeed(); } catch(e) {}
 }
 window.loadDashboardCircle = async function() {
   const container = document.getElementById('dashCircleContainer');
@@ -13994,12 +14112,16 @@ window.nudgeSteward = async function(circleId, forMemberId, btn) {
   }
 };
 
-window.loadDashboardCommunityFeed = async function() {
-  const container = document.getElementById('dashCommunityFeedContainer');
-  if (!container) return;
+
+
+window.loadCommunityViewFeed = async function() {
+  const container = document.getElementById('communityFeedContainer');
+  const promo = document.getElementById('communityPromoCard');
+  if (!container || !promo) return;
 
   if (!window.MEMBER_EMAIL) {
     container.style.display = 'none';
+    promo.style.display = 'block';
     return;
   }
 
@@ -14024,6 +14146,15 @@ window.loadDashboardCommunityFeed = async function() {
     } catch (e) { return ''; }
   }
 
+  container.style.display = 'block';
+  container.innerHTML = `
+    <div class="wall-skeleton-container">
+      <div class="wall-skeleton-card"></div>
+      <div class="wall-skeleton-card"></div>
+      <div class="wall-skeleton-card"></div>
+    </div>
+  `;
+
   try {
     const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/skool-feed', {
       method: 'POST',
@@ -14033,6 +14164,7 @@ window.loadDashboardCommunityFeed = async function() {
     
     if (!res.ok) {
       container.style.display = 'none';
+      promo.style.display = 'block';
       return;
     }
     
@@ -14041,23 +14173,25 @@ window.loadDashboardCommunityFeed = async function() {
     
     if (feed.length === 0) {
       container.style.display = 'none';
+      promo.style.display = 'block';
       return;
     }
 
+    promo.style.display = 'none';
     container.style.display = 'block';
     let postsHtml = '';
     
-    feed.slice(0, 3).forEach(post => {
+    feed.forEach(post => {
       postsHtml += `
-        <a href="https://www.skool.com/bakndcreator/${post.slug}" target="_blank" rel="noopener" style="text-decoration:none; display:block; padding:12px; border-radius:8px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); margin-bottom:8px; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(255,255,255,0.06)';" onmouseout="this.style.background='rgba(255,255,255,0.01)'; this.style.borderColor='rgba(255,255,255,0.03)';">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; gap:8px;">
-            <h4 style="font-size:13.5px; font-weight:600; color:#fff; margin:0; line-height:1.3; font-family:var(--font-body); flex:1; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${esc(post.title)}</h4>
+        <a href="https://www.skool.com/bakndcreator/${post.slug}" target="_blank" rel="noopener" style="text-decoration:none; display:block; padding:16px; border-radius:12px; background:var(--wall-card); border:1px solid rgba(255,255,255,0.03); margin-bottom:12px; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(255,255,255,0.06)';" onmouseout="this.style.background='var(--wall-card)'; this.style.borderColor='rgba(255,255,255,0.03)';">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;">
+            <h4 style="font-size:15px; font-weight:600; color:#fff; margin:0; line-height:1.3; font-family:var(--font-body); flex:1;">${esc(post.title)}</h4>
             <span style="font-size:11px; color:rgba(255,255,255,0.3); white-space:nowrap;">${formatTimeAgo(post.posted_at)}</span>
           </div>
-          <p style="font-size:12px; color:rgba(255,255,255,0.5); line-height:1.4; margin:0 0 8px 0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-family:var(--font-body);">${esc(post.excerpt || '')}</p>
+          <p style="font-size:13px; color:rgba(255,255,255,0.6); line-height:1.5; margin:0 0 12px 0; font-family:var(--font-body);">${esc(post.excerpt || '')}</p>
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; color:rgba(204,255,0,0.7); font-weight:500;">By ${esc(post.author_name)}</span>
-            <div style="display:flex; gap:10px; font-size:11px; color:rgba(255,255,255,0.4);">
+            <span style="font-size:12px; color:var(--lime); font-weight:500;">By ${esc(post.author_name)}</span>
+            <div style="display:flex; gap:12px; font-size:12px; color:rgba(255,255,255,0.4);">
               <span>👍 ${post.likes || 0}</span>
               <span>💬 ${post.comments || 0}</span>
             </div>
@@ -14067,23 +14201,19 @@ window.loadDashboardCommunityFeed = async function() {
     });
 
     container.innerHTML = `
-      <div class="g-card animate-fade-in" style="border: 1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.01); margin-bottom:24px;">
-        <div class="dash-card__head" style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <div class="dash-card__icon" style="color:var(--lime); font-size:16px;">👥</div>
-            <div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">From the Community</div>
-          </div>
-          <a href="https://www.skool.com/bakndcreator" target="_blank" rel="noopener" style="font-size:11px; color:var(--lime); text-transform:uppercase; font-family:var(--font-display); font-weight:700; text-decoration:none; opacity:0.85;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">Open Skool ↗</a>
-        </div>
-        <div class="dash-card__body" style="padding:0;">
-          ${postsHtml}
-        </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <span style="font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em;">Community Feed</span>
+        <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="font-size:11px; padding:6px 12px; border-radius:6px; text-decoration:none; text-transform:uppercase; font-weight:700;">Open Skool ↗</a>
+      </div>
+      <div>
+        ${postsHtml}
       </div>
     `;
 
   } catch (e) {
-    console.error("Error loading community feed:", e);
+    console.error("Error loading community view feed:", e);
     container.style.display = 'none';
+    promo.style.display = 'block';
   }
 };
 
@@ -14904,22 +15034,6 @@ async function renderDaily(root){
      '<button class="ref-btn" onclick="openVerse(this,\''+wk.night+'\')">&#9789; '+wk.night+'</button></div>'+
      '<div class="verse-panel"></div></div>';
 
-  let cohortHtml = '';
-  if (F.cohort_id) {
-    cohortHtml = '<div id="cohortBoardContainer" class="g-card">Loading Cohort board...</div>';
-  } else {
-    cohortHtml = '<div id="cohortBoardContainer" class="g-card">' +
-      '<div class="plan-sec-title">Cohort Challenge</div>' +
-      '<p class="g-body" style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">Fast together. Enter the Cohort ID below to join your group:</p>' +
-      '<input type="text" id="joinCohortIdInput" placeholder="Enter Cohort ID..." class="free-input" style="width:100%; margin-bottom:12px; font-size:14px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:10px 12px;">' +
-      '<div class="g-actions" style="margin-top:8px;">' +
-      '  <button class="btn-lime" id="btnJoinCohort" onclick="handleJoinCohortTap()" style="width:100%;">Join Challenge</button>' +
-      '</div>' +
-      '<div id="joinCohortError" style="font-size:12px; color:var(--text-dim); margin-top:8px; display:none; text-align:center;"></div>' +
-      '</div>';
-  }
-  h += cohortHtml;
-
   // Tonight's Journal section (no checklist)
   h+='<div class="g-card"><div class="plan-sec-title">Tonight\u2019s Journal</div>'+
      '<p class="g-body" style="font-style:italic; margin-bottom:16px;">Daily Prompt: ' + ((P.journal_prompts && P.journal_prompts[ph.name]) || 'Write what today showed.') + '</p>'+
@@ -15010,25 +15124,6 @@ function renderClosedFast(root){
       '<p class="g-body" style="max-width:400px;margin:0 auto 20px">' + elapsed + ' days of ' + F.plan.fast_name + ' are in your record and they count.</p>'+
       '<div class="g-actions" style="justify-content:center;margin-bottom:16px;"><button class="btn-lime" id="btnBuildNewFast" onclick="discardFast()">Restart</button></div>';
     
-    if (F.cohort_id) {
-      closedHtml += '<div id="cohortBoardContainer" class="g-card" style="text-align:left; margin-top:20px;">Loading Cohort board...</div>' +
-        '<div id="cohortTestimonyContainer" class="g-card" style="text-align:left; margin-top:20px;">' +
-        '  <div class="plan-sec-title">Share Cohort Testimony</div>' +
-        '  <p class="g-body" style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">Consistent stewardship compounds when shared. Would you like to post a testimony of this cohort fast to the Prayer Wall?</p>' +
-        '  <textarea id="cohortTestimonyText" class="free-input" placeholder="Share what this cohort challenge showed you before God..." style="width:100%; height:100px; font-size:14px; margin-bottom:12px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:10px 12px;"></textarea>' +
-        '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">' +
-        '    <span style="font-size:12px; color:var(--text-dim);">Post as</span>' +
-        '    <select id="cohortTestimonyDisplayMode" class="free-input" style="width:auto; padding:4px 8px; font-size:12px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff;">' +
-        '      <option value="name">My Name</option>' +
-        '      <option value="anonymous">Anonymous</option>' +
-        '    </select>' +
-        '  </div>' +
-        '  <div class="g-actions">' +
-        '    <button class="btn-lime" id="btnPostCohortTestimony" onclick="submitCohortTestimony()" style="width:100%;">Post to Prayer Wall</button>' +
-        '  </div>' +
-        '  <div style="font-size:12px; color:var(--text-dim); margin-top:8px; text-align:center;">Only if you want to. The app never posts for you.</div>' +
-        '</div>';
-    }
     closedHtml += '</div>';
     root.innerHTML = closedHtml;
     return;
@@ -15054,10 +15149,6 @@ function renderClosedFast(root){
   let h = '<div class="g-card fade" style="max-width:540px; margin:0 auto; padding:32px 24px;">'+
     '<div class="plan-name" style="font-size:28px; text-transform:uppercase; color:var(--lime); text-align:center; margin-bottom:12px;">' + F.plan.fast_name + '</div>'+
     '<div style="font-size:14px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); text-align:center; margin-bottom:24px;">Fast Closed &middot; ' + elapsed + ' days elapsed</div>';
-
-  if (F.cohort_id) {
-    h += '<div id="cohortBoardContainer" class="g-card" style="margin-bottom:20px;">Loading Cohort board...</div>';
-  }
 
   h += '<div style="margin-bottom:20px;">'+
       '<div class="grp-label">What you were seeking</div>'+
@@ -16180,7 +16271,7 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
@@ -16208,7 +16299,9 @@ async function loadAndInit(){
       affiliate: 'navAffiliate',
       community: 'navCommunity',
       leaderboard: 'navLeaderboard',
-      claim: 'navClaim'
+      claim: 'navClaim',
+      circle: 'navCircle',
+      cohort: 'navCohort'
     };
     const el = document.getElementById(btnMap[hash]);
     go(hash, el);
