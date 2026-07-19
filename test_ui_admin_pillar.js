@@ -84,8 +84,10 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
 
     // Mock cohort-create
     let cohortCreatedPayload = null;
+    let cohortCreatedHeaders = null;
     await page.route('**/functions/v1/cohort-create', async route => {
       cohortCreatedPayload = JSON.parse(route.request().postData());
+      cohortCreatedHeaders = route.request().headers();
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -145,7 +147,10 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
     if (cohortCreatedPayload.name !== 'Fall Stewards 2026') {
       throw new Error("cohort-create request name incorrect: " + cohortCreatedPayload.name);
     }
-    console.log("✅ Verified: cohort-create API payload is correct.");
+    if (cohortCreatedHeaders['authorization'] !== 'Bearer mock-jwt-token-12345') {
+      throw new Error("cohort-create Authorization header incorrect: " + cohortCreatedHeaders['authorization']);
+    }
+    console.log("✅ Verified: cohort-create API payload and Authorization header are correct.");
 
     // Test a regular non-admin member
     console.log("Testing regular member non-admin view visibility...");

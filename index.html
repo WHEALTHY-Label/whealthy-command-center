@@ -12679,10 +12679,25 @@ async function submitCreateCohort() {
   msgEl.style.color = 'rgba(255,255,255,0.6)';
   msgEl.textContent = 'Creating cohort...';
 
+  let token = '';
+  if (typeof sb !== 'undefined' && sb) {
+    try {
+      const { data: sessionData } = await sb.auth.getSession();
+      if (sessionData && sessionData.session) {
+        token = sessionData.session.access_token;
+      }
+    } catch (e) {
+      console.warn("Failed to get session token:", e);
+    }
+  }
+
   try {
     const res = await fetch(FN_BASE + '/cohort-create', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
         name,
