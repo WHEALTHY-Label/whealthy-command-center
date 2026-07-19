@@ -171,7 +171,7 @@ const path = require('path');
 
   // Wait for sidebar navigation to load
   console.log("Waiting for sidebar to load...");
-  await page.waitForSelector('#navWall', { timeout: 10000 });
+  await page.waitForSelector('#parentPrayer', { timeout: 10000 });
 
   // Dismiss claimModal and captureSheetOverlay if they are open
   console.log("Dismissing blocking modals...");
@@ -182,6 +182,7 @@ const path = require('path');
 
   // Click 'Testimony Wall' nav item
   console.log("Clicking 'Testimony Wall' sidebar navigation item...");
+  await page.click('#parentPrayer');
   await page.click('#navTestimony');
 
   console.log("Waiting for Testimony Wall view to render...");
@@ -200,6 +201,8 @@ const path = require('path');
 
   // Verify cards rendering
   console.log("Verifying cards content...");
+  await page.waitForSelector('#tst-top-grid .tst-card', { state: 'attached', timeout: 5000 });
+  await page.waitForSelector('#tst-river-list .tst-card', { state: 'attached', timeout: 5000 });
   const topCardsCount = await page.locator('#tst-top-grid .tst-card').count();
   const riverCardsCount = await page.locator('#tst-river-list .tst-card').count();
   console.log(`Found ${topCardsCount} top cards and ${riverCardsCount} river cards.`);

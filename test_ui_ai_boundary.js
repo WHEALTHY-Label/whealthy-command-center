@@ -286,6 +286,7 @@ server.listen(8089, async () => {
 
     // --- TEST 2: Answered Notification Voice ---
     console.log("Navigating to My Prayers page ('me' tab)...");
+    await page.click('#parentPrayer');
     await page.click('#navMe');
     await page.waitForSelector('#mePanelMine', { state: 'visible', timeout: 5000 });
     

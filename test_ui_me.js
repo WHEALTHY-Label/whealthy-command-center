@@ -259,7 +259,7 @@ const path = require('path');
 
   // Wait for sidebar navigation to load
   console.log("Waiting for sidebar to load...");
-  await page.waitForSelector('#navMe', { timeout: 10000 });
+  await page.waitForSelector('#parentPrayer', { timeout: 10000 });
 
   // Dismiss blocking modals
   console.log("Dismissing blocking modals...");
@@ -267,6 +267,10 @@ const path = require('path');
     if (typeof window.closeClaimModal === 'function') window.closeClaimModal();
     if (typeof window.closeCaptureSheet === 'function') window.closeCaptureSheet();
   });
+
+  // Expand the Prayer group first so subtabs are visible
+  console.log("Expanding Prayer group...");
+  await page.click('#parentPrayer');
 
   // Check initial badge presence
   console.log("Verifying initial badge is rendered since there is 1 unseen answered watched prayer...");
@@ -290,6 +294,7 @@ const path = require('path');
 
   // Verify list cards
   console.log("Checking cards under My Prayers panel...");
+  await page.waitForSelector('#meMineList .me-card', { state: 'attached', timeout: 5000 });
   const mineCards = page.locator('#meMineList .me-card');
   const countMine = await mineCards.count();
   console.log(`Found ${countMine} cards under My Prayers.`);

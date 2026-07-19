@@ -107,7 +107,7 @@ try {
         try {
           postData = JSON.parse(request.postData() || '{}');
         } catch (e) {}
-        if (postData.action === 'milestone_shown' || postData.action === 'milestone_dismiss' || postData.action === 'milestone_close') {
+        if (postData.action === 'milestone_shown' || postData.action === 'milestone_dismiss' || postData.action === 'milestone_close' || (postData.action === 'close' && String(postData.id || '').startsWith('mock-milestone'))) {
           await route.fulfill({
             status: 200,
             contentType: 'application/json',

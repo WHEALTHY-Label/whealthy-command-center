@@ -54,7 +54,10 @@ textarea,input,select{font-size:16px}
 .si-claim-label{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lime)}
 @keyframes claim-pulse{0%,100%{opacity:1;box-shadow:0 0 8px rgba(204,255,0,0.6)}50%{opacity:.4;box-shadow:0 0 16px rgba(204,255,0,0.9)}}
 .sidebar-item.claim-highlight{background:rgba(204,255,0,0.06);border:1px solid rgba(204,255,0,0.12)}
-.sidebar-sub-nav{margin-left:20px;display:flex;flex-direction:column;gap:2px;border-left:1px solid rgba(255,255,255,0.06);padding-left:12px;margin-bottom:8px;margin-top:2px}
+.sidebar-sub-nav{margin-left:20px;display:none;flex-direction:column;gap:2px;border-left:1px solid rgba(255,255,255,0.06);padding-left:12px;margin-bottom:8px;margin-top:2px}
+.sidebar-sub-nav.expanded{display:flex}
+.si-chevron{margin-left:auto;font-size:10px;color:rgba(255,255,255,0.25);transition:transform 0.2s ease;display:inline-block}
+.sidebar-item.expanded-parent .si-chevron{transform:rotate(90deg)}
 .sidebar-sub-item{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:transparent;border:none;border-radius:6px;color:#8c8f96;font-size:13px;font-weight:600;text-align:left;transition:all .2s;cursor:pointer;}
 .sidebar-sub-item:hover{color:#fff;background:rgba(255,255,255,0.02)}
 .sidebar-sub-item.active{color:var(--lime);background:rgba(204,255,0,0.05);font-weight:700}
@@ -1710,37 +1713,41 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
       <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
       <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> The Record</button>
+      
+      <!-- Community Group -->
+      <button class="sidebar-item" id="parentCommunity" onclick="toggleSidebarGroup(this)"><span class="si-dot"></span> Community <span class="si-chevron">&#9656;</span></button>
+      <div class="sidebar-sub-nav">
+        <button class="sidebar-sub-item" id="navCommunity" onclick="go('community',this)">Post Wall</button>
+        <a href="https://www.skool.com/bakndcreator" target="_blank" rel="noopener" class="sidebar-sub-item" style="text-decoration:none;">Enter Community</a>
+      </div>
 
       <!-- Section 2 — Disciplines -->
       <div class="nav-section-title">Disciplines</div>
       
-      <!-- Prayer -->
-      <button class="sidebar-item" id="navPrayer" onclick="go('prayer',this)"><span class="si-dot"></span> Prayer</button>
+      <!-- Prayer Group -->
+      <button class="sidebar-item" id="parentPrayer" onclick="toggleSidebarGroup(this)"><span class="si-dot"></span> Prayer <span class="si-chevron">&#9656;</span></button>
       <div class="sidebar-sub-nav">
+        <button class="sidebar-sub-item" id="navPrayer" onclick="go('prayer',this)">Prayer</button>
         <button class="sidebar-sub-item" id="navWall" data-nav="wall" onclick="go('wall',this)">Prayer Wall</button>
         <button class="sidebar-sub-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)">Testimony Wall</button>
         <button class="sidebar-sub-item" id="navMe" data-nav="me" onclick="go('me',this)">My Prayers <span id="meBadge" style="display:none; width:6px; height:6px; background:var(--wall-lime); border-radius:50%; margin-left:6px; box-shadow:0 0 8px rgba(204,255,0,0.6);"></span></button>
       </div>
 
-      <!-- Scripture -->
+      <!-- Scripture (Plain, no subtabs) -->
       <button class="sidebar-item" id="navBible" onclick="go('bible',this)"><span class="si-dot"></span> Scripture</button>
-      <div class="sidebar-sub-nav">
-        <button class="sidebar-sub-item" id="navBible365" onclick="go('bible',this)">Bible 365</button>
-      </div>
 
-      <!-- Fasting -->
-      <button class="sidebar-item" id="navFast" onclick="go('fast',this)"><span class="si-dot"></span> Fasting <span class="si-day" id="navDayBadge" style="display:none"></span></button>
+      <!-- Fasting Group -->
+      <button class="sidebar-item" id="parentFast" onclick="toggleSidebarGroup(this)"><span class="si-dot"></span> Fasting <span class="si-day" id="navDayBadge" style="display:none"></span> <span class="si-chevron">&#9656;</span></button>
       <div class="sidebar-sub-nav">
-        <button class="sidebar-sub-item" id="navFastSub" onclick="go('fast',this)">The Fast</button>
+        <button class="sidebar-sub-item" id="navFast" onclick="go('fast',this)">The Fast</button>
         <button class="sidebar-sub-item" id="navCohort" onclick="go('cohort',this)">Cohort Challenge</button>
       </div>
 
       <!-- Circles -->
       <button class="sidebar-item" id="navCircle" onclick="go('circle',this)"><span class="si-dot"></span> Circles</button>
 
-      <!-- Section 3 — Community and More -->
-      <div class="nav-section-title">Community & More</div>
-      <button class="sidebar-item" id="navCommunity" onclick="go('community',this)"><span class="si-dot"></span> Community</button>
+      <!-- Section 3 — More -->
+      <div class="nav-section-title">More</div>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Center</button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
     </nav>
@@ -12467,12 +12474,30 @@ function go(view,el,label){
   ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
   const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView'};
   document.getElementById(map[view]||'dashView').style.display='block';
-  document.querySelectorAll('.sidebar-item, .sidebar-sub-item').forEach(b=>b.classList.remove('active'));
+  
+  // Reset all active/expanded states first
+  document.querySelectorAll('.sidebar-item, .sidebar-sub-item').forEach(b=>b.classList.remove('active', 'expanded-parent'));
+  document.querySelectorAll('.sidebar-sub-nav').forEach(nav=>nav.classList.remove('expanded'));
+
   if(!el && view) {
     var btnId = 'nav' + view.charAt(0).toUpperCase() + view.slice(1);
     el = document.getElementById(btnId);
   }
-  if(el)el.classList.add('active');
+  if(el) {
+    el.classList.add('active');
+    
+    // Auto-expand containing parent group
+    if (el.classList.contains('sidebar-sub-item')) {
+      const subNav = el.closest('.sidebar-sub-nav');
+      if (subNav) {
+        subNav.classList.add('expanded');
+        const parentBtn = subNav.previousElementSibling;
+        if (parentBtn && parentBtn.classList.contains('sidebar-item')) {
+          parentBtn.classList.add('expanded-parent', 'active');
+        }
+      }
+    }
+  }
   try { personalizePageHeader(view); } catch(e) {}
   if(view==='claim'){
     renderClaimPage();
@@ -12555,7 +12580,20 @@ function setHeaderFocus(view){
 }
 function toggleSidebar(){const sb=document.getElementById('sidebar');sb.classList.contains('open')?closeSidebar():(sb.classList.add('open'),document.getElementById('sbOverlay').classList.add('open'),document.body.classList.add('nav-lock'));}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('open');document.body.classList.remove('nav-lock');}
-window.toggleSidebar=toggleSidebar;window.closeSidebar=closeSidebar;
+function toggleSidebarGroup(parentEl) {
+  const subNav = parentEl.nextElementSibling;
+  if (subNav && subNav.classList.contains('sidebar-sub-nav')) {
+    const isExpanded = subNav.classList.contains('expanded');
+    if (isExpanded) {
+      subNav.classList.remove('expanded');
+      parentEl.classList.remove('expanded-parent');
+    } else {
+      subNav.classList.add('expanded');
+      parentEl.classList.add('expanded-parent');
+    }
+  }
+}
+window.toggleSidebar=toggleSidebar;window.closeSidebar=closeSidebar;window.toggleSidebarGroup=toggleSidebarGroup;
 function ceremony(title,sub,ms){
   document.getElementById('cerTitle').textContent=title;
   document.getElementById('cerSub').textContent=sub;
