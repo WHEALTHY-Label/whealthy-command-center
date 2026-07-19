@@ -1750,6 +1750,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <div class="nav-section-title">More</div>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Center</button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
+      <button class="sidebar-item" id="navAdmin" onclick="go('admin',this)" style="display: none;"><span class="si-dot"></span> Admin</button>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
@@ -7440,6 +7441,43 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
       </div>
 
+      <!-- ============ ADMIN ============ -->
+      <div id="adminView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">🛡️</div>
+          <div>
+            <h1 class="view-header-title">Admin Surface</h1>
+            <p class="view-header-subtitle">System settings and cohort administration.</p>
+          </div>
+        </div>
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <div class="g-card" style="margin-bottom: 24px;">
+            <div class="plan-sec-title">Create New Cohort</div>
+            <p class="g-body" style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">
+              Create a new open challenge cohort. Members will be able to join via the Cohort ID.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-display); font-weight: 700;">Cohort Name</label>
+                <input type="text" id="adminCohortName" placeholder="e.g., Summer Fast 2026" class="free-input" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 14px;">
+              </div>
+              <div style="display: flex; gap: 12px;">
+                <div style="flex: 1;">
+                  <label style="display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-display); font-weight: 700;">Start Date</label>
+                  <input type="date" id="adminCohortStart" class="free-input" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 14px;">
+                </div>
+                <div style="flex: 1;">
+                  <label style="display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-display); font-weight: 700;">End Date</label>
+                  <input type="date" id="adminCohortEnd" class="free-input" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 14px;">
+                </div>
+              </div>
+              <button class="btn-lime" onclick="submitCreateCohort()" style="margin-top: 8px;">Create Cohort</button>
+              <div id="adminCohortMessage" style="font-size: 13px; margin-top: 8px; text-align: center; display: none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -11498,6 +11536,29 @@ async function waRunGate(emailArg){
       if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
         MEMBER_NAME = waProfileMeta.name || waProfileMeta.full_name || waProfileMeta.first_name || '';
       }
+
+      // Fetch verify-member to resolve admin_role
+      try {
+        const vr = await fetch(FN_BASE + '/verify-member', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        if (vr.ok) {
+          const vd = await vr.json();
+          window.ADMIN_ROLE = vd.admin_role || null;
+          const adminBtn = document.getElementById('navAdmin');
+          if (adminBtn) {
+            if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
+              adminBtn.style.display = 'flex';
+            } else {
+              adminBtn.style.display = 'none';
+            }
+          }
+        }
+      } catch (ve) {
+        console.warn('Failed to call verify-member:', ve);
+      }
       window.MEMBER_EMAIL = MEMBER_EMAIL;
       window.MEMBER_NAME = MEMBER_NAME;
       window.MEMBER_ID = MEMBER_ID;
@@ -12471,8 +12532,8 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   
   // Reset all active/expanded states first
@@ -12505,6 +12566,8 @@ function go(view,el,label){
   } else if(view==='leaderboard'){
     document.getElementById('headerLine').textContent='At a Glance';
     renderGlancePage();
+  } else if(view==='admin'){
+    document.getElementById('headerLine').textContent='Admin Surface';
   } else if(view==='bible'){
     document.getElementById('headerLine').textContent='Bible 365';
     if(typeof initBible365==='function'&&!window._bibleInited){window._bibleInited=true;initBible365();}
@@ -12593,7 +12656,64 @@ function toggleSidebarGroup(parentEl) {
     }
   }
 }
-window.toggleSidebar=toggleSidebar;window.closeSidebar=closeSidebar;window.toggleSidebarGroup=toggleSidebarGroup;
+async function submitCreateCohort() {
+  const nameEl = document.getElementById('adminCohortName');
+  const startEl = document.getElementById('adminCohortStart');
+  const endEl = document.getElementById('adminCohortEnd');
+  const msgEl = document.getElementById('adminCohortMessage');
+
+  if (!nameEl || !startEl || !endEl || !msgEl) return;
+
+  const name = nameEl.value.trim();
+  const start_date = startEl.value.trim();
+  const end_date = endEl.value.trim();
+
+  if (!name || !start_date || !end_date) {
+    msgEl.style.display = 'block';
+    msgEl.style.color = '#ff6b6b';
+    msgEl.textContent = 'All fields are required.';
+    return;
+  }
+
+  msgEl.style.display = 'block';
+  msgEl.style.color = 'rgba(255,255,255,0.6)';
+  msgEl.textContent = 'Creating cohort...';
+
+  try {
+    const res = await fetch(FN_BASE + '/cohort-create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        name,
+        start_date,
+        end_date
+      })
+    });
+
+    const data = await res.json();
+    if (res.ok && (data.success || data.cohort_id || data.id)) {
+      msgEl.style.color = 'var(--lime)';
+      msgEl.textContent = 'Successfully created cohort!';
+      nameEl.value = '';
+      startEl.value = '';
+      endEl.value = '';
+      try {
+        if (typeof window.loadCohortView === 'function') {
+          window.loadCohortView();
+        }
+      } catch (err) {}
+    } else {
+      msgEl.style.color = '#ff6b6b';
+      msgEl.textContent = data.error || 'Failed to create cohort.';
+    }
+  } catch (err) {
+    console.error('Error creating cohort:', err);
+    msgEl.style.color = '#ff6b6b';
+    msgEl.textContent = 'Network or server error occurred.';
+  }
+}
+window.toggleSidebar=toggleSidebar;window.closeSidebar=closeSidebar;window.toggleSidebarGroup=toggleSidebarGroup;window.submitCreateCohort=submitCreateCohort;
 function ceremony(title,sub,ms){
   document.getElementById('cerTitle').textContent=title;
   document.getElementById('cerSub').textContent=sub;
@@ -16309,7 +16429,7 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
@@ -16339,7 +16459,8 @@ async function loadAndInit(){
       leaderboard: 'navLeaderboard',
       claim: 'navClaim',
       circle: 'navCircle',
-      cohort: 'navCohort'
+      cohort: 'navCohort',
+      admin: 'navAdmin'
     };
     const el = document.getElementById(btnMap[hash]);
     go(hash, el);

@@ -27,6 +27,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Chart.js is the primary renderer. If the CDN is blocked, inline SVG fallback kicks in automatically. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 /* Font fallback for widget embeds that strip <link> tags (baknd HTML paste) */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
@@ -566,6 +567,9 @@ h1,h2,h3{font-family:var(--font-display);text-transform:uppercase;letter-spacing
 ========================================================= */
 const LIVE_ENDPOINT = "https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats";
 const KEY_STORE = "wh_admin_key";
+const SUPABASE_URL = 'https://yzaxzmuuvozonhgwhlim.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXh6bXV1dm96b25oZ3dobGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDEwNTksImV4cCI6MjA4OTM3NzA1OX0.azWx9VrATCtci1Xzedm4NwozQRHVP8kfROZZSDmlaL8';
+const sb = (typeof window!=="undefined" && window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
 
 /* LIVE ONLY — no mock data. Every number comes from the admin-stats edge
    function (read-only aggregates over the real tables). Stewards arrive
@@ -592,12 +596,34 @@ function dataStatus(text, isError){
 async function getData(range, bypassCache = false){
   let key = getAdminKey(false);
   if(!key){ dataStatus("Admin key required — refresh to enter it", true); return null; }
+
+  let email = "";
+  let token = "";
+  if (sb) {
+    try {
+      const { data: sessionData } = await sb.auth.getSession();
+      if (sessionData && sessionData.session) {
+        token = sessionData.session.access_token;
+        email = sessionData.session.user.email;
+      }
+    } catch (e) {
+      console.warn("Failed to get Supabase session:", e);
+    }
+  }
+  if (!email) {
+    email = localStorage.getItem('wh_steward_email') || '';
+  }
+
   for(let attempt = 0; attempt < 2; attempt++){
     try{
       const r = await fetch(LIVE_ENDPOINT, {
         method: "POST",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify({range, admin_key: key, bypass_cache: bypassCache})
+        headers: {
+          "content-type": "application/json",
+          "x-admin-email": email,
+          "Authorization": token ? `Bearer ${token}` : ""
+        },
+        body: JSON.stringify({range, admin_key: key, bypass_cache: bypassCache, email})
       });
       if(r.status === 401){
         localStorage.removeItem(KEY_STORE);

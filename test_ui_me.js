@@ -254,8 +254,8 @@ const path = require('path');
   });
 
   // Navigate to local server
-  console.log("Navigating to http://localhost:8089/...");
-  await page.goto('http://localhost:8089/', { waitUntil: 'networkidle' });
+  console.log("Navigating to page with mocked session...");
+  await page.goto('http://localhost:12345/whealthy-command-center-repo/index.html', { waitUntil: 'networkidle' });
 
   // Wait for sidebar navigation to load
   console.log("Waiting for sidebar to load...");

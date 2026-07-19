@@ -166,8 +166,8 @@ const path = require('path');
   });
 
   // Navigate to local server
-  console.log("Navigating to http://localhost:8089/... ");
-  await page.goto('http://localhost:8089/', { waitUntil: 'networkidle' });
+  console.log("Navigating to page with mocked session...");
+  await page.goto('http://localhost:12345/whealthy-command-center-repo/index.html', { waitUntil: 'networkidle' });
 
   // Wait for sidebar navigation to load
   console.log("Waiting for sidebar to load...");
@@ -237,7 +237,7 @@ const path = require('path');
 
   // Test Deep Link Pinning Flow
   console.log("Testing deep link parameter landing...");
-  await page.goto('http://localhost:8089/?view=testimony&post=test-post-1', { waitUntil: 'networkidle' });
+  await page.goto('http://localhost:12345/whealthy-command-center-repo/index.html?view=testimony&post=test-post-1', { waitUntil: 'networkidle' });
   await page.evaluate(() => {
     if (typeof window.closeClaimModal === 'function') window.closeClaimModal();
     if (typeof window.closeCaptureSheet === 'function') window.closeCaptureSheet();
