@@ -1480,6 +1480,89 @@
     .join-modal__cta { width:100%; padding:18px; font-size:16px }
     .join-modal__footer { font-size:11px; color:var(--text-dim); margin-top:16px }
     @media(max-width:480px) { .join-modal { padding:36px 24px } .join-modal__title { font-size:24px } }
+
+    /* Digital Degens Restructured Layout Styles */
+    .proof-stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px 8px; margin: 24px auto; max-width: 600px; text-align: center; gap: 12px; }
+    .proof-stats__item { flex: 1; }
+    .proof-stats__value { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--lime); margin-bottom: 4px; }
+    .proof-stats__label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.3; }
+    @media (max-width: 520px) {
+      .proof-stats { flex-direction: column; padding: 16px; margin: 24px 16px; }
+      .proof-stats__item:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; margin-bottom: 12px; }
+    }
+
+    .testimonial-band { background: var(--lime); color: #080809; padding: 48px 24px; text-align: center; margin: 40px 0; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+    .testimonial-band__quote { font-family: var(--font-display); font-size: 32px; font-weight: 700; line-height: 1.25; max-width: 800px; margin: 0 auto 16px; text-transform: uppercase; }
+    .testimonial-band__quote strong { background: #080809; color: var(--lime); padding: 2px 6px; }
+    .testimonial-band__attr { font-size: 14px; font-weight: 500; opacity: 0.8; letter-spacing: 0.05em; }
+    @media (max-width: 768px) { .testimonial-band__quote { font-size: 24px; } }
+
+    .solution-moves { display: flex; flex-direction: column; gap: 20px; max-width: 680px; margin: 48px auto; padding: 0 24px; text-align: left; }
+    .solution-move { display: flex; align-items: flex-start; gap: 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; }
+    .solution-move__num { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: #080809; background: var(--lime); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0; }
+    .solution-move__content { flex: 1; }
+    .solution-move__title { font-family: var(--font-display); font-size: 18px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #fff; }
+    .solution-move__desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    .patterns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 1000px; margin: 48px auto; padding: 0 24px; }
+    .pattern-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px 24px; display: flex; flex-direction: column; height: 100%; text-align: left; }
+    .pattern-card__badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--lime); background: var(--lime-soft); border: 1px solid rgba(204,255,0,0.2); padding: 4px 8px; border-radius: 4px; margin-bottom: 16px; align-self: flex-start; }
+    .pattern-card__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; text-transform: uppercase; color: var(--text); margin-bottom: 12px; line-height: 1.15; }
+    .pattern-card__desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+    .split-list { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 900px; margin: 48px auto; padding: 0 24px; text-align: left; }
+    .split-list__col { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 40px; }
+    .split-list__col--tired { border-color: rgba(255, 100, 80, 0.15); background: rgba(255, 100, 80, 0.02); }
+    .split-list__col--governed { border-color: rgba(204, 255, 0, 0.15); background: rgba(204, 255, 0, 0.02); }
+    .split-list__title { font-family: var(--font-display); font-size: 24px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; text-align: center; }
+    .split-list__title--tired { color: #ff6450; }
+    .split-list__title--governed { color: var(--lime); }
+    .split-list__items { display: flex; flex-direction: column; gap: 16px; list-style: none; padding: 0; }
+    .split-list__item { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .split-list__icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .split-list__icon--tired { color: #ff6450; }
+    .split-list__icon--governed { color: var(--lime); }
+    @media (max-width: 768px) { .split-list { grid-template-columns: 1fr; gap: 24px; } }
+
+    .rate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 800px; margin: 32px auto; padding: 0 24px; }
+    .rate-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 32px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .rate-card--founding { border-color: rgba(204,255,0,0.25); background: rgba(204,255,0,0.04); }
+    .rate-card--after { opacity: 0.55; }
+    .rate-card__label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .rate-card__label--lime { color: var(--lime); }
+    .rate-card__value { font-family: var(--font-display); font-size: 64px; font-weight: 700; line-height: 1; margin-bottom: 8px; color: #fff; }
+    .rate-card__value--lime { color: var(--lime); }
+    .rate-card__desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    @media (max-width: 520px) { .rate-cards { grid-template-columns: 1fr; gap: 16px; } }
+
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 1000px; margin: 48px auto; padding: 0 24px; }
+    .product-card { background: rgba(22,23,25,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; display: flex; flex-direction: column; height: 100%; text-align: left; }
+    .product-card__img-wrap { width: 100%; aspect-ratio: 1/1; background: rgba(30,32,36,0.5); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .product-card__img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .product-card__content { padding: 24px 20px; display: flex; flex-direction: column; flex: 1; }
+    .product-card__time { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); margin-bottom: 8px; }
+    .product-card__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; text-transform: uppercase; color: var(--text); margin-bottom: 10px; line-height: 1.1; }
+    .product-card__desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: auto; padding-bottom: 12px; }
+    .product-card__replaces { font-size: 11px; color: var(--white-40); font-style: italic; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    .value-stack { max-width: 480px; margin: 48px auto; padding: 32px 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; text-align: left; }
+    .value-stack__title { font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--lime); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+    .value-stack__sub { font-family: var(--font-display); font-size: 24px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; text-align: center; color: #fff; }
+    .value-stack__rows { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .value-stack__row { display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
+    .value-stack__row span:first-child { flex: 1; }
+    .value-stack__row span:last-child { white-space: nowrap; }
+    .value-stack__row--total { font-weight: 700; font-size: 15px; color: #fff; border-bottom: none; padding-top: 8px; align-items: baseline; }
+    .value-stack__row--total span:last-child { color: var(--lime); font-size: 24px; font-family: var(--font-display); white-space: nowrap; }
+    .value-stack__ctas { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+
+    .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(8,8,9,0.95); border-top: 1px solid rgba(255,255,255,0.08); padding: 12px 24px; z-index: 9999; display: flex; justify-content: center; gap: 16px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transform: translateY(100%); transition: transform 0.3s ease; }
+    .sticky-bar--show { transform: translateY(0); }
+    .sticky-bar__btn { flex: 1; max-width: 240px; padding: 12px 16px !important; font-size: 13px !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; justify-content: center !important; }
+    @media (max-width: 520px) {
+      .sticky-bar { padding: 10px 16px; gap: 8px; }
+      .sticky-bar__btn { font-size: 11px !important; padding: 10px 8px !important; }
+    }
   </style>
 </head>
 
@@ -1494,27 +1577,11 @@
   <div id="whealthy-app-embed">
 
     <!-- DYNAMIC REFERRER PILL (ALWAYS ON TOP) -->
-    <div class="referrer-pill referrer-pill-dynamic">
+    <div class="referrer-pill referrer-pill-dynamic" style="display: none;">
       <div class="referrer-pill__text"><span class="referrer-name"></span> invited you</div>
     </div>
 
-    <!-- SECTION 1: ALERT BAR -->
-    <div class="alert-bar" role="banner">
-      <div class="alert-bar__inner container">
-        <div
-          style="font-family:var(--font-display);font-weight:700;letter-spacing:0.06em;color:var(--white);font-size:14px;flex-shrink:0;">
-          W<span style="color:var(--lime);">HEAL</span>THY</div>
-        <span class="alert-bar__badge">Join Free</span>
-        <div class="alert-bar__messages" id="alertMessages">
-          <div class="alert-bar__message active">You weren't meant to carry it alone.</div>
-          <div class="alert-bar__message">The Stewards Community. Free to join. Built for people who carry real weight.</div>
-          <div class="alert-bar__message">Founding affiliate window is open. Your future starts now.</div>
-        </div>
-        <div class="alert-bar__dot"></div>
-      </div>
-    </div>
-
-    <!-- SECTION 2: HERO -->
+    <!-- SECTION 1: HERO -->
     <section class="hero" id="hero">
       <div class="hero__bg">
         <div class="hero__orb hero__orb--1"></div>
@@ -1522,247 +1589,284 @@
       </div>
       <div class="hero__content container">
         <div class="hero__label"><span class="chip__dot"></span>The Stewards Community</div>
-        <h1 class="hero__headline">You Carry Work, Family, and Faith.<br><em>Your Energy Should Be Governed, Not
-            Borrowed.</em></h1>
-        <p class="hero__sub">Coffee owns you. Energy drinks panic you. Supplements ghost you. <strong>WHEALTHY governs
-            your energy.</strong> A free community of stewards who carry the same weight. Products available to everyone. Members get 10% off.</p>
-        <div class="hero__ctas">
-          <button class="btn-primary btn-primary--arc" onclick="joinStewards()">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5" />
-              <path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-            Join the Community
-          </button>
+        <h1 class="hero__headline">You Carry Work, Family, and Faith.<br><em>Your Energy Should Be Governed, Not Borrowed.</em></h1>
+        <p class="hero__sub">Coffee owns you. Energy drinks panic you. Supplements ghost you. <strong>WHEALTHY governs your energy.</strong> A free community of stewards who carry the same weight. Products available to everyone. Members get 10% off.</p>
+        <div class="hero__ctas" style="display: flex; gap: 12px; margin-bottom: 24px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-primary" onclick="joinStewards()" style="justify-content: center; flex: 1; max-width: 280px; min-width: 200px;">Join the Community &middot; Free</button>
+          <a href="#products-section" class="btn-primary btn-primary--outline" style="justify-content: center; text-decoration: none; flex: 1; max-width: 280px; min-width: 200px; display: inline-flex; align-items: center;">See the Products</a>
         </div>
-        <div class="hero__chips">
-          <span class="chip"><span class="chip__dot"></span>Free to Join</span>
-          <span class="chip"><span class="chip__dot"></span>10% Member Discount</span>
-          <span class="chip"><span class="chip__dot"></span>Skool Community</span>
+        
+        <!-- 3-stat bar -->
+        <div class="proof-stats">
+          <div class="proof-stats__item">
+            <div class="proof-stats__value">FREE</div>
+            <div class="proof-stats__label">the community, forever</div>
+          </div>
+          <div class="proof-stats__item">
+            <div class="proof-stats__value">10% OFF</div>
+            <div class="proof-stats__label">every product with the member code</div>
+          </div>
+          <div class="proof-stats__item">
+            <div class="proof-stats__value">73%</div>
+            <div class="proof-stats__label">report improved clarity within 14 days</div>
+          </div>
         </div>
+
+        <!-- Trust Strip -->
+        <div class="credibility__logos reveal" style="flex-wrap: wrap; gap: 16px 32px; justify-content: center; margin-top: 32px;">
+          <div class="credibility__item" style="font-size: 11px; color: var(--text-dim);"><span class="chip__dot"></span>Founders</div>
+          <div class="credibility__item" style="font-size: 11px; color: var(--text-dim);"><span class="chip__dot"></span>Ministry Leaders</div>
+          <div class="credibility__item" style="font-size: 11px; color: var(--text-dim);"><span class="chip__dot"></span>Builders</div>
+          <div class="credibility__item" style="font-size: 11px; color: var(--text-dim);"><span class="chip__dot"></span>Fathers</div>
+          <div class="credibility__item" style="font-size: 11px; color: var(--text-dim); display: flex; align-items: center; gap: 6px;">
+            <span>Hosted on</span>
+            <img src="https://assets.skool.com/skool/15f6b2167d644781b0a9db5d96a7d6ff.png" style="height: 14px; filter: grayscale(1) brightness(2);" alt="Skool">
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- SECTION 3: CREDIBILITY BAR -->
-    <section class="credibility">
-      <div class="container">
-        <p class="credibility__label">Who's Already Inside</p>
-        <div class="credibility__logos reveal" style="flex-wrap:wrap; gap:24px 40px">
-          <div class="credibility__item" style="text-align:center; max-width:160px">
-            <strong style="display:block; color:var(--text); margin-bottom:4px">Founders</strong>
-            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Building without a team, carrying the vision alone.</span>
-          </div>
-          <div class="credibility__item" style="text-align:center; max-width:160px">
-            <strong style="display:block; color:var(--text); margin-bottom:4px">Ministry Leaders</strong>
-            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Pastors running men's groups and leading from depletion.</span>
-          </div>
-          <div class="credibility__item" style="text-align:center; max-width:160px">
-            <strong style="display:block; color:var(--text); margin-bottom:4px">Builders</strong>
-            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Contractors, creatives, operators grinding on fumes.</span>
-          </div>
-          <div class="credibility__item" style="text-align:center; max-width:160px">
-            <strong style="display:block; color:var(--text); margin-bottom:4px">Fathers</strong>
-            <span style="font-size:11px; color:var(--text-dim); line-height:1.4; display:block">Dads rebuilding presence after years of coming home empty.</span>
-          </div>
-          <div class="credibility__item" style="text-align:center">
-            <span style="font-size:12px; color:var(--text-dim)">Hosted on</span> <img
-              src="https://assets.skool.com/skool/15f6b2167d644781b0a9db5d96a7d6ff.png"
-              style="height:18px; display:inline-block; vertical-align:middle; filter:grayscale(1) brightness(2); margin-left:6px"
-              alt="Skool">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3B: ARCHETYPE RECOGNITION -->
-    <section style="padding:60px 0">
-      <div class="container">
-        <p class="section-label">You Are Not Alone in This Pattern</p>
-        <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); margin-bottom:12px">Find Yourself in Here.
-        </h2>
-        <p style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">These
-          are not diagnoses. They are patterns. And patterns can be governed.</p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px">
-          <div
-            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
-            <span
-              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
-              01</span>
-            <h3
-              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
-              Owned by<br>Caffeine</h3>
-            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Can't start without it. The ritual
-              became a dependency you stopped questioning.</p>
-          </div>
-          <div
-            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
-            <span
-              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
-              02</span>
-            <h3
-              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
-              Wired but<br>Scattered</h3>
-            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">High energy that goes everywhere. Busy
-              all day, nothing to show for it.</p>
-          </div>
-          <div
-            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
-            <span
-              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
-              03</span>
-            <h3
-              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
-              Sharp Until<br>2PM</h3>
-            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Mornings are strong. Then the collapse
-              hits and afternoons are a write-off.</p>
-          </div>
-          <div
-            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
-            <span
-              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
-              04</span>
-            <h3
-              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
-              Running on<br>Fumes</h3>
-            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Low-grade depletion all day. Never
-              crashing, just never fully on.</p>
-          </div>
-          <div
-            style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 20px">
-            <span
-              style="display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime); background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:12px">Archetype
-              05</span>
-            <h3
-              style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:8px; line-height:1.1">
-              The Skeptical<br>Steward</h3>
-            <p style="font-size:12px; color:var(--text-muted); line-height:1.5">Tried it all before. Not closed, just
-              needs proof instead of another pitch.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3C: INSIDE THE ROOM -->
-    <section style="padding:80px 0; border-top:1px solid var(--border)">
-      <div class="container">
-        <p class="section-label reveal">What It Actually Looks Like Inside</p>
-        <h2 class="section-headline reveal" style="font-size:clamp(28px,4vw,44px); margin-bottom:16px">This Is Not a Course.<br>It's a Room.</h2>
-        <p style="text-align:center; color:var(--text-muted); font-size:16px; max-width:580px; margin:0 auto 48px; line-height:1.7" class="reveal">A course gives you content. A community gives you people. Here's what a normal week looks like inside The Stewards.</p>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px" class="reveal">
-          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px 24px">
-            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:12px">Tuesday Night</div>
-            <h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Weekly Check-In</h3>
-            <p style="font-size:13px; color:var(--text-muted); line-height:1.6">Someone posts how their fast is going. Someone else shares a business pivot. Five stewards respond before morning. Not likes. Real words. This is where the fireside chat happens.</p>
-          </div>
-          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px 24px">
-            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:12px">Every Day</div>
-            <h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Pattern Threads</h3>
-            <p style="font-size:13px; color:var(--text-muted); line-height:1.6">Stewards posting their governance routines. What worked. What didn't. The real data from real days. Not theory from people who don't carry your weight.</p>
-          </div>
-          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px 24px">
-            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lime); margin-bottom:12px">Ongoing</div>
-            <h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Faith, Business, Family</h3>
-            <p style="font-size:13px; color:var(--text-muted); line-height:1.6">Same thread. Same people. Because stewards don't compartmentalize. Your prayer life and your business and your marriage aren't separate conversations here.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 4: PROBLEM AGITATION -->
-    <section class="agitation">
-      <div class="container">
-        <div class="agitation__box reveal">
-          <p class="section-label">The Pattern</p>
-          <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); text-transform:none">If you're like most stewards carrying real responsibility, you're probably tired of running on fumes.</h2>
-          <p style="text-align:center; color:var(--text-muted); font-size:18px; margin-top:16px">Most people carrying this kind of weight have been <strong>borrowing energy instead of governing it.</strong></p>
-
-          <div class="agitation__list">
-            <div class="agitation__item">
-              <span class="agitation__icon">&#10005;</span>
-              <p class="agitation__text">Struggling to <strong>start your day without a dependency ritual</strong>, knowing it spikes your cortisol before you even wake up.</p>
-            </div>
-            <div class="agitation__item">
-              <span class="agitation__icon">&#10005;</span>
-              <p class="agitation__text">Watching others stay stable while you <strong>collapse at 2PM</strong> and fake it through the afternoon meetings.</p>
-            </div>
-            <div class="agitation__item">
-              <span class="agitation__icon">&#10005;</span>
-              <p class="agitation__text">Feeling overwhelmed by <strong>"biohacking" supplements</strong> that promise the world but ghost you after 30 days.</p>
-            </div>
-            <div class="agitation__item">
-              <span class="agitation__icon">&#10005;</span>
-              <p class="agitation__text">Worried that you're coming home with <strong>the leftover version of yourself</strong> for the people who matter most.</p>
-            </div>
-          </div>
-
-          <p style="text-align:center; color:var(--text-muted); font-size:16px">This is the pattern. It has a name. And it can be governed.</p>
-
-          <div class="agitation__transition">
-            <p style="color:var(--text)">Right now you're experiencing an unmanaged baseline.</p>
-            <p class="agitation__future">Imagine Instead: A Governed Rhythm.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div style="text-align:center; padding:40px 0">
-      <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
-      <p style="color:var(--text-dim); font-size:12px; margin-top:12px">No cost. No commitment. Just stewards.</p>
+    <!-- SECTION 2: QUOTE BAND -->
+    <div class="testimonial-band">
+      <div class="testimonial-band__quote">"I didn't feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup."</div>
+      <div class="testimonial-band__attr">Marcus T. &middot; Sales Director &middot; Community Member &middot; same pattern</div>
     </div>
 
-    <!-- SECTION 5: FOUNDING AFFILIATE PROGRAM -->
-    <section class="opportunity">
+    <!-- SECTION 3: THREE MOVES -->
+    <section style="padding: 80px 0;">
       <div class="container">
-        <div class="opportunity__grid">
-          <div class="reveal">
-            <p class="section-label" style="text-align:left">The Founding Affiliate Program</p>
-            <h2 class="section-headline" style="text-align:left; margin-bottom:16px">Share the Mission.<br>Build What Lasts.</h2>
-            <p style="color:var(--text-muted); font-size:16px; margin-bottom:20px; line-height:1.7">WHEALTHY is free to join because the mission matters more than a gate. But this is also the moment to build something real for yourself. Every person you invite now is tracked to you permanently on Skool.</p>
-            <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; color:var(--text-muted)">
-              <li><span style="color:var(--lime); margin-right:8px">&#10003;</span> <strong>Lifetime attribution.</strong> Every person you invite to the free community is tracked to you forever on Skool.</li>
-              <li><span style="color:var(--lime); margin-right:8px">&#10003;</span> <strong>40% founding rate.</strong> When the paid tier launches, those people become your recurring commissions at the highest rate we will ever offer.</li>
-              <li><span style="color:var(--lime); margin-right:8px">&#10003;</span> <strong>After launch: 30%.</strong> The founding window is the only time to lock in 40%. It will not reopen.</li>
+        <p class="section-label">A SIMPLE PATH TO GOVERNANCE</p>
+        <h2 class="section-headline">This Is Not a Course. It's a Room.</h2>
+        <p class="section-sub" style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">A course gives you content. A community gives you people. Here are the three moves to get started.</p>
+        
+        <div class="solution-moves">
+          <div class="solution-move">
+            <div class="solution-move__num">01</div>
+            <div class="solution-move__content">
+              <h4 class="solution-move__title">Join Free</h4>
+              <p class="solution-move__desc">The community is hosted on Skool. Your 10% member discount code is waiting inside, free to join and free to leave.</p>
+            </div>
+          </div>
+          <div class="solution-move">
+            <div class="solution-move__num">02</div>
+            <div class="solution-move__content">
+              <h4 class="solution-move__title">Name Your Pattern</h4>
+              <p class="solution-move__desc">Find where your energy is leaking. Our 60-second Energy Pattern Analysis identifies exactly what pattern your energy runs under the weight you carry.</p>
+            </div>
+          </div>
+          <div class="solution-move">
+            <div class="solution-move__num">03</div>
+            <div class="solution-move__content">
+              <h4 class="solution-move__title">Govern Your Rhythm</h4>
+              <p class="solution-move__desc">Participate in weekly check-ins and threads. Products are completely optional and always available at the 10% member discount.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FIVE PATTERNS -->
+    <section style="padding: 80px 0; border-top: 1px solid var(--border)">
+      <div class="container">
+        <p class="section-label">Find Yourself in Here</p>
+        <h2 class="section-headline">The Five Patterns</h2>
+        <p class="section-sub" style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">These are not diagnoses. They are patterns. And patterns can be governed.</p>
+        
+        <div class="patterns-grid">
+          <div class="pattern-card">
+            <span class="pattern-card__badge">Pattern 01</span>
+            <h3 class="pattern-card__title">Owned by Caffeine</h3>
+            <p class="pattern-card__desc">Can't start without it. The ritual became a dependency you stopped questioning.</p>
+          </div>
+          <div class="pattern-card">
+            <span class="pattern-card__badge">Pattern 02</span>
+            <h3 class="pattern-card__title">Wired but Scattered</h3>
+            <p class="pattern-card__desc">High energy that goes everywhere. Busy all day, nothing to show for it.</p>
+          </div>
+          <div class="pattern-card">
+            <span class="pattern-card__badge">Pattern 03</span>
+            <h3 class="pattern-card__title">Sharp Until 2PM</h3>
+            <p class="pattern-card__desc">Mornings are strong. Then the collapse hits and afternoons are a write-off.</p>
+          </div>
+          <div class="pattern-card">
+            <span class="pattern-card__badge">Pattern 04</span>
+            <h3 class="pattern-card__title">Running on Fumes</h3>
+            <p class="pattern-card__desc">Low-grade depletion all day. Never crashing, just never fully on.</p>
+          </div>
+          <div class="pattern-card">
+            <span class="pattern-card__badge">Pattern 05</span>
+            <h3 class="pattern-card__title">The Skeptical Steward</h3>
+            <p class="pattern-card__desc">Tried it all before. Not closed, just needs proof instead of another pitch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: TIRED VS GOVERNED SPLIT -->
+    <section style="padding: 80px 0; border-top: 1px solid var(--border)">
+      <div class="container">
+        <p class="section-label">The Shift</p>
+        <h2 class="section-headline">Tired vs. Governed</h2>
+        <p class="section-sub" style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">Stewardship is trading a borrowed baseline for a governed rhythm.</p>
+        
+        <div class="split-list">
+          <div class="split-list__col split-list__col--tired">
+            <h3 class="split-list__title split-list__title--tired">You're probably tired of</h3>
+            <ul class="split-list__items">
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--tired">&#10005;</span>
+                <span>Struggling to <strong>start your day without a dependency ritual</strong>, knowing it spikes your cortisol before you even wake up.</span>
+              </li>
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--tired">&#10005;</span>
+                <span>Watching others stay stable while you <strong>collapse at 2PM</strong> and fake it through the afternoon meetings.</span>
+              </li>
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--tired">&#10005;</span>
+                <span>Feeling overwhelmed by <strong>"biohacking" supplements</strong> that promise the world but ghost you after 30 days.</span>
+              </li>
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--tired">&#10005;</span>
+                <span>Worried that you're coming home with <strong>the leftover version of yourself</strong> for the people who matter most.</span>
+              </li>
             </ul>
           </div>
-          <div class="opportunity__card reveal reveal-delay-1">
-            <h3 style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--white); margin-bottom:12px; text-transform:uppercase">How It Works</h3>
-            <p style="color:var(--text-muted); font-size:15px; line-height:1.6">Join the free Stewards community on Skool. Share your link. Every person who joins through you is attributed to your account for life. When the paid membership launches, Skool processes the payment and pays your commission automatically. You are building your future income now by inviting people into a free community.</p>
-            <p style="color:var(--text-dim); font-size:12px; margin-top:16px; line-height:1.5">Affiliate commissions are paid by Skool under their affiliate program. Rates reflect commission percentage only and are not a representation of earnings.</p>
+          
+          <div class="split-list__col split-list__col--governed">
+            <h3 class="split-list__title split-list__title--governed">A Governed Rhythm</h3>
+            <ul class="split-list__items">
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--governed">&#10004;</span>
+                <span>Starting clean with <strong>stable, intentional energy</strong> that doesn't spike or panic your baseline.</span>
+              </li>
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--governed">&#10004;</span>
+                <span>Sustaining <strong>directed focus</strong> straight through the midday gap without the afternoon collapse.</span>
+              </li>
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--governed">&#10004;</span>
+                <span>Trading the boost-and-crash loop for a <strong>repeatable baseline</strong> built into the day you already live.</span>
+              </li>
+              <li class="split-list__item">
+                <span class="split-list__icon split-list__icon--governed">&#10004;</span>
+                <span>Coming home with <strong>energy left in the tank</strong> for work, family, and faith.</span>
+              </li>
+            </ul>
           </div>
+        </div>
+        
+        <div style="text-align:center; padding:20px 0">
+          <button class="btn-primary" onclick="joinStewards()" style="padding:18px 40px; font-size:16px; margin:0 auto;">Join the Community. Free.</button>
         </div>
       </div>
     </section>
 
-    <div style="text-align:center; padding:40px 0">
-      <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Become a Founding Affiliate</button>
-      <p style="color:var(--text-dim); font-size:12px; margin-top:12px">Free to join. Lifetime attribution on Skool.</p>
-    </div>
+    <!-- SECTION 6: PROOF WALL -->
+    <section style="padding: 80px 0; border-top: 1px solid var(--border)">
+      <div class="container">
+        <p class="section-label">Real Testimony</p>
+        <h2 class="section-headline">Real People. Real Weight.</h2>
+        <p class="section-sub" style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">Stewards inside the community sharing their real experiences.</p>
+        
+        <div class="patterns-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+          <div class="pattern-card" style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.01);">
+            <p style="font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.9); margin-bottom: 24px; font-style: italic;">"I didn't feel hyped. I just felt <strong>clear.</strong> Like the static turned off. By day 9 I stopped reaching for the second cup."</p>
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: auto;">
+              <div style="font-family: var(--font-display); font-weight: 700; font-size: 14px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%;">MT</div>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #fff;">Marcus T.</div>
+                <div style="font-size: 11px; color: var(--text-dim);">Sales Director &#183; Father of 3</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pattern-card" style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.01);">
+            <p style="font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.9); margin-bottom: 24px; font-style: italic;">"I still had energy at <strong>4pm without the crash.</strong> I didn't realize how normalized the afternoon drop was."</p>
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: auto;">
+              <div style="font-family: var(--font-display); font-weight: 700; font-size: 14px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%;">DR</div>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #fff;">Daniel R.</div>
+                <div style="font-size: 11px; color: var(--text-dim);">Founder &#183; Husband</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pattern-card" style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.01);">
+            <p style="font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.9); margin-bottom: 24px; font-style: italic;">"I noticed I was <strong>more patient after work.</strong> That's not a supplement effect. That's a rhythm shift."</p>
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: auto;">
+              <div style="font-family: var(--font-display); font-weight: 700; font-size: 14px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%;">JW</div>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #fff;">Pastor Jerome W.</div>
+                <div style="font-size: 11px; color: var(--text-dim);">Ministry Leader &#183; Dad</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pattern-card" style="border: 1px solid rgba(204,255,0,0.2); background: rgba(204,255,0,0.01);">
+            <p style="font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.9); margin-bottom: 24px; font-style: italic;">"I finally have <strong>people who get it.</strong> My pastor doesn't understand my business. My business partner doesn't understand my faith. These guys understand both."</p>
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: auto;">
+              <div style="font-family: var(--font-display); font-weight: 700; font-size: 14px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(204,255,0,0.1); border-radius: 50%;">AJ</div>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #fff;">Andre J.</div>
+                <div style="font-size: 11px; color: var(--text-dim);">Business Owner &#183; Elder</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 36px;">
+          <p style="color: var(--text-muted); font-size: 16px;"><strong>73%</strong> of stewards report improved clarity within 14 days.</p>
+        </div>
+      </div>
+    </section>
 
-    <!-- SECTION 6: STORY -->
-    <section class="story">
+    <!-- SECTION 7: AFFILIATE BAND -->
+    <section class="opportunity" id="affiliate-section">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <p class="section-label">Share the mission &middot; founding window open</p>
+          <h2 class="section-headline">Share the Mission.<br>Build What Lasts.</h2>
+          <p class="section-sub" style="text-align:center; color:var(--text-muted); font-size:15px; max-width:580px; margin:0 auto">WHEALTHY is free to join because the mission matters more than a gate. But this is also the moment to build recurring commissions. Every person you invite now is tracked to you permanently on Skool.</p>
+        </div>
+        
+        <div class="rate-cards">
+          <div class="rate-card rate-card--founding">
+            <span class="rate-card__label rate-card__label--lime">Founding Rate</span>
+            <div class="rate-card__value rate-card__value--lime">40%</div>
+            <p class="rate-card__desc">Locked for life. When the paid tier launches, those people become your recurring commissions at the highest rate we will ever offer.</p>
+          </div>
+          <div class="rate-card rate-card--after">
+            <span class="rate-card__label">After Launch</span>
+            <div class="rate-card__value">30%</div>
+            <p class="rate-card__desc">The standard affiliate commission rate. The founding window is the only time to lock in 40%. It will not reopen.</p>
+          </div>
+        </div>
+        
+        <div style="max-width: 600px; margin: 32px auto 0; text-align: center;">
+          <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 12px;">Join the free Stewards community on Skool. Share your link. Every person who joins through you is attributed to your account for life. When the paid membership launches, Skool processes the payment and pays your commission automatically. You are building your future income now by inviting people into a free community.</p>
+          <p style="color: var(--text-dim); font-size: 12px; line-height: 1.5;">Affiliate commissions are paid by Skool under their affiliate program. Rates reflect commission percentage only and are not a representation of earnings.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: FOUNDER STORY -->
+    <section class="story" style="border-top: 1px solid var(--border)">
       <div class="story__container reveal">
-        <div
-          style="background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); border-left:3px solid var(--lime); color:var(--text-muted); padding:16px 24px; border-radius:var(--radius); font-size:15px; line-height:1.6; margin-bottom:40px">
-          <strong style="color:var(--text)">From one steward to another:</strong> This is a real story about a pattern I
-          was stuck in and the system that replaced it.
+        <div style="background:var(--lime-soft); border:1px solid rgba(204,255,0,0.2); border-left:3px solid var(--lime); color:var(--text-muted); padding:16px 24px; border-radius:var(--radius); font-size:15px; line-height:1.6; margin-bottom:40px">
+          <strong style="color:var(--text)">Meet the Steward Behind the System</strong>
         </div>
         <div class="story__content">
-          <p><strong>From:</strong> Ignacio Jos&eacute; Zambrano, II<br><strong>Location:</strong> The Stewards
-            Community</p>
-          <p>If you're reading this, chances are you carry real weight: work, family, faith. I know exactly how
-            you feel because I hit the same wall.</p>
-          <p>I was wired but scattered. My mornings were fueled by a dependency ritual, my afternoons were a fog, and by
-            6 PM, my family got the emptied-out version of me.</p>
+          <p><strong>From:</strong> Ignacio Jos&eacute; Zambrano, II<br><strong>Location:</strong> The Stewards Community</p>
+          <p>If you're reading this, chances are you carry real weight: work, family, faith. I know exactly how you feel because I hit the same wall.</p>
+          <p>I was wired but scattered. My mornings were fueled by a dependency ritual, my afternoons were a fog, and by 6 PM, my family got the emptied-out version of me.</p>
           <ul>
             <li>I tried cutting back on coffee (the headaches broke me).</li>
             <li>I invested in expensive "focus" pills (felt absolutely nothing).</li>
             <li>I even tried just pushing through it with sheer willpower.</li>
           </ul>
           <p>Then something changed.</p>
-          <p>I realized the problem wasn't a lack of energy. <strong>The problem was an unmanaged pattern.</strong> I
-            stopped looking for a "boost" and started looking for a system.</p>
+          <p>I realized the problem wasn't a lack of energy. <strong>The problem was an unmanaged pattern.</strong> I stopped looking for a "boost" and started looking for a system.</p>
           <p>When I finally built a functional routine (morning governance, midday stability, afternoon hydration), the results shocked me.</p>
           <ul>
             <li>By Day 9, the urge for a second cup of coffee vanished.</li>
@@ -1775,246 +1879,101 @@
       </div>
     </section>
 
-    <div style="text-align:center; padding:40px 0">
-      <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
-    </div>
-
-    <!-- SECTION 7: THE STEWARDS COMMUNITY -->
-    <section class="solution" id="offer">
-      <div class="container">
-        <div class="solution__box reveal">
-          <p style="font-size:16px; color:var(--lime); font-style:italic; margin-bottom:24px">Take 10 seconds to imagine coming home at 6 PM with energy left in the tank. How would that change your life?</p>
-          <h2 style="font-family:var(--font-display); font-size:clamp(32px,5vw,56px); font-weight:700; text-transform:uppercase; line-height:1.0; margin-bottom:16px">Introducing<br><span style="color:var(--lime)">The Stewards Community</span></h2>
-          <p style="font-size:18px; color:var(--text-muted); max-width:600px; margin:0 auto">A free community of stewards who govern their energy together. Products available to everyone. Members get 10% off.</p>
-
-          <div class="solution__benefits">
-            <div class="solution__benefit">
-              <div class="solution__benefit-icon" style="font-family:var(--font-display); font-weight:700; font-size:20px">01</div>
-              <div class="solution__benefit-title">Freedom to Think</div>
-              <div class="solution__benefit-desc"><span style="font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Focus</span><br>Governance routines matched to your energy pattern. Weekly pattern threads where stewards share what's working. Real data from real days, not theory.</div>
-            </div>
-            <div class="solution__benefit">
-              <div class="solution__benefit-icon" style="font-family:var(--font-display); font-weight:700; font-size:20px">02</div>
-              <div class="solution__benefit-title">Energy to Be Present</div>
-              <div class="solution__benefit-desc"><span style="font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Family</span><br>Accountability check-ins with stewards who understand the weight. Conversations about showing up at 6 PM with energy left. Fathers, husbands, and leaders holding the standard together.</div>
-            </div>
-            <div class="solution__benefit">
-              <div class="solution__benefit-icon" style="font-family:var(--font-display); font-weight:700; font-size:20px">03</div>
-              <div class="solution__benefit-title">Rhythm to Carry Well</div>
-              <div class="solution__benefit-desc"><span style="font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Faith</span><br>365-day Bible reading plan inside the community. Monthly 30-day governance challenges. Prayer threads, business conversations, and marriage check-ins all in the same space. Because stewards don't compartmentalize.</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="text-align:center; margin-top:40px">
-          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:20px 44px; font-size:18px">Join the Community. Free.</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 8: PROOF -->
-    <section class="proof">
-      <div class="container">
-        <p class="section-label reveal">From Stewards Inside the Room</p>
-        <h2 class="section-headline reveal reveal-delay-1">Real People.<br>Real Weight.</h2>
-        <div class="proof__grid reveal reveal-delay-2" style="margin-top:48px; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr))">
-          <div class="testimonial-card">
-            <p class="testimonial-card__quote">"I didn't feel hyped. I just felt <strong>clear.</strong> Like the static
-              turned off. By day 9 I stopped reaching for the second cup."</p>
-            <div class="testimonial-card__meta">
-              <div class="testimonial-card__avatar"
-                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">MT</div>
-              <div>
-                <div class="testimonial-card__name">Marcus T.</div>
-                <div class="testimonial-card__role">Sales Director &#183; Father of 3</div>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card">
-            <p class="testimonial-card__quote">"I still had energy at <strong>4pm without the crash.</strong> I didn't
-              realize how normalized the afternoon drop was."</p>
-            <div class="testimonial-card__meta">
-              <div class="testimonial-card__avatar"
-                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">DR</div>
-              <div>
-                <div class="testimonial-card__name">Daniel R.</div>
-                <div class="testimonial-card__role">Founder &#183; Husband</div>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card">
-            <p class="testimonial-card__quote">"I noticed I was <strong>more patient after work.</strong> That's not a
-              supplement effect. That's a rhythm shift."</p>
-            <div class="testimonial-card__meta">
-              <div class="testimonial-card__avatar"
-                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">JW</div>
-              <div>
-                <div class="testimonial-card__name">Pastor Jerome W.</div>
-                <div class="testimonial-card__role">Ministry Leader &#183; Dad</div>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card" style="border-color:rgba(204,255,0,0.15)">
-            <p class="testimonial-card__quote">"I finally have <strong>people who get it.</strong> My pastor doesn't understand my business. My business partner doesn't understand my faith. These guys understand both."</p>
-            <div class="testimonial-card__meta">
-              <div class="testimonial-card__avatar"
-                style="font-family:var(--font-display); font-weight:700; font-size:14px; letter-spacing:0.05em">AJ</div>
-              <div>
-                <div class="testimonial-card__name">Andre J.</div>
-                <div class="testimonial-card__role">Business Owner &#183; Elder</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="text-align:center; margin-top:32px" class="reveal">
-          <p style="color:var(--text-muted); font-size:16px"><strong>73%</strong> of stewards report improved clarity
-            within 14 days.</p>
-        </div>
-
-        <div style="text-align:center; margin-top:40px" class="reveal">
-          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: PRODUCTS WITH 10% MEMBER DISCOUNT -->
-    <section style="padding:80px 0; border-top:1px solid var(--border)">
+    <!-- SECTION 9: PRODUCTS SECTION -->
+    <section style="padding:80px 0; border-top:1px solid var(--border)" id="products-section">
       <div class="container">
         <div class="reveal" style="text-align:center; margin-bottom:48px">
-          <p class="section-label">Governance Routines</p>
-          <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); margin-bottom:16px">The Products That<br>Govern Your Energy.</h2>
-          <!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) -->
-          <p style="color:var(--text-muted); font-size:16px; max-width:580px; margin:0 auto 24px; line-height:1.7">Available to everyone. No membership required. But community members get 10% off every product, every time.</p>
-          <div style="display:inline-block; background:linear-gradient(135deg, rgba(204,255,0,0.1), rgba(204,255,0,0.03)); border:1px solid rgba(204,255,0,0.2); border-radius:12px; padding:12px 24px">
-            <span style="font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--lime)">Community Member Price</span>
-            <span style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--white); margin-left:12px">10% Off</span>
-          </div>
+          <p class="section-label">Optional. Members never pay full price.</p>
+          <h2 class="section-headline">The Products That<br>Govern Your Energy.</h2>
+          <p style="color:var(--text-muted); font-size:16px; max-width:580px; margin:0 auto 24px; line-height:1.7">Your member code takes 10% off every product, every time. It's inside the community, free.</p>
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px" class="reveal">
+        <div class="products-grid">
           <!-- Product 1: Functional Coffee -->
-          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
-            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
-              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="WHEALTHY Functional Coffee" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+          <div class="product-card">
+            <div class="product-card__img-wrap">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="WHEALTHY Functional Coffee">
             </div>
-            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
-              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Morning &#183; 6-9am</div>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Start Clear</h3>
-              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">Smooth, intentional caffeine paired with adaptogens. Function without the ownership pattern.</p>
-              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The frantic coffee ritual.</p>
+            <div class="product-card__content">
+              <div class="product-card__time">Morning &#183; 6-9am</div>
+              <h3 class="product-card__title">Start Clear</h3>
+              <p class="product-card__desc">Smooth, intentional caffeine paired with adaptogens. Function without the ownership pattern.</p>
+              <p class="product-card__replaces">Replaces: The frantic coffee ritual.</p>
             </div>
           </div>
           <!-- Product 2: Performance Capsules -->
-          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
-            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
-              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Performance Capsules" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+          <div class="product-card">
+            <div class="product-card__img-wrap">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Performance Capsules">
             </div>
-            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
-              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Midday &#183; 11am-1pm</div>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Stay Stable</h3>
-              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">A midday anchor that keeps focus stable through the second half. No crash. No dependency.</p>
-              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The second cup loop and noon energy drink.</p>
+            <div class="product-card__content">
+              <div class="product-card__time">Midday &#183; 11am-1pm</div>
+              <h3 class="product-card__title">Stay Stable</h3>
+              <p class="product-card__desc">A midday anchor that keeps focus stable through the second half. No crash. No dependency.</p>
+              <p class="product-card__replaces">Replaces: The second cup loop and noon energy drink.</p>
             </div>
           </div>
           <!-- Product 3: Genius Guice -->
-          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
-            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
-              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice Think Drink" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+          <div class="product-card">
+            <div class="product-card__img-wrap">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice Think Drink">
             </div>
-            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
-              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Afternoon &#183; 2-4pm</div>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Think Again</h3>
-              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">Hydration plus cognitive support. Recover your afternoon instead of surviving it.</p>
-              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The 2pm collapse and the fog.</p>
+            <div class="product-card__content">
+              <div class="product-card__time">Afternoon &#183; 2-4pm</div>
+              <h3 class="product-card__title">Think Again</h3>
+              <p class="product-card__desc">Hydration plus cognitive support. Recover your afternoon instead of surviving it.</p>
+              <p class="product-card__replaces">Replaces: The 2pm collapse and the fog.</p>
             </div>
           </div>
           <!-- Product 4: Charge Powder -->
-          <div style="background:rgba(22,23,25,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; transition:var(--transition); display:flex; flex-direction:column">
-            <div style="width:100%; aspect-ratio:1/1; background:rgba(30,32,36,0.5); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); position:relative; overflow:hidden">
-              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge Powder" style="width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+          <div class="product-card">
+            <div class="product-card__img-wrap">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge Powder">
             </div>
-            <div style="padding:24px 20px; display:flex; flex-direction:column; flex:1">
-              <div style="font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin-bottom:8px">Anytime &#183; On Demand</div>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:10px; line-height:1.1">Stay Charged</h3>
-              <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:auto; padding-bottom:12px">Clean energy on demand. When the gap hits and you need to stay governed.</p>
-              <p style="font-size:11px; color:var(--white-40); font-style:italic; padding-top:10px; border-top:1px solid var(--border)">Replaces: The vending machine run.</p>
+            <div class="product-card__content">
+              <div class="product-card__time">Anytime &#183; On Demand</div>
+              <h3 class="product-card__title">Stay Charged</h3>
+              <p class="product-card__desc">Clean energy on demand. When the gap hits and you need to stay governed.</p>
+              <p class="product-card__replaces">Replaces: The vending machine run.</p>
             </div>
-          </div>
-        </div>
-
-        <div style="text-align:center; margin-top:40px" class="reveal">
-          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Unlock 10% Off.</button>
-          <p style="color:var(--text-dim); font-size:12px; margin-top:12px">Products available to everyone. Members save 10% automatically.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: WHAT YOU'RE WALKING INTO -->
-    <section style="padding:80px 0; border-top:1px solid var(--border)">
-      <div class="container">
-        <div class="reveal" style="max-width:680px; margin:0 auto">
-          <p class="section-label">Before You Click</p>
-          <h2 class="section-headline" style="font-size:clamp(28px,4vw,44px); margin-bottom:32px">What You're<br>Walking Into.</h2>
-
-          <div style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-xl); padding:36px 32px; line-height:1.8; color:var(--text-muted); font-size:15px">
-            <p style="margin-bottom:20px">This is a room on Skool. It is free to enter and free to leave.</p>
-            <p style="margin-bottom:20px">Inside, you will find founders who build alone, pastors who lead men's ministries, fathers rebuilding trust with their families, and builders who refuse to fake it through the afternoon.</p>
-            <p style="margin-bottom:20px">On any given day, someone is posting a governance routine that worked. Someone else is asking for accountability on a fast. Someone is sharing a business win and three stewards are responding with real words, not reactions.</p>
-            <p style="margin-bottom:20px">There are prayer threads. Business conversations. Marriage check-ins. They happen in the same space because stewards don't put their faith in one box and their ambition in another.</p>
-            <p style="margin-bottom:20px">There are governance routines (products) available to everyone who wants them. Community members get 10% off. But the room itself is the offer. The products are what help you show up for it with energy left in the tank.</p>
-            <p style="color:var(--text)"><strong>This is not a pitch. It is a description. Walk in and see.</strong></p>
-          </div>
-
-          <div style="text-align:center; margin-top:40px">
-            <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:20px 44px; font-size:18px">Walk Into the Room.</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 11: GUARANTEE -->
-    <section class="guarantee">
+    <!-- SECTION 10: VALUE STACK & GOVERNANCE PROMISE -->
+    <section style="padding: 80px 0; border-top: 1px solid var(--border)">
       <div class="container">
-        <div class="guarantee__box reveal">
+        <p class="section-label">Before You Click</p>
+        <h2 class="section-headline">Join Today for Free</h2>
+        <p class="section-sub" style="text-align:center; color:var(--text-muted); font-size:15px; max-width:520px; margin:0 auto 40px">Here is everything you lock in the moment you walk into the room.</p>
+        
+        <div class="value-stack">
+          <div class="value-stack__title">EVERYTHING YOU'RE GETTING</div>
+          <div class="value-stack__sub">MORE THAN A ROUTINE</div>
+          <div class="value-stack__rows">
+            <div class="value-stack__row"><span>The Stewards community</span><span>Free forever</span></div>
+            <div class="value-stack__row"><span>Pattern named & analyzed</span><span>Included</span></div>
+            <div class="value-stack__row"><span>Weekly check-ins & threads</span><span>Included</span></div>
+            <div class="value-stack__row"><span>Faith, family, and business room</span><span>Included</span></div>
+            <div class="value-stack__row"><span>10% member discount code</span><span>Included</span></div>
+            <div class="value-stack__row"><span>Founding affiliate commission rate</span><span>40%</span></div>
+            <div class="value-stack__row value-stack__row--total"><span>Your price</span><span>FREE</span></div>
+          </div>
+          <div class="value-stack__ctas">
+            <button class="btn-primary" onclick="joinStewards()" style="justify-content: center; width: 100%;">Join the Community &middot; Free</button>
+          </div>
+        </div>
+        
+        <div class="guarantee__box" style="margin-top: 48px; max-width: 600px; margin-left: auto; margin-right: auto;">
           <div class="guarantee__icon" style="font-family:var(--font-display); font-weight:700; font-size:32px; color:var(--lime)">100%</div>
           <h2 class="guarantee__title">The Governance Promise</h2>
           <p class="guarantee__text">You are entirely in control. <strong>Leave whenever you want. No contracts. No pressure.</strong> The community is free to join and free to leave. A single click in Skool is all it takes.</p>
         </div>
-
-        <div style="text-align:center; margin-top:40px">
-          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:18px 40px; font-size:16px">Join the Community. Free.</button>
-        </div>
       </div>
     </section>
 
-    <!-- SECTION 12: HOW TO JOIN -->
-    <section class="final-cta">
-      <div class="final-cta__bg"></div>
-      <div class="final-cta__content reveal">
-        <h2 style="font-family:var(--font-display); font-size:clamp(28px,4vw,44px); font-weight:700; text-transform:uppercase; color:var(--text); margin-bottom:32px">Start Here.</h2>
-
-        <div class="steps-list">
-          <div class="step-item">
-            <div class="step-item__num">1</div>
-            <div class="step-item__text"><strong>Join the free community.</strong> Click the button below and set up your Skool profile in under a minute.</div>
-          </div>
-          <div class="step-item">
-            <div class="step-item__num">2</div>
-            <div class="step-item__text"><strong>Connect with stewards.</strong> Meet others carrying the same weight who refuse to fake it through the afternoon.</div>
-          </div>
-          <div class="step-item">
-            <div class="step-item__num">3</div>
-            <div class="step-item__text"><strong>Start your governance routine.</strong> Products are available to everyone. Community members get 10% off.</div>
-          </div>
-        </div>
-
-        <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="font-size:18px; padding:20px 44px; width:100%; max-width:400px; justify-content:center">
-          Join the Community. Free.
-        </button>
-      </div>
-    </section>
-
-    <!-- SECTION 14: FAQ -->
+    <!-- SECTION 11: FAQ & P.S. & LEGAL FOOTER -->
     <section class="faq">
       <div class="faq__container reveal">
         <p class="section-label">Clarity</p>
@@ -2044,10 +2003,6 @@
           <h3 class="faq__q">Q: How does the affiliate rate work?</h3>
           <p class="faq__a">A: By joining now, you lock in a 40% affiliate commission for life. Every person you invite is tracked to you permanently on Skool. When the paid tier launches, Skool processes the payment and pays your commission automatically.</p>
         </div>
-
-        <div style="text-align:center; margin-top:40px">
-          <button class="btn-primary btn-primary--arc" onclick="joinStewards()" style="padding:20px 44px; font-size:18px; width:100%; max-width:500px; justify-content:center">Join the Community. Free.</button>
-        </div>
       </div>
     </section>
 
@@ -2055,8 +2010,8 @@
     <footer>
       <div class="container">
         <div class="footer__logo">W<span>HEAL</span>THY</div>
-        <p class="footer__copy">&#169; 2026 WHEALTHY LABEL. All rights reserved.</p>
-        <p style="font-size:14px; color:var(--text-muted); max-width:600px; margin:0 auto">
+        <p class="footer__copy">&#169; 2026 WHEALTHY LABEL. All rights reserved. These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease. Faith &#183; Family &#183; Focus.</p>
+        <p style="font-size:14px; color:var(--text-muted); max-width:600px; margin:20px auto 0">
           <strong>P.S.</strong> The community is free. The products are available to everyone. Community members get 10% off. The founding affiliate rate is real and it will close. <a href="#" onclick="joinStewards(); return false;" style="color:var(--lime); text-decoration:underline">Join us inside.</a>
         </p>
       </div>
@@ -2094,9 +2049,9 @@
     </div>
 
     <!-- STICKY CTA -->
-    <div class="sticky-cta" id="stickyCta">
-      <div class="sticky-cta__text">Free to Join. 10% Off All Products.</div>
-      <button class="btn-primary" onclick="joinStewards()" style="font-size:14px; padding:14px 28px">Join the Community</button>
+    <div class="sticky-bar" id="stickyCta">
+      <button class="btn-primary sticky-bar__btn" onclick="joinStewards()">Join Free &middot; 10% code inside</button>
+      <button class="btn-primary btn-primary--outline sticky-bar__btn" onclick="document.getElementById('affiliate-section').scrollIntoView({behavior: 'smooth'})">Lock 40% founding rate</button>
     </div>
 
     <!-- PROOF TOAST -->
@@ -2125,18 +2080,18 @@
     })();
 
     // Sticky CTA
-    (function () { const s = document.getElementById('stickyCta'); if (!s) return; window.addEventListener('scroll', () => { if (window.scrollY > 600) s.classList.add('visible'); else s.classList.remove('visible') }, { passive: true }) })();
-
-    // Alert Bar Rotation
     (function () {
-      const msgs = document.querySelectorAll('.alert-bar__message');
-      let current = 0;
-      if (msgs.length < 2) return;
-      setInterval(() => {
-        msgs[current].classList.remove('active');
-        current = (current + 1) % msgs.length;
-        msgs[current].classList.add('active');
-      }, 4000);
+      const s = document.getElementById('stickyCta');
+      if (!s) return;
+      window.addEventListener('scroll', () => {
+        const q = document.querySelector('.testimonial-band');
+        const trigger = q ? (q.offsetTop + q.offsetHeight) : 600;
+        if (window.scrollY > trigger) {
+          s.classList.add('sticky-bar--show');
+        } else {
+          s.classList.remove('sticky-bar--show');
+        }
+      }, { passive: true });
     })();
 
     // Skool Link Router & Supabase Integration
