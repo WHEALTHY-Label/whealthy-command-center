@@ -5681,6 +5681,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
               Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
             </button>
+            <button class="me-tab-btn" id="meTabBtnCircle" onclick="ME.switchTab('circle')">Steward Circle</button>
           </div>
 
           <!-- PANEL 1: MY PRAYERS -->
@@ -5700,6 +5701,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <div class="wall-skeleton-card"></div>
             </div>
             <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
+          </div>
+
+          <!-- PANEL 3: STEWARD CIRCLE -->
+          <div id="mePanelCircle" style="display:none">
+            <div id="meCircleContent"></div>
           </div>
         </div>
       </div>
@@ -5812,13 +5818,17 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               this.activeTab = tab;
               document.getElementById('meTabBtnMine').classList.toggle('active', tab === 'mine');
               document.getElementById('meTabBtnWatching').classList.toggle('active', tab === 'watching');
+              document.getElementById('meTabBtnCircle').classList.toggle('active', tab === 'circle');
               document.getElementById('mePanelMine').style.display = tab === 'mine' ? 'block' : 'none';
               document.getElementById('mePanelWatching').style.display = tab === 'watching' ? 'block' : 'none';
+              document.getElementById('mePanelCircle').style.display = tab === 'circle' ? 'block' : 'none';
 
               if (tab === 'mine' && this.mineOffset === 0) {
                 this.loadMine(0);
               } else if (tab === 'watching' && this.watchingOffset === 0) {
                 this.loadWatching(0);
+              } else if (tab === 'circle') {
+                if (typeof window.loadMeCircle === 'function') window.loadMeCircle();
               }
             },
 
@@ -6481,6 +6491,345 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             ME.init();
           };
         })();
+
+        // Steward Circles UX/UI functions
+        window.loadMeCircle = async function() {
+          const content = document.getElementById('meCircleContent');
+          if (!content) return;
+
+          if (!window.MEMBER_EMAIL) {
+            content.innerHTML = `<div class="me-empty-state">Please log in to access Steward Circles.</div>`;
+            return;
+          }
+
+          content.innerHTML = `
+            <div class="wall-skeleton-container" style="margin-top:16px;">
+              <div class="wall-skeleton-card" style="min-height: 200px; border-radius:16px;"></div>
+            </div>
+          `;
+
+          function esc(str) {
+            if (!str) return '';
+            return str.toString()
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
+          }
+
+          try {
+            const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-day', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: window.MEMBER_EMAIL })
+            });
+            const data = await res.json();
+            
+            if (!data || data.error) {
+              content.innerHTML = `
+                <div class="me-card" style="text-align:center; padding:32px 16px;">
+                  <p style="color:rgba(255,255,255,0.4); margin-bottom:12px;">Failed to load Steward Circle</p>
+                  <button class="me-btn-action me-btn-secondary" onclick="window.loadMeCircle()">Retry</button>
+                </div>
+              `;
+              return;
+            }
+
+            if (!data.circle) {
+              content.innerHTML = `
+                <div class="animate-fade-in" style="display:flex; flex-direction:column; gap:24px; margin-top:8px;">
+                  
+                  <!-- Join Circle Card -->
+                  <div class="me-card" style="border: 1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01);">
+                    <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin:0 0 8px 0;">Join a Circle</h3>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.45; margin:0 0 20px 0;">Enter a 6-character invite code shared by another Steward.</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                      <input type="text" id="meJoinCodeInput" placeholder="ENTER CODE" maxlength="6" style="width:100%; max-width:260px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-display); font-size:16px; font-weight:700; text-align:center; letter-spacing:0.1em; outline:none; text-transform:uppercase; box-sizing:border-box;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                      
+                      <div id="meJoinError" style="font-size:12.5px; color:rgba(255,255,255,0.45); display:none; margin-top:4px; font-family:var(--font-body);"></div>
+                      
+                      <div id="meJoinConfirmContainer" style="display:none; margin-top:8px;">
+                        <p style="font-size:13px; color:rgba(204,255,0,0.85); margin:0 0 12px 0;">Confirm joining this circle?</p>
+                        <div style="display:flex; gap:10px;">
+                          <button class="me-btn-action" id="meJoinConfirmBtn" style="padding:10px 20px;">Yes, Join</button>
+                          <button class="me-btn-action me-btn-secondary" onclick="window.cancelCircleJoin()" style="padding:10px 20px;">Cancel</button>
+                        </div>
+                      </div>
+                      
+                      <button class="me-btn-action" id="meJoinSubmitBtn" onclick="window.submitCircleJoin()" style="width:fit-content; padding:10px 24px;">Join Circle</button>
+                    </div>
+                  </div>
+
+                  <!-- Create Circle Card -->
+                  <div class="me-card" style="border: 1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01);">
+                    <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin:0 0 8px 0;">Create a Circle</h3>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.45; margin:0 0 20px 0;">Start a new Steward Circle and invite up to 6 accountability partners.</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                      <input type="text" id="meCreateNameInput" placeholder="Circle Name" maxlength="40" style="width:100%; max-width:320px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-body); font-size:14px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                      
+                      <div id="meCreateError" style="font-size:12.5px; color:rgba(255,255,255,0.45); display:none; margin-top:4px; font-family:var(--font-body);"></div>
+                      
+                      <button class="me-btn-action" id="meCreateSubmitBtn" onclick="window.submitCircleCreate()" style="width:fit-content; padding:10px 24px;">Create Circle</button>
+                    </div>
+                  </div>
+
+                </div>
+              `;
+              return;
+            }
+
+            localStorage.setItem('wh_circle_id', data.circle_id);
+            window.MY_CIRCLE_DATA = data;
+
+            let membersHtml = '';
+            data.members.forEach(m => {
+              const isSelf = m.member_id === window.MEMBER_ID;
+              const isShepherd = m.role === 'shepherd';
+              
+              membersHtml += `
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:10px; background:${isSelf ? 'rgba(204,255,0,0.03)' : 'rgba(255,255,255,0.01)'}; border:1px solid ${isSelf ? 'rgba(204,255,0,0.15)' : 'rgba(255,255,255,0.04)'}; margin-bottom:8px;">
+                  <div style="font-size:13.5px; font-weight:600; color:${isSelf ? 'var(--lime)' : '#fff'}; display:flex; align-items:center; gap:8px;">
+                    ${esc(m.name)}
+                    ${isShepherd ? `<span style="font-size:9px; background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3); padding:2px 6px; border-radius:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Shepherd</span>` : ''}
+                    ${isSelf ? `<span style="font-size:9px; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); padding:2px 6px; border-radius:4px; font-weight:600; text-transform:uppercase;">You</span>` : ''}
+                  </div>
+                  <div style="font-size:12px; color:rgba(255,255,255,0.4); text-transform:capitalize;">${esc(m.role)}</div>
+                </div>
+              `;
+            });
+
+            content.innerHTML = `
+              <div class="me-card animate-fade-in" style="border: 1px solid rgba(204,255,0,0.15); background: radial-gradient(circle at top right, rgba(204,255,0,0.02), transparent 60%), #0e1013; margin-top: 8px;">
+                <div style="margin-bottom:20px;">
+                  <div style="font-size:12px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;">Steward Circle</div>
+                  <h2 style="font-family:var(--font-display); font-size:22px; font-weight:700; color:#fff; margin:0; text-transform:uppercase;">${esc(data.circle)}</h2>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:16px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                  <div>
+                    <div style="font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px;">Invite Code</div>
+                    <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--lime); letter-spacing:0.1em;">${data.invite_code}</div>
+                  </div>
+                  <button class="me-btn-action" onclick="window.copyInviteCode('${data.invite_code}', this)" style="padding:8px 16px; font-size:11.5px;">Copy Code</button>
+                </div>
+
+                <div style="margin-bottom:28px;">
+                  <h4 style="font-family:var(--font-display); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.5); margin:0 0 12px 0;">Circle Members (${data.members.length}/7)</h4>
+                  ${membersHtml}
+                </div>
+
+                <div style="border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; display:flex; justify-content:space-between; align-items:center;">
+                  <div id="meLeaveConfirmContainer" style="display:none; width:100%;">
+                    <p style="font-size:13px; color:rgba(255,255,255,0.6); margin:0 0 12px 0;">Are you sure you want to leave this circle? Your accountability partners will see that you left, but there is no guilt here.</p>
+                    <div style="display:flex; gap:10px;">
+                      <button class="me-btn-action" onclick="window.submitCircleLeave('${data.circle_id}', this)" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 20px;">Yes, Leave</button>
+                      <button class="me-btn-action me-btn-secondary" onclick="window.cancelCircleLeave()" style="padding:10px 20px;">Cancel</button>
+                    </div>
+                  </div>
+                  
+                  <button class="me-btn-action me-btn-secondary" id="meLeaveBtn" onclick="window.confirmCircleLeave()" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); padding:8px 16px; font-size:12px;">Leave Circle</button>
+                </div>
+              </div>
+            `;
+
+          } catch (e) {
+            console.error("Error fetching circle data:", e);
+            content.innerHTML = `
+              <div class="me-card" style="text-align:center; padding:32px 16px;">
+                <p style="color:rgba(255,255,255,0.4); margin-bottom:12px;">Server error while loading circle</p>
+                <button class="me-btn-action me-btn-secondary" onclick="window.loadMeCircle()">Retry</button>
+              </div>
+            `;
+          }
+        };
+
+        window.submitCircleJoin = function() {
+          const input = document.getElementById('meJoinCodeInput');
+          const errorEl = document.getElementById('meJoinError');
+          const btn = document.getElementById('meJoinSubmitBtn');
+          const confirmContainer = document.getElementById('meJoinConfirmContainer');
+          
+          if (!input || !window.MEMBER_EMAIL) return;
+          const code = input.value.trim().toUpperCase();
+          if (code.length !== 6) {
+            errorEl.textContent = 'Please enter a valid 6-character code.';
+            errorEl.style.display = 'block';
+            return;
+          }
+          
+          errorEl.style.display = 'none';
+          btn.style.display = 'none';
+          confirmContainer.style.display = 'block';
+          
+          const confirmBtn = document.getElementById('meJoinConfirmBtn');
+          confirmBtn.onclick = async function() {
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `⏳ Joining...`;
+            
+            try {
+              const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-join', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: window.MEMBER_EMAIL, invite_code: code })
+              });
+              const d = await res.json();
+              
+              if (d && d.error) {
+                errorEl.textContent = d.error;
+                errorEl.style.display = 'block';
+                window.cancelCircleJoin();
+              } else if (d && d.joined) {
+                localStorage.setItem('wh_circle_id', d.circle_id);
+                window.loadMeCircle();
+                window.loadDashboardCircle();
+              } else {
+                errorEl.textContent = 'Unable to join circle. Try again.';
+                errorEl.style.display = 'block';
+                window.cancelCircleJoin();
+              }
+            } catch (e) {
+              console.error(e);
+              errorEl.textContent = 'Connection error. Please try again.';
+              errorEl.style.display = 'block';
+              window.cancelCircleJoin();
+            }
+          };
+        };
+
+        window.cancelCircleJoin = function() {
+          const btn = document.getElementById('meJoinSubmitBtn');
+          const confirmContainer = document.getElementById('meJoinConfirmContainer');
+          if (btn && confirmContainer) {
+            btn.style.display = 'block';
+            confirmContainer.style.display = 'none';
+            const confirmBtn = document.getElementById('meJoinConfirmBtn');
+            if (confirmBtn) {
+              confirmBtn.disabled = false;
+              confirmBtn.innerHTML = 'Yes, Join';
+            }
+          }
+        };
+
+        window.submitCircleCreate = async function() {
+          const input = document.getElementById('meCreateNameInput');
+          const errorEl = document.getElementById('meCreateError');
+          const btn = document.getElementById('meCreateSubmitBtn');
+          
+          if (!input || !window.MEMBER_EMAIL) return;
+          const name = input.value.trim();
+          if (!name) {
+            errorEl.textContent = 'Please enter a circle name.';
+            errorEl.style.display = 'block';
+            return;
+          }
+          
+          errorEl.style.display = 'none';
+          btn.disabled = true;
+          btn.innerHTML = `⏳ Creating...`;
+          
+          try {
+            const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, name })
+            });
+            const d = await res.json();
+            
+            if (d && d.error) {
+              errorEl.textContent = d.error;
+              errorEl.style.display = 'block';
+              btn.disabled = false;
+              btn.innerHTML = 'Create Circle';
+            } else if (d && d.created) {
+              localStorage.setItem('wh_circle_id', d.circle_id);
+              window.loadMeCircle();
+              window.loadDashboardCircle();
+            } else {
+              errorEl.textContent = 'Unable to create circle. Try again.';
+              errorEl.style.display = 'block';
+              btn.disabled = false;
+              btn.innerHTML = 'Create Circle';
+            }
+          } catch (e) {
+            console.error(e);
+            errorEl.textContent = 'Connection error. Please try again.';
+            errorEl.style.display = 'block';
+            btn.disabled = false;
+            btn.innerHTML = 'Create Circle';
+          }
+        };
+
+        window.confirmCircleLeave = function() {
+          const leaveBtn = document.getElementById('meLeaveBtn');
+          const confirmContainer = document.getElementById('meLeaveConfirmContainer');
+          if (leaveBtn && confirmContainer) {
+            leaveBtn.style.display = 'none';
+            confirmContainer.style.display = 'block';
+          }
+        };
+
+        window.cancelCircleLeave = function() {
+          const leaveBtn = document.getElementById('meLeaveBtn');
+          const confirmContainer = document.getElementById('meLeaveConfirmContainer');
+          if (leaveBtn && confirmContainer) {
+            leaveBtn.style.display = 'block';
+            confirmContainer.style.display = 'none';
+          }
+        };
+
+        window.submitCircleLeave = async function(circleId, btn) {
+          if (!window.MEMBER_EMAIL || !circleId || btn.disabled) return;
+          btn.disabled = true;
+          btn.innerHTML = `⏳ Leaving...`;
+          
+          try {
+            const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-leave', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, circle_id: circleId })
+            });
+            const d = await res.json();
+            
+            if (d && d.left) {
+              localStorage.removeItem('wh_circle_id');
+              window.MY_CIRCLE_DATA = null;
+              window.loadMeCircle();
+              window.loadDashboardCircle();
+            } else {
+              btn.disabled = false;
+              btn.innerHTML = 'Yes, Leave';
+              window.cancelCircleLeave();
+              alert('Unable to leave circle. Please try again.');
+            }
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+            btn.innerHTML = 'Yes, Leave';
+            window.cancelCircleLeave();
+            alert('Connection error. Please try again.');
+          }
+        };
+
+        window.copyInviteCode = function(code, btn) {
+          if (!navigator.clipboard) {
+            alert("Invite Code: " + code);
+            return;
+          }
+          navigator.clipboard.writeText(code).then(() => {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `Copied!`;
+            btn.style.background = 'rgba(204,255,0,0.15)';
+            btn.style.color = 'var(--lime)';
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.background = '';
+              btn.style.color = '';
+            }, 2000);
+          });
+        };
       </script>
 
       <!-- ============ PRAYER PILLAR ============ -->
@@ -13357,6 +13706,9 @@ function renderDash(){
 
   h+='</div></div>';
 
+  /* ── STEWARD CIRCLE CARD CONTAINER ── */
+  h+='<div id="dashCircleContainer" style="margin-top:24px"></div>';
+
   /* ── WALL NUDGE CARD ── */
   if (window.wallCommunityState && window.wallCommunityState.live_post_count > 0) {
     h+='<div id="dashWallNudgeCard" class="g-card" style="margin-top:24px; border: 1px solid rgba(204,255,0,0.15); background: radial-gradient(circle at top right, rgba(204,255,0,0.03), transparent 60%), #0e1013;">';
@@ -13477,7 +13829,165 @@ function renderDash(){
   h+='</div>';
   root.innerHTML=h;
   try { renderChainChip('rhythm-chain-container', 'rhythm'); } catch(e) {}
+  try { window.loadDashboardCircle(); } catch(e) {}
 }
+window.loadDashboardCircle = async function() {
+  const container = document.getElementById('dashCircleContainer');
+  if (!container) return;
+
+  if (!window.MEMBER_EMAIL) {
+    container.style.display = 'none';
+    return;
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    return str.toString()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  try {
+    const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-day', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: window.MEMBER_EMAIL })
+    });
+    const data = await res.json();
+    if (!data || data.error) {
+      console.warn("Failed to load Steward Circle:", data ? data.error : 'No response');
+      container.style.display = 'none';
+      return;
+    }
+
+    if (!data.circle) {
+      container.innerHTML = `
+        <div class="g-card animate-fade-in" style="border: 1px solid rgba(255,255,255,0.05); background: radial-gradient(circle at top right, rgba(204,255,0,0.02), transparent 60%), #0e1013; padding: 24px;">
+          <div class="dash-card__head" style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <div class="dash-card__icon" style="color:var(--lime); font-size:16px;">👥</div>
+            <div class="dash-card__title" style="color:var(--lime); font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Steward Circle</div>
+          </div>
+          <div class="dash-card__body" style="padding:0;">
+            <p style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.45; margin:0 0 16px; font-family:'DM Sans', sans-serif;">Accountability partner support. Join or create a private 7-person circle with other Stewards.</p>
+            <button class="btn-ghost" onclick="go('me'); if(window.ME && typeof window.ME.switchTab === 'function') window.ME.switchTab('circle');" style="padding:10px 16px; font-size:12px; border-radius:8px; border: 1px solid rgba(204,255,0,0.3); color:var(--lime); width:auto; text-transform:uppercase; font-family:var(--font-display); font-weight:700; cursor:pointer;" onmouseover="this.style.background='rgba(204,255,0,0.08)'" onmouseout="this.style.background='transparent'">
+              Setup Your Circle
+            </button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    localStorage.setItem('wh_circle_id', data.circle_id);
+    window.MY_CIRCLE_DATA = data;
+
+    let html = `
+      <div class="g-card animate-fade-in" style="border: 1px solid rgba(204,255,0,0.12); background: radial-gradient(circle at top right, rgba(204,255,0,0.02), transparent 60%), #0e1013; padding: 24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="color:var(--lime); font-size:18px;">👥</div>
+            <div style="color:#fff; font-family:var(--font-display); font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${esc(data.circle)}</div>
+          </div>
+          <span style="font-size:11px; color:rgba(255,255,255,0.4); font-family:var(--font-body);">Invite Code: <strong style="color:var(--lime); font-family:var(--font-display); letter-spacing:0.05em; font-size:12px; margin-left:4px;">${data.invite_code}</strong></span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+    `;
+
+    data.members.forEach(m => {
+      const isSelf = m.member_id === window.MEMBER_ID;
+      const isShepherd = m.role === 'shepherd';
+      
+      html += `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:10px; background:${isSelf ? 'rgba(204,255,0,0.04)' : 'rgba(255,255,255,0.01)'}; border: 1px solid ${isSelf ? 'rgba(204,255,0,0.2)' : 'rgba(255,255,255,0.03)'};">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:13.5px; font-weight:600; color:${isSelf ? 'var(--lime)' : '#fff'}; display:flex; align-items:center; gap:6px;">
+              ${esc(m.name)}
+              ${isShepherd ? `<span style="font-size:9px; background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3); padding:1px 5px; border-radius:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Shepherd</span>` : ''}
+              ${isSelf ? `<span style="font-size:9px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); padding:1px 5px; border-radius:4px; font-weight:600; text-transform:uppercase;">You</span>` : ''}
+            </div>
+          </div>
+          
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span style="width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; font-weight:700; ${m.word ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="THE WORD">W</span>
+              <span style="width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; font-weight:700; ${m.prayer ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="PRAYER">P</span>
+              ${m.fast === null ? 
+                `<span style="width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; font-weight:700; background:rgba(255,255,255,0.01); color:rgba(255,255,255,0.15); border:1px dashed rgba(255,255,255,0.05);" title="NO ACTIVE FAST">-</span>` :
+                `<span style="width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; font-weight:700; ${m.fast ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="THE FAST">F</span>`
+              }
+              <span style="width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; font-weight:700; ${m.record ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="THE RECORD">R</span>
+            </div>
+            
+            ${!isSelf ? `
+              <div style="width:115px; display:flex; justify-content:flex-end;">
+                ${m.i_prayed_count >= 3 ? `
+                  <button disabled style="padding:6px 10px; font-size:11px; font-weight:600; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); color:rgba(255,255,255,0.3); cursor:not-allowed; text-transform:uppercase; letter-spacing:0.02em; min-height:28px;">🙏 Prayed today</button>
+                ` : `
+                  <button onclick="window.nudgeSteward('${data.circle_id}', ${m.member_id}, this)" style="padding:6px 10px; font-size:11px; font-weight:700; border-radius:6px; background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.25); color:var(--lime); cursor:pointer; text-transform:uppercase; letter-spacing:0.02em; min-height:28px; transition:all 0.2s;" onmouseover="this.style.background='var(--lime)'; this.style.color='#000';" onmouseout="this.style.background='rgba(204,255,0,0.06)'; this.style.color='var(--lime)';">🙏 Pray</button>
+                `}
+              </div>
+            ` : '<div style="width:115px;"></div>'}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+    container.innerHTML = html;
+  } catch (e) {
+    console.error("Error loading dashboard circle:", e);
+    container.style.display = 'none';
+  }
+};
+
+window.nudgeSteward = async function(circleId, forMemberId, btn) {
+  if (!window.MEMBER_EMAIL || !circleId || !forMemberId || btn.disabled) return;
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = `⏳ Praying...`;
+  
+  try {
+    const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-nudge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL,
+        circle_id: circleId,
+        for_member: forMemberId
+      })
+    });
+    const d = await res.json();
+    if (d && (d.prayed || d.capped)) {
+      btn.innerHTML = `🙏 Prayed!`;
+      btn.style.background = 'rgba(204, 255, 0, 0.12)';
+      btn.style.borderColor = 'rgba(204, 255, 0, 0.4)';
+      btn.style.color = 'var(--lime)';
+      setTimeout(() => {
+        window.loadDashboardCircle();
+      }, 2000);
+    } else {
+      btn.innerHTML = `⚠️ Failed`;
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }, 2000);
+    }
+  } catch (e) {
+    console.error("Nudge failed:", e);
+    btn.innerHTML = `⚠️ Error`;
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }, 2000);
+  }
+};
+
 function updateNavBadge(){
   const b=document.getElementById('navDayBadge');
   const d=activeFastDay();
