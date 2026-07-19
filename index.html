@@ -2050,6 +2050,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   <button class="btn-lime" onclick="saveReflectionJournal()" style="padding:8px 16px; font-size:12px; border-radius:8px; width:auto;">Save Reflection</button>
                 </div>
               </div>
+              <div id="wordArrivesCardContainer" style="margin-top:24px; display:none;"></div>
             </div>
 
             <!-- Right Column -->
@@ -7658,6 +7659,8 @@ window.saveReflectionJournal = function() {
   // Close container
   const container = document.getElementById('bible_reflectionContainer');
   if (container) container.style.display = 'none';
+  
+  window.triggerWordArrives('reflection');
 };
 
 const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
@@ -11537,6 +11540,65 @@ function escapeHtml(str) {
   return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+window.triggerWordArrives = async function(triggerSource) {
+  if (!MEMBER_EMAIL) return;
+  try {
+    const res = await fetch(FN_BASE + '/word-arrives', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: MEMBER_EMAIL })
+    });
+    const d = await res.json();
+    if (d.arrived) {
+      if (d.reason !== 'already-today') {
+        speak('A word arrived');
+      }
+      
+      const archetypes = {
+        'morning-dependency': 'Morning Dependency',
+        'energy-without-aim': 'Energy Without Aim',
+        'low-floor': 'Low Floor',
+        'holding-it-together': 'Holding It Together',
+        'general': 'General Focus'
+      };
+      const archName = archetypes[d.reason] || d.reason || 'General Focus';
+      
+      const cardHtml = `<div class="g-card word-arrived-card fade" style="margin-top: 20px; border: 1px solid rgba(204,255,0,0.25); background: rgba(255,255,255,0.03); text-align: left; padding: 20px; border-radius: 12px;">` +
+        `  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 8px; font-weight: 700;">A word arrived</div>` +
+        `  <blockquote style="font-family:'Outfit','DM Sans',sans-serif; font-size: 16px; font-style: italic; line-height: 1.45; color: #fff; margin: 0 0 12px; font-weight: 500;">"${d.text}"</blockquote>` +
+        `  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">` +
+        `    <div>` +
+        `      <span style="color: var(--lime); font-weight: 700; font-size: 14px;">${d.reference || d.ref}</span>` +
+        `      <span style="font-size: 11px; color: var(--text-dim); margin-left: 8px;">Chosen for ${archName}</span>` +
+        `    </div>` +
+        `    <button class="btn-ghost" onclick="speak('${d.text.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')" style="padding: 6px 10px; font-size: 11px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); color: #fff; cursor: pointer;">` +
+        `      <span>🔊</span> Have the Governor read it` +
+        `    </button>` +
+        `  </div>` +
+        `</div>`;
+      
+      if (triggerSource === 'reflection') {
+        const container = document.getElementById('wordArrivesCardContainer');
+        if (container) {
+          container.innerHTML = cardHtml;
+          container.style.display = 'block';
+        }
+      } else if (triggerSource === 'day-complete') {
+        const scribeLineEl = document.querySelector('.scribe-line');
+        if (scribeLineEl) {
+          if (!document.querySelector('.word-arrived-card')) {
+            const cardWrapper = document.createElement('div');
+            cardWrapper.innerHTML = cardHtml;
+            scribeLineEl.parentNode.insertBefore(cardWrapper.firstChild, scribeLineEl.nextSibling);
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Failed to check if word arrives:", e);
+  }
+};
+
 async function load(){
   try{
     const r=await fetch(FN_BASE+'/governor-state',{method:'POST',
@@ -12878,6 +12940,12 @@ Return JSON: {"people":[],"burdens":[],"wins":[],"scribe_line":"","tone":"mixed"
   html+='<div class="g-actions" style="margin-top:16px"><button class="btn-ghost" onclick="location.reload()">New Entry</button></div></div>';
   area.innerHTML=html;
   vib(15);
+
+  const reflections = JSON.parse(localStorage.getItem('wh_bible_reflections') || '{}');
+  const hasReflection = !!reflections[currentDay];
+  if (!hasReflection) {
+    window.triggerWordArrives('day-complete');
+  }
 }
 window.fileEntry=fileEntry;
 
