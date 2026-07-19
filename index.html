@@ -11570,7 +11570,7 @@ window.getQuietDisciplineState = function(discipline) {
     word: (n) => `The Word has been quiet ${n} ${n === 1 ? 'day' : 'days'}. Open today's reading?`,
     prayer: (n) => `Prayer has been quiet ${n} ${n === 1 ? 'day' : 'days'}. Lift someone up today?`,
     fast: (n) => `Your fast report has been quiet ${n} ${n === 1 ? 'day' : 'days'}. Mark tonight?`,
-    record: (n) => `The Record has been quiet four days. Want to speak tonight's entry?`
+    record: (n) => `The Record has been quiet ${n} ${n === 1 ? 'day' : 'days'}. Want to speak tonight's entry?`
   };
 
   if (!lastActiveStr) {
