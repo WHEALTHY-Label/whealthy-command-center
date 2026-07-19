@@ -1736,10 +1736,12 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
 .s4-cost__title{font-family:var(--font-display);font-size:clamp(18px,3.5vw,28px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.1;margin-bottom:8px}
 .s4-cost__citation{font-size:14px;color:var(--text-muted);line-height:1.6}
 .cost-cards{display:flex;flex-direction:column;gap:12px;max-width:500px;margin:0 auto 24px}
-.cost-card{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px}
+.cost-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 20px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px}
+.cost-card__info{min-width:0;flex:1 1 auto}
 .cost-card__label{font-size:14px;font-weight:600;color:var(--text)}
 .cost-card__sub{font-size:12px;color:var(--text-dim);margin-top:2px}
-.cost-card__amount{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text);white-space:nowrap;text-decoration:line-through;text-decoration-color:rgba(255,100,100,.5)}
+.cost-card__amount{flex:0 0 auto;font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text);white-space:nowrap;text-decoration:line-through;text-decoration-color:rgba(255,100,100,.5)}
+@media(max-width:400px){.cost-card{flex-direction:column;align-items:flex-start;gap:6px}}
 .cost-total{display:flex;align-items:center;justify-content:space-between;padding:20px;background:rgba(204,255,0,.05);border:1px solid rgba(204,255,0,.2);border-radius:8px;max-width:500px;margin:0 auto 16px}
 .cost-total__label{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime)}
 .cost-total__amount{font-family:var(--font-display);font-size:clamp(24px,5vw,36px);font-weight:700;color:var(--text)}
@@ -1782,6 +1784,22 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
 .bundle-tile__caffeine-free{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(204,255,0,.6);margin-top:4px}
 .s6-bundle__mixing{font-size:13px;color:var(--text-muted);line-height:1.6;padding:16px;background:rgba(255,255,255,.02);border-radius:6px;margin-bottom:12px}
 .s6-bundle__shipping{font-size:11px;font-weight:600;color:var(--lime);text-align:center;opacity:.7}
+
+/* ===== OPTIONAL PHONE (result page) ===== */
+.s6b-phone{max-width:440px;margin:0 auto;padding:24px;text-align:center}
+.s6b-phone__label{font-size:14px;color:var(--text);line-height:1.5;margin-bottom:14px}
+.s6b-phone__label span{color:var(--text-dim);font-weight:600}
+.s6b-phone__row{display:flex;gap:10px;align-items:stretch}
+.s6b-phone__input{flex:1;min-width:0;background:var(--surface,#0F1012);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm,10px);color:var(--white);font-size:15px;padding:14px 16px;min-height:48px;outline:none}
+.s6b-phone__input:focus{border-color:var(--lime)}
+.s6b-phone__input.error{border-color:#ff5a5a}
+.s6b-phone__input:disabled{opacity:.6}
+.s6b-phone__btn{flex:0 0 auto;background:transparent;border:1px solid rgba(204,255,0,0.4);color:var(--lime);font-weight:700;font-size:14px;letter-spacing:.03em;padding:0 22px;min-height:48px;border-radius:var(--radius-sm,10px);cursor:pointer}
+.s6b-phone__btn:disabled{opacity:.6;cursor:default;border-color:rgba(255,255,255,0.15);color:var(--text-muted)}
+.s6b-phone__note{font-size:12px;color:var(--text-dim);margin-top:10px;min-height:16px}
+.s6b-phone__note--warn{color:#ffb020}
+.s6b-phone__note--ok{color:var(--lime)}
+@media(max-width:400px){.s6b-phone__row{flex-direction:column}.s6b-phone__btn{padding:14px}}
 
 /* ===== S7: DECISION BLOCK ===== */
 .s7-decision{padding:56px 24px;text-align:center}
@@ -1975,6 +1993,35 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
     border-radius: 0;
     border: none;
   }
+}
+
+/* Steward Turn & Reframe styles */
+.steward-turn {
+  margin: 64px auto;
+  max-width: 600px;
+  text-align: center;
+  padding: 0 24px;
+}
+.steward-turn__body {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--white);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.steward-reframe {
+  display: inline-block;
+  background: var(--lime-soft);
+  border: 1px solid rgba(204,255,0,0.2);
+  color: var(--lime);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border-radius: 100px;
 }
 </style>
 </head>
@@ -2821,44 +2868,167 @@ setTimeout(()=>{showProof();setInterval(()=>{setTimeout(showProof,Math.random()*
 if(window.matchMedia('(prefers-reduced-motion:no-preference)').matches&&window.innerWidth>900){window.addEventListener('scroll',()=>{const y=window.scrollY;document.querySelectorAll('.hero__orb').forEach((o,i)=>{o.style.transform=`translateY(${y*[.15,.1,.08][i]}px)`})},{passive:true})}
 
 /* =====================================================
-   PART 1: THE WEIGHT (7 questions, additive, unscored by SM)
+   QUIZ SPEC V2 DATASET (12 Screens / Questions)
    ===================================================== */
-const P1_QD=[
-  {key:'sex',q:'Are you male or female?',opts:['Male','Female'],vals:['male','female'],micro:'So the mirror reflects you, not a generic profile.'},
-  {key:'age_band',q:'What season of life are you in?',opts:['18 to 24','25 to 34','35 to 44','45 to 54','55 or beyond'],vals:['18-24','25-34','35-44','45-54','55plus'],micro:'Energy patterns shift with seasons. The mirror should too.'},
-  {key:'relationship',q:'Who\'s carrying it with you?',opts:['Married or partnered','Single'],vals:['married','single'],micro:'Load shared and load carried alone are different weights.'},
-  {key:'kids_count',q:'How many are counting on you at home?',opts:['None','1','2','3','4 or more'],vals:[0,1,2,3,4],micro:'Every one of them changes the math.'},
-  {key:'job_type',q:'What does your work take from you?',opts:['Desk and decisions','Physical, on my feet','Leading a team or a business','Shift or irregular hours','Home is the work'],vals:['desk','physical','leadership','shift','home'],micro:'Different work drains different reserves.'},
-  {key:'hours_band',q:'How many hours does a normal week take?',opts:['Under 40','40 to 50','50 to 60','60 or more'],vals:['under40','40-50','50-60','60plus'],micro:'Count the commute. Count the phone at dinner.',microAlt:'Count all of it. Home hours are work hours.',microAltKey:'job_type',microAltVal:'home'},
-  {key:'consumption',q:'What\'s carrying you through the day right now?',opts:['Coffee, 1 to 2 cups','Coffee, 3 or more cups','Energy drinks','Powders or pills you\'ve tried','Soda or sweet tea','Nothing, just willpower'],vals:['coffee-light','coffee-heavy','energy-drinks','powders-pills','soda-tea','willpower'],micro:'Tap everything that\'s true. No judgment here.',multi:true}
+const QUIZ_QUESTIONS = [
+  {
+    // Screen 1: Shape
+    type: 'single',
+    q: 'SOMEWHERE IN YOUR DAY, IS THERE A STRETCH WHERE HARD WORK FEELS EASY?',
+    opts: ['Yes, and I know when it hits', 'There used to be', 'Not that I can point to']
+  },
+  {
+    // Screen 2: Resource
+    type: 'single',
+    q: 'WHEN YOU CAN\'T GET MOVING, WHICH ONE IS CLOSER TO TRUE?',
+    opts: [
+      'I know exactly what needs doing. My body won\'t go.',
+      'I\'m going. I just can\'t land on the thing that matters.'
+    ]
+  },
+  {
+    // Screen 3: Timescale + Input
+    type: 'double',
+    q: 'THINK BACK. DID SOMETHING CHANGE, OR HAS IT JUST BEEN THIS WAY?',
+    opts: [
+      'Something specific shifted in the last few months',
+      'A year or more of this',
+      'I couldn\'t tell you when it started'
+    ],
+    q2: 'THE LAST TIME YOU GOT REAL REST, A FULL NIGHT OR A FEW DAYS OFF, HOW LONG DID IT LAST?',
+    opts2: [
+      'I felt like myself again for a good while',
+      'One good day, then back to it',
+      'It didn\'t move much',
+      'I can\'t remember the last time I got that'
+    ]
+  },
+  {
+    // Screen 4: Source
+    type: 'single',
+    q: 'YOUR FIRST CUP. BE HONEST ABOUT WHAT IT\'S DOING.',
+    opts: [
+      'The day doesn\'t start until I\'ve had it',
+      'I like it. I\'d be fine without it.',
+      'I don\'t drink it'
+    ]
+  },
+  {
+    // Screen 5: History / Modifier
+    type: 'single',
+    q: 'LAST THING YOU TRIED FOR THIS. WHAT HAPPENED?',
+    opts: [
+      'Haven\'t tried anything',
+      'Something actually helped',
+      'Nothing happened',
+      'Worked for a week or two, then stopped'
+    ]
+  },
+  {
+    // Screen 6: Load Leaning
+    type: 'single',
+    q: 'WHO\'S LEANING ON YOU RIGHT NOW?',
+    opts: [
+      'Just me',
+      'Me and my partner',
+      'Kids at home',
+      'A team or crew at work',
+      'All of it, honestly'
+    ]
+  },
+  {
+    // Screen 7: Load Season
+    type: 'single',
+    q: 'WHAT SEASON ARE YOU IN?',
+    opts: [
+      'Coasting, things are calm',
+      'Busy but okay',
+      'Stacked, carrying a lot',
+      'Underwater'
+    ]
+  },
+  {
+    // Screen 8: Intent Matters
+    type: 'single',
+    q: 'WHEN YOU THINK ABOUT GETTING THIS RIGHT, WHAT MATTERS MOST?',
+    opts: [
+      'Performing at a high level at work',
+      'Showing up for my family',
+      'My faith and my character',
+      'All of it, honestly'
+    ]
+  },
+  {
+    // Screen 9: Intent Govern
+    type: 'multi',
+    q: 'WHICH OF THESE ARE YOU TRYING TO GOVERN BETTER? (PICK ALL)',
+    opts: [
+      'Energy and body',
+      'Focus and work',
+      'Faith and character',
+      'Family and presence',
+      'Money and provision'
+    ]
+  },
+  {
+    // Screen 10: Intent Fork
+    type: 'single',
+    q: 'LAST ONE. WHAT ARE YOU REALLY LOOKING FOR?',
+    opts: [
+      'Something that just works for my energy',
+      'A routine and a community to change and steward my whole life'
+    ]
+  },
+  {
+    // Screen 11: Reflection Text
+    type: 'text',
+    q: 'ANYTHING ELSE YOU\'RE CARRYING RIGHT NOW?',
+    sub: 'Optional. Write as much or as little as you like.',
+    placeholder: 'What else are you carrying?'
+  }
 ];
 
-// Part 1 answers storage
-let p1Ans={sex:null,age_band:null,relationship:null,kids_count:null,job_type:null,hours_band:null,consumption:[]};
+// Quiz state
+let qS = 0;
+let quizState = { peak_block: null };
+let quizAnswers = [null, null, null, null, null, null, null, null, [], null, ''];
 
-// Primary quiz questions (same 5 from doctrine — UNTOUCHED)
-const QD=[
-  {q:"First, where are you starting from? Which sounds like your morning?",opts:["I need coffee before I can think straight","I crash hard every afternoon","I'm wired but can't actually focus","I feel fine but know I'm running on fumes"]},
-  {q:"Be honest, how many cups before you feel functional?",opts:["One. I'm pretty dialed in","Two to three. I need a while","Three or more. It's a problem","It doesn't really help anymore"]},
-  {q:"What happens after lunch?",opts:["I crash hard and fake it through","I stay pretty stable actually","I need something or I'm useless","I've just accepted the fog"]},
-  {q:"Have you tried cutting back on caffeine?",opts:["Yes and I had headaches and failed","Yes briefly but went back","I've wanted to but haven't tried","I don't think it's that bad"]},
-  {q:"Last one. What are you really carrying right now?",opts:["Being present with my family","Performing at a high level at work","My faith and how I carry my calling","All of the above honestly"]}
-];
+// Legacy variables for backward compatibility
+let p1Ans = {sex: 'male', age_band: '35-44', relationship: 'single', kids_count: 0, job_type: 'desk', hours_band: '40-50', consumption: []};
+let ans = [-1, -1, -1, -1, -1];
+let secondaryAns = null;
+let lastQuizResult = null;
+let lastBundleKey = null;
+let lastContactInfo = null;
+let lastIdentity = null;
 
-// Scoring matrix: [question][option] => [owned, wired, sharp, fumes, skeptical] — UNTOUCHED
-const SM=[
-  [[3,0,0,0,0],[0,0,3,0,0],[0,3,0,0,0],[0,0,0,3,0]],
-  [[0,0,2,0,1],[0,2,1,0,0],[2,1,0,0,0],[0,0,0,2,1]],
-  [[0,0,3,0,0],[0,0,1,0,2],[2,1,0,0,0],[0,0,0,3,0]],
-  [[3,0,0,0,0],[0,2,1,0,0],[0,1,0,2,0],[0,0,0,1,2]],
-  [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
-];
+const AK = ['morning-dependency', 'energy-without-aim', 'low-floor', 'holding-it-together'];
+const IK = ['family', 'work', 'faith', 'all'];
 
-const AK=['owned-by-caffeine','wired-but-scattered','sharp-until-2pm','running-on-fumes','skeptical-steward'];
-const IK=['family','work','faith','all'];
+const BUNDLE_CONFIG={
+  'genius-joe':{name:'The Genius Joe Routine',checkoutUrl:'https://whealthylabel.com/new/genius-joe-functional-coffee-hydration-bundle',priceFull:null},
+  'boss':{name:'The Boss Routine',checkoutUrl:'https://whealthylabel.com/new/boss-performance-capsules-hydration-bundle',priceFull:null},
+  'genius-guice':{name:'The Genius Guice Routine',checkoutUrl:'https://whealthylabel.com/new/genius-guice-think-drink-powder-hydration-bundle',priceFull:null},
+  'charge':{name:'The Charge Routine',checkoutUrl:'https://whealthylabel.com/new/charge-powder-hydration',priceFull:null}
+};
 
-let qS=0, ans=[-1,-1,-1,-1,-1], secondaryAns=null;
-let lastQuizResult=null, lastBundleKey=null, lastContactInfo=null;
+const SEASON_DESCRIPTORS={
+  'building':'Load is forming. What you govern now compounds.',
+  'carrying':'Real weight, every day. The season most people carry alone.',
+  'stacked':'Everything at once. This season takes a system, not willpower.'
+};
+
+const CONSUMPTION_COST={
+  'coffee-light':{label:'The daily coffee habit',sub:'1 to 2 cups, cafe runs or home brew',lo:120,hi:150},
+  'coffee-heavy':{label:'The heavy coffee habit',sub:'3 or more cups, every single day',lo:180,hi:210},
+  'energy-drinks':{label:'The energy drinks',sub:'The rescue that crashes you later',lo:75,hi:75},
+  'powders-pills':{label:'The abandoned drawer',sub:'Products bought on hype, quietly retired',lo:45,hi:45},
+  'soda-tea':{label:'The sugar bridge',sub:'Soda and sweet tea between the crashes',lo:50,hi:50}
+};
+function fmtCost(lo,hi){return lo===hi?('$'+lo+'/mo'):('$'+lo+'-$'+hi+'/mo');}
+
+const WILLPOWER_PANEL='<div class="willpower-panel"><h3 class="willpower-panel__title">YOU\'RE RUNNING ON WILLPOWER ALONE.</h3><p class="willpower-panel__body">No coffee crutch, no energy drinks, no drawer of abandoned products. Just you, forcing the engine every day with nothing underneath it. That\'s not discipline paying off. That\'s reserves running down with no system catching them.</p></div>';
+
 
 /* =====================================================
    IDENTITY PROFILES (6 profiles)
@@ -2896,82 +3066,123 @@ const IDENTITY_PROFILES={
   }
 };
 
-const SEASON_DESCRIPTORS={
-  'building':'Load is forming. What you govern now compounds.',
-  'carrying':'Real weight, every day. The season most people carry alone.',
-  'stacked':'Everything at once. This season takes a system, not willpower.'
-};
-
-/* =====================================================
-   CONSUMPTION-TO-COST MAPPING
-   ===================================================== */
-const CONSUMPTION_COST={
-  'coffee-light':{label:'The daily coffee habit',sub:'1 to 2 cups, cafe runs or home brew',amount:60},
-  'coffee-heavy':{label:'The heavy coffee habit',sub:'3 or more cups, every single day',amount:120},
-  'energy-drinks':{label:'The energy drinks',sub:'The rescue that crashes you later',amount:75},
-  'powders-pills':{label:'The abandoned drawer',sub:'Products bought on hype, quietly retired',amount:45},
-  'soda-tea':{label:'The sugar bridge',sub:'Soda and sweet tea between the crashes',amount:50}
-};
-
-const WILLPOWER_PANEL='<div class="willpower-panel"><h3 class="willpower-panel__title">YOU\'RE RUNNING ON WILLPOWER ALONE.</h3><p class="willpower-panel__body">No coffee crutch, no energy drinks, no drawer of abandoned products. Just you, forcing the engine every day with nothing underneath it. That\'s not discipline paying off. That\'s reserves running down with no system catching them.</p></div>';
-
-/* =====================================================
-   BUNDLE CONFIG (placeholder checkout links)
-   ===================================================== */
-const BUNDLE_CONFIG={
-  'genius-joe':{name:'The Genius Joe Routine',checkoutUrl:'https://whealthylabel.com/new/genius-joe-functional-coffee-hydration-bundle',priceFull:null},
-  'boss':{name:'The Boss Routine',checkoutUrl:'https://whealthylabel.com/new/boss-performance-capsules-hydration-bundle',priceFull:null},
-  'genius-guice':{name:'The Genius Guice Routine',checkoutUrl:'https://whealthylabel.com/new/genius-guice-think-drink-powder-hydration-bundle',priceFull:null},
-  'charge':{name:'The Charge Routine',checkoutUrl:'https://whealthylabel.com/new/charge-powder-hydration',priceFull:null}
-};
-
 /* =====================================================
    SCORING: RDS + IDENTITY WATERFALL + TOKEN ASSEMBLY
    ===================================================== */
-function calcRDS(){
-  const rel=p1Ans.relationship,kids=p1Ans.kids_count||0,hours=p1Ans.hours_band,job=p1Ans.job_type;
-  const familyLoad=(rel==='married'?1:0)+(kids===0?0:kids<=2?2:3);
-  const hoursMap={'under40':1,'40-50':2,'50-60':3,'60plus':4};
-  const workLoad=(hoursMap[hours]||1)+(['leadership','shift'].includes(job)?1:0);
-  return familyLoad+workLoad;
-}
+function runQuizScoring() {
+  // ---- Gate signals ----
+  const shape = quizAnswers[0];                 // 0 = knows the peak, 1 = used to, 2 = never
+  const shape_fires = (shape === 1 || shape === 2);
+  const peak_block = (typeof quizState !== 'undefined' && quizState.peak_block) || null;
 
-function calcLoadSeason(rds){
-  if(rds<=2) return 'building';
-  if(rds<=5) return 'carrying';
-  return 'stacked';
-}
+  const resource = quizAnswers[1];              // 0 = body won't go, 1 = can't land the thing
+  const resource_fires = (resource === 0);
 
-function calcIdentityProfile(){
-  const job=p1Ans.job_type,hours=p1Ans.hours_band,kids=p1Ans.kids_count||0;
-  const rel=p1Ans.relationship,age=p1Ans.age_band;
-  // Waterfall: first match wins
-  if(job==='leadership'&&['50-60','60plus'].includes(hours)) return 'operator';
-  if(kids>=3||job==='home') return 'anchor';
-  if(rel==='married'&&kids>=1&&hours!=='under40') return 'provider';
-  if(['physical','shift'].includes(job)) return 'long-haul';
-  if(['18-24','25-34'].includes(age)&&kids===0) return 'builder';
-  return 'quiet-carrier';
-}
+  const ts = quizAnswers[2] || {};              // { t, i } from the double screen
+  const timescale = (ts.t != null) ? ts.t : null;   // 0 recent, 1 year+, 2 can't say
+  const input = (ts.i != null) ? ts.i : null;       // 0 rest held, 1 one day, 2 didn't move, 3 can't remember
+  const timescale_fires = (timescale === 1 || timescale === 2);
+  const input_fires = (input === 1 || input === 2); // input === 3 is UNKNOWN, fires nothing; 0 = false
 
-function assembleSubtitle(){
-  const sex=p1Ans.sex,rel=p1Ans.relationship,kids=p1Ans.kids_count||0;
-  const hours=p1Ans.hours_band,job=p1Ans.job_type;
-  // FAMILY_PHRASE
-  let familyPhrase='';
-  const parentNoun=sex==='male'?'father':sex==='female'?'mother':'parent';
-  const kidsWord=['zero','one','two','three','four'][kids]||'four';
-  const relWord=rel==='married'?'Married':'Single';
-  if(kids>=1){
-    familyPhrase=relWord+' '+parentNoun+' of '+kidsWord+'.';
-  } else {
-    familyPhrase=relWord+'.';
+  const source = quizAnswers[3];                // 0 = can't start without it, 1 = fine without it, 2 = don't drink it
+  const source_fires = (source === 0);
+
+  const history = quizAnswers[4];               // 0 none, 1 helped, 2 nothing, 3 worked then stopped
+  const skeptical_flag = (history === 2);
+
+  // ---- Three-gate cascade. First to open wins, then STOP. ----
+  let pattern, bundleKey;
+  const floorCount = [resource_fires, timescale_fires, input_fires].filter(Boolean).length;
+
+  if (shape_fires && floorCount >= 2) {                 // GATE 1: Floor. 3 of 4 (shape + 2).
+    pattern = 'low-floor';           bundleKey = 'charge';
+  } else if (source_fires) {                            // GATE 2: Source.
+    pattern = 'morning-dependency';  bundleKey = 'genius-joe';
+  } else if (peak_block) {                              // GATE 3: Spend. Requires a named peak.
+    pattern = 'energy-without-aim';
+    const early = (peak_block === 'early-morning' || peak_block === 'late-morning');
+    bundleKey = early ? 'boss' : 'genius-guice';        // early peak -> midday collapse -> Boss; later -> Guice
+  } else {                                              // FALL-THROUGH.
+    pattern = 'holding-it-together'; bundleKey = 'boss';
   }
-  // WORK_PHRASE
-  const hoursPrefix={'under40':'Under forty hours a week','40-50':'Forty to fifty hour weeks','50-60':'Fifty to sixty hour weeks','60plus':'Sixty-plus hour weeks'};
-  const jobSuffix={'desk':'at a desk full of decisions.','physical':'of work that takes the body.','leadership':'leading people who count on you.','shift':'on a schedule that never sits still.','home':'running the home.'};
-  const workPhrase=(hoursPrefix[hours]||'')+ ' '+(jobSuffix[job]||'');
-  return{familyPhrase,workPhrase};
+
+  // ---- Load (unchanged logic, reindexed to 5 and 6) ----
+  const q5 = quizAnswers[5];
+  const q5Points = [1,2,3,3,4][q5] || 1;
+  const q6 = quizAnswers[6];
+  const q6Points = [1,2,3,4][q6] || 1;
+  const loadScore = q5Points + q6Points;
+  let loadSeason = 'building';
+  if (q6 === 1) loadSeason = 'carrying';
+  else if (q6 === 2 || q6 === 3) loadSeason = 'stacked';
+
+  // ---- Pathway fork (unchanged logic, reindexed to 7, 8, 9) ----
+  const q7 = quizAnswers[7];
+  const q8 = quizAnswers[8] || [];
+  const q9 = quizAnswers[9];
+  const hasStewardSignal = (q7 === 1 || q7 === 2 || q7 === 3) || (q8.includes(2) || q8.includes(3) || q8.includes(4));
+  let pathway = 'customer';
+  if (q9 === 1) pathway = 'steward';
+  else if (q9 === 0) pathway = 'customer';
+  else pathway = hasStewardSignal ? 'steward' : 'customer';
+
+  return {
+    pattern, patternName: getPatternName(pattern), bundleKey,
+    loadScore, loadSeason, pathway, peak_block, skeptical_flag,
+    signals: { shape_fires, resource_fires, timescale_fires, input_fires, source_fires, floorCount }
+  };
+}
+
+function mapNewAnswersToLegacyState() {
+  const q1 = quizAnswers[0];
+  const q2 = quizAnswers[1];
+  const q3_ts = quizAnswers[2] || {};
+  const q3 = q3_ts.t;
+  const q4 = q3_ts.i;
+  const q5_source = quizAnswers[3];
+  const q6_history = quizAnswers[4];
+  const leaning = quizAnswers[5];
+  const season = quizAnswers[6];
+  const matters = quizAnswers[7];
+
+  // Map Pattern answers to legacy ans array
+  ans[0] = q1;
+  ans[1] = q2;
+  ans[2] = q3;
+  ans[3] = q4;
+  
+  // Map Matters Most (matters) to ans[4] (0 = work, 1 = family, 2 = faith, 3 = all)
+  // Legacy ans[4] mapping: 0 = family, 1 = work, 2 = faith, 3 = all
+  if (matters === 0) ans[4] = 1;
+  else if (matters === 1) ans[4] = 0;
+  else if (matters === 2) ans[4] = 2;
+  else if (matters === 3) ans[4] = 3;
+
+  // Map to p1Ans for display layer compatibility
+  p1Ans = {
+    sex: 'male',
+    age_band: '35-44',
+    relationship: (leaning === 1 || leaning === 2 || leaning === 4) ? 'married' : 'single',
+    kids_count: (leaning === 2 || leaning === 4) ? 2 : 0,
+    job_type: (leaning === 3) ? 'leadership' : 'desk',
+    hours_band: (season === 2 || season === 3) ? '50-60' : '40-50',
+    consumption: []
+  };
+
+  // Map caffeine consumption based on source (index 3)
+  if (q5_source === 0) p1Ans.consumption = ['coffee-heavy'];
+  else if (q5_source === 1) p1Ans.consumption = ['coffee-light'];
+  else p1Ans.consumption = ['willpower'];
+}
+
+function getPatternName(key) {
+  const names = {
+    'morning-dependency': 'The Morning Dependency',
+    'energy-without-aim': 'Energy Without Aim',
+    'low-floor': 'The Low Floor',
+    'holding-it-together': 'Holding It Together'
+  };
+  return names[key] || key;
 }
 
 function buildLoadCitation(){
@@ -2986,12 +3197,77 @@ function buildLoadCitation(){
   return 'The weight you just named';
 }
 
+function calcRDS(){
+  return runQuizScoring().loadScore;
+}
+
+function calcLoadSeason(rds){
+  if(rds<=2) return 'building';
+  if(rds<=5) return 'carrying';
+  return 'stacked';
+}
+
+function calcIdentityProfile(){
+  const q5 = quizAnswers[5];
+  const q6 = quizAnswers[6];
+  // Waterfall determination based on new Load/Intent answers
+  if (q5 === 3) return 'operator';
+  if (q5 === 2) return 'anchor';
+  if (q5 === 4) return 'provider';
+  if (q6 === 3) return 'long-haul';
+  if (q6 === 0) return 'builder';
+  return 'quiet-carrier';
+}
+
+function assembleSubtitle(){
+  const kids = p1Ans.kids_count;
+  const relationship = p1Ans.relationship;
+  const hours = p1Ans.hours_band;
+  const job = p1Ans.job_type;
+  
+  const relWord = relationship === 'married' ? 'Married' : 'Single';
+  const familyPhrase = kids >= 1 ? `${relWord} parent of ${kids === 1 ? 'one' : 'two'}.` : `${relWord}.`;
+  
+  const hoursPrefix = hours === '50-60' ? 'Fifty to sixty hour weeks' : 'Forty to fifty hour weeks';
+  const jobSuffix = job === 'leadership' ? 'leading people who count on you.' : 'at a desk full of decisions.';
+  const workPhrase = `${hoursPrefix} ${jobSuffix}`;
+  
+  return { familyPhrase, workPhrase };
+}
+
+function appendRedirectParams(baseUrl, pattern, patternName, email, name) {
+  try {
+    const url = new URL(baseUrl);
+    if (email) url.searchParams.set('email', email);
+    if (name) url.searchParams.set('name', name);
+    if (pattern) {
+      url.searchParams.set('pattern', pattern);
+      url.searchParams.set('archetype', pattern);
+    }
+    if (patternName) {
+      url.searchParams.set('pattern_name', patternName);
+      url.searchParams.set('archetype_name', patternName);
+    }
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) url.searchParams.set('ref', ref);
+    return url.toString();
+  } catch (e) {
+    let sep = baseUrl.indexOf('?') !== -1 ? '&' : '?';
+    let res = baseUrl;
+    if (email) { res += `${sep}email=${encodeURIComponent(email)}`; sep = '&'; }
+    if (name) { res += `${sep}name=${encodeURIComponent(name)}`; sep = '&'; }
+    if (pattern) { res += `${sep}pattern=${encodeURIComponent(pattern)}&archetype=${encodeURIComponent(pattern)}`; sep = '&'; }
+    if (patternName) { res += `${sep}pattern_name=${encodeURIComponent(patternName)}&archetype_name=${encodeURIComponent(patternName)}`; sep = '&'; }
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) res += `${sep}ref=${encodeURIComponent(ref)}`;
+    return res;
+  }
+}
+
 // Supabase Edge Function (primary -- no secret needed, function validates server-side)
 const SUPABASE_FN_URL='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/add-member';
 
 // Skool community join link with referral pass-through.
-// Reads ?ref= from THIS page's URL and forwards it to Skool. No fallback:
-// if no ref is present, the link goes to Skool with no ref attached.
 const SKOOL_BASE='https://www.skool.com/bakndcreator/about';
 function getSkoolJoinUrl(){
   try{
@@ -3001,11 +3277,21 @@ function getSkoolJoinUrl(){
 }
 function proceedToSkool(){
   if(window._wTrack) window._wTrack('cta_click',{label:'Proceed to Skool',location:'bridge',is_result:true});
-  window.open(getSkoolJoinUrl(),'_blank','noopener');
+  const email = (lastContactInfo && lastContactInfo.email) || '';
+  const name = (lastContactInfo && lastContactInfo.first_name) ? (lastContactInfo.first_name + ' ' + (lastContactInfo.last_name || '')) : '';
+  const pattern = lastQuizResult ? lastQuizResult.key : '';
+  const patternName = lastQuizResult ? getPatternName(lastQuizResult.key) : '';
+  const finalUrl = appendRedirectParams(getSkoolJoinUrl(), pattern, patternName, email, name);
+  window.open(finalUrl,'_blank','noopener');
 }
 function joinStewards(){
   if(window._wTrack) window._wTrack('cta_click',{label:'Join the Community',location:'result',is_result:true});
-  window.open(getSkoolJoinUrl(),'_blank','noopener');
+  const email = (lastContactInfo && lastContactInfo.email) || '';
+  const name = (lastContactInfo && lastContactInfo.first_name) ? (lastContactInfo.first_name + ' ' + (lastContactInfo.last_name || '')) : '';
+  const pattern = lastQuizResult ? lastQuizResult.key : '';
+  const patternName = lastQuizResult ? getPatternName(lastQuizResult.key) : '';
+  const finalUrl = appendRedirectParams(getSkoolJoinUrl(), pattern, patternName, email, name);
+  window.open(finalUrl,'_blank','noopener');
 }
 
 // Zapier webhook (backup)
@@ -3060,38 +3346,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Archetype to bundle mapping
 // Each archetype maps to a default bundle, plus whether secondary routing is needed
 const BUNDLE_MAP={
-  'owned-by-caffeine':{
-    default:'genius-joe',
-    needsSecondary:true,
-    secondaryType:'coffee-preference',
-    secondaryQ:'Do you want to keep coffee in your routine, or are you ready to move away from it?',
-    secondaryOpts:[
-      {label:'Keep coffee, just make it better',bundle:'genius-joe'},
-      {label:'Ready to move away from coffee',bundle:'boss',altBundle:'charge',needsFormat:true}
-    ]
-  },
-  'wired-but-scattered':{default:'charge',needsSecondary:false},
-  'sharp-until-2pm':{default:'charge',needsSecondary:false},
-  'running-on-fumes':{
-    default:'boss',
-    needsSecondary:true,
-    secondaryType:'format-preference',
-    secondaryQ:'What format works better for your day?',
-    secondaryOpts:[
-      {label:'Capsules. Quick and easy, no mixing',bundle:'boss'},
-      {label:'Drink mix. I like sipping something throughout the day',bundle:'genius-guice'}
-    ]
-  },
-  'skeptical-steward':{
-    default:'boss',
-    needsSecondary:true,
-    secondaryType:'format-preference',
-    secondaryQ:'What format would you actually stick with?',
-    secondaryOpts:[
-      {label:'Capsules. Just give me something simple',bundle:'boss'},
-      {label:'Drink mix. I want to taste and feel the difference',bundle:'genius-guice'}
-    ]
-  }
+  'morning-dependency': { default:'genius-joe',   needsSecondary:false },
+  'energy-without-aim': { default:'boss',         needsSecondary:false },
+  'low-floor':          { default:'charge',       needsSecondary:false },
+  'holding-it-together':{ default:'boss',         needsSecondary:false }
 };
 
 // Bundle definitions
@@ -3136,40 +3394,33 @@ const BUNDLES={
 
 // Archetype result data — new two-layer structure (pattern underneath identity)
 const AR={
-  'owned-by-caffeine':{
-    n:['Owned by','Caffeine'],
+  'morning-dependency':{
+    n:['Morning','Dependency'],
     sig:'The first hour of your day doesn\'t belong to you. It belongs to the cup.',
-    pat:'The morning ritual stopped being a preference a long time ago. You don\'t reach for the cup because you enjoy it. You reach for it because the day can\'t start without it. Somewhere along the way, the thing that was supposed to serve your morning started owning it, and now the cup decides how the day goes before you do.',
+    pat:'The morning ritual stopped being a preference a long time ago. You reach for the cup because the day can\'t start without it. Somewhere along the way, the thing that was supposed to serve your morning started owning it, and now the cup decides how the day goes before you do.',
     shame:'The dependency didn\'t happen because you\'re weak. It happened because your days carry real weight and borrowed energy was the only system anyone ever showed you.',
-    realCost:'The money is the small part. The bigger cost is starting every single day as someone you have to caffeinate into existence.'
+    realCost:'The real cost of starting every day this way is starting as someone you have to caffeinate into existence.'
   },
-  'wired-but-scattered':{
-    n:['Wired but','Scattered'],
+  'energy-without-aim':{
+    n:['Energy Without','Aim'],
     sig:'You have plenty of energy. It just never points in one direction.',
-    pat:'You\'re not running low. You\'re running loose. The fuel is there, but it scatters across ten open loops before noon, and by evening you\'re exhausted with nothing finished. You keep wondering how you worked that hard and moved that little. That\'s not a work ethic problem. That\'s ungoverned energy doing what ungoverned energy does.',
+    pat:'You\'re not running low. You\'re running loose. The fuel is there, but it scatters across ten open loops before noon, and by evening you\'re exhausted with nothing finished. That\'s not a work ethic problem. That\'s ungoverned energy doing what ungoverned energy does.',
     shame:'Scattered was never a character flaw. It\'s what happens when real fuel meets real responsibility with no system holding the two together.',
-    realCost:'The real cost isn\'t on a receipt. It\'s the sharpest hours of your day spent spinning instead of building.'
+    realCost:'The real cost is that the sharpest hours of your day are spent spinning instead of building.'
   },
-  'sharp-until-2pm':{
-    n:['Sharp Until','2PM'],
-    sig:'Your best hours end right when the day still needs you.',
-    pat:'Mornings, you\'re dangerous. Clear, quick, decisive. Then 2pm arrives and someone dims the lights. You\'ve built so many workarounds for the afternoon that you\'ve started calling the fade normal. It isn\'t normal. It\'s a pattern, and the second half of your day has been paying for it.',
-    shame:'The crash was never your discipline failing. It was a fuel curve nobody taught you to govern.',
-    realCost:'The real cost is the second half of every day. Work gets your best. Family gets the faded version. Faith gets the leftovers.'
-  },
-  'running-on-fumes':{
-    n:['Running on','Fumes'],
-    sig:'You\'re not lazy. The tank has been empty for a long time.',
-    pat:'You keep showing up. That\'s the thing about you. But you\'ve been showing up on reserves, and reserves run out. Every morning is a negotiation with your own body just to get moving, and every evening ends with less of you than the people you love deserve. That\'s not a schedule problem. That\'s an empty tank being asked to carry a full life.',
-    shame:'Depletion isn\'t weakness. It\'s the receipt for carrying too much, for too long, with no system underneath you.',
+  'low-floor':{
+    n:['The Low','Floor'],
+    sig:'You\'re not crashing, just never fully on.',
+    pat:'You\'ve gotten so good at performing at 60% that nobody can tell, but you can. You have normalized a depleted baseline, and the gap between where you are and where you could be is wider than you think. Note: A low floor isn\'t a diagnosis or a failure of will. If flat energy persists despite structure, it is always worth a conversation with a professional.',
+    shame:'Nobody stages an intervention for "functional." But "functional" is not the same as clear. You are not broken. You are just running an energy system that has normalized depletion.',
     realCost:'The real cost is presence. You\'re in the room, but everyone gets whatever\'s left of you. And lately, there isn\'t much left.'
   },
-  'skeptical-steward':{
-    n:['The Skeptical','Steward'],
-    sig:'You\'ve been burned before. Good. That means you\'re paying attention.',
-    pat:'You\'ve watched enough products overpromise and underdeliver that your guard stays up on principle. You don\'t want hype, you don\'t want a miracle story, and you definitely don\'t want another tub in the drawer. You want something that works, holds up, and doesn\'t insult your intelligence. That\'s not cynicism. That\'s a standard.',
-    shame:'Holding your trust back was never the mistake. Skepticism is stewardship of your trust, and you were right to guard it.',
-    realCost:'The real cost of being burned is standing still. You\'ve protected yourself so well from bad answers that you\'re still living with the problem.'
+  'holding-it-together':{
+    n:['Holding It','Together'],
+    sig:'Your energy holds, but your reserves don\'t.',
+    pat:'You have the willpower to push through any day, but willpower is a finite resource. Running on grit gets the job done, but it taxes the people you love before it taxes your calendar. When you run out, your family and personal life pay the price before your work does.',
+    shame: 'Pushing through isn\'t a failure. It is the receipt for carrying too much weight with no system underneath you to help you steward it.',
+    realCost: 'The real cost is that your work gets your grit, while the people you love get whatever leftovers are left in the tank.'
   }
 };
 
@@ -3181,12 +3432,16 @@ const IC={
   all:{t:'You said <strong>all of it</strong> matters. Governed energy is stewardship of the body you carry everything else with. What matters most to you requires a vessel that is clear, stable, and present.'}
 };
 
-/* Quiz Functions — 12-screen two-chapter engine */
-const TOTAL_SCREENS=12; // 7 Part 1 + 5 Part 2
+/* Quiz Functions — 11-screen two-chapter engine */
+const TOTAL_SCREENS=11;
 
 function openQuiz(){
-  qS=0;ans=[-1,-1,-1,-1,-1];secondaryAns=null;
-  p1Ans={sex:null,age_band:null,relationship:null,kids_count:null,job_type:null,hours_band:null,consumption:[]};
+  qS=0;
+  quizState={peak_block:null};
+  quizAnswers=[null, null, null, null, null, null, null, null, [], null, ''];
+  secondaryAns=null;
+  lastContactInfo=null;
+  p1Ans={sex:'male',age_band:'35-44',relationship:'single',kids_count:0,job_type:'desk',hours_band:'40-50',consumption:[]};
   if(window._wTrack)window._wTrack('quiz_open',{trigger:'cta'});
   const m=document.getElementById('quizModal');
   m.classList.remove('result-mode');
@@ -3200,7 +3455,8 @@ function openQuiz(){
 function closeQuiz(){
   const m=document.getElementById('quizModal');
   if(m.classList.contains('open')&&!m.classList.contains('result-mode')&&window._wTrack){
-    window._wTrack('quiz_drop_off',{last_question:qS+1,answers_given:ans.filter(a=>a>=0).length,part1_complete:qS>=7});
+    const answersGivenCount = quizAnswers.filter(a => a !== null && a !== '' && (!Array.isArray(a) || a.length > 0)).length;
+    window._wTrack('quiz_drop_off',{last_question:qS+1,answers_given:answersGivenCount,part1_complete:qS>=7});
   }
   m.classList.remove('open');
   document.body.classList.remove('modal-open');
@@ -3209,137 +3465,214 @@ function closeQuiz(){
   if(rs)rs.remove();
 }
 
-function getChapterLabel(screen){
-  return screen<7?'THE WEIGHT':'THE PATTERN';
-}
-
-function isScreenActive(s){
-  if(s===8){ // QD[1]: How many cups...
-    return p1Ans.consumption.includes('coffee-light') || p1Ans.consumption.includes('coffee-heavy');
-  }
-  return true;
-}
-
 function getQuizProgressStats(){
-  let activeCount = 0;
-  let currentActiveIndex = -1;
-  for(let i=0; i<TOTAL_SCREENS; i++){
-    if(isScreenActive(i)){
-      activeCount++;
-      if(i === qS){
-        currentActiveIndex = activeCount;
-      }
-    }
-  }
-  return {current: currentActiveIndex, total: activeCount};
+  return {current: qS + 1, total: 10};
 }
 
 function getProgressWidth(screen){
-  const stats = getQuizProgressStats();
-  return (stats.current / stats.total * 100);
+  const widths = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 100];
+  return widths[screen] || 100;
 }
 
 function renderQ(s){
-  const isPart1=s<7;
-  const chapter=getChapterLabel(s);
-  const body=document.getElementById('qmBody');
-  document.getElementById('qmProgress').style.width=getProgressWidth(s)+'%';
-  const stats = getQuizProgressStats();
+  const d = QUIZ_QUESTIONS[s];
+  const chapter = getChapterLabel(s);
+  const body = document.getElementById('qmBody');
+  document.getElementById('qmProgress').style.width = getProgressWidth(s) + '%';
 
-  if(isPart1){
-    const d=P1_QD[s];
-    // Conditional microcopy for Q6
-    let micro=d.micro;
-    if(d.microAlt&&p1Ans[d.microAltKey]===d.microAltVal) micro=d.microAlt;
+  const qNumText = s === 10 ? 'Optional Step' : `Question ${s + 1} of 10`;
 
-    if(d.multi){
-      // Q7: multi-select
-      body.innerHTML=`<div class="quiz-slide active">
-        <div class="quiz-modal__chapter">${chapter}</div>
-        <div class="quiz-modal__q-num">Question ${stats.current} of ${stats.total}</div>
-        <div class="quiz-modal__question">${d.q}</div>
-        <div class="quiz-modal__micro">${micro}</div>
-        <div class="quiz-modal__options quiz-modal__options--multi">${d.opts.map((o,i)=>`<div class="qm-option qm-option--multi" onclick="pickMulti(this,${i})" data-val="${d.vals[i]}"><div class="qm-option__check"></div><span>${o}</span></div>`).join('')}</div>
-        <button class="btn-primary quiz-modal__next" id="qmNext" onclick="nextQ()">Continue</button>
-      </div>`;
-    } else {
-      body.innerHTML=`<div class="quiz-slide active">
-        <div class="quiz-modal__chapter">${chapter}</div>
-        <div class="quiz-modal__q-num">Question ${stats.current} of ${stats.total}</div>
-        <div class="quiz-modal__question">${d.q}</div>
-        <div class="quiz-modal__micro">${micro}</div>
-        <div class="quiz-modal__options">${d.opts.map((o,i)=>`<div class="qm-option" onclick="pickP1Opt(this,${s},${i})"><div class="qm-option__radio"></div><span>${o}</span></div>`).join('')}</div>
-        <button class="btn-primary quiz-modal__next" id="qmNext" onclick="nextQ()">Continue</button>
-      </div>`;
-    }
-  } else {
-    // Part 2: existing questions (screen 7-11 = QD index 0-4)
-    const qIdx=s-7;
-    const d=QD[qIdx];
-    const isLast=qIdx===4;
-    body.innerHTML=`<div class="quiz-slide active">
-      <div class="quiz-modal__chapter">${chapter}</div>
-      <div class="quiz-modal__q-num">Question ${stats.current} of ${stats.total}</div>
-      <div class="quiz-modal__question">${d.q}</div>
-      <div class="quiz-modal__options">${d.opts.map((o,i)=>`<div class="qm-option" onclick="pickOpt(this,${i})"><div class="qm-option__radio"></div><span>${o}</span></div>`).join('')}</div>
-      <button class="btn-primary quiz-modal__next" id="qmNext" onclick="nextQ()">${isLast?'See My Pattern':'Continue'}</button>
+  let optionsHtml = '';
+  if (d.type === 'single') {
+    optionsHtml = `<div class="quiz-modal__options">
+      ${d.opts.map((o, i) => {
+        const isSel = quizAnswers[s] === i ? 'selected' : '';
+        let followUpHtml = '';
+        if (s === 0 && i === 0) {
+          const isPeakSelected = (val) => quizState.peak_block === val ? 'selected' : '';
+          followUpHtml = `
+            <div class="qm-followup" id="peakFollowUp" style="margin-top: 16px; padding: 16px; display: ${quizAnswers[0] === 0 ? 'block' : 'none'}; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); gap: 12px; flex-direction: column;">
+              <p style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em; font-weight: 600;">When does it hit?</p>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                ${['early-morning', 'late-morning', 'midday', 'afternoon', 'evening'].map(val => {
+                  const labels = { 'early-morning': 'Early morning', 'late-morning': 'Late morning', 'midday': 'Midday', 'afternoon': 'Afternoon', 'evening': 'Evening' };
+                  return `<div class="qm-option ${isPeakSelected(val)}" onclick="pickPeak(this, '${val}', event)" style="padding: 10px 14px; font-size: 13px; border-radius: var(--radius-sm); margin: 0;">
+                    <div class="qm-option__radio"></div>
+                    <span>${labels[val]}</span>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+        return `<div class="qm-option ${isSel}" onclick="pickOpt(this, ${i})">
+          <div class="qm-option__radio"></div>
+          <span>${o}</span>
+          ${followUpHtml}
+        </div>`;
+      }).join('')}
+    </div>`;
+  } else if (d.type === 'double') {
+    optionsHtml = `
+      <div style="margin-bottom: 24px;">
+        <p style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em; font-weight: 600;">Part A: ${d.q}</p>
+        <div class="quiz-modal__options">
+          ${d.opts.map((o, i) => {
+            const isSel = (quizAnswers[s] && quizAnswers[s].t === i) ? 'selected' : '';
+            return `<div class="qm-option ${isSel}" onclick="pickDoubleT(this, ${i})">
+              <div class="qm-option__radio"></div>
+              <span>${o}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div>
+        <p style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em; font-weight: 600;">Part B: ${d.q2}</p>
+        <div class="quiz-modal__options">
+          ${d.opts2.map((o, i) => {
+            const isSel = (quizAnswers[s] && quizAnswers[s].i === i) ? 'selected' : '';
+            return `<div class="qm-option ${isSel}" onclick="pickDoubleI(this, ${i})">
+              <div class="qm-option__radio"></div>
+              <span>${o}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  } else if (d.type === 'multi') {
+    optionsHtml = `<div class="quiz-modal__options quiz-modal__options--multi">
+      ${d.opts.map((o, i) => {
+        const isSel = (quizAnswers[s] && quizAnswers[s].includes(i)) ? 'selected' : '';
+        return `<div class="qm-option qm-option--multi ${isSel}" onclick="pickMulti(this, ${i})">
+          <div class="qm-option__check"></div>
+          <span>${o}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  } else if (d.type === 'text') {
+    const val = quizAnswers[s] || '';
+    optionsHtml = `<div class="quiz-modal__options quiz-modal__options--text" style="display:block; width:100%;">
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px; line-height:1.5;">${d.sub}</p>
+      <textarea class="email-capture__input" id="qTextVal" style="height:120px; padding:14px; font-size:14px; resize:none; width:100%; border-radius:var(--radius); background:rgba(30,32,36,0.5); border:1px solid var(--border); color:var(--text);" placeholder="${d.placeholder}" oninput="handleTextChange(this)">${val}</textarea>
     </div>`;
   }
-}
 
-function pickP1Opt(el,screen,idx){
-  el.closest('.quiz-modal__options').querySelectorAll('.qm-option').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  const d=P1_QD[screen];
-  p1Ans[d.key]=d.vals[idx];
-  document.getElementById('qmNext').classList.add('ready');
-}
-
-function pickMulti(el,idx){
-  const d=P1_QD[6]; // Q7 consumption
-  const val=d.vals[idx];
-  const allOpts=el.closest('.quiz-modal__options').querySelectorAll('.qm-option--multi');
-
-  // Exclusivity rules
-  if(val==='willpower'){
-    // Selecting willpower deselects everything else
-    allOpts.forEach(o=>o.classList.remove('selected'));
-    el.classList.add('selected');
-    p1Ans.consumption=['willpower'];
-  } else {
-    // Selecting anything else deselects willpower
-    allOpts.forEach(o=>{if(o.dataset.val==='willpower')o.classList.remove('selected')});
-    p1Ans.consumption=p1Ans.consumption.filter(v=>v!=='willpower');
-
-    // Coffee options are mutually exclusive with each other
-    if(val==='coffee-light'||val==='coffee-heavy'){
-      const otherCoffee=val==='coffee-light'?'coffee-heavy':'coffee-light';
-      allOpts.forEach(o=>{if(o.dataset.val===otherCoffee)o.classList.remove('selected')});
-      p1Ans.consumption=p1Ans.consumption.filter(v=>v!==otherCoffee);
-    }
-
-    // Toggle this selection
-    if(el.classList.contains('selected')){
-      el.classList.remove('selected');
-      p1Ans.consumption=p1Ans.consumption.filter(v=>v!==val);
+  let isReady = false;
+  if (d.type === 'single' && quizAnswers[s] !== null && quizAnswers[s] !== undefined) {
+    if (s === 0 && quizAnswers[0] === 0 && !quizState.peak_block) {
+      isReady = false;
     } else {
-      el.classList.add('selected');
-      if(!p1Ans.consumption.includes(val)) p1Ans.consumption.push(val);
+      isReady = true;
     }
+  } else if (d.type === 'double') {
+    const ansObj = quizAnswers[s];
+    if (ansObj && ansObj.t !== null && ansObj.t !== undefined && ansObj.i !== null && ansObj.i !== undefined) {
+      isReady = true;
+    }
+  } else if (d.type === 'multi' && quizAnswers[s] && quizAnswers[s].length > 0) {
+    isReady = true;
+  } else if (d.type === 'text') {
+    isReady = true;
   }
 
-  // Enable/disable next button based on minimum 1 selection
-  const btn=document.getElementById('qmNext');
-  if(p1Ans.consumption.length>0) btn.classList.add('ready');
+  const btnText = s === 10 ? 'See My Pattern' : 'Continue';
+
+  body.innerHTML = `<div class="quiz-slide active">
+    <div class="quiz-modal__chapter">${chapter}</div>
+    <div class="quiz-modal__q-num">${qNumText}</div>
+    <div class="quiz-modal__question">${d.type === 'double' ? 'Timescale & Impact' : d.q}</div>
+    ${optionsHtml}
+    <button class="btn-primary quiz-modal__next ${isReady ? 'ready' : ''}" id="qmNext" onclick="nextQ()">${btnText}</button>
+  </div>`;
+}
+
+function getChapterLabel(s){
+  if(s < 5) return 'THE PATTERN';
+  if(s < 7) return 'THE LOAD';
+  if(s < 10) return 'THE INTENT';
+  return 'REFLECTION';
+}
+
+function isScreenActive(s){
+  return true;
+}
+
+function pickOpt(el, i){
+  el.closest('.quiz-modal__options').querySelectorAll('.qm-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  quizAnswers[qS] = i;
+  
+  if (qS === 0) {
+    const followUp = document.getElementById('peakFollowUp');
+    const btn = document.getElementById('qmNext');
+    if (i === 0) {
+      if (followUp) followUp.style.display = 'block';
+      if (quizState.peak_block) {
+        if (btn) btn.classList.add('ready');
+      } else {
+        if (btn) btn.classList.remove('ready');
+      }
+    } else {
+      if (followUp) followUp.style.display = 'none';
+      quizState.peak_block = null;
+      if (btn) btn.classList.add('ready');
+    }
+  } else {
+    document.getElementById('qmNext').classList.add('ready');
+  }
+}
+
+function pickPeak(el, val, event) {
+  if (event) event.stopPropagation();
+  el.closest('#peakFollowUp').querySelectorAll('.qm-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  quizState.peak_block = val;
+  const btn = document.getElementById('qmNext');
+  if (btn) btn.classList.add('ready');
+}
+
+function pickDoubleT(el, i) {
+  el.closest('.quiz-modal__options').querySelectorAll('.qm-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!quizAnswers[qS]) quizAnswers[qS] = { t: null, i: null };
+  quizAnswers[qS].t = i;
+  checkDoubleReady();
+}
+
+function pickDoubleI(el, i) {
+  el.closest('.quiz-modal__options').querySelectorAll('.qm-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!quizAnswers[qS]) quizAnswers[qS] = { t: null, i: null };
+  quizAnswers[qS].i = i;
+  checkDoubleReady();
+}
+
+function checkDoubleReady() {
+  const ansObj = quizAnswers[qS];
+  const btn = document.getElementById('qmNext');
+  if (ansObj && ansObj.t !== null && ansObj.t !== undefined && ansObj.i !== null && ansObj.i !== undefined) {
+    if (btn) btn.classList.add('ready');
+  } else {
+    if (btn) btn.classList.remove('ready');
+  }
+}
+
+function pickMulti(el, i){
+  if(!Array.isArray(quizAnswers[qS])) quizAnswers[qS] = [];
+  if(el.classList.contains('selected')){
+    el.classList.remove('selected');
+    quizAnswers[qS] = quizAnswers[qS].filter(idx => idx !== i);
+  } else {
+    el.classList.add('selected');
+    if(!quizAnswers[qS].includes(i)) quizAnswers[qS].push(i);
+  }
+  const btn = document.getElementById('qmNext');
+  if(quizAnswers[qS].length > 0) btn.classList.add('ready');
   else btn.classList.remove('ready');
 }
 
-function pickOpt(el,i){
-  el.closest('.quiz-modal__options').querySelectorAll('.qm-option').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  const qIdx=qS-7; // Part 2 index
-  ans[qIdx]=i;
-  document.getElementById('qmNext').classList.add('ready');
+function handleTextChange(el){
+  quizAnswers[qS] = el.value;
 }
 
 function slideIn(body, html, delay){
@@ -3358,236 +3691,172 @@ function slideIn(body, html, delay){
 }
 
 function nextQ(){
-  const isPart1=qS<7;
+  const d = QUIZ_QUESTIONS[qS];
+  if(d.type === 'single' && (quizAnswers[qS] === null || quizAnswers[qS] === undefined)) return;
+  if(d.type === 'double' && (!quizAnswers[qS] || quizAnswers[qS].t === null || quizAnswers[qS].t === undefined || quizAnswers[qS].i === null || quizAnswers[qS].i === undefined)) return;
+  if(d.type === 'multi' && (!quizAnswers[qS] || quizAnswers[qS].length === 0)) return;
 
-  if(isPart1){
-    // Validate Part 1 answer
-    const d=P1_QD[qS];
-    if(d.multi){
-      if(p1Ans.consumption.length===0) return;
-    } else {
-      if(p1Ans[d.key]===null||p1Ans[d.key]===undefined) return;
-    }
-    if(window._wTrack){
-      const trackVal=d.multi?p1Ans.consumption.join(','):p1Ans[d.key];
-      window._wTrack('quiz_question',{question:qS+1,part:'weight',key:d.key,answer:trackVal});
-    }
-  } else {
-    // Part 2 validation
-    const qIdx=qS-7;
-    if(ans[qIdx]<0) return;
-    if(window._wTrack)window._wTrack('quiz_question',{question:qS+1,part:'pattern',answer:ans[qIdx],answer_text:QD[qIdx].opts[ans[qIdx]]});
+  if(window._wTrack){
+    let trackVal = '';
+    if(d.type === 'single') trackVal = d.opts[quizAnswers[qS]];
+    else if(d.type === 'double') trackVal = `Timescale:${d.opts[quizAnswers[qS].t]},Input:${d.opts2[quizAnswers[qS].i]}`;
+    else if(d.type === 'multi') trackVal = quizAnswers[qS].map(idx => d.opts[idx]).join(',');
+    else trackVal = quizAnswers[qS] || '';
+    window._wTrack('quiz_question',{question:qS+1,key:'q_'+(qS+1),answer:trackVal});
   }
 
-  const body=document.getElementById('qmBody');
-
-  let nextS = qS + 1;
-  while(nextS < TOTAL_SCREENS && !isScreenActive(nextS)){
-    nextS++;
-  }
-
-  if(nextS < TOTAL_SCREENS){
-    qS = nextS;
-    document.getElementById('qmProgress').style.width=getProgressWidth(qS)+'%';
-
-    const chapter=getChapterLabel(qS);
-    const isPart1Next=qS<7;
-    const stats = getQuizProgressStats();
-
-    if(isPart1Next){
-      const d=P1_QD[qS];
-      let micro=d.micro;
-      if(d.microAlt&&p1Ans[d.microAltKey]===d.microAltVal) micro=d.microAlt;
-
-      if(d.multi){
-        slideIn(body,`<div class="quiz-slide">
-          <div class="quiz-modal__chapter">${chapter}</div>
-          <div class="quiz-modal__q-num">Question ${stats.current} of ${stats.total}</div>
-          <div class="quiz-modal__question">${d.q}</div>
-          <div class="quiz-modal__micro">${micro}</div>
-          <div class="quiz-modal__options quiz-modal__options--multi">${d.opts.map((o,i)=>`<div class="qm-option qm-option--multi" onclick="pickMulti(this,${i})" data-val="${d.vals[i]}"><div class="qm-option__check"></div><span>${o}</span></div>`).join('')}</div>
-          <button class="btn-primary quiz-modal__next" id="qmNext" onclick="nextQ()">Continue</button>
-        </div>`);
-      } else {
-        slideIn(body,`<div class="quiz-slide">
-          <div class="quiz-modal__chapter">${chapter}</div>
-          <div class="quiz-modal__q-num">Question ${stats.current} of ${stats.total}</div>
-          <div class="quiz-modal__question">${d.q}</div>
-          <div class="quiz-modal__micro">${micro}</div>
-          <div class="quiz-modal__options">${d.opts.map((o,i)=>`<div class="qm-option" onclick="pickP1Opt(this,${qS},${i})"><div class="qm-option__radio"></div><span>${o}</span></div>`).join('')}</div>
-          <button class="btn-primary quiz-modal__next" id="qmNext" onclick="nextQ()">Continue</button>
-        </div>`);
-      }
-    } else {
-      // Part 2
-      const qIdx=qS-7;
-      const d=QD[qIdx];
-      const isLast=qIdx===4;
-      slideIn(body,`<div class="quiz-slide">
-        <div class="quiz-modal__chapter">${chapter}</div>
-        <div class="quiz-modal__q-num">Question ${stats.current} of ${stats.total}</div>
-        <div class="quiz-modal__question">${d.q}</div>
-        <div class="quiz-modal__options">${d.opts.map((o,i)=>`<div class="qm-option" onclick="pickOpt(this,${i})"><div class="qm-option__radio"></div><span>${o}</span></div>`).join('')}</div>
-        <button class="btn-primary quiz-modal__next" id="qmNext" onclick="nextQ()">${isLast?'See My Pattern':'Continue'}</button>
-      </div>`);
-    }
+  if(qS < 10){
+    qS++;
+    renderQ(qS);
   } else {
-    // All 12 questions complete: calculate archetype + identity
-    document.getElementById('qmProgress').style.width='100%';
-    document.getElementById('qmFooter').style.display='none';
-
-    const result=calcArc();
-    const mapping=BUNDLE_MAP[result.key];
-
-    if(mapping.needsSecondary){
-      showSecondaryQ(result, mapping);
-    } else {
-      showContactForm(result, mapping.default);
-    }
+    // End of questions: show Free Archetype Reveal (Screen 11)
+    document.getElementById('qmProgress').style.width = '100%';
+    document.getElementById('qmFooter').style.display = 'none';
+    mapNewAnswersToLegacyState();
+    const scoringResult = runQuizScoring();
+    showArchetypeReveal(scoringResult);
   }
 }
 
-function calcArc(){
-  const s=[0,0,0,0,0];
-  for(let q=0;q<5;q++){
-    const a=ans[q];
-    if(a<0)continue;
-    for(let i=0;i<5;i++)s[i]+=SM[q][a][i];
-  }
-  let mx=0;
-  for(let i=1;i<5;i++)if(s[i]>s[mx])mx=i;
-  return{key:AK[mx],id:IK[ans[4]]||'all',scores:s};
-}
+function showArchetypeReveal(scoringResult){
+  const d = AR[scoringResult.pattern];
+  const body = document.getElementById('qmBody');
+  
+  if (window._wTrack) window._wTrack('quiz_reveal', { archetype: scoringResult.pattern });
 
-function showSecondaryQ(result, mapping){
-  if(window._wTrack)window._wTrack('quiz_secondary',{archetype:result.key,question:mapping.secondaryQ});
-  const body=document.getElementById('qmBody');
   slideIn(body, `<div class="quiz-slide">
-    <div class="secondary-q">
-      <div class="secondary-q__label">One More Question</div>
-      <div class="secondary-q__question">${mapping.secondaryQ}</div>
-      <div class="secondary-q__options quiz-modal__options">
-        ${mapping.secondaryOpts.map((opt,i)=>`<div class="qm-option" onclick="pickSecondary(this,${i},'${result.key}')"><div class="qm-option__radio"></div><span>${opt.label}</span></div>`).join('')}
+    <div style="text-align:center; padding: 24px 0;">
+      <div class="quiz-modal__chapter" style="color: var(--lime); font-weight: 700; letter-spacing: 0.15em; margin-bottom: 24px;">FREE · NO WALL · SHAREABLE</div>
+      <div class="quiz-modal__q-num" style="margin-bottom: 12px;">ARCHETYPE REVEAL</div>
+      
+      <div style="background: rgba(204,255,0,0.03); border: 1px solid rgba(204,255,0,0.15); border-radius: var(--radius-lg); padding: 40px 24px; margin-bottom: 32px; box-shadow: 0 0 40px rgba(204,255,0,0.05);">
+        <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lime); margin-bottom: 8px; font-weight: 600;">Your Pattern is</p>
+        <h1 style="font-family: var(--font-display); font-size: clamp(32px, 6vw, 48px); font-weight: 700; text-transform: uppercase; color: var(--white); line-height: 1.1; margin: 0 0 16px;">
+          ${d.n[0]} <span style="color: var(--lime);">${d.n[1]}</span>
+        </h1>
+        <p style="font-size: 15px; color: var(--text); line-height: 1.6; max-width: 480px; margin: 0 auto;">${d.sig}</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 320px; margin: 0 auto;">
+        <button class="btn-primary" onclick="showContactFormFromReveal()" style="justify-content: center; width: 100%;">
+          Unlock My Full Result <span style="margin-left: 6px;">&rarr;</span>
+        </button>
+        <button class="btn-primary btn-primary--outline" onclick="shareArchetype('${scoringResult.pattern}')" style="justify-content: center; width: 100%; border-color: rgba(255,255,255,0.15); color: var(--text-muted);">
+          Share My Type
+        </button>
       </div>
     </div>
   </div>`);
 }
 
-function pickSecondary(el, idx, archetypeKey){
-  el.closest('.secondary-q__options').querySelectorAll('.qm-option').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-
-  const mapping=BUNDLE_MAP[archetypeKey];
-  const chosen=mapping.secondaryOpts[idx];
-  let bundleKey=chosen.bundle;
-  if(window._wTrack)window._wTrack('quiz_secondary',{archetype:archetypeKey,answer:chosen.label,bundle:bundleKey});
-
-  // If the secondary option needs further format routing (owned-by-caffeine "move away" path)
-  if(chosen.needsFormat){
-    setTimeout(()=>{
-      showFormatQ(archetypeKey, chosen);
-    },500);
-    return;
-  }
-
-  secondaryAns=idx;
-  const result=calcArc();
-
-  setTimeout(()=>{
-    showContactForm(result, bundleKey);
-  },500);
+function shareArchetype(pattern){
+  const shareUrl = window.location.origin + window.location.pathname + '?pattern=' + pattern;
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    alert('Share link copied to clipboard!');
+  }).catch(() => {
+    alert('Share link: ' + shareUrl);
+  });
 }
 
-function showFormatQ(archetypeKey, parentChoice){
-  const body=document.getElementById('qmBody');
-  slideIn(body, `<div class="quiz-slide">
-    <div class="secondary-q">
-      <div class="secondary-q__label">Last One</div>
-      <div class="secondary-q__question">What format works better for your day?</div>
-      <div class="secondary-q__options quiz-modal__options">
-        <div class="qm-option" onclick="pickFormat(this,'boss')"><div class="qm-option__radio"></div><span>Capsules. Quick and easy, no mixing</span></div>
-        <div class="qm-option" onclick="pickFormat(this,'charge')"><div class="qm-option__radio"></div><span>Drink mix. I like sipping something</span></div>
-      </div>
-    </div>
-  </div>`);
+function showContactFormFromReveal(){
+  const scoringResult = runQuizScoring();
+  showContactForm(scoringResult);
 }
 
-function pickFormat(el, bundleKey){
-  el.closest('.secondary-q__options').querySelectorAll('.qm-option').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  const result=calcArc();
-  setTimeout(()=>{
-    showContactForm(result, bundleKey);
-  },500);
-}
+function showContactForm(scoringResult){
+  lastQuizResult = { key: scoringResult.pattern, id: scoringResult.pathway, scores: scoringResult.archetypeScores };
+  lastBundleKey = scoringResult.bundleKey;
+  
+  if (window._wTrack) window._wTrack('quiz_contact_form', { archetype: scoringResult.pattern, bundle: scoringResult.bundleKey });
 
-/* Contact Form (inside quiz modal, before countdown) */
-function showContactForm(result, bundleKey){
-  // Store for later
-  lastQuizResult=result;
-  lastBundleKey=bundleKey;
-  if(window._wTrack)window._wTrack('quiz_contact_form',{archetype:result.key,bundle:bundleKey});
-
-  const body=document.getElementById('qmBody');
+  const body = document.getElementById('qmBody');
   slideIn(body, `<div class="quiz-slide">
     <div style="text-align:center">
-      <div class="quiz-modal__q-num">Almost There</div>
-      <div class="quiz-modal__question" style="font-size:clamp(18px,3.5vw,24px);margin-bottom:12px">Where Should We Send<br>Your Results?</div>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.6">Your energy pattern is ready. Enter your info and we will send your personalized governance plan.</p>
+      <div class="quiz-modal__chapter" style="color: var(--lime); font-weight: 700; letter-spacing: 0.15em; margin-bottom: 24px;">THE GATE</div>
+      <div class="quiz-modal__q-num" style="margin-bottom: 12px;">CONTACT CAPTURE</div>
+      <div class="quiz-modal__question" style="font-size:clamp(18px,3.5vw,24px);margin-bottom:12px">Where Should We Send<br>Your Full Result?</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.6">Just your first name and email. Then your full breakdown, your matched routine, and your next step unlock.</p>
+
       <div class="email-capture__form" style="text-align:left">
-        <div class="email-capture__row">
-          <input type="text" class="email-capture__input" id="captName" placeholder="First name" autocomplete="given-name">
-          <input type="text" class="email-capture__input" id="captLastName" placeholder="Last name" autocomplete="family-name">
-        </div>
-        <input type="tel" class="email-capture__input" id="captPhone" placeholder="Phone (###-###-####)" autocomplete="tel" oninput="formatPhone(this)">
+        <input type="text" class="email-capture__input" id="captName" placeholder="First name" autocomplete="given-name">
         <input type="email" class="email-capture__input" id="captEmail" placeholder="your@email.com" autocomplete="email">
         <p class="email-capture__error" id="captError"></p>
-        <button class="btn-primary quiz-modal__next ready" onclick="submitContactForm()" style="width:100%;justify-content:center">See My Results</button>
+        <button class="btn-primary quiz-modal__next ready" onclick="submitContactForm()" style="width:100%;justify-content:center">Unlock My Result</button>
       </div>
       <p style="font-size:11px;color:var(--text-dim);margin-top:12px">We respect your privacy. No spam. Unsubscribe anytime.</p>
     </div>
   </div>`);
 }
 
+
 function submitContactForm(){
   const nameEl=document.getElementById('captName');
-  const lastEl=document.getElementById('captLastName');
-  const phoneEl=document.getElementById('captPhone');
   const emailEl=document.getElementById('captEmail');
   const errorEl=document.getElementById('captError');
 
   // Clear previous errors
-  [nameEl,lastEl,phoneEl,emailEl].forEach(el=>el.classList.remove('error'));
+  [nameEl,emailEl].forEach(el=>el.classList.remove('error'));
   errorEl.classList.remove('visible');
   errorEl.textContent='';
 
   const firstName=nameEl.value.trim();
-  const lastName=lastEl.value.trim();
-  const phone=phoneEl.value.trim();
   const email=emailEl.value.trim();
 
-  // Validate
+  // Validate: first name + email only. Phone is asked later, optional, on the result page.
   const errors=[];
   if(!firstName){nameEl.classList.add('error');errors.push('First name is required')}
-  if(!lastName){lastEl.classList.add('error');errors.push('Last name is required')}
-  if(!phone||!validatePhone(phone)){phoneEl.classList.add('error');errors.push('Phone must be ###-###-####')}
   if(!email||!validateEmail(email)){emailEl.classList.add('error');errors.push('Valid email is required')}
 
   if(errors.length>0){
     errorEl.textContent=errors[0];
     errorEl.classList.add('visible');
     setTimeout(()=>{
-      [nameEl,lastEl,phoneEl,emailEl].forEach(el=>el.classList.remove('error'));
+      [nameEl,emailEl].forEach(el=>el.classList.remove('error'));
       errorEl.classList.remove('visible');
     },3000);
     return;
   }
 
-  // Store contact info globally for the webhook
-  lastContactInfo={first_name:firstName,last_name:lastName,phone:phone,email:email};
+  // Store contact info globally for the webhook. Phone stays empty here; captured optionally on the result page.
+  lastContactInfo={first_name:firstName,last_name:'',phone:'',email:email};
 
   // Proceed to countdown
   showCountdown(lastQuizResult, lastBundleKey);
+}
+
+/* Optional phone capture on the result page. Only fires when a valid number is entered. */
+function saveResultPhone(){
+  const el=document.getElementById('resultPhone');
+  const note=document.getElementById('resultPhoneNote');
+  if(!el)return;
+  const phone=el.value.trim();
+  if(!phone){
+    if(note){note.textContent='Enter a number first, or skip it.';note.className='s6b-phone__note s6b-phone__note--warn';}
+    return;
+  }
+  if(!validatePhone(phone)){
+    el.classList.add('error');
+    if(note){note.textContent='Number should look like ###-###-####.';note.className='s6b-phone__note s6b-phone__note--warn';}
+    return;
+  }
+  el.classList.remove('error');
+  if(lastContactInfo)lastContactInfo.phone=phone; else lastContactInfo={phone:phone};
+  // Send a lightweight update keyed to the email we already captured.
+  sendToWebhook({
+    event:'contact_phone_added',
+    source:'quiz',
+    timestamp:new Date().toISOString(),
+    first_name:(lastContactInfo&&lastContactInfo.first_name)||'',
+    last_name:'',
+    phone:phone,
+    email:(lastContactInfo&&lastContactInfo.email)||'',
+    pattern:(lastQuizResult&&lastQuizResult.key)||'',
+    pathway:(lastQuizResult&&lastQuizResult.id)||''
+  });
+  el.disabled=true;
+  const btn=document.getElementById('resultPhoneBtn');
+  if(btn){btn.disabled=true;btn.textContent='Saved';}
+  if(note){note.textContent='Got it. We will text your routine and next steps.';note.className='s6b-phone__note s6b-phone__note--ok';}
 }
 
 /* S0 Reveal Beat + Webhook + Result Page */
@@ -3596,22 +3865,26 @@ function showCountdown(result, bundleKey){
   lastQuizResult=result;
   lastBundleKey=bundleKey;
 
+  // Run new scoring to get complete result details
+  const scoringResult = runQuizScoring();
+
   // Compute identity data
   const identityKey=calcIdentityProfile();
-  const rds=calcRDS();
-  const season=calcLoadSeason(rds);
-  const profile=IDENTITY_PROFILES[identityKey];
+  const rds=scoringResult.loadScore;
+  const season=scoringResult.loadSeason;
+  const profile=IDENTITY_PROFILES[identityKey] || IDENTITY_PROFILES['quiet-carrier'];
   const subtitle=assembleSubtitle();
   const citation=buildLoadCitation();
 
   // Store for result page
   lastIdentity={key:identityKey,profile,rds,season,subtitle,citation};
 
-  // Fire webhook with Part 1 + Part 2 data (flat new fields, existing nested preserved)
+  // Fire webhook with Part 1 + Part 2 data
   const bundle=BUNDLES[bundleKey];
   const archData=AR[result.key];
   const contact=lastContactInfo||{};
-  if(window._wTrack)window._wTrack('quiz_complete',{archetype:result.key,bundle:bundleKey,identity:identityKey});
+  if(window._wTrack)window._wTrack('quiz_complete',{archetype:result.key,bundle:bundleKey,identity:identityKey,pathway:scoringResult.pathway});
+  
   sendToWebhook({
     event:'quiz_complete',
     source:'quiz',
@@ -3621,14 +3894,19 @@ function showCountdown(result, bundleKey){
     last_name:contact.last_name||'',
     phone:contact.phone||'',
     email:contact.email||'',
+    // NEW v2 fields
+    pattern:result.key,
+    pattern_name:getPatternName(result.key),
+    pathway:scoringResult.pathway,
+    // Legacy compatibility fields
     archetype:result.key,
-    archetype_name:archData.n.join(' '),
-    identity_anchor:result.id,
+    archetype_name:getPatternName(result.key),
+    identity_anchor:scoringResult.pathway,
     bundle_key:bundleKey,
     bundle_name:bundle.name,
     price:'free',
     price_interval:'community',
-    // New flat Part 1 fields
+    // New flat fields
     sex:p1Ans.sex||'',
     age_band:p1Ans.age_band||'',
     relationship:p1Ans.relationship||'',
@@ -3639,20 +3917,25 @@ function showCountdown(result, bundleKey){
     identity_profile:identityKey,
     load_score:rds,
     load_season:season,
-    // Existing nested (untouched)
-    scores:{
-      'owned-by-caffeine':result.scores[0],
-      'wired-but-scattered':result.scores[1],
-      'sharp-until-2pm':result.scores[2],
-      'running-on-fumes':result.scores[3],
-      'skeptical-steward':result.scores[4]
-    },
+    // NEW v2 flat fields
+    peak_block:scoringResult.peak_block||'',
+    skeptical_flag:scoringResult.skeptical_flag||false,
+    // Scores and answers
+    scores:scoringResult.signals||{},
     answers:{
-      q1_morning:QD[0].opts[ans[0]]||'',
-      q2_cups:QD[1].opts[ans[1]]||'',
-      q3_after_lunch:QD[2].opts[ans[2]]||'',
-      q4_cut_back:QD[3].opts[ans[3]]||'',
-      q5_matters_most:QD[4].opts[ans[4]]||''
+      q1_shape: QUIZ_QUESTIONS[0].opts[quizAnswers[0]] || '',
+      q1_peak_block: scoringResult.peak_block || '',
+      q2_resource: QUIZ_QUESTIONS[1].opts[quizAnswers[1]] || '',
+      q3_timescale: (quizAnswers[2] && quizAnswers[2].t !== null) ? QUIZ_QUESTIONS[2].opts[quizAnswers[2].t] : '',
+      q4_input: (quizAnswers[2] && quizAnswers[2].i !== null) ? QUIZ_QUESTIONS[2].opts2[quizAnswers[2].i] : '',
+      q5_source: QUIZ_QUESTIONS[3].opts[quizAnswers[3]] || '',
+      q6_history: QUIZ_QUESTIONS[4].opts[quizAnswers[4]] || '',
+      q7_leaning: QUIZ_QUESTIONS[5].opts[quizAnswers[5]] || '',
+      q8_season: QUIZ_QUESTIONS[6].opts[quizAnswers[6]] || '',
+      q9_matters: QUIZ_QUESTIONS[7].opts[quizAnswers[7]] || '',
+      q10_govern: (quizAnswers[8] || []).map(idx => QUIZ_QUESTIONS[8].opts[idx]).join(','),
+      q11_looking: QUIZ_QUESTIONS[9].opts[quizAnswers[9]] || '',
+      q12_carrying: quizAnswers[10] || ''
     }
   });
 
@@ -3669,6 +3952,7 @@ function showCountdown(result, bundleKey){
   slideIn(body, `<div class="quiz-slide">
     <div class="reveal-beat">
       <div class="reveal-beat__bolt">&#9889;</div>
+      <div class="reveal-beat__text">Analyzing Your Pattern...</div>
     </div>
   </div>`);
 
@@ -3677,19 +3961,18 @@ function showCountdown(result, bundleKey){
     m.classList.add('result-mode');
     card.scrollTop=0;
     showFullResult(result, bundleKey);
-  },1400);
+  },1500);
 }
-
-let lastIdentity=null;
 
 /* 10-Section Result Page (S1-S9) */
 function showFullResult(result, bundleKey){
-  const d=AR[result.key], id=IC[result.id]||IC.all, bundle=BUNDLES[bundleKey], cfg=BUNDLE_CONFIG[bundleKey];
+  const d=AR[result.key], id=IC[IK[ans[4]]]||IC.all, bundle=BUNDLES[bundleKey], cfg=BUNDLE_CONFIG[bundleKey];
   const card=document.getElementById('quizCard');
   card.scrollTop=0;
 
   const ip=lastIdentity;
   const nameStr=(lastContactInfo&&lastContactInfo.first_name)?lastContactInfo.first_name:'';
+  const isSteward = result.id === 'steward';
 
   // Build consumption cost cards (S4)
   let costSection='';
@@ -3697,15 +3980,17 @@ function showFullResult(result, bundleKey){
   if(isWillpower){
     costSection=WILLPOWER_PANEL;
   } else {
-    let totalCost=0;
+    let totalLo=0,totalHi=0;
     const costCards=p1Ans.consumption.filter(c=>c!=='willpower').map(c=>{
       const cd=CONSUMPTION_COST[c];
       if(!cd) return '';
-      totalCost+=cd.amount;
-      return `<div class="cost-card"><div class="cost-card__label">${cd.label}</div><div class="cost-card__sub">${cd.sub}</div><div class="cost-card__amount">$${cd.amount}/mo</div></div>`;
+      totalLo+=cd.lo;totalHi+=cd.hi;
+      return `<div class="cost-card"><div class="cost-card__info"><div class="cost-card__label">${cd.label}</div><div class="cost-card__sub">${cd.sub}</div></div><div class="cost-card__amount">${fmtCost(cd.lo,cd.hi)}</div></div>`;
     }).join('');
+    const totalIsRange=totalLo!==totalHi;
+    const totalInner=totalIsRange?`<div class="cost-total__amount">${fmtCost(totalLo,totalHi)}</div>`:`<div class="cost-total__amount" id="costTotalNum">$${totalHi}/mo</div>`;
     costSection=`<div class="cost-cards">${costCards}</div>
-    <div class="cost-total"><div class="cost-total__label">Total Pattern Cost</div><div class="cost-total__amount" id="costTotalNum">$${totalCost}/mo</div></div>
+    <div class="cost-total"><div class="cost-total__label">Total Pattern Cost</div>${totalInner}</div>
     <p class="cost-real">${d.realCost}</p>`;
   }
 
@@ -3736,6 +4021,88 @@ function showFullResult(result, bundleKey){
       ${isCaffeineFree?'<div class="bundle-tile__caffeine-free">Caffeine-free</div>':''}
     </div>`;
   }).join('');
+
+  const email = (lastContactInfo && lastContactInfo.email) || '';
+  const name = (lastContactInfo && lastContactInfo.first_name) ? (lastContactInfo.first_name + ' ' + (lastContactInfo.last_name || '')) : '';
+  const skoolPreviewUrl = appendRedirectParams(getSkoolJoinUrl(), result.key, d.n.join(' '), email, name);
+
+  // Steward-only turn and reframe copy block
+  const stewardTurnHtml = isSteward ? `
+  <!-- ===== STEWARD TURN & REFRAME ===== -->
+  <div class="steward-turn">
+    <p class="steward-turn__body">"You didn't come for caffeine. You came to change something you're carrying."</p>
+    <div class="steward-reframe">That's not an energy problem. It's a governance one.</div>
+  </div>` : '';
+
+  // Decision path HTML based on fork
+  let decisionHtml = '';
+  if (isSteward) {
+    decisionHtml = `
+    <!-- ===== S7: DECISION BLOCK (dual path - Steward) ===== -->
+    <div class="s7-decision">
+      <div class="s7-decision__header">
+        <h2 class="s7-decision__title">THE ROUTINE IS YOURS.<br>CHOOSE HOW YOU START.</h2>
+        <p class="s7-decision__sub">Either way, your matched routine ships to your door. Stewards just never pay full price for it.</p>
+      </div>
+      <div class="s7-decision__paths">
+        <div class="s7-decision__path s7-decision__path--quiet">
+          <div class="s7-decision__path-label">START YOUR ROUTINE</div>
+          <p class="s7-decision__path-desc">Buy ${cfg.name} at full price. No account. No community. It ships, you start.</p>
+          <button class="btn-primary btn-primary--outline s7-decision__btn" onclick="openPurchasePopup()">Buy the Bundle</button>
+          <p class="s7-decision__path-note">U.S. shipping only.</p>
+        </div>
+        <div class="s7-decision__divider"><span>or</span></div>
+        <div class="s7-decision__path s7-decision__path--join">
+          <div class="s7-decision__path-label">JOIN THE STEWARDS FIRST</div>
+          <p class="s7-decision__path-desc">Free forever. Your ${MEMBER_DISCOUNT_PCT}% code is waiting inside, next to people who carry the same weight you do.</p>
+          <button class="btn-primary s7-decision__btn" onclick="joinStewards()">Join Free &#183; Get ${MEMBER_DISCOUNT_PCT}% Off</button>
+          <div class="s7-decision__chips"><span class="chip"><span class="chip__dot"></span>Free forever</span><span class="chip"><span class="chip__dot"></span>Real people, real weight</span><span class="chip"><span class="chip__dot"></span>Your ${MEMBER_DISCOUNT_PCT}% code inside</span></div>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    decisionHtml = `
+    <!-- ===== S7: DECISION BLOCK (single path - Customer) ===== -->
+    <div class="s7-decision">
+      <div class="s7-decision__header">
+        <h2 class="s7-decision__title">GET YOUR ROUTINE.</h2>
+        <p class="s7-decision__sub">Matched to your pattern. Get started today.</p>
+      </div>
+      <div style="text-align:center; margin-top:32px;">
+        <button class="btn-primary" onclick="openPurchasePopup()" style="padding:22px 48px; font-size:17px; justify-content:center;">Claim My Routine &amp; Start Today</button>
+      </div>
+    </div>`;
+  }
+
+  // Community block (Steward only)
+  const communityHtml = isSteward ? `
+  <!-- ===== S8: THE STEWARDS (community) ===== -->
+  <div class="s8-stewards">
+    <p class="s8-stewards__eyebrow">THE STEWARDS COMMUNITY</p>
+    <h3 class="s8-stewards__title">THE PRODUCTS GOVERN YOUR ENERGY.<br><span>THE STEWARDS GOVERN YOUR GROWTH.</span></h3>
+    <p class="s8-stewards__desc">A free community of people carrying work, family, and faith at the same time. Bible, body, and business. Patterns get named here, weight gets shared here, and nobody carries alone.</p>
+    <a href="${skoolPreviewUrl}" target="_blank" rel="noopener" class="s8-stewards__link" onclick="if(window._wTrack)window._wTrack('cta_click',{label:'Preview Community',location:'result'})">Preview the Community &#8594;</a>
+  </div>` : '';
+
+  // Final CTA block based on fork
+  let finalCtaHtml = '';
+  if (isSteward) {
+    finalCtaHtml = `
+    <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
+    <p class="s9-final__sub">You've seen the weight. You've seen the pattern. Start the routine today at full price, or join the Stewards free and start it for less.</p>
+    ${window._affiliateName?`<p class="s9-final__affiliate">Your friend ${window._affiliateName} invited you to join.</p>`:''}
+    <div class="s9-final__buttons">
+      <button class="btn-primary" onclick="joinStewards()">Join Free &#183; Get ${MEMBER_DISCOUNT_PCT}% Off</button>
+    </div>
+    <button class="s9-final__buy-text" onclick="openPurchasePopup()">Or buy ${cfg.name} now</button>`;
+  } else {
+    finalCtaHtml = `
+    <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
+    <p class="s9-final__sub">Start the routine today and govern your energy.</p>
+    <div class="s9-final__buttons">
+      <button class="btn-primary" onclick="openPurchasePopup()">Buy ${cfg.name}</button>
+    </div>`;
+  }
 
   card.innerHTML=`<button class="quiz-modal__close" onclick="closeQuiz()" style="position:sticky;top:16px;float:right;margin:16px 16px 0 0;z-index:10">&#10005;</button>
 <div class="result-container">
@@ -3771,6 +4138,8 @@ function showFullResult(result, bundleKey){
   <p class="s2-pattern__close">The pattern makes sense, given what you carry.</p>
 </div>
 
+${stewardTurnHtml}
+
 <!-- ===== S3: REMOVE SHAME (sparse, big type) ===== -->
 <div class="s3-shame">
   <h2 class="s3-shame__headline">YOU ARE NOT BROKEN.</h2>
@@ -3800,7 +4169,6 @@ function showFullResult(result, bundleKey){
 
 <!-- ===== S6: THE ROUTINE (timeline + bundle) ===== -->
 <div class="s6-routine">
-  <!-- S6A: Bridge sentence -->
   <p class="s6-routine__bridge">For ${ip.profile.name} running ${d.n.join(' ')}, ${bridgeSentence} and Hydration holds the floor under everything you carry.</p>
 
   <div class="s6-routine__header">
@@ -3809,10 +4177,8 @@ function showFullResult(result, bundleKey){
     <p class="s6-routine__sub">Two moves. Matched to your pattern. Built into the day you already live.</p>
   </div>
 
-  <!-- S6B: Timeline -->
   <div class="s6-timeline">${timelineSlots}</div>
 
-  <!-- S6C: Bundle card -->
   <div class="s6-bundle">
     <h3 class="s6-bundle__name">${cfg.name}</h3>
     <div class="s6-bundle__tiles">${bundleTiles}</div>
@@ -3821,47 +4187,24 @@ function showFullResult(result, bundleKey){
   </div>
 </div>
 
-<!-- ===== S7: DECISION BLOCK (dual path) ===== -->
-<div class="s7-decision">
-  <div class="s7-decision__header">
-    <h2 class="s7-decision__title">THE ROUTINE IS YOURS.<br>CHOOSE HOW YOU START.</h2>
-    <p class="s7-decision__sub">Either way, your matched routine ships to your door. Stewards just never pay full price for it.</p>
+<!-- ===== OPTIONAL: text my routine ===== -->
+<div class="s6b-phone">
+  <p class="s6b-phone__label">Want your routine and next steps texted to you? <span>Optional.</span></p>
+  <div class="s6b-phone__row">
+    <input type="tel" id="resultPhone" class="s6b-phone__input" placeholder="Phone (###-###-####)" autocomplete="tel" oninput="formatPhone(this)">
+    <button type="button" id="resultPhoneBtn" class="s6b-phone__btn" onclick="saveResultPhone()">Add</button>
   </div>
-  <div class="s7-decision__paths">
-    <div class="s7-decision__path s7-decision__path--quiet">
-      <div class="s7-decision__path-label">START YOUR ROUTINE</div>
-      <p class="s7-decision__path-desc">Buy ${cfg.name} at full price. No account. No community. It ships, you start.</p>
-      <button class="btn-primary btn-primary--outline s7-decision__btn" onclick="openPurchasePopup()">Buy the Bundle</button>
-      <p class="s7-decision__path-note">U.S. shipping only.</p>
-    </div>
-    <div class="s7-decision__divider"><span>or</span></div>
-    <div class="s7-decision__path s7-decision__path--join">
-      <div class="s7-decision__path-label">JOIN THE STEWARDS FIRST</div>
-      <p class="s7-decision__path-desc">Free forever. Your ${MEMBER_DISCOUNT_PCT}% code is waiting inside, next to people who carry the same weight you do.</p>
-      <button class="btn-primary s7-decision__btn" onclick="joinStewards()">Join Free &#183; Get ${MEMBER_DISCOUNT_PCT}% Off</button>
-      <div class="s7-decision__chips"><span class="chip"><span class="chip__dot"></span>Free forever</span><span class="chip"><span class="chip__dot"></span>Real people, real weight</span><span class="chip"><span class="chip__dot"></span>Your ${MEMBER_DISCOUNT_PCT}% code inside</span></div>
-    </div>
-  </div>
+  <p class="s6b-phone__note" id="resultPhoneNote">We will only use it to send your routine. No spam.</p>
 </div>
 
-<!-- ===== S8: THE STEWARDS (community) ===== -->
-<div class="s8-stewards">
-  <p class="s8-stewards__eyebrow">THE STEWARDS COMMUNITY</p>
-  <h3 class="s8-stewards__title">THE PRODUCTS GOVERN YOUR ENERGY.<br><span>THE STEWARDS GOVERN YOUR GROWTH.</span></h3>
-  <p class="s8-stewards__desc">A free community of people carrying work, family, and faith at the same time. Bible, body, and business. Patterns get named here, weight gets shared here, and nobody carries alone.</p>
-  <a href="${getSkoolJoinUrl()}" target="_blank" rel="noopener" class="s8-stewards__link" onclick="if(window._wTrack)window._wTrack('cta_click',{label:'Preview Community',location:'result'})">Preview the Community &#8594;</a>
-</div>
+${decisionHtml}
+
+${communityHtml}
 
 <!-- ===== S9: FINAL CTA + LEGAL ===== -->
 <div class="s9-final">
   <div class="s9-final__content">
-    <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
-    <p class="s9-final__sub">You've seen the weight. You've seen the pattern. Start the routine today at full price, or join the Stewards free and start it for less.</p>
-    ${window._affiliateName?`<p class="s9-final__affiliate">Your friend ${window._affiliateName} invited you to join.</p>`:''}
-    <div class="s9-final__buttons">
-      <button class="btn-primary" onclick="joinStewards()">Join Free &#183; Get ${MEMBER_DISCOUNT_PCT}% Off</button>
-    </div>
-    <button class="s9-final__buy-text" onclick="openPurchasePopup()">Or buy ${cfg.name} now</button>
+    ${finalCtaHtml}
     <button class="result-retake" onclick="retakeQuiz()">Retake the Energy Pattern Analysis</button>
   </div>
 </div>
@@ -3884,13 +4227,17 @@ function showFullResult(result, bundleKey){
     },300);
   }
 
-  // Dual-lane sticky bar
+  // Dual-lane/Single-lane sticky bar
   const existingSticky=document.getElementById('resultSticky');
   if(existingSticky)existingSticky.remove();
   const sticky=document.createElement('div');
-  sticky.className='result-sticky result-sticky--dual';
+  sticky.className=isSteward ? 'result-sticky result-sticky--dual' : 'result-sticky';
   sticky.id='resultSticky';
-  sticky.innerHTML=`<button class="result-sticky__buy btn-primary" onclick="openPurchasePopup()">Buy the Bundle</button><button class="result-sticky__join btn-primary btn-primary--outline" onclick="joinStewards()">Join Free</button>`;
+  if(isSteward){
+    sticky.innerHTML=`<button class="result-sticky__buy btn-primary" onclick="openPurchasePopup()">Buy the Bundle</button><button class="result-sticky__join btn-primary btn-primary--outline" onclick="joinStewards()">Join Free</button>`;
+  } else {
+    sticky.innerHTML=`<button class="result-sticky__buy btn-primary" onclick="openPurchasePopup()" style="width:100%; justify-content:center;">Buy the Bundle</button>`;
+  }
   document.body.appendChild(sticky);
 
   setTimeout(()=>{
@@ -4048,9 +4395,13 @@ function retakeQuiz(){
   const pp=document.getElementById('purchasePopup');
   if(pp)pp.remove();
   c.innerHTML=`<button class="quiz-modal__close" onclick="closeQuiz()">&#10005;</button><div class="quiz-modal__progress"><div class="quiz-modal__progress-fill" id="qmProgress"></div></div><div class="quiz-modal__body" id="qmBody"></div><div class="quiz-modal__footer" id="qmFooter"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" stroke="var(--lime)" stroke-width="1" stroke-linejoin="round"/></svg><span class="quiz-modal__footer-text">Private &#183; 2 minutes &#183; No fluff</span></div>`;
-  qS=0;ans=[-1,-1,-1,-1,-1];secondaryAns=null;lastContactInfo=null;
-  p1Ans={sex:null,age_band:null,relationship:null,kids_count:null,job_type:null,hours_band:null,consumption:[]};
-  c.scrollTop=0;renderQ(0);
+  qS=0;
+  quizAnswers=[null, null, null, null, null, null, null, null, [], null, ''];
+  secondaryAns=null;
+  lastContactInfo=null;
+  p1Ans={sex:'male',age_band:'35-44',relationship:'single',kids_count:0,job_type:'desk',hours_band:'40-50',consumption:[]};
+  c.scrollTop=0;
+  renderQ(0);
 }
 </script>
 </div>

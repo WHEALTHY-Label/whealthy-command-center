@@ -8250,7 +8250,7 @@ function parseRef(ref){
 
 async function fetchSingleChapter(book,chapter){
   const suffix = chapter ? '+' + chapter : '';
-  const url='https://bible-api.com/'+encodeURIComponent(book)+suffix;
+  const url='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/bible-verses?ref='+encodeURIComponent(chapter ? (book+' '+chapter) : book);
   const resp=await fetch(url);
   if(!resp.ok)throw new Error('API returned '+resp.status);
   const data=await resp.json();
@@ -8269,7 +8269,7 @@ async function fetchScripture(ref){
   const parsed=parseRef(ref);
   if(!parsed)throw new Error('Could not parse reference: '+ref);
 
-  // Fetch each chapter individually (bible-api.com fails on multi-chapter ranges)
+  // Fetch each chapter individually (kept for safety; the owned bible-verses endpoint also handles multi-chapter ranges in one call)
   const chapterResults=await Promise.all(
     parsed.chapters.map(ch=>fetchSingleChapter(parsed.book,ch))
   );
@@ -13549,7 +13549,7 @@ window.openVerse=async function(btn,ref){
   panel.classList.add('show');
   panel.innerHTML='<div class="vref">'+ref+'</div>'+skel('Opening the passage',[95,88,60]);
   try{
-    const r=await fetch('https://bible-api.com/'+encodeURIComponent(ref));
+    const r=await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/bible-verses?ref='+encodeURIComponent(ref));
     if(!r.ok)throw new Error();
     const d=await r.json();
     if(!d.verses||!d.verses.length)throw new Error();
