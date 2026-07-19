@@ -184,7 +184,27 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true, summary: {} })
+        body: JSON.stringify({
+          success: true,
+          members: { free: 18, paid: 40, purchasers: 20, conv: 0, dFree: 0, dPaid: 0, dPurchasers: 0, churned: 0, nurture: { queued: 0, sent: 0, joined: 0 } },
+          funnel: { stages: [] },
+          fasts: { started: 0, completed: 0, completionRate: 0, types: [], active: 0, endedEarly: 0, avgPct: 0, adherence: 0, avgDuration: 0 },
+          fastsExtra: { dropoff: [], weakRules: [], people: { started: 0, completed: 0, endedEarly: 0, active: 0, pct: 0 }, structureOnlyPct: 0 },
+          bundles: { suggested: [], purchased: [], matchRate: 0, top: { mark: '', name: '', rate: 0, purchased: 0, suggested: 0 } },
+          bundleOps: { claimRate: 0, pending: 0, confirmed: 0, shipped: 0, skipped: 0, subs: { active: 0, paused: 0, cancelled: 0, autoPct: 0 }, tryToMember: 0 },
+          memberHealth: { mrr: 0, activeUsers: 0, stickiness: 0, churn: 0, churned: 0, nurture: { queued: 0, sent: 0, joined: 0 } },
+          engagement: { completedFasts: 0, prayerAnswers: 0, journalEntries: 0, comfort: [], journalers: 0, leaderboard: [], entriesPerMember: 0, avgStreak: 0, scriptureEngagedPct: 0, avgInteractions: 0, scribe: { landedRate: 0, briefPct: 0 }, dailyLogs: { filed: 0, avgEnergy: 0, avgPresence: 0, powderPct: 0, skipPct: 0 } },
+          demo: { age: [], job: [], hours: [], consumption: [], sex: [['Men', 0], ['Women', 0]] },
+          tryOrders: [],
+          affiliates: { clicks: 0, signups: 0, sales: 0, top: [], registered: 0, active: 0, referred: 0, tryRefs: 0 },
+          quiz: { archetypes: [], seasons: [], pageViews: 0, starts: 0, completions: 0, dropoffs: 0, ctaClicks: 0 },
+          logs: [],
+          stewardLog: [],
+          record: { entries: 0, heavy: 1, win: 1, mixed: 1, burned: 0 },
+          recordExtra: { scribePct: 0, resurfaced: 0 },
+          growth: { labels: [] },
+          trends: { fastsStarted: [], fastsCompleted: [], orders: [], logsFiled: [], powderDays: [], entriesFiled: [], burned: [], durations: [] }
+        })
       });
     });
 
@@ -194,7 +214,6 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
     // Call getData via page evaluate to trigger fetch
     console.log("Triggering getData in admin analytics page...");
     await page.evaluate(async () => {
-      localStorage.setItem('wh_admin_key', 'admin1234');
       await getData('7d');
     });
     await page.waitForTimeout(1000);
@@ -212,7 +231,10 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
     if (statsRequestBody.email !== 'ignacio@thebizcofirm.com') {
       throw new Error("Request body email incorrect: " + statsRequestBody.email);
     }
-    console.log("✅ Verified: Admin analytics page correctly sends session email and token.");
+    if ('admin_key' in statsRequestBody) {
+      throw new Error("Request body contains retired admin_key parameter.");
+    }
+    console.log("✅ Verified: Admin analytics page correctly sends session email and token without prompt/key.");
 
     console.log("=== ALL ADMIN SURFACE & SECURITY TESTS PASSED ===");
     await browser.close();

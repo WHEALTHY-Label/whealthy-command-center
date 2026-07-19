@@ -566,7 +566,6 @@ h1,h2,h3{font-family:var(--font-display);text-transform:uppercase;letter-spacing
    - record.*: record_entries (tone, burned)
 ========================================================= */
 const LIVE_ENDPOINT = "https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats";
-const KEY_STORE = "wh_admin_key";
 const SUPABASE_URL = 'https://yzaxzmuuvozonhgwhlim.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXh6bXV1dm96b25oZ3dobGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDEwNTksImV4cCI6MjA4OTM3NzA1OX0.azWx9VrATCtci1Xzedm4NwozQRHVP8kfROZZSDmlaL8';
 const sb = (typeof window!=="undefined" && window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
@@ -575,15 +574,6 @@ const sb = (typeof window!=="undefined" && window.supabase && window.supabase.cr
    function (read-only aggregates over the real tables). Stewards arrive
    pre-anonymized as SW-numbers; names and emails never reach this page. */
 let STEWARD_LOG = [];   // filled from live payload
-
-function getAdminKey(forceAsk){
-  let k = localStorage.getItem(KEY_STORE);
-  if(!k || forceAsk){
-    k = prompt("Enter the WHEALTHY admin key:");
-    if(k){ k = k.trim(); localStorage.setItem(KEY_STORE, k); }
-  }
-  return k;
-}
 
 function dataStatus(text, isError){
   const b = document.getElementById("mockBadge");
@@ -594,9 +584,6 @@ function dataStatus(text, isError){
 }
 
 async function getData(range, bypassCache = false){
-  let key = getAdminKey(false);
-  if(!key){ dataStatus("Admin key required — refresh to enter it", true); return null; }
-
   let email = "";
   let token = "";
   if (sb) {
@@ -614,33 +601,33 @@ async function getData(range, bypassCache = false){
     email = localStorage.getItem('wh_steward_email') || '';
   }
 
-  for(let attempt = 0; attempt < 2; attempt++){
-    try{
-      const r = await fetch(LIVE_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-admin-email": email,
-          "Authorization": token ? `Bearer ${token}` : ""
-        },
-        body: JSON.stringify({range, admin_key: key, bypass_cache: bypassCache, email})
-      });
-      if(r.status === 401){
-        localStorage.removeItem(KEY_STORE);
-        key = getAdminKey(true);
-        if(!key){ dataStatus("Admin key rejected", true); return null; }
-        continue;
-      }
-      if(!r.ok) throw new Error("HTTP " + r.status);
-      const d = await r.json();
-      dataStatus("", false);
-      return d;
-    }catch(err){
-      dataStatus("Live data unavailable — check connection, then hit refresh", true);
+  if (!token) {
+    dataStatus("Unauthorized — please log into the WHEALTHY app first", true);
+    return null;
+  }
+
+  try{
+    const r = await fetch(LIVE_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-admin-email": email,
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({range, bypass_cache: bypassCache, email})
+    });
+    if(r.status === 401 || r.status === 403){
+      dataStatus("Unauthorized — Admin access required", true);
       return null;
     }
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const d = await r.json();
+    dataStatus("", false);
+    return d;
+  }catch(err){
+    dataStatus("Live data unavailable — check connection, then hit refresh", true);
+    return null;
   }
-  return null;
 }
 
 /* ========================= STATE ========================= */
@@ -649,7 +636,7 @@ let activeView = "overview";
 let currentData = null;
 let lastRefresh = Date.now();
 const $ = id => document.getElementById(id);
-const fmt = n => n.toLocaleString("en-US");
+const fmt = n => (n === undefined || n === null) ? "0" : n.toLocaleString("en-US");
 
 const VIEW_TITLES = {overview:"Overview",members:"Members",quiz:"Quiz & Funnel",fasts:"The Fast",bundles:"Bundles",affiliates:"Affiliates",engagement:"Engagement",record:"The Record"};
 
