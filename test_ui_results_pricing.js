@@ -175,14 +175,14 @@ console.log("=== RUNNING QUIZ RESULTS PRICING TESTS ===");
     if (chargeRetail !== '$84.98') throw new Error("Incorrect Charge retail price: " + chargeRetail);
     if (chargeMember !== '$54.00/mo') throw new Error("Incorrect Charge member price: " + chargeMember);
 
-    // Verify 1 iframe and 1 placeholder
+    // Verify 2 iframes and 0 placeholders
     const iframeCount = await page.locator('.review-videos__frame-wrap iframe').count();
     const placeholderCount = await page.locator('.review-videos__placeholder').count();
     console.log(`Video items: Iframe count=${iframeCount}, Placeholder count=${placeholderCount}`);
-    if (iframeCount !== 1) throw new Error(`Expected exactly 1 YouTube review iframe for Charge Powder, got ${iframeCount}`);
-    if (placeholderCount !== 1) throw new Error(`Expected exactly 1 review placeholder for Hydration Powder, got ${placeholderCount}`);
+    if (iframeCount !== 2) throw new Error(`Expected exactly 2 YouTube review iframes, got ${iframeCount}`);
+    if (placeholderCount !== 0) throw new Error(`Expected exactly 0 review placeholders, got ${placeholderCount}`);
 
-    console.log("✅ Verified: 'charge' review section renders 1 video iframe + 1 placeholder correctly.");
+    console.log("✅ Verified: 'charge' review section renders 2 video iframes + 0 placeholders correctly.");
   }
 
   try {
