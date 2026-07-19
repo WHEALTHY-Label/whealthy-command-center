@@ -13207,7 +13207,9 @@ function voiceNav(destination) {
   const map = {
     dash: 'dash', record: 'record', fast: 'fast',
     community: 'community', bible: 'bible',
-    affiliate: 'affiliate', leaderboard: 'leaderboard', claim: 'claim'
+    affiliate: 'affiliate', leaderboard: 'leaderboard', claim: 'claim',
+    prayer: 'prayer', wall: 'wall', testimony: 'testimony', me: 'me',
+    portal: 'portal', tryall: 'tryall'
   };
   const dest = map[(destination || '').toLowerCase()] || 'dash';
   const el = document.getElementById('nav' + dest.charAt(0).toUpperCase() + dest.slice(1));
@@ -16081,7 +16083,7 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
