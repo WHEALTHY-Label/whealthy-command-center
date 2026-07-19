@@ -13901,10 +13901,10 @@ window.loadDashboardCircle = async function() {
       const isShepherd = m.role === 'shepherd';
       
       html += `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:10px; background:${isSelf ? 'rgba(204,255,0,0.04)' : 'rgba(255,255,255,0.01)'}; border: 1px solid ${isSelf ? 'rgba(204,255,0,0.2)' : 'rgba(255,255,255,0.03)'};">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 12px; padding:10px 12px; border-radius:10px; background:${isSelf ? 'rgba(204,255,0,0.04)' : 'rgba(255,255,255,0.01)'}; border: 1px solid ${isSelf ? 'rgba(204,255,0,0.2)' : 'rgba(255,255,255,0.03)'};">
           <div style="display:flex; align-items:center; gap:10px;">
-            <div style="font-size:13.5px; font-weight:600; color:${isSelf ? 'var(--lime)' : '#fff'}; display:flex; align-items:center; gap:6px;">
-              ${esc(m.name)}
+            <div style="font-size:13.5px; font-weight:600; color:${isSelf ? 'var(--lime)' : '#fff'}; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span style="white-space:nowrap;">${esc(m.name)}</span>
               ${isShepherd ? `<span style="font-size:9px; background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3); padding:1px 5px; border-radius:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Shepherd</span>` : ''}
               ${isSelf ? `<span style="font-size:9px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); padding:1px 5px; border-radius:4px; font-weight:600; text-transform:uppercase;">You</span>` : ''}
             </div>
