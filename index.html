@@ -10872,18 +10872,20 @@ function waChooseProfile(p){
 }
 
 function waPaintSuggest(h, data){
-  if (data && data.found === true && data.profile){
-    const s = waEl('waSuggest');
-    if (!s) return;
-    s.textContent = '';
-    s.appendChild(waBuildOption(data.profile));
+  const s = waEl('waSuggest');
+  if (!s) return;
+  s.textContent = '';
+  if (data && Array.isArray(data.results) && data.results.length > 0){
+    data.results.forEach(item => {
+      s.appendChild(waBuildOption(item));
+    });
     s.classList.add('is-open');
     const i = waEl('waHandle');
     if (i) i.setAttribute('aria-expanded','true');
     waOptions = Array.prototype.slice.call(s.querySelectorAll('.wa-opt'));
     waCursor = -1;
   } else {
-    waNote('No public Skool profile at @' + h + '. Check the spelling, or continue and sign in.');
+    waNote('No match yet — keep typing, or press Find my profile.');
   }
 }
 
@@ -10905,10 +10907,10 @@ async function waLiveLookup(h){
 
   let res, data;
   try {
-    res = await fetch(FN_BASE + '/skool-profile-lookup', {
+    res = await fetch(FN_BASE + '/skool-member-search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ handle: h }),
+      body: JSON.stringify({ q: h }),
       signal: ctl ? ctl.signal : undefined
     });
     data = await res.json().catch(() => ({}));
@@ -10951,11 +10953,7 @@ function waOnHandleInput(){
     waNote('That looks like an email. Your Skool handle is the @name at the end of your profile link.');
     return;
   }
-  if (h.length < 3){ waCloseSuggest(); return; }
-  if (!waValidHandle(h)){
-    waNote('Handles use letters, numbers and hyphens only.');
-    return;
-  }
+  if (h.length < 2){ waCloseSuggest(); return; }
   if (waCache.has(h)){ waPaintSuggest(h, waCache.get(h)); return; }
   if (waAutoPaused){ waNote('Too many lookups. Give it a moment, then press Find my profile.'); return; }
 
@@ -11635,6 +11633,7 @@ function waWire(){
   on('waThatsMeBtn', 'click', waGoAccess);
   on('waNotMeBtn', 'click', () => {
     waState.profile = null;
+    waCloseSuggest();
     waShowScreen('locate');
     const h = waEl('waHandle');
     if (h){ h.value = ''; setTimeout(() => { try{ h.focus(); }catch(e){} }, 60); }
