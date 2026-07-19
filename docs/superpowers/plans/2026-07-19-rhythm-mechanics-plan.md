@@ -298,7 +298,48 @@ ALTER TABLE circle_prays ENABLE ROW LEVEL SECURITY;
 2. The Governor line passes the server constitution regex (no banned words, no em dashes).
 3. Tab screenshots at three widths; every old deep link still resolves.
 
-**GATE:** program complete. Delete all qa fixture rows (`source = 'qa-test'` members and everything keyed to them) and confirm counts return to baseline.
+**GATE:** program complete for the disciplines core. Page 8 is optional timing and never delays Pages 0 through 7. Delete all qa fixture rows (`source = 'qa-test'` members and everything keyed to them) and confirm counts return to baseline.
+
+---
+
+# PAGE 8 | FROM THE COMMUNITY, the Skool window (owners: Claude backend, then Antigravity UI. Optional timing, never blocks the disciplines core)
+
+A read-only feed of recent Skool community posts inside the app, each card deep-linking to the real post. Members only.
+
+**The identity rule (settled by Ignacio, July 19).** Everyone in the community is a member. Member is a community relationship; customer and wholesaler are commerce relationships. Commerce never grants community surfaces. This feed renders for `member_status = 'member'` and simply does not exist for anyone else. One mode, no teaser.
+
+**Migration `create_skool_posts_cache`:**
+```sql
+CREATE TABLE skool_posts (
+  id text primary key,          -- skool post id
+  slug text not null,           -- permalink piece: skool.com/bakndcreator/{slug}
+  title text not null,
+  excerpt text,                 -- first ~200 chars of content
+  author_name text,             -- display name only, as shown inside skool
+  likes int default 0,
+  comments int default 0,
+  posted_at timestamptz,
+  synced_at timestamptz not null default now()
+);
+ALTER TABLE skool_posts ENABLE ROW LEVEL SECURITY;
+```
+
+**Function `skool-feed-sync`** (scheduled, every 15 minutes via pg_cron). Holds the bot seat's cookie as secret `SKOOL_BOT_COOKIE`, never the founder's login. Fetches page one of the community feed through the documented internal endpoints, upserts into `skool_posts`, prunes to the newest 50. On any failure it changes nothing: the cache keeps serving yesterday's posts, the app never errors. Read-only against Skool, one fetch per interval, the access pattern of a single person checking the feed.
+
+**Function `skool-feed`.** POST `{ email }` → verifies `member_status = 'member'` → returns the cached posts with permalinks built as `https://www.skool.com/bakndcreator/{slug}`. Non-members receive `{ "feed": [] }`, HTTP 200, no explanation.
+
+**UI.** A card on the dashboard community area titled "From the Community": title, author first name, like and comment counts, tap opens the post in Skool in a new tab. Naming note: this is the window into Skool; the Wall remains the in-app prayer wall. The two are never conflated.
+
+**Report:** template, plus the sync schedule as created.
+
+**VERIFY:**
+1. Sync run populates rows; `select count(*) from skool_posts` ≥ 1; excerpt lengths ≤ 220 chars.
+2. `skool-feed` for a qa member with `member_status = 'lead'` → empty feed, 200.
+3. Permalink spot check: two returned URLs opened manually land on the correct Skool posts.
+4. Kill test: sync run with an invalid cookie leaves the cache intact and the feed serving.
+5. UI screenshots at three widths.
+
+**GATE:** pass. Program fully complete.
 
 ---
 
