@@ -27,6 +27,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
+.results-price{max-width:480px;margin:32px auto;padding:28px 24px;border:1px solid rgba(204,255,0,0.25);border-radius:16px;background:rgba(204,255,0,0.03);text-align:center}
+.results-price__label{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+.results-price__hero{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.results-price__amount{font-family:var(--font-display);font-size:52px;font-weight:700;color:var(--lime);line-height:1}
+.results-price__per{font-size:18px;color:rgba(255,255,255,0.6)}
+.results-price__unlock{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;margin:12px auto 0;max-width:360px}
+.results-price__strike{text-decoration:line-through;color:rgba(255,255,255,0.4)}
+.results-price__rows{margin-top:20px;text-align:left;border-top:1px solid rgba(255,255,255,0.08);padding-top:12px}
+.results-price__row{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:rgba(255,255,255,0.6);padding:7px 0}
+.results-price__row--you{color:#fff;font-weight:700}
+.results-price__row--you span:last-child{color:var(--lime)}
+.results-price__foot{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.42);line-height:1.5}
+@media(max-width:520px){.results-price{margin:24px 16px;padding:22px 18px}.results-price__amount{font-size:42px}}
+
 /* ============================================
    SHIPPING NOTICES
    ============================================ */
@@ -3012,6 +3026,31 @@ const BUNDLE_CONFIG={
   'charge':{name:'The Charge Routine',checkoutUrl:'https://whealthylabel.com/new/charge-powder-hydration',priceFull:null}
 };
 
+const BUNDLE_PRICES = {
+  'genius-joe': { tryPrice: 64.00, retail: 84.98, member: 57.60 },
+  'boss': { tryPrice: 55.00, retail: 84.98, member: 49.50 },
+  'genius-guice': { tryPrice: 60.00, retail: 84.98, member: 54.00 },
+  'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 }
+};
+
+const money = function(val) { return '$' + val.toFixed(2); };
+
+function resultsPriceBlock(bundleKey){
+  var bp = BUNDLE_PRICES[bundleKey] || BUNDLE_PRICES['charge'];
+  return ''
+  + '<div class="results-price">'
+  +   '<div class="results-price__label">Your member price</div>'
+  +   '<div class="results-price__hero"><span class="results-price__amount">' + money(bp.member) + '</span><span class="results-price__per">/mo</span></div>'
+  +   '<div class="results-price__unlock">Join the Stewards free to unlock your 10% code. Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>.</div>'
+  +   '<div class="results-price__rows">'
+  +     '<div class="results-price__row"><span>Both products, bought separately</span><span class="results-price__strike">' + money(bp.retail) + '/mo</span></div>'
+  +     '<div class="results-price__row"><span>The bundle (non-member)</span><span>' + money(bp.tryPrice) + '/mo</span></div>'
+  +     '<div class="results-price__row results-price__row--you"><span>Your price as a member</span><span>' + money(bp.member) + '/mo</span></div>'
+  +   '</div>'
+  +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping · billed monthly · cancel anytime · ' + money(bp.retail - bp.member) + '/mo under buying them apart</div>'
+  + '</div>';
+}
+
 const SEASON_DESCRIPTORS={
   'building':'Load is forming. What you govern now compounds.',
   'carrying':'Real weight, every day. The season most people carry alone.',
@@ -3967,6 +4006,7 @@ function showCountdown(result, bundleKey){
 /* 10-Section Result Page (S1-S9) */
 function showFullResult(result, bundleKey){
   const d=AR[result.key], id=IC[IK[ans[4]]]||IC.all, bundle=BUNDLES[bundleKey], cfg=BUNDLE_CONFIG[bundleKey];
+  const bp = BUNDLE_PRICES[bundleKey] || BUNDLE_PRICES['charge'];
   const card=document.getElementById('quizCard');
   card.scrollTop=0;
 
@@ -4048,14 +4088,14 @@ function showFullResult(result, bundleKey){
         <div class="s7-decision__path s7-decision__path--quiet">
           <div class="s7-decision__path-label">START YOUR ROUTINE</div>
           <p class="s7-decision__path-desc">Buy ${cfg.name} at full price. No account. No community. It ships, you start.</p>
-          <button class="btn-primary btn-primary--outline s7-decision__btn" onclick="openPurchasePopup()">Buy the Bundle</button>
+          <button class="btn-primary btn-primary--outline s7-decision__btn" onclick="openPurchasePopup()">Buy the Bundle &middot; ${money(bp.tryPrice)}/mo</button>
           <p class="s7-decision__path-note">U.S. shipping only.</p>
         </div>
         <div class="s7-decision__divider"><span>or</span></div>
         <div class="s7-decision__path s7-decision__path--join">
           <div class="s7-decision__path-label">JOIN THE STEWARDS FIRST</div>
           <p class="s7-decision__path-desc">Free forever. Your ${MEMBER_DISCOUNT_PCT}% code is waiting inside, next to people who carry the same weight you do.</p>
-          <button class="btn-primary s7-decision__btn" onclick="joinStewards()">Join Free &#183; Get ${MEMBER_DISCOUNT_PCT}% Off</button>
+          <button class="btn-primary s7-decision__btn" onclick="joinStewards()">Join Free &middot; ${money(bp.member)}/mo &middot; 10% off</button>
           <div class="s7-decision__chips"><span class="chip"><span class="chip__dot"></span>Free forever</span><span class="chip"><span class="chip__dot"></span>Real people, real weight</span><span class="chip"><span class="chip__dot"></span>Your ${MEMBER_DISCOUNT_PCT}% code inside</span></div>
         </div>
       </div>
@@ -4069,7 +4109,7 @@ function showFullResult(result, bundleKey){
         <p class="s7-decision__sub">Matched to your pattern. Get started today.</p>
       </div>
       <div style="text-align:center; margin-top:32px;">
-        <button class="btn-primary" onclick="openPurchasePopup()" style="padding:22px 48px; font-size:17px; justify-content:center;">Claim My Routine &amp; Start Today</button>
+        <button class="btn-primary" onclick="openPurchasePopup()" style="padding:22px 48px; font-size:17px; justify-content:center;">Claim My Routine &amp; Start Today &middot; ${money(bp.tryPrice)}/mo</button>
       </div>
     </div>`;
   }
@@ -4092,15 +4132,15 @@ function showFullResult(result, bundleKey){
     <p class="s9-final__sub">You've seen the weight. You've seen the pattern. Start the routine today at full price, or join the Stewards free and start it for less.</p>
     ${window._affiliateName?`<p class="s9-final__affiliate">Your friend ${window._affiliateName} invited you to join.</p>`:''}
     <div class="s9-final__buttons">
-      <button class="btn-primary" onclick="joinStewards()">Join Free &#183; Get ${MEMBER_DISCOUNT_PCT}% Off</button>
+      <button class="btn-primary" onclick="joinStewards()">Join Free &middot; ${money(bp.member)}/mo &middot; 10% off</button>
     </div>
-    <button class="s9-final__buy-text" onclick="openPurchasePopup()">Or buy ${cfg.name} now</button>`;
+    <button class="s9-final__buy-text" onclick="openPurchasePopup()">Or buy ${cfg.name} now &middot; ${money(bp.tryPrice)}/mo</button>`;
   } else {
     finalCtaHtml = `
     <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
     <p class="s9-final__sub">Start the routine today and govern your energy.</p>
     <div class="s9-final__buttons">
-      <button class="btn-primary" onclick="openPurchasePopup()">Buy ${cfg.name}</button>
+      <button class="btn-primary" onclick="openPurchasePopup()">Buy ${cfg.name} &middot; ${money(bp.tryPrice)}/mo</button>
     </div>`;
   }
 
@@ -4186,6 +4226,8 @@ ${stewardTurnHtml}
     <div class="s6-bundle__shipping">Ships to U.S. addresses only</div>
   </div>
 </div>
+
+${resultsPriceBlock(bundleKey)}
 
 <!-- ===== OPTIONAL: text my routine ===== -->
 <div class="s6b-phone">

@@ -19,6 +19,19 @@
   --green:#00e676;--green-soft:rgba(0,230,118,0.12);
   --amber:#ffb300;--amber-soft:rgba(255,179,0,0.08);
 }
+.results-price{max-width:480px;margin:32px auto;padding:28px 24px;border:1px solid rgba(204,255,0,0.25);border-radius:16px;background:rgba(204,255,0,0.03);text-align:center}
+.results-price__label{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+.results-price__hero{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.results-price__amount{font-family:var(--font-display);font-size:52px;font-weight:700;color:var(--lime);line-height:1}
+.results-price__per{font-size:18px;color:rgba(255,255,255,0.6)}
+.results-price__unlock{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;margin:12px auto 0;max-width:360px}
+.results-price__strike{text-decoration:line-through;color:rgba(255,255,255,0.4)}
+.results-price__rows{margin-top:20px;text-align:left;border-top:1px solid rgba(255,255,255,0.08);padding-top:12px}
+.results-price__row{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:rgba(255,255,255,0.6);padding:7px 0}
+.results-price__row--you{color:#fff;font-weight:700}
+.results-price__row--you span:last-child{color:var(--lime)}
+.results-price__foot{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.42);line-height:1.5}
+@media(max-width:520px){.results-price{margin:24px 16px;padding:22px 18px}.results-price__amount{font-size:42px}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden;-webkit-text-size-adjust:100%}
 body{font-family:var(--font-body);background:var(--black);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100svh;padding-bottom:env(safe-area-inset-bottom)}
@@ -15813,6 +15826,30 @@ window.copyAff=function(index,btnEl){
 };
 
 /* ================== CLAIM BUNDLE ================== */
+var BUNDLE_PRICES = {
+  'genius-joe': { tryPrice: 64.00, retail: 84.98, member: 57.60 },
+  'boss': { tryPrice: 55.00, retail: 84.98, member: 49.50 },
+  'genius-guice': { tryPrice: 60.00, retail: 84.98, member: 54.00 },
+  'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 }
+};
+var money = function(val) { return '$' + val.toFixed(2); };
+
+function resultsPriceBlock(bundleKey){
+  var bp = BUNDLE_PRICES[bundleKey] || BUNDLE_PRICES['charge'];
+  return ''
+  + '<div class="results-price">'
+  +   '<div class="results-price__label">Your member price</div>'
+  +   '<div class="results-price__hero"><span class="results-price__amount">' + money(bp.member) + '</span><span class="results-price__per">/mo</span></div>'
+  +   '<div class="results-price__unlock">Join the Stewards free to unlock your 10% code. Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>.</div>'
+  +   '<div class="results-price__rows">'
+  +     '<div class="results-price__row"><span>Both products, bought separately</span><span class="results-price__strike">' + money(bp.retail) + '/mo</span></div>'
+  +     '<div class="results-price__row"><span>The bundle (non-member)</span><span>' + money(bp.tryPrice) + '/mo</span></div>'
+  +     '<div class="results-price__row results-price__row--you"><span>Your price as a member</span><span>' + money(bp.member) + '/mo</span></div>'
+  +   '</div>'
+  +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping · billed monthly · cancel anytime · ' + money(bp.retail - bp.member) + '/mo under buying them apart</div>'
+  + '</div>';
+}
+
 var CC_BUNDLES=[
   {
     key: 'genius-joe',
@@ -16155,14 +16192,7 @@ function renderClaimPage(){
 
   // Dynamic Product Cards Grid Update
   var activeB = CC_BUNDLES.find(function(b){return b.key===selectedBundle})||CC_BUNDLES[3];
-  var BUNDLE_PRICES = {
-    'genius-joe': { tryPrice: 64.00, retail: 84.98, member: 57.60 },
-    'boss': { tryPrice: 55.00, retail: 84.98, member: 49.50 },
-    'genius-guice': { tryPrice: 60.00, retail: 84.98, member: 54.00 },
-    'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 }
-  };
   var bp = BUNDLE_PRICES[selectedBundle] || BUNDLE_PRICES['charge'];
-  var money = function(val) { return '$' + val.toFixed(2); };
 
   if(actionCard) {
     actionCard.innerHTML = '<button class="btn-lime" id="claimConfirmBtn" onclick="confirmClaim()" style="width:100%">Start My ' + activeB.name.replace(' + Hydration', '') + ' Routine</button>' +
