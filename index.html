@@ -1386,6 +1386,289 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
   border: 1px solid rgba(255, 255, 255, 0.04);
   color: transparent;
 }
+
+/* ── Guided Tour & First Steps ── */
+.tour-dim-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 9, 0.85);
+  z-index: 10000001;
+  pointer-events: auto;
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+.tour-dim-overlay.active {
+  display: block;
+  opacity: 1;
+}
+.tour-spotlight-active {
+  position: relative !important;
+  z-index: 10000002 !important;
+  outline: 3px solid #ccff00 !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 25px rgba(204,255,0,0.8) !important;
+  transition: outline 0.2s ease, box-shadow 0.2s ease !important;
+}
+.tour-card {
+  position: fixed;
+  z-index: 10000003;
+  width: 380px;
+  background: #121316;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  color: #f0f1f3;
+  font-family: 'DM Sans', sans-serif;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: auto;
+  display: none;
+}
+.tour-card.active {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}
+.tour-card__title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.tour-card__body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(240, 241, 243, 0.8);
+  margin-bottom: 20px;
+}
+.tour-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tour-card__dots {
+  display: flex;
+  gap: 4px;
+}
+.tour-card__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.2s ease;
+}
+.tour-card__dot.active {
+  background: #ccff00;
+}
+.tour-card__nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tour-card__btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tour-card__btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.tour-card__btn--next {
+  background: #ccff00;
+  border-color: #ccff00;
+  color: #080809;
+  font-weight: 600;
+}
+.tour-card__btn--next:hover {
+  background: #ddff33;
+  border-color: #ddff33;
+}
+.tour-card__skip {
+  color: rgba(255, 255, 255, 0.4);
+  background: none;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+.tour-card__skip:hover {
+  color: #fff;
+}
+
+/* First Steps Checklist Card */
+.first-steps-card {
+  background: rgba(204, 255, 0, 0.02);
+  border: 1px solid rgba(204, 255, 0, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease, margin-bottom 0.5s ease;
+}
+.first-steps-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.first-steps-card__title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+}
+.first-steps-card__title span {
+  color: #ccff00;
+}
+.first-steps-card__progress-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+.first-steps-card__sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.first-steps-card__bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.first-steps-card__bar {
+  height: 100%;
+  background: #ccff00;
+  width: 0%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+}
+.first-steps-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.first-steps-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.first-steps-card__row.completed {
+  background: rgba(204, 255, 0, 0.02);
+  border-color: rgba(204, 255, 0, 0.15);
+}
+.first-steps-card__row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.first-steps-card__checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  font-size: 11px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+.first-steps-card__row.completed .first-steps-card__checkbox {
+  background: #ccff00;
+  border-color: #ccff00;
+  color: #080809;
+}
+.first-steps-card__row-text {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.3s ease;
+}
+.first-steps-card__row.completed .first-steps-card__row-text {
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: line-through;
+}
+.first-steps-card__go {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ccff00;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: gap 0.2s ease;
+}
+.first-steps-card__go:hover {
+  gap: 8px;
+}
+.first-steps-card__footer {
+  margin-top: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+}
+.first-steps-card__footer span {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: underline;
+}
+.first-steps-card__footer span:hover {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .tour-card {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    border-radius: 20px 20px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    padding: 24px 20px;
+    box-sizing: border-box;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+  }
+  .tour-card.active {
+    transform: translateY(0);
+  }
+}
 </style>
 </head>
 <body>
@@ -1724,14 +2007,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
       <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
-      <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)"><span class="si-dot"></span> At a Glance</button>
+      <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)" style="display:none"><span class="si-dot"></span> At a Glance</button>
       <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> The Record</button>
       
       <!-- Community Group -->
       <button class="sidebar-item" id="parentCommunity" onclick="toggleSidebarGroup(this)"><span class="si-dot"></span> Community <span class="si-chevron">&#9656;</span></button>
       <div class="sidebar-sub-nav">
         <button class="sidebar-sub-item" id="navCommunity" onclick="go('community',this)">Post Wall</button>
-        <a href="https://www.skool.com/bakndcreator" target="_blank" rel="noopener" class="sidebar-sub-item" style="text-decoration:none;">Enter Community</a>
+        <a href="https://www.skool.com/bakndcreator" target="_blank" rel="noopener" class="sidebar-sub-item" id="navEnterCommunity" style="text-decoration:none;">Enter Community</a>
       </div>
 
       <!-- Section 2 — Disciplines -->
@@ -1763,6 +2046,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <div class="nav-section-title">More</div>
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Center</button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
+      <button class="sidebar-item" id="navRetakeTour" onclick="startGuidedTour(true)"><span class="si-dot"></span> Retake the Tour</button>
       <button class="sidebar-item" id="navAdmin" onclick="go('admin',this)" style="display: none;"><span class="si-dot"></span> Admin</button>
     </nav>
     <div class="sidebar-footer">
@@ -4240,6 +4524,9 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
             handlePrayClick: async function(postId, btn, event) {
               event.stopPropagation();
+              if (typeof updateFirstStepFlag === 'function') {
+                updateFirstStepFlag('wall');
+              }
               
               // Debounce check: block rapid clicks
               const now = Date.now();
@@ -8189,6 +8476,10 @@ window.logPrayerRequest = async function() {
     const chk = document.getElementById('bible_taskCommunityCheck');
     if (chk) chk.classList.add('checked');
 
+    if (typeof updateFirstStepFlag === 'function') {
+      updateFirstStepFlag('wall');
+    }
+
     if (typeof fetchBibleFeed === 'function') {
       await fetchBibleFeed();
     }
@@ -11558,6 +11849,8 @@ async function waRunGate(emailArg){
         if (vr.ok) {
           const vd = await vr.json();
           window.ADMIN_ROLE = vd.admin_role || null;
+          window.TOUR_DONE_AT = vd.tour_done_at || null;
+          window.FIRST_STEPS = vd.first_steps || {};
           const adminBtn = document.getElementById('navAdmin');
           if (adminBtn) {
             if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
@@ -11585,6 +11878,14 @@ async function waRunGate(emailArg){
       await loadAndInit();
       if (window.ME && typeof window.ME.recomputeBadges === 'function') {
         window.ME.recomputeBadges();
+      }
+      
+      if (!window.TOUR_DONE_AT) {
+        setTimeout(function() {
+          if (typeof startGuidedTour === 'function') {
+            startGuidedTour();
+          }
+        }, 1500);
       }
       return;
     }
@@ -12642,6 +12943,7 @@ function go(view,el,label){
     try { reloadLedger(); } catch(e) {}
   }
   try { window.updateSurfaceQuietStates(); } catch(e) {}
+  try { reportFirstStepVisit(view); } catch(e) {}
   window.scrollTo({top:0});
 }
 window.go=go;
@@ -14084,6 +14386,9 @@ function renderDash(){
      '</div>';
 
   h+='</div></div>';
+
+  /* ── FIRST STEPS CHECKLIST CARD ── */
+  h += (typeof window.renderFirstStepsCard === 'function') ? window.renderFirstStepsCard() : '';
 
   /* ── STEWARD CIRCLE CARD CONTAINER ── */
   h+='<div id="dashCircleContainer" style="margin-top:24px"></div>';
@@ -16974,5 +17279,644 @@ async function loadAndInit(){
   .capture-sheet-overlay{right:10px !important;bottom:88px !important}
 }
 </style>
+
+<!-- ═══ GUIDED TOUR + FIRST STEPS ENGINE ═══ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ────────── CONFIG: The 7 First Steps keys ────────── */
+  var FS_KEYS = ['bundle','word','wall','record','community','fast','code'];
+
+  /* ────────── FIRST STEPS CARD RENDERER ────────── */
+  window.renderFirstStepsCard = function() {
+    var fs = window.FIRST_STEPS || {};
+    var done = 0;
+    FS_KEYS.forEach(function(k) { if (fs[k]) done++; });
+
+    // Don't show the card if the tour hasn't been taken yet and no steps exist,
+    // or if all 7 are complete (card collapses permanently)
+    if (done >= 7) return '';
+    // Only show after tour has been triggered (done_at set, or at least 1 step done)
+    if (!window.TOUR_DONE_AT && done === 0) return '';
+
+    var archName = 'Steward';
+    if (window.REC) {
+      archName = window.REC.pattern_name || window.REC.archetype_name || window.REC.archetype || window.REC.pattern || 'Steward';
+    }
+    archName = archName.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+
+    var pct = Math.round((done / 7) * 100);
+    var h = '';
+    h += '<div id="firstStepsCard" class="first-steps-card g-card" style="margin-top:24px; border: 1px solid rgba(204,255,0,0.12); background: radial-gradient(circle at top left, rgba(204,255,0,0.03), transparent 60%), #0e1013;">';
+    h += '<div class="first-steps-card__header">';
+    h += '<h3 class="first-steps-card__title">First Steps · <span>' + archName + '</span></h3>';
+    h += '<span class="first-steps-card__progress-text">' + done + ' of 7</span>';
+    h += '</div>';
+    h += '<div class="first-steps-card__sub">Walk the house once. Each step checks itself off as you live it.</div>';
+    h += '<div class="first-steps-card__bar-wrap"><div class="first-steps-card__bar" style="width:' + pct + '%"></div></div>';
+    h += '<div class="first-steps-card__list">';
+
+    var steps = [
+      { key: 'bundle',    label: 'Claim your monthly bundle',    view: 'claim',     nav: 'navClaim' },
+      { key: 'word',      label: "Open today's Word",            view: 'bible',     nav: 'navBible' },
+      { key: 'wall',      label: 'Lift one prayer on the Wall',  view: 'wall',      nav: 'navWall' },
+      { key: 'record',    label: "File tonight's Record entry",  view: 'record',    nav: 'navRecord' },
+      { key: 'community', label: 'Step into the Community',      view: 'community', nav: 'navCommunity' },
+      { key: 'fast',      label: 'Start (or mark) your fast',    view: 'fast',      nav: 'navFast' },
+      { key: 'code',      label: 'Grab your 10% member code',   view: 'affiliate', nav: 'navAffiliate' }
+    ];
+
+    steps.forEach(function(s) {
+      var checked = !!fs[s.key];
+      h += '<div class="first-steps-card__row' + (checked ? ' completed' : '') + '" data-fs-key="' + s.key + '">';
+      h += '<div class="first-steps-card__row-left">';
+      h += '<div class="first-steps-card__checkbox">' + (checked ? '✓' : '') + '</div>';
+      h += '<span class="first-steps-card__row-text">' + s.label + '</span>';
+      h += '</div>';
+      if (!checked) {
+        h += '<span class="first-steps-card__go" onclick="go(\'' + s.view + '\', document.getElementById(\'' + s.nav + '\'))">Go →</span>';
+      }
+      h += '</div>';
+    });
+
+    h += '</div>'; // list
+    h += '<div class="first-steps-card__footer">Finish the walk, run the rhythm. · <span onclick="startGuidedTour(true)">Retake the tour</span></div>';
+    h += '</div>'; // card
+
+    return h;
+  };
+
+  /* ────────── FIRST STEPS: AUTO-REPORTING ON VIEW NAVIGATION ────────── */
+  var FS_VIEW_MAP = {
+    'claim':     'bundle',
+    'bible':     'word',
+    'wall':      'wall',
+    'record':    'record',
+    'community': 'community',
+    'fast':      'fast',
+    'affiliate': 'code'
+  };
+  var _fsReportPending = false;
+
+  window.reportFirstStepVisit = function(view) {
+    if (!view || !FS_VIEW_MAP[view]) return;
+    var key = FS_VIEW_MAP[view];
+    var fs = window.FIRST_STEPS || {};
+
+    // Already reported
+    if (fs[key]) return;
+
+    // Mark locally
+    fs[key] = true;
+    window.FIRST_STEPS = fs;
+
+    // Debounced POST to tour-state
+    if (!_fsReportPending) {
+      _fsReportPending = true;
+      setTimeout(function() {
+        _fsReportPending = false;
+        postTourState({ steps: window.FIRST_STEPS });
+      }, 600);
+    }
+
+    // Re-render the First Steps card on dash if visible
+    try {
+      var cardEl = document.getElementById('firstStepsCard');
+      if (cardEl) {
+        var newHtml = window.renderFirstStepsCard();
+        if (newHtml) {
+          var tmp = document.createElement('div');
+          tmp.innerHTML = newHtml;
+          cardEl.parentNode.replaceChild(tmp.firstElementChild, cardEl);
+        } else {
+          // All 7 done — celebrate and collapse
+          cardEl.style.transition = 'max-height 0.5s ease, opacity 0.5s ease, margin 0.5s ease';
+          cardEl.style.maxHeight = '0';
+          cardEl.style.opacity = '0';
+          cardEl.style.marginBottom = '0';
+          cardEl.style.overflow = 'hidden';
+          try { ceremony('Walk Complete', 'You have walked the house. Run the rhythm.', 3000); } catch(e) {}
+        }
+      }
+    } catch(e) {}
+  };
+
+  /* ────────── TOUR-STATE ENDPOINT ────────── */
+  function postTourState(payload) {
+    var fnBase = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
+
+    // Session JWT required — no token means skip the POST entirely (server rejects anon)
+    if (typeof sb === 'undefined' || !sb || !sb.auth) return;
+
+    sb.auth.getSession().then(function(r) {
+      var token = (r.data && r.data.session) ? r.data.session.access_token : '';
+      if (!token) return; // No session → skip
+
+      fetch(fnBase + '/tour-state', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(payload)
+      }).then(function(res) {
+        return res.json();
+      }).then(function(data) {
+        if (data.tour_done_at) window.TOUR_DONE_AT = data.tour_done_at;
+        if (data.first_steps) window.FIRST_STEPS = data.first_steps;
+      }).catch(function(e) {
+        console.warn('tour-state POST failed:', e);
+      });
+    }).catch(function() {});
+  }
+
+  /* ────────── TOUR ENGINE ────────── */
+  var _tourActive = false;
+  var _tourSteps = [];
+  var _tourIndex = 0;
+  var _tourState = {};
+  var _prevSpotlight = null;
+
+  function buildTourState() {
+    var firstName = 'Steward';
+    if (window.MEMBER_NAME) {
+      firstName = window.MEMBER_NAME.split(' ')[0];
+      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    }
+
+    var archName = 'Steward';
+    if (window.REC) {
+      archName = window.REC.pattern_name || window.REC.archetype_name || window.REC.archetype || window.REC.pattern || 'Steward';
+    }
+    archName = archName.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+
+    var bundleClaimed = !!(window._bundleClaimed || (typeof productState !== 'undefined' && productState === 'equipped'));
+    var fastActive = !!(window.S && window.S.fast && window.S.fast.status === 'active');
+    var fastDay = fastActive && typeof activeFastDay === 'function' ? activeFastDay() : 0;
+    var fastDuration = (window.S && window.S.fast && window.S.fast.duration) || 0;
+    var isAdmin = (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin');
+
+    var wordDay = '';
+    try {
+      if (window.CHIPS_DATA && window.CHIPS_DATA.word_streak) wordDay = window.CHIPS_DATA.word_streak;
+    } catch(e) {}
+
+    // Find first unchecked step for the finish card
+    var fs = window.FIRST_STEPS || {};
+    var firstUnchecked = 'Claim your monthly bundle';
+    var stepLabels = ['Claim your monthly bundle', "Open today's Word", 'Lift one prayer on the Wall',
+                      "File tonight's Record entry", 'Step into the Community', 'Start your fast',
+                      'Grab your 10% member code'];
+    for (var i = 0; i < FS_KEYS.length; i++) {
+      if (!fs[FS_KEYS[i]]) { firstUnchecked = stepLabels[i]; break; }
+    }
+
+    return {
+      firstName: firstName,
+      archetypeName: archName,
+      bundleClaimed: bundleClaimed,
+      fastActive: fastActive,
+      fastDay: fastDay,
+      fastDuration: fastDuration,
+      isAdmin: isAdmin,
+      wordDay: wordDay,
+      firstUnchecked: firstUnchecked
+    };
+  }
+
+  function buildSteps(st) {
+    var steps = [];
+
+    // Step 0: Welcome (centered, no spotlight)
+    steps.push({
+      target: null, view: null, group: null,
+      title: st.archetypeName + '.',
+      body: "That's what the assessment named you, " + st.firstName + ". This house was built for stewards who carry real weight. Every room, ninety seconds. Walk with me.",
+      nextLabel: 'Walk me through',
+      skipLabel: 'I know the house',
+      adminOnly: false
+    });
+
+    // Step 1: Home
+    steps.push({
+      target: 'navDash', view: 'dash', group: null,
+      title: 'Home',
+      body: 'Your command center. Every morning starts here: the Daily Directive, one line that governs the day, and your bundle at hand.',
+      adminOnly: false
+    });
+
+    // Step 2: Claim Bundle
+    steps.push({
+      target: 'navClaim', view: 'claim', group: null,
+      title: 'Claim Bundle',
+      body: st.bundleClaimed
+        ? 'Your bundle is claimed. This room is where next month\u2019s drop gets confirmed.'
+        : 'Your monthly bundle is waiting. Claim it when we finish and it ships to your door.',
+      adminOnly: false
+    });
+
+    // Step 3: Try All
+    steps.push({
+      target: 'navTryall', view: 'tryall', group: null,
+      title: 'Try All',
+      body: 'Every routine in the house, open to try. When your season changes, this is where you re-match.',
+      adminOnly: false
+    });
+
+    // Step 4: At a Glance — REMOVED from nav and tour
+
+    // Step 5: The Record
+    steps.push({
+      target: 'navRecord', view: 'record', group: null,
+      title: 'The Record',
+      body: "Tonight\u2019s entry lives here. What happened, what it weighed, what gets burned. The Record holds it so you don\u2019t have to.",
+      adminOnly: false
+    });
+
+    // Step 6: Post Wall
+    steps.push({
+      target: 'navCommunity', view: 'community', group: 'parentCommunity',
+      title: 'Community \u00b7 Post Wall',
+      body: 'The feed. Real posts from inside the community without leaving the app.',
+      adminOnly: false
+    });
+
+    // Step 7: Enter Community
+    steps.push({
+      target: 'navEnterCommunity', view: null, group: 'parentCommunity',
+      title: 'Community \u00b7 Enter Community',
+      body: 'And the full house on Skool, one click away.',
+      adminOnly: false
+    });
+
+    // Step 8: Prayer
+    steps.push({
+      target: 'navPrayer', view: 'prayer', group: 'parentPrayer',
+      title: 'Prayer',
+      body: 'Discipline one. Guided morning and evening petitions that meet you where you are.',
+      adminOnly: false
+    });
+
+    // Step 9: Prayer Wall
+    steps.push({
+      target: 'navWall', view: 'wall', group: 'parentPrayer',
+      title: 'Prayer Wall',
+      body: 'Carry someone. Real weight from real stewards lands here, you amen it, you lift it, you add your own. Nobody on this wall carries alone.',
+      adminOnly: false
+    });
+
+    // Step 10: Testimony Wall
+    steps.push({
+      target: 'navTestimony', view: 'testimony', group: 'parentPrayer',
+      title: 'Testimony Wall',
+      body: 'Answered weight gets witnessed. When God moves, it lands here.',
+      adminOnly: false
+    });
+
+    // Step 11: My Prayers
+    steps.push({
+      target: 'navMe', view: 'me', group: 'parentPrayer',
+      title: 'My Prayers',
+      body: "Everything you\u2019ve lifted, kept. Return, update, close the loop.",
+      adminOnly: false
+    });
+
+    // Step 12: Scripture
+    steps.push({
+      target: 'navBible', view: 'bible', group: null,
+      title: 'Scripture',
+      body: 'The Word, daily.' + (st.wordDay ? " You\u2019re on Day " + st.wordDay + '.' : '') + ' The reading meets your season.',
+      adminOnly: false
+    });
+
+    // Step 13: The Fast
+    steps.push({
+      target: 'navFast', view: 'fast', group: 'parentFast',
+      title: 'The Fast',
+      body: st.fastActive
+        ? 'Day ' + st.fastDay + ' of ' + st.fastDuration + ". Tonight\u2019s report is waiting."
+        : "When you\u2019re ready to lay something down, it starts here. A model, rules, and a clock.",
+      adminOnly: false
+    });
+
+    // Step 14: Cohort Challenge
+    steps.push({
+      target: 'navCohort', view: 'cohort', group: 'parentFast',
+      title: 'Cohort Challenge',
+      body: "Fast together. Cohorts run one shared clock, and the board shows who\u2019s standing.",
+      adminOnly: false
+    });
+
+    // Step 15: Circles
+    steps.push({
+      target: 'navCircle', view: 'circle', group: null,
+      title: 'Circles',
+      body: 'Your circle: a handful of stewards, a daily pulse. The smallest room in the house and the strongest.',
+      adminOnly: false
+    });
+
+    // Step 16: Affiliate Center
+    steps.push({
+      target: 'navAffiliate', view: 'affiliate', group: null,
+      title: 'Affiliate Center',
+      body: 'Your 10% member code lives here, plus your share link. Carry the mission forward, get paid when it lands.',
+      adminOnly: false
+    });
+
+    // Step 17: Product Portal
+    steps.push({
+      target: 'navPortal', view: 'portal', group: null,
+      title: 'Product Portal',
+      body: 'Orders, shipments, subscriptions. The logistics room.',
+      adminOnly: false
+    });
+
+    // Step 18: Admin (admin-only)
+    steps.push({
+      target: 'navAdmin', view: 'admin', group: null,
+      title: 'Admin',
+      body: 'The master key. Cohorts, the roster, the controls. Only you see this room.',
+      adminOnly: true
+    });
+
+    // Step 19: Finish (centered)
+    steps.push({
+      target: null, view: null, group: null,
+      title: 'The House',
+      body: "That\u2019s the house, " + st.firstName + ". Your First Steps are on Home. Start with " + st.firstUnchecked + ". Govern the day.",
+      nextLabel: 'Start my First Steps',
+      skipLabel: null,
+      adminOnly: false
+    });
+
+    // Filter: remove admin step if not admin
+    if (!st.isAdmin) {
+      steps = steps.filter(function(s) { return !s.adminOnly; });
+    }
+
+    return steps;
+  }
+
+  function clearSpotlight() {
+    if (_prevSpotlight) {
+      _prevSpotlight.classList.remove('tour-spotlight-active');
+      _prevSpotlight = null;
+    }
+  }
+
+  function positionCard(targetEl) {
+    var card = document.getElementById('tourCard');
+    if (!card) return;
+
+    // Mobile: bottom sheet handled by CSS
+    if (window.innerWidth <= 768) {
+      card.style.top = '';
+      card.style.left = '';
+      card.style.right = '';
+      card.style.bottom = '';
+      return;
+    }
+
+    if (!targetEl) {
+      // Centered
+      card.style.top = '50%';
+      card.style.left = '50%';
+      card.style.transform = 'translate(-50%, -50%) scale(1)';
+      return;
+    }
+
+    var rect = targetEl.getBoundingClientRect();
+    var cardW = 380;
+    var cardH = card.offsetHeight || 280;
+    var pad = 16;
+
+    // Default: right of the element
+    var left = rect.right + pad;
+    var top = rect.top;
+
+    // If overflows right, place left
+    if (left + cardW > window.innerWidth - pad) {
+      left = rect.left - cardW - pad;
+    }
+    // If still overflows left, center horizontally
+    if (left < pad) {
+      left = Math.max(pad, (window.innerWidth - cardW) / 2);
+    }
+
+    // Vertical overflow
+    if (top + cardH > window.innerHeight - pad) {
+      top = Math.max(pad, window.innerHeight - cardH - pad);
+    }
+    if (top < pad) top = pad;
+
+    card.style.transform = 'scale(1)';
+    card.style.top = top + 'px';
+    card.style.left = left + 'px';
+  }
+
+  function openSidebarGroup(groupId) {
+    if (!groupId) return;
+    var parentEl = document.getElementById(groupId);
+    if (!parentEl) return;
+    var subNav = parentEl.nextElementSibling;
+    if (subNav && subNav.classList.contains('sidebar-sub-nav') && !subNav.classList.contains('expanded')) {
+      subNav.classList.add('expanded');
+      parentEl.classList.add('expanded-parent');
+    }
+  }
+
+  function ensureSidebarOpen() {
+    var sb = document.getElementById('sidebar');
+    if (sb && !sb.classList.contains('open') && window.innerWidth <= 768) {
+      sb.classList.add('open');
+      var ov = document.getElementById('sbOverlay');
+      if (ov) ov.classList.add('open');
+      document.body.classList.add('nav-lock');
+    }
+  }
+
+  function showStep(index) {
+    if (index < 0 || index >= _tourSteps.length) return;
+    _tourIndex = index;
+    var step = _tourSteps[index];
+
+    clearSpotlight();
+
+    // Open sidebar group if needed
+    if (step.group) {
+      ensureSidebarOpen();
+      openSidebarGroup(step.group);
+    }
+
+    // Navigate to view (but not during tour, we just show the spotlight on the nav item)
+    if (step.view) {
+      // Only navigate on the step action, the spotlight stays on the nav button
+      go(step.view);
+    }
+
+    // Spotlight the target
+    var targetEl = null;
+    if (step.target) {
+      targetEl = document.getElementById(step.target);
+      if (targetEl) {
+        targetEl.classList.add('tour-spotlight-active');
+        _prevSpotlight = targetEl;
+        // Scroll it into view in the sidebar
+        try { targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
+      }
+    }
+
+    // Build card content
+    var card = document.getElementById('tourCard');
+    if (!card) return;
+
+    var totalSteps = _tourSteps.length;
+    var isFirst = index === 0;
+    var isLast = index === totalSteps - 1;
+
+    var html = '';
+
+    // Mobile drag handle
+    if (window.innerWidth <= 768) {
+      html += '<div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:99px;margin:0 auto 16px;"></div>';
+    }
+
+    html += '<div class="tour-card__title">' + step.title + '</div>';
+    html += '<div class="tour-card__body">' + step.body + '</div>';
+
+    // Dot progress
+    html += '<div class="tour-card__dots">';
+    for (var d = 0; d < totalSteps; d++) {
+      html += '<div class="tour-card__dot' + (d === index ? ' active' : '') + '"></div>';
+    }
+    html += '</div>';
+
+    // Navigation
+    html += '<div class="tour-card__footer">';
+
+    if (isFirst) {
+      // Welcome: skip + walk me through
+      html += '<button class="tour-card__skip" onclick="skipTour()">' + (step.skipLabel || 'Skip') + '</button>';
+      html += '<div class="tour-card__nav">';
+      html += '<button class="tour-card__btn tour-card__btn--next" onclick="tourNext()">' + (step.nextLabel || 'Next') + '</button>';
+      html += '</div>';
+    } else if (isLast) {
+      // Finish: single CTA
+      html += '<div class="tour-card__nav" style="width:100%;justify-content:center;">';
+      html += '<button class="tour-card__btn tour-card__btn--next" onclick="completeTour()" style="width:100%;">' + (step.nextLabel || 'Start my First Steps') + '</button>';
+      html += '</div>';
+    } else {
+      // Middle steps: skip + back/next
+      html += '<button class="tour-card__skip" onclick="skipTour()">Skip tour</button>';
+      html += '<div class="tour-card__nav">';
+      html += '<button class="tour-card__btn" onclick="tourPrev()">Back</button>';
+      html += '<button class="tour-card__btn tour-card__btn--next" onclick="tourNext()">Next</button>';
+      html += '</div>';
+    }
+
+    html += '</div>';
+
+    card.innerHTML = html;
+
+    // Show overlay + card
+    var overlay = document.getElementById('tourDimOverlay');
+    if (overlay) overlay.classList.add('active');
+    card.classList.add('active');
+
+    // Position card
+    requestAnimationFrame(function() {
+      positionCard(targetEl);
+    });
+  }
+
+  window.tourNext = function() {
+    if (_tourIndex < _tourSteps.length - 1) {
+      showStep(_tourIndex + 1);
+    }
+  };
+
+  window.tourPrev = function() {
+    if (_tourIndex > 0) {
+      showStep(_tourIndex - 1);
+    }
+  };
+
+  function teardownTour() {
+    _tourActive = false;
+    clearSpotlight();
+    var overlay = document.getElementById('tourDimOverlay');
+    var card = document.getElementById('tourCard');
+    if (overlay) overlay.classList.remove('active');
+    if (card) { card.classList.remove('active'); card.innerHTML = ''; }
+    // Close sidebar on mobile
+    try { closeSidebar(); } catch(e) {}
+  }
+
+  window.skipTour = function() {
+    teardownTour();
+    window.TOUR_DONE_AT = new Date().toISOString();
+    postTourState({ done: true });
+    // Navigate to home
+    go('dash');
+  };
+
+  window.completeTour = function() {
+    teardownTour();
+    window.TOUR_DONE_AT = new Date().toISOString();
+    postTourState({ done: true });
+    // Navigate to Home and scroll to First Steps
+    go('dash');
+    setTimeout(function() {
+      var card = document.getElementById('firstStepsCard');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 600);
+  };
+
+  window.startGuidedTour = function(isRetake) {
+    if (_tourActive) return;
+    _tourActive = true;
+
+    _tourState = buildTourState();
+    _tourSteps = buildSteps(_tourState);
+    _tourIndex = 0;
+
+    showStep(0);
+  };
+
+  /* ────────── RESIZE HANDLER ────────── */
+  var _resizeTimer;
+  window.addEventListener('resize', function() {
+    if (!_tourActive) return;
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function() {
+      var step = _tourSteps[_tourIndex];
+      var targetEl = step && step.target ? document.getElementById(step.target) : null;
+      positionCard(targetEl);
+    }, 150);
+  });
+
+  /* ────────── KEYBOARD NAVIGATION ────────── */
+  document.addEventListener('keydown', function(e) {
+    if (!_tourActive) return;
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+      e.preventDefault();
+      if (_tourIndex < _tourSteps.length - 1) window.tourNext();
+      else window.completeTour();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      window.tourPrev();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      window.skipTour();
+    }
+  });
+
+})();
+</script>
+
+<!-- Tour Overlays -->
+<div id="tourDimOverlay" class="tour-dim-overlay"></div>
+<div id="tourCard" class="tour-card"></div>
 </body>
 </html>
