@@ -61,6 +61,11 @@ console.log("=== RUNNING WHEALTHY INVITE PAGE TESTS ===");
     if (!quoteText.includes("I didn't feel hyped. I just felt clear.")) {
       throw new Error(`Quote band quote mismatch: ${quoteText}`);
     }
+    const computedColor = await page.locator('.testimonial-band').evaluate(el => window.getComputedStyle(el).color);
+    console.log(`Quote band computed color: ${computedColor}`);
+    if (computedColor !== 'rgb(8, 8, 9)') {
+      throw new Error(`Quote band color contrast issue: expected "rgb(8, 8, 9)", got "${computedColor}"`);
+    }
 
     // 5. Verify Solution Numbered Moves
     console.log("Checking solution moves...");
