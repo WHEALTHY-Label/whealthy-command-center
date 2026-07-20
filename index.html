@@ -6313,7 +6313,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 
                 <div id="bibleChatThread" class="bible-chat-thread">
                   <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
-                    <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Governor</div>
+                    <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
                     Ask me anything about today's scripture passage, or highlight a verse to study its context together.
                   </div>
                 </div>
@@ -10665,7 +10665,7 @@ window.MEMBER_ID = MEMBER_ID;
     const typingId = 'gov-typing-' + Date.now();
     thread.innerHTML += `
       <div id="${typingId}" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
-        <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Governor</div>
+        <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
         <span style="color:rgba(255,255,255,0.4); font-style:italic;">Seeking scripture...</span>
       </div>
     `;
@@ -10689,7 +10689,7 @@ window.MEMBER_ID = MEMBER_ID;
           const data = body.out;
           let responseHtml = `
             <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
-              <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Governor</div>
+              <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
               <div>${data.reply}</div>
           `;
           if (data.verses && data.verses.length > 0) {
@@ -10717,7 +10717,7 @@ window.MEMBER_ID = MEMBER_ID;
       } else {
         thread.innerHTML += `
           <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,100,100,0.1); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; color:rgba(255,100,100,0.8); max-width:80%;">
-            <div style="font-weight:700; font-size:11px; text-transform:uppercase; margin-bottom:4px;">Governor</div>
+            <div style="font-weight:700; font-size:11px; text-transform:uppercase; margin-bottom:4px;">Bible Buddy</div>
             Sorry, I encountered an issue retrieving scripture.
           </div>
         `;
