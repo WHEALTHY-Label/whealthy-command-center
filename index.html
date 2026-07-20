@@ -2341,11 +2341,18 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <!-- How Bible 365 works -->
         <div class="g-card" style="margin-bottom:20px;padding:20px 24px;">
           <details>
-            <summary style="cursor:pointer;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.06em;">How Bible 365 works</summary>
+            <summary id="bibleHowSummary" style="cursor:pointer;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.06em;">How Bible 365 works</summary>
             <div style="margin-top:12px;">
+              <div id="bibleHow365">
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">The whole Bible in 365 days. Your Day 1 was the day you started — the calendar moves whether you read or not, so today's number is your place in the year, not your page count.</p>
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Each day is one reading: a theme and a passage. Open it, read it, mark it read.</p>
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0;">Missed days stay open behind you. Go back and complete them any time — your streak counts consecutive days you actually finished.</p>
+              </div>
+              <div id="bibleHowMy" style="display:none;">
+              <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Every book, every chapter, open whenever you want. This is your Bible to read freely, at your own pace, with no calendar and no streak.</p>
+              <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Tap a verse to highlight it or leave a private note. Your highlights, your notes, and the spot you left off are saved to you and follow you across devices.</p>
+              <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0;">Stuck on a passage? Ask The Steward's Bible Buddy. It answers with scripture and context only, never opinions, so you can go deeper and stay in the Word.</p>
+              </div>
             </div>
           </details>
         </div>
@@ -10615,6 +10622,12 @@ window.MEMBER_ID = MEMBER_ID;
     }
     const header = document.getElementById('bibleTitleHeader');
     if (header) header.textContent = is365 ? 'Bible 365' : 'My Bible';
+    const howSum = document.getElementById('bibleHowSummary');
+    const how365 = document.getElementById('bibleHow365');
+    const howMy = document.getElementById('bibleHowMy');
+    if (howSum) howSum.textContent = is365 ? 'How Bible 365 works' : 'How My Bible works';
+    if (how365) how365.style.display = is365 ? 'block' : 'none';
+    if (howMy) howMy.style.display = is365 ? 'none' : 'block';
     const wrapper365 = document.getElementById('bible365ContentWrapper');
     const myBibleWrapper = document.getElementById('myBibleContentWrapper');
     if (is365) {
