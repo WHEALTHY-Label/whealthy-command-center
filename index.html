@@ -8038,6 +8038,36 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           .admin-tab-content.active {
             display: block;
           }
+          .admin-group-bar {
+            display: flex;
+            gap: 6px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 24px;
+            max-width: 380px;
+          }
+          .admin-group-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.55);
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 9px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+          }
+          .admin-group-btn:hover { color: #fff; }
+          .admin-group-btn.active { background: var(--lime); color: #0a0a0a; }
+          .admin-group-content { display: none; }
+          .admin-group-content.active { display: block; }
           .admin-table {
             width: 100%;
             border-collapse: collapse;
@@ -8089,12 +8119,22 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div class="view-header-block">
           <div class="view-header-icon-box">🛡️</div>
           <div>
-            <h1 class="view-header-title">Admin Surface</h1>
+            <h1 class="view-header-title">Admin</h1>
             <p class="view-header-subtitle">Tiered control roster, moderation, and system settings.</p>
           </div>
         </div>
 
         <div style="max-width: 1000px; margin: 0 auto; padding: 16px;">
+
+          <!-- LEVEL 1 — Admin sub-tabs -->
+          <div class="admin-group-bar">
+            <button class="admin-group-btn active" onclick="switchAdminGroup('surface')">Surface</button>
+            <button class="admin-group-btn" onclick="switchAdminGroup('analytics')">Analytics</button>
+          </div>
+
+          <!-- SUB-TAB: SURFACE (roster, moderation, settings, audit) -->
+          <div id="adminGroupSurface" class="admin-group-content active">
+
           <!-- Tabs Navigation -->
           <div class="admin-nav-bar">
             <button class="admin-nav-btn active" onclick="switchAdminTab('challenge')">Challenge</button>
@@ -8102,12 +8142,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="admin-nav-btn" onclick="switchAdminTab('moderation')">Moderation</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('settings')">Settings</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('audit')">Audit Log</button>
-            <button class="admin-nav-btn" onclick="switchAdminTab('control')">Control Center</button>
-          </div>
-
-          <!-- TAB: CONTROL CENTER (embedded live analytics dashboard, lazy-loaded) -->
-          <div id="adminTabControl" class="admin-tab-content">
-            <iframe id="controlCenterFrame" data-src="whealthy-admin-analytics.html" title="Control Center" style="width:100%; height:calc(100svh - 210px); min-height:560px; border:0; border-radius:12px; background:#080809; display:block;"></iframe>
           </div>
 
           <!-- TAB 1: CHALLENGE -->
@@ -8246,6 +8280,13 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </table>
               </div>
             </div>
+          </div>
+
+          </div><!-- /adminGroupSurface -->
+
+          <!-- SUB-TAB: ANALYTICS (embedded dashboard, lazy-loaded) -->
+          <div id="adminGroupAnalytics" class="admin-group-content">
+            <iframe id="controlCenterFrame" data-src="whealthy-admin-analytics.html" title="Analytics" style="width:100%; height:calc(100svh - 210px); min-height:560px; border:0; border-radius:12px; background:#080809; display:block;"></iframe>
           </div>
 
         </div>
@@ -12847,6 +12888,19 @@ async function getAdminToken() {
   return token;
 }
 
+function switchAdminGroup(group) {
+  document.querySelectorAll('.admin-group-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${group}'`));
+  });
+  document.querySelectorAll('.admin-group-content').forEach(c => c.classList.remove('active'));
+  const target = document.getElementById('adminGroup' + group.charAt(0).toUpperCase() + group.slice(1));
+  if (target) target.classList.add('active');
+  if (group === 'analytics') {
+    const f = document.getElementById('controlCenterFrame');
+    if (f && !f.getAttribute('src')) { f.setAttribute('src', f.dataset.src); }
+  }
+}
+
 async function switchAdminTab(tabName) {
   const btns = document.querySelectorAll('.admin-nav-btn');
   btns.forEach(btn => {
@@ -12874,9 +12928,6 @@ async function switchAdminTab(tabName) {
     await loadAdminSettings();
   } else if (tabName === 'audit') {
     await loadAdminAudit();
-  } else if (tabName === 'control') {
-    const f = document.getElementById('controlCenterFrame');
-    if (f && !f.getAttribute('src')) { f.setAttribute('src', f.dataset.src); }
   }
 }
 
