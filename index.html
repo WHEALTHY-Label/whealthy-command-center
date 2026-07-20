@@ -4,7 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>WHEALTHY , The Record and The Fast</title>
+<title>WHEALTHY — The Steward's Rhythm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -74,7 +74,7 @@ textarea,input,select{font-size:16px}
 .sidebar-sub-item{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:transparent;border:none;border-radius:6px;color:#8c8f96;font-size:13px;font-weight:600;text-align:left;transition:all .2s;cursor:pointer;}
 .sidebar-sub-item:hover{color:#fff;background:rgba(255,255,255,0.02)}
 .sidebar-sub-item.active{color:var(--lime);background:rgba(204,255,0,0.05);font-weight:700}
-.nav-section-title{font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.25);padding:14px 12px 6px 12px;margin-top:6px;user-select:none}
+.nav-section-title{font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#CCFF00;padding:14px 12px 6px 12px;margin-top:6px;user-select:none}
 .nav-section-title:first-of-type{margin-top:0}
 
 /* ── Claim Bundle Modal ── */
@@ -1694,7 +1694,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     <div class="bl-ring-inner"></div>
   </div>
   <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-    <div class="bl-text" id="blText">Booting Steward's OS...</div>
+    <div class="bl-text" id="blText">Booting The Steward's Rhythm...</div>
     <div class="bl-console" id="blConsole">SYS_BOOT // OK</div>
   </div>
   <script>
@@ -1707,7 +1707,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       if(b){
         var el=document.getElementById('blText');
         var c=document.getElementById('blConsole');
-        if(el) el.innerHTML = '<span style="color:#ccff00;font-weight:700;">[ OK ] Steward\'s OS: Access Approved</span>';
+        if(el) el.innerHTML = '<span style="color:#ccff00;font-weight:700;">[ OK ] The Steward\'s Rhythm: Access Approved</span>';
         if(c) c.textContent = "SYS_READY // DEPLOYED";
         setTimeout(function(){
           b.classList.add('hide');
@@ -1717,7 +1717,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     };
     (function(){
       var msgs=[
-        "Initializing Steward's OS...",
+        "Initializing The Steward's Rhythm...",
         "Calibrating high-performance bio-matrix...",
         "Synthesizing caffeine-free adrenaline...",
         "Decoupling cortisol stress pathways...",
@@ -1999,7 +1999,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">&#10005;</button>
     <div class="sidebar-brand">
       <div class="sidebar-brand-title" style="font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:#fff;">W<span style="color:#ccff00;">HEAL</span>THY</div>
-      <div class="sidebar-brand-sub" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">Steward's OS</div>
+      <div class="sidebar-brand-sub" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">The Steward's Rhythm</div>
     </div>
     <nav class="sidebar-nav">
       <!-- Section 1 — General -->
@@ -2007,14 +2007,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
       <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
-      <button class="sidebar-item" id="navLeaderboard" onclick="go('leaderboard',this)" style="display:none"><span class="si-dot"></span> At a Glance</button>
-      <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> The Record</button>
+
+      <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> My Journal</button>
       
       <!-- Community Group -->
       <button class="sidebar-item" id="parentCommunity" onclick="toggleSidebarGroup(this)"><span class="si-dot"></span> Community <span class="si-chevron">&#9656;</span></button>
       <div class="sidebar-sub-nav">
         <button class="sidebar-sub-item" id="navCommunity" onclick="go('community',this)">Post Wall</button>
-        <a href="https://www.skool.com/bakndcreator" target="_blank" rel="noopener" class="sidebar-sub-item" id="navEnterCommunity" style="text-decoration:none;">Enter Community</a>
+        <button class="sidebar-sub-item" id="navEnterCommunity" onclick="go('communityEnter',this)">Enter Community</button>
       </div>
 
       <!-- Section 2 — Disciplines -->
@@ -2330,6 +2330,18 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="btn-ghost" style="width:38px; height:38px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);" onclick="speak('No new notifications')">&#128276;</button>
             <button class="btn-ghost" style="width:38px; height:38px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);" onclick="toggleCalendar()">&#9881;</button>
           </div>
+        </div>
+
+        <!-- How Bible 365 works -->
+        <div class="g-card" style="margin-bottom:20px;padding:20px 24px;">
+          <details>
+            <summary style="cursor:pointer;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.06em;">How Bible 365 works</summary>
+            <div style="margin-top:12px;">
+              <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">The whole Bible in 365 days. Your Day 1 was the day you started — the calendar moves whether you read or not, so today's number is your place in the year, not your page count.</p>
+              <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Each day is one reading: a theme and a passage. Open it, read it, mark it read.</p>
+              <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0;">Missed days stay open behind you. Go back and complete them any time — your streak counts consecutive days you actually finished.</p>
+            </div>
+          </details>
         </div>
 
         <div id="word-chain-container"></div>
@@ -7444,6 +7456,18 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         <div class="pr-container">
           <div id="prayerQuietStateContainer" style="margin-bottom: 20px;"></div>
+          <!-- Prayer Rhythm intro card -->
+          <div id="prayerIntroCard" class="g-card" style="margin-bottom:24px;padding:28px 24px;">
+            <div style="font-size:11px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">THE PRAYER RHYTHM</div>
+            <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.04em;margin:0 0 12px;">You pray the Lord's Prayer. One movement at a time.</h2>
+            <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.55;margin-bottom:20px;">Jesus gave the outline. You bring today. Six movements, one honest line each — who you’re talking to, what’s true about Him, what isn’t yours to decide, what you need, what needs forgiving, what needs guarding. Your lines become your prayer.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+              <span style="display:inline-block;padding:8px 14px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.2);border-radius:100px;font-size:12px;font-weight:600;color:var(--lime);">Morning — pray the day forward</span>
+              <span style="display:inline-block;padding:8px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:100px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);">Midday — one breath to reset</span>
+              <span style="display:inline-block;padding:8px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:100px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);">Evening — pray the day back</span>
+            </div>
+            <p style="font-size:12px;color:rgba(255,255,255,0.35);line-height:1.5;margin:0;">Every prayer is saved to My Prayers, private. Lift it to the Prayer Wall only if you choose to.</p>
+          </div>
           <div class="pr-tabs" id="prTabs">
             <button class="pr-tab" id="prTabMorning" onclick="PRAYER.switchPass('morning')">Morning</button>
             <button class="pr-tab" id="prTabMidday" onclick="PRAYER.switchPass('midday')">Midday</button>
@@ -7535,17 +7559,24 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
       </div>
 
-      <!-- ============ AT A GLANCE ============ -->
-      <div id="leaderboardView" style="display:none">
+      <!-- ============ ENTER COMMUNITY (in-app room) ============ -->
+      <div id="enterCommunityView" style="display:none">
         <div class="view-header-block">
-          <div class="view-header-icon-box">&#128202;</div>
+          <div class="view-header-icon-box">&#129309;</div>
           <div>
-            <h1 class="view-header-title" id="leaderboardTitle">At a Glance</h1>
-            <p class="view-header-subtitle" id="leaderboardSubtitle">Your entire WHEALTHY OS state, consolidated.</p>
+            <h1 class="view-header-title">Enter Community</h1>
+            <p class="view-header-subtitle">The full house on Skool — one click away.</p>
           </div>
         </div>
-        <div id="glanceBentoGrid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 24px; font-family: 'Outfit', -apple-system, sans-serif;">
-          <!-- Populated dynamically by renderGlancePage() -->
+        <div style="max-width:680px;margin:0 auto;padding:16px;">
+          <div class="g-card" style="text-align:center;padding:36px 24px;">
+            <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
+            <p class="g-body" style="max-width:480px;margin:0 auto 24px;color:rgba(255,255,255,0.6);line-height:1.55;">Connect with fellow Stewards on Skool. Accountability partners, group challenges, and community support.</p>
+            <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:block;margin:0 auto 28px;max-width:540px;border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(204,255,0,0.15);border:1px solid rgba(204,255,0,0.25);transition:transform 0.3s ease, box-shadow 0.3s ease;text-decoration:none;" onmouseover="this.style.transform='scale(1.015)';this.style.boxShadow='0 0 25px rgba(204,255,0,0.3)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 20px rgba(204,255,0,0.15)';">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/Screenshot_2026-07-16_at_3.25.52PM-4233600.png?format=webp" alt="WHEALTHY Community" style="width:100%;height:auto;display:block;opacity:0.95;transition:opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.95';">
+            </a>
+            <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;padding:12px 32px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;">Open Skool Community &rarr;</a>
+          </div>
         </div>
       </div>
 
@@ -7640,7 +7671,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div class="view-header-block">
           <div class="view-header-icon-box">R</div>
           <div>
-            <h1 class="view-header-title" id="recordTitle">The Record</h1>
+            <h1 class="view-header-title" id="recordTitle">Steward's Journal</h1>
             <p class="view-header-subtitle" id="recordSubtitle">Your words, kept.</p>
           </div>
         </div>
@@ -7649,7 +7680,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div id="recordWallNudge" class="scribe-line" style="display:none; margin-bottom:24px;"></div>
 
         <div class="g-card">
-          <div class="g-eyebrow">The Record</div>
+          <div class="g-eyebrow">Steward's Journal</div>
           <div class="g-title">Tonight's Entry</div>
           <div id="fastModeChip"></div>
           <p class="g-body">Hold nothing back and hold the phone. Two minutes, spoken. The scribe keeps your words exactly as you said them.</p>
@@ -7673,14 +7704,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
 
         <div class="g-card">
-          <div class="g-eyebrow">The Record</div>
+          <div class="g-eyebrow">Steward's Journal</div>
           <div class="g-title">The Threads</div>
           <p class="g-body" style="margin-bottom:16px">The scribe tracks what keeps returning: the people, the burdens, the wins. It names the pattern. It never interprets your heart.</p>
           <div id="mapArea"></div>
         </div>
 
         <div class="g-card">
-          <div class="g-eyebrow">The Record</div>
+          <div class="g-eyebrow">Steward's Journal</div>
           <div class="g-title">The Wall</div>
           <p class="g-body" style="margin-bottom:14px">Every entry, a stone laid. Amber held weight. Lime held a win. Tap any stone to read it.</p>
           <div class="wall" id="wall"></div>
@@ -7688,7 +7719,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
 
         <div class="g-card">
-          <div class="g-eyebrow">The Record</div>
+          <div class="g-eyebrow">Steward's Journal</div>
           <div class="g-title">The Covenant of the Record</div>
           <div class="covenant-box">
             <b>What is remembered:</b> your entries, the threads the scribe names, and what your fasts showed, so the next one is built from what is true.<br>
@@ -9687,10 +9718,47 @@ window.MEMBER_ID = MEMBER_ID;
         this.morningStep++;
         this.renderMorningStep();
       } else {
-        this.morningData = {};
-        this.morningStep = 1;
-        go('dash');
+        // Show completion screen with assembled prayer
+        this.renderMorningCompletion();
       }
+    },
+
+    renderMorningCompletion() {
+      const container = document.getElementById('prPassContent');
+      if (!container) { this.morningData = {}; this.morningStep = 1; go('dash'); return; }
+      const lines = [
+        this.morningData.m1, this.morningData.m2, this.morningData.m3,
+        this.morningData.m4, this.morningData.m5a, this.morningData.m5b,
+        this.morningData.m6
+      ].filter(Boolean);
+      const composed = lines.length ? lines.join(' ') : 'Your prayer was lifted in silence.';
+      container.innerHTML = `
+        <div class="pr-card" style="text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">YOUR PRAYER</div>
+          <p style="font-size:16px;color:#fff;line-height:1.6;font-style:italic;max-width:520px;margin:0 auto 24px;">&ldquo;${composed.replace(/"/g,'&quot;')}&rdquo;</p>
+          <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:24px;">Saved to My Prayers, private. Lift it to the Wall only if you choose to.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <button class="pr-btn" onclick="PRAYER.finishMorning(false)">Amen \u00b7 Save to My Prayers</button>
+            <button class="pr-btn pr-btn-ghost" onclick="PRAYER.finishMorning(true)">Lift to the Wall</button>
+          </div>
+        </div>
+      `;
+    },
+
+    finishMorning(liftToWall) {
+      if (liftToWall && typeof this.publishPrayer === 'function') {
+        // Assemble and publish
+        const lines = [
+          this.morningData.m1, this.morningData.m2, this.morningData.m3,
+          this.morningData.m4, this.morningData.m5a, this.morningData.m5b,
+          this.morningData.m6
+        ].filter(Boolean);
+        const body = lines.join(' ');
+        if (body) this.publishPrayer({ body, pass: 'morning' });
+      }
+      this.morningData = {};
+      this.morningStep = 1;
+      go('dash');
     },
 
     async fetchDailySurfaced() {
@@ -11543,7 +11611,7 @@ Generate custom, brief title greetings and subtitles for each main view of the a
 2. Bible 365 (bibleTitle/bibleSubtitle)
 3. The Fast (fastTitle/fastSubtitle)
 4. The Record (recordTitle/recordSubtitle)
-5. At a Glance (leaderboardTitle/leaderboardSubtitle)
+
 
 Steward Context:
 - Name: ${name}
@@ -11572,10 +11640,9 @@ Return ONLY a valid JSON object matching this schema exactly (no preamble, no ma
   "bibleSubtitle": "[Dynamic message encouraging them based on their Bible streak/status]",
   "fastTitle": "The Fast",
   "fastSubtitle": "[Dynamic message based on their active fast duration or setup stage]",
-  "recordTitle": "The Record",
+  "recordTitle": "Steward's Journal",
   "recordSubtitle": "[Dynamic message summarizing their progress/directives today]",
-  "leaderboardTitle": "At a Glance",
-  "leaderboardSubtitle": "[A brief dynamic 1-sentence summary of their active streaks and overall OS momentum]"
+
 }`;
 
     const lastDailyCommNudge = localStorage.getItem('wh_daily_comm_nudge_shown_at');
@@ -12507,7 +12574,7 @@ window.updateSurfaceQuietStates = function() {
   }
   const recordContainer = document.getElementById('recordQuietStateContainer');
   if (recordContainer) {
-    recordContainer.innerHTML = window.drawDisciplineCard('THE RECORD', 'record', 'record', 'navRecord');
+    recordContainer.innerHTML = window.drawDisciplineCard('MY JOURNAL', 'record', 'record', 'navRecord');
   }
 };
 
@@ -12845,8 +12912,8 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','leaderboardView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   
   // Reset all active/expanded states first
@@ -12876,9 +12943,8 @@ function go(view,el,label){
   if(view==='claim'){
     renderClaimPage();
     document.getElementById('headerLine').textContent='Claim Bundle';
-  } else if(view==='leaderboard'){
-    document.getElementById('headerLine').textContent='At a Glance';
-    renderGlancePage();
+  } else if(view==='communityEnter'){
+    document.getElementById('headerLine').textContent='Enter Community';
   } else if(view==='admin'){
     document.getElementById('headerLine').textContent='Admin Surface';
   } else if(view==='bible'){
@@ -12951,7 +13017,7 @@ function setHeaderFocus(view){
   const el=document.getElementById('headerLine');
   const d=activeFastDay();
   if(d&&S.fast&&S.fast.plan){el.textContent='Day '+d+' of '+S.fast.duration+' \u00b7 '+S.fast.plan.fast_name;}
-  else if(view==='record')el.textContent='The Record';
+  else if(view==='record')el.textContent='Steward\'s Journal';
   else if(view==='fast')el.textContent='The Fast';
   else el.textContent='Daily Focus: Govern the day';
 }
@@ -13407,8 +13473,9 @@ function snapshotContext() {
                       (document.getElementById('fastView').style.display !== 'none' ? 'fast' :
                       (document.getElementById('bibleView').style.display !== 'none' ? 'bible' :
                       (document.getElementById('affiliateView').style.display !== 'none' ? 'affiliate' :
-                      (document.getElementById('leaderboardView').style.display !== 'none' ? 'leaderboard' :
-                      (document.getElementById('claimView').style.display !== 'none' ? 'claim' : 'dash')))));
+                      (document.getElementById('enterCommunityView').style.display !== 'none' ? 'communityEnter' :
+                      (document.getElementById('claimView').style.display !== 'none' ? 'claim' : 'dash'))));
+
   const fastState = !S.fast ? 'none' : (S.fast.status || 'none');
   const reportOpenState = reportOpen() ? 'open' : 'closed until 8:45pm';
   const filedToday = S.entries.some(e => e.date === realToday() && !e.burned) ? 'yes' : 'no';
@@ -13831,7 +13898,7 @@ function voiceNav(destination) {
   const map = {
     dash: 'dash', record: 'record', fast: 'fast',
     community: 'community', bible: 'bible',
-    affiliate: 'affiliate', leaderboard: 'leaderboard', claim: 'claim',
+    affiliate: 'affiliate', claim: 'claim',
     prayer: 'prayer', wall: 'wall', testimony: 'testimony', me: 'me',
     portal: 'portal', tryall: 'tryall',
     circle: 'circle', circles: 'circle',
@@ -14093,15 +14160,29 @@ function renderWall(){
 }
 window.togNode=function(el){el.classList.toggle('open');};
 window.burnEntry=async function(date){
-  if(!confirm('Burned means gone, everywhere, including from what the scribe learns. Burn this entry?'))return;
+  // Inline two-tap confirm — no native confirm() (blocked in iframes)
+  var btn = event && event.target;
+  if (btn && !btn.dataset.confirmed) {
+    btn.dataset.confirmed = '1';
+    btn.style.color = '#ff8a8a';
+    btn.style.borderColor = 'rgba(255,77,77,0.4)';
+    btn.innerHTML = 'Confirm burn — gone everywhere';
+    var keepBtn = document.createElement('span');
+    keepBtn.textContent = ' · Keep it';
+    keepBtn.style.color = 'rgba(255,255,255,0.5)';
+    keepBtn.style.cursor = 'pointer';
+    keepBtn.onclick = function(e) { e.stopPropagation(); btn.dataset.confirmed = ''; btn.innerHTML = '🔥 Burn'; btn.style.color = ''; btn.style.borderColor = ''; };
+    btn.appendChild(keepBtn);
+    return;
+  }
   const e=S.entries.find(x=>x.date===date);
   if(e){e.burned=true;e.text='';e.scribe='';e.resurface=null;}
   await burnEntryState(date);
-  renderWall();updateMeta();renderWall();updateMeta();renderMapDefault();
+  renderWall();updateMeta();renderMapDefault();
 };
 function updateMeta(){
   const live=S.entries.filter(e=>!e.burned);
-  document.getElementById('recordMeta').textContent=live.length+' entries in your record. At year end, the record becomes a printed book.';
+  document.getElementById('recordMeta').textContent=live.length+' entries in your journal. At year end, the journal becomes a printed book.';
 }
 
 /* ================== FAST BUILDER ================== */
@@ -14382,7 +14463,7 @@ function renderDash(){
      window.drawDisciplineCard('THE WORD', 'word', 'bible', 'navBible') +
      window.drawDisciplineCard('PRAYER', 'prayer', 'prayer', 'navPrayer') +
      window.drawDisciplineCard('THE FAST', 'fast', 'fast', 'navFast') +
-     window.drawDisciplineCard('THE RECORD', 'record', 'record', 'navRecord') +
+     window.drawDisciplineCard('MY JOURNAL', 'record', 'record', 'navRecord') +
      '</div>';
 
   h+='</div></div>';
@@ -14420,7 +14501,7 @@ function renderDash(){
   /* ── RECORD SNAPSHOT ── */
   var live=S.entries.filter(function(e){return !e.burned;});
   var last=live[live.length-1];
-  h+='<div class="g-card"><div class="plan-sec-title">The Record</div>'+
+  h+='<div class="g-card"><div class="plan-sec-title">My Journal</div>'+
      '<p class="g-body">'+live.length+' entries on the wall'+(last?', last laid '+weeksAgo(last.date):'')+'. At year end, it becomes a printed book.</p></div>';
 
   h+='</div>';
@@ -16778,7 +16859,7 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',leaderboard:'leaderboardView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
@@ -16805,7 +16886,7 @@ async function loadAndInit(){
       portal: 'navPortal',
       affiliate: 'navAffiliate',
       community: 'navCommunity',
-      leaderboard: 'navLeaderboard',
+      communityEnter: 'navEnterCommunity',
       claim: 'navClaim',
       circle: 'navCircle',
       cohort: 'navCohort',
@@ -16950,11 +17031,8 @@ async function loadAndInit(){
         title: name + '\'s Steward Circle',
         sub: 'Discuss routines, share insights, and connect with fellow creators.'
       },
-      leaderboard: {
-        title: 'At a Glance',
-        sub: 'Your entire WHEALTHY OS state, consolidated.'
-      }
     };
+
 
     var data = personalMap[view] || personalMap.dash;
     if (window.aiPersonalizations) {
@@ -16966,8 +17044,7 @@ async function loadAndInit(){
         bible: { title: window.aiPersonalizations.bibleTitle || personalMap.bible.title, sub: window.aiPersonalizations.bibleSubtitle || personalMap.bible.sub },
         portal: { title: window.aiPersonalizations.portalTitle || personalMap.portal.title, sub: window.aiPersonalizations.portalSubtitle || personalMap.portal.sub },
         affiliate: { title: window.aiPersonalizations.affiliateTitle || personalMap.affiliate.title, sub: window.aiPersonalizations.affiliateSubtitle || personalMap.affiliate.sub },
-        community: { title: window.aiPersonalizations.communityTitle || personalMap.community.title, sub: window.aiPersonalizations.communitySubtitle || personalMap.community.sub },
-        leaderboard: { title: window.aiPersonalizations.leaderboardTitle || personalMap.leaderboard.title, sub: window.aiPersonalizations.leaderboardSubtitle || personalMap.leaderboard.sub }
+        community: { title: window.aiPersonalizations.communityTitle || personalMap.community.title, sub: window.aiPersonalizations.communitySubtitle || personalMap.community.sub }
       };
       if (aiMap[view] && aiMap[view].title && aiMap[view].sub) {
         data = aiMap[view];
@@ -17321,7 +17398,7 @@ async function loadAndInit(){
       { key: 'bundle',    label: 'Claim your monthly bundle',    view: 'claim',     nav: 'navClaim' },
       { key: 'word',      label: "Open today's Word",            view: 'bible',     nav: 'navBible' },
       { key: 'wall',      label: 'Lift one prayer on the Wall',  view: 'wall',      nav: 'navWall' },
-      { key: 'record',    label: "File tonight's Record entry",  view: 'record',    nav: 'navRecord' },
+      { key: 'record',    label: "File tonight's journal entry",  view: 'record',    nav: 'navRecord' },
       { key: 'community', label: 'Step into the Community',      view: 'community', nav: 'navCommunity' },
       { key: 'fast',      label: 'Start (or mark) your fast',    view: 'fast',      nav: 'navFast' },
       { key: 'code',      label: 'Grab your 10% member code',   view: 'affiliate', nav: 'navAffiliate' }
@@ -17466,7 +17543,7 @@ async function loadAndInit(){
     var fs = window.FIRST_STEPS || {};
     var firstUnchecked = 'Claim your monthly bundle';
     var stepLabels = ['Claim your monthly bundle', "Open today's Word", 'Lift one prayer on the Wall',
-                      "File tonight's Record entry", 'Step into the Community', 'Start your fast',
+                      "File tonight's journal entry", 'Step into the Community', 'Start your fast',
                       'Grab your 10% member code'];
     for (var i = 0; i < FS_KEYS.length; i++) {
       if (!fs[FS_KEYS[i]]) { firstUnchecked = stepLabels[i]; break; }
@@ -17524,13 +17601,13 @@ async function loadAndInit(){
       adminOnly: false
     });
 
-    // Step 4: At a Glance — REMOVED from nav and tour
+    // (Step 4 was At-a-Glance, fully deleted)
 
-    // Step 5: The Record
+    // Step 5: My Journal
     steps.push({
       target: 'navRecord', view: 'record', group: null,
-      title: 'The Record',
-      body: "Tonight\u2019s entry lives here. What happened, what it weighed, what gets burned. The Record holds it so you don\u2019t have to.",
+      title: 'My Journal',
+      body: "Tonight\u2019s entry lives here. What happened, what it weighed, what got burned. Your journal holds it so you don\u2019t have to.",
       adminOnly: false
     });
 
@@ -17544,7 +17621,7 @@ async function loadAndInit(){
 
     // Step 7: Enter Community
     steps.push({
-      target: 'navEnterCommunity', view: null, group: 'parentCommunity',
+      target: 'navEnterCommunity', view: 'communityEnter', group: 'parentCommunity',
       title: 'Community \u00b7 Enter Community',
       body: 'And the full house on Skool, one click away.',
       adminOnly: false
