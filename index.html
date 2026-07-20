@@ -8102,6 +8102,12 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="admin-nav-btn" onclick="switchAdminTab('moderation')">Moderation</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('settings')">Settings</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('audit')">Audit Log</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('control')">Control Center</button>
+          </div>
+
+          <!-- TAB: CONTROL CENTER (embedded live analytics dashboard, lazy-loaded) -->
+          <div id="adminTabControl" class="admin-tab-content">
+            <iframe id="controlCenterFrame" data-src="whealthy-admin-analytics.html" title="Control Center" style="width:100%; height:calc(100svh - 210px); min-height:560px; border:0; border-radius:12px; background:#080809; display:block;"></iframe>
           </div>
 
           <!-- TAB 1: CHALLENGE -->
@@ -12868,6 +12874,9 @@ async function switchAdminTab(tabName) {
     await loadAdminSettings();
   } else if (tabName === 'audit') {
     await loadAdminAudit();
+  } else if (tabName === 'control') {
+    const f = document.getElementById('controlCenterFrame');
+    if (f && !f.getAttribute('src')) { f.setAttribute('src', f.dataset.src); }
   }
 }
 
