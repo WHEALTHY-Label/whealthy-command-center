@@ -3142,10 +3142,33 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  .bento-card--hero, .bento-card--desc, .bento-card--benefits, .bento-card--perfect, .bento-card--ingredients {
+  .bento-card--hero, .bento-card--desc, .bento-card--benefits, .bento-card--perfect, .bento-card--ingredients, .bento-card--review {
     grid-column: span 1;
     grid-row: auto;
   }
+}
+.bento-card--review {
+  grid-column: span 3;
+  align-items: center;
+  text-align: center;
+}
+.bento-review-frame {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 9/16;
+  margin: 8px auto 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(204,255,0,0.15);
+  box-shadow: 0 0 30px rgba(204,255,0,0.08);
+}
+.bento-review-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 </style>
 
@@ -3230,6 +3253,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </ul>
             </div>
             
+            <!-- CARD 6: REAL STEWARD REVIEW -->
+            <div class="bento-card bento-card--review">
+                <h3 class="bento-heading">Real Steward Review</h3>
+                <div class="bento-review-frame">
+                    <iframe src="https://www.youtube.com/embed/aDmfm4Wflhk" title="WHEALTHY Water Review" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
             <!-- CARD 5: INGREDIENTS (Span 3x1) -->
             <div class="bento-card bento-card--ingredients">
                 
@@ -3299,6 +3330,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </ul>
             </div>
             
+            <!-- CARD 6: REAL STEWARD REVIEW -->
+            <div class="bento-card bento-card--review">
+                <h3 class="bento-heading">Real Steward Review</h3>
+                <div class="bento-review-frame">
+                    <iframe src="https://www.youtube.com/embed/nPEV9WZCc2s" title="Charge Powder Review" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
             <!-- CARD 5: INGREDIENTS (Span 3x1) -->
             <div class="bento-card bento-card--ingredients">
                 
@@ -3504,6 +3543,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </ul>
             </div>
             
+            <!-- CARD 6: REAL STEWARD REVIEW -->
+            <div class="bento-card bento-card--review">
+                <h3 class="bento-heading">Real Steward Review</h3>
+                <div class="bento-review-frame">
+                    <iframe src="https://www.youtube.com/embed/Clo-3ACw_cc" title="Boss Capsules Review" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
             <!-- CARD 5: INGREDIENTS (Span 3x1) -->
             <div class="bento-card bento-card--ingredients">
                 
