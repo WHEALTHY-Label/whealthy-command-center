@@ -13474,7 +13474,7 @@ function snapshotContext() {
                       (document.getElementById('bibleView').style.display !== 'none' ? 'bible' :
                       (document.getElementById('affiliateView').style.display !== 'none' ? 'affiliate' :
                       (document.getElementById('enterCommunityView').style.display !== 'none' ? 'communityEnter' :
-                      (document.getElementById('claimView').style.display !== 'none' ? 'claim' : 'dash'))));
+                      (document.getElementById('claimView').style.display !== 'none' ? 'claim' : 'dash')))));
 
   const fastState = !S.fast ? 'none' : (S.fast.status || 'none');
   const reportOpenState = reportOpen() ? 'open' : 'closed until 8:45pm';
@@ -14171,7 +14171,7 @@ window.burnEntry=async function(date){
     keepBtn.textContent = ' · Keep it';
     keepBtn.style.color = 'rgba(255,255,255,0.5)';
     keepBtn.style.cursor = 'pointer';
-    keepBtn.onclick = function(e) { e.stopPropagation(); btn.dataset.confirmed = ''; btn.innerHTML = '🔥 Burn'; btn.style.color = ''; btn.style.borderColor = ''; };
+    keepBtn.onclick = function(e) { e.stopPropagation(); btn.dataset.confirmed = ''; btn.innerHTML = 'Burn this entry'; btn.style.color = ''; btn.style.borderColor = ''; };
     btn.appendChild(keepBtn);
     return;
   }
