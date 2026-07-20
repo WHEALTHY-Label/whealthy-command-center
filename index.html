@@ -10329,13 +10329,14 @@ window.MEMBER_ID = MEMBER_ID;
       if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,255,255,0.4);">Loading chapter...</div>';
       try {
         const url = `${FN_BASE}/bible-verses?ref=${encodeURIComponent(this.currentBook + ' ' + this.currentChapter)}`;
-        const res = await fetch(url);
-        if (res.status !== 200) throw new Error("Load failed");
+        const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + SUPABASE_ANON, 'apikey': SUPABASE_ANON } });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         this.loadedVerses = data.verses || [];
         this.renderVerses();
       } catch (e) {
-        if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,100,100,0.8);">Failed to load chapter scripture.</div>';
+        console.error('[MyBible] chapter load failed:', e);
+        if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,100,100,0.8);">Failed to load chapter scripture. (' + ((e && e.message) || e) + ')</div>';
       }
     },
 
@@ -10347,7 +10348,7 @@ window.MEMBER_ID = MEMBER_ID;
         const noteMark = this.marks.find(m => m.book === v.book_name && m.chapter === v.chapter && m.verse === v.verse && m.kind === 'note');
         return `
           <span class="bible-verse-row ${hasHighlight ? 'highlighted' : ''}" data-verse="${v.verse}" onclick="BIBLE_READER.selectVerse(${v.verse}, event)">
-            <span class="verse-num">${v.verse}</span>${v.text.trim()}
+            <span class="verse-num">${v.verse}</span>${(v.text || '').trim()}
             ${noteMark ? `<span class="verse-note-indicator" onclick="BIBLE_READER.viewNote(${v.verse}, event)" title="${noteMark.body.replace(/"/g, '&quot;')}">💬 note</span>` : ''}
           </span>
         `;
