@@ -77,7 +77,8 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
         contentType: 'application/json',
         body: JSON.stringify({
           verified: true,
-          admin_role: 'master'
+          admin_role: 'master',
+          tour_done_at: '2026-07-20T00:00:00Z'
         })
       });
     });
@@ -160,7 +161,8 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
         contentType: 'application/json',
         body: JSON.stringify({
           verified: true,
-          admin_role: null
+          admin_role: null,
+          tour_done_at: '2026-07-20T00:00:00Z'
         })
       });
     });
