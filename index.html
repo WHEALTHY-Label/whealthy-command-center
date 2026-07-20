@@ -2319,9 +2319,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         }
         </style>
 
-        <!-- New Top Header Bar -->
+        <!-- New Top Header Bar with Mode Toggles -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
-          <h1 style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--lime); margin:0; text-transform:uppercase; letter-spacing:0.04em;">Bible 365</h1>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <h1 id="bibleTitleHeader" style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--lime); margin:0; text-transform:uppercase; letter-spacing:0.04em;">Bible 365</h1>
+            <!-- Toggles -->
+            <div style="display:inline-flex; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:3px;">
+              <button id="toggleBible365" onclick="switchBibleMode('365')" style="border:none; border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer; background:var(--lime); color:#000; transition:all 0.2s;">Bible 365</button>
+              <button id="toggleMyBible" onclick="switchBibleMode('my')" style="border:none; border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer; background:none; color:rgba(255,255,255,0.6); transition:all 0.2s;">My Bible</button>
+            </div>
+          </div>
           <div style="display:flex; align-items:center; gap:16px;">
             <div style="position:relative;">
               <input type="text" id="bible_searchWisdom" placeholder="Search wisdom..." style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:10px 16px 10px 36px; color:#fff; font-size:13px; outline:none; width:180px; transition: border-color 0.25s;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)';">
@@ -2331,7 +2338,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="btn-ghost" style="width:38px; height:38px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);" onclick="toggleCalendar()">&#9881;</button>
           </div>
         </div>
-
         <!-- How Bible 365 works -->
         <div class="g-card" style="margin-bottom:20px;padding:20px 24px;">
           <details>
@@ -2346,7 +2352,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         <div id="word-chain-container"></div>
         <div id="wordQuietStateContainer" style="margin-bottom: 20px;"></div>
-        <div id="bible365Root">
+        <div id="bible365ContentWrapper">
+                  <div id="bible365Root">
           <!-- Two-column grid -->
           <div class="bible-grid">
             
@@ -6129,7 +6136,194 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
       </div>
 
-      <script>
+      
+        </div>
+
+        <!-- ============ MY BIBLE CONTENT WRAPPER ============ -->
+        <div id="myBibleContentWrapper" style="display:none;">
+          <style>
+            .mybible-grid {
+              display: grid;
+              grid-template-columns: 1.4fr 1fr;
+              gap: 24px;
+            }
+            @media (max-width: 1024px) {
+              .mybible-grid {
+                grid-template-columns: 1fr;
+              }
+            }
+            .mybible-reader-card {
+              background: #0e1013;
+              border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 16px;
+              padding: 24px;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+            }
+            .mybible-verses-box {
+              background: rgba(0,0,0,0.15);
+              border: 1px solid rgba(255,255,255,0.05);
+              border-radius: 12px;
+              padding: 20px;
+              font-family: var(--font-body);
+              font-size: 15px;
+              line-height: 1.8;
+              color: rgba(255,255,255,0.85);
+              max-height: 480px;
+              overflow-y: auto;
+              user-select: text;
+            }
+            .bible-verse-row {
+              cursor: pointer;
+              transition: background 0.15s, color 0.15s;
+              padding: 2px 4px;
+              border-radius: 4px;
+              display: inline;
+            }
+            .bible-verse-row:hover {
+              background: rgba(255,255,255,0.06);
+              color: #fff;
+            }
+            .bible-verse-row.highlighted {
+              background: rgba(204,255,0,0.25);
+              border-bottom: 2px solid var(--lime);
+              color: #fff;
+            }
+            .verse-num {
+              font-weight: 700;
+              font-size: 10px;
+              color: var(--lime);
+              vertical-align: super;
+              margin-right: 4px;
+              user-select: none;
+            }
+            .verse-note-indicator {
+              font-size: 10px;
+              font-weight: 700;
+              background: rgba(255,255,255,0.1);
+              color: rgba(255,255,255,0.7);
+              padding: 1px 4px;
+              border-radius: 4px;
+              margin-left: 4px;
+              vertical-align: middle;
+              display: inline-block;
+              cursor: pointer;
+            }
+            .verse-note-indicator:hover {
+              background: var(--lime);
+              color: #000;
+            }
+            .mybible-sidebar {
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+            }
+            .bible-chat-thread {
+              background: rgba(0,0,0,0.15);
+              border: 1px solid rgba(255,255,255,0.05);
+              border-radius: 12px;
+              height: 280px;
+              overflow-y: auto;
+              padding: 16px;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+            }
+          </style>
+
+          <!-- Resume spot banner -->
+          <div id="myBibleResumeBanner" style="display:none; align-items:center; justify-content:space-between; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.2); padding:12px 20px; border-radius:12px; margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:18px;">📖</span>
+              <span style="font-size:13px; color:rgba(255,255,255,0.95);">Resume where you left off: <strong id="resumeSpotText" style="color:var(--lime);">Matthew 1:1</strong></span>
+            </div>
+            <button class="btn-lime" onclick="resumeLastSpot()" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; text-transform:uppercase; border-radius:6px;">Resume</button>
+          </div>
+
+          <div class="mybible-grid">
+            
+            <!-- Left: Reader -->
+            <div class="mybible-reader-card">
+              <!-- Book & Chapter picker row -->
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase;">Book</span>
+                  <select id="myBibleBookSelect" onchange="onBookSelected()" style="background:#121316; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:14px; font-weight:700; outline:none; cursor:pointer;">
+                  </select>
+                </div>
+                
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button onclick="navigateChapter(-1)" class="btn-ghost" style="width:36px; height:36px; padding:0; border-radius:8px; font-size:14px;">&larr;</button>
+                  <h2 id="myBibleReaderTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin:0; text-transform:uppercase; letter-spacing:0.02em; min-width:120px; text-align:center;">Matthew 1</h2>
+                  <button onclick="navigateChapter(1)" class="btn-ghost" style="width:36px; height:36px; padding:0; border-radius:8px; font-size:14px;">&rarr;</button>
+                </div>
+              </div>
+
+              <!-- Horizontal scroll chapter chips -->
+              <div id="myBibleChapterChips" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.06); scrollbar-width:thin;">
+              </div>
+
+              <!-- Verses content container -->
+              <div id="myBibleVerseContainer" class="mybible-verses-box">
+              </div>
+
+              <!-- Interactive verse markup actions card -->
+              <div id="verseActionsCard" class="g-card" style="display:none; padding:16px; border-color:var(--lime); background:rgba(204,255,0,0.02); position:relative;">
+                <button onclick="BIBLE_READER.closeVerseActions()" style="position:absolute; top:12px; right:12px; background:none; border:none; color:rgba(255,255,255,0.4); font-size:16px; cursor:pointer;">&times;</button>
+                <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:8px;" id="selectedVerseLabel">Matthew 1:1</div>
+                
+                <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+                  <button id="btnHighlightToggle" onclick="BIBLE_READER.toggleHighlightOnSelected()" class="btn-lime" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:6px;">Highlight (Lime)</button>
+                  <button onclick="BIBLE_READER.removeMarkupOnSelected()" class="btn-ghost" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:6px; color:rgba(255,255,255,0.6);">Clear Markup</button>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="verseNoteInput" placeholder="Add a personal study note..." style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:13px; outline:none;">
+                  <button onclick="BIBLE_READER.saveNoteOnSelected()" class="btn-lime" style="padding:8px 14px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:8px; text-transform:uppercase;">Save Note</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Sidebar (Governor AI & markup ledger) -->
+            <div class="mybible-sidebar">
+              <!-- Governor AI study assistant -->
+              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">Governor AI Scripture study</h3>
+                  <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.08); padding:3px 6px; border-radius:4px; text-transform:uppercase; color:rgba(255,255,255,0.6);">Interactive</span>
+                </div>
+                
+                <div id="bibleChatThread" class="bible-chat-thread">
+                  <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
+                    <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Governor</div>
+                    Ask me anything about today's scripture passage, or highlight a verse to study its context together.
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="bibleChatInput" placeholder="Ask about this chapter..." style="flex:1; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:10px 12px; color:#fff; font-size:13px; outline:none;" onkeydown="if(event.key==='Enter') sendBibleChatMessage()">
+                  <button onclick="sendBibleChatMessage()" class="btn-lime" style="width:40px; height:40px; padding:0; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px;">&rarr;</button>
+                </div>
+              </div>
+
+              <!-- Study markups ledger -->
+              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">Study Ledger (Marks)</h3>
+                  <button id="btnToggleMarkupsView" onclick="toggleMarkupsView()" class="btn-ghost" style="padding:4px 8px; font-size:10px; width:auto; height:auto; min-height:auto; border-radius:4px; text-transform:uppercase; font-weight:700;">Hide Markups</button>
+                </div>
+
+                <div id="markupsListView">
+                  <div id="markupsListContent" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:4px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+<script>
         (function() {
           const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
           const ME = {
@@ -7220,322 +7414,819 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <!-- ============ PRAYER PILLAR ============ -->
       <div id="prayerView" style="display:none">
         <style>
-          .pr-container {
+          .hio-container {
             max-width: 680px;
             margin: 0 auto;
             padding: clamp(16px, 4vw, 32px) 16px;
             color: #fff;
           }
-          .pr-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 8px;
-          }
-          .pr-tab {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: var(--font-display);
+          .hio-kicker {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--lime);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: color 0.2s, border-bottom 0.2s;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
           }
-          .pr-tab.active {
-            color: var(--lime);
-            border-bottom: 2px solid var(--lime);
-          }
-          .pr-tab.suggested::after {
-            content: " •";
-            color: var(--lime);
-          }
-          .pr-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 16px;
-            padding: clamp(16px, 4vw, 24px);
-            margin-bottom: 24px;
-          }
-          .pr-title {
+          .hio-title {
             font-family: var(--font-display);
-            font-size: 20px;
+            font-size: clamp(24px, 5vw, 36px);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.03em;
-            color: #fff;
-            margin: 0 0 8px 0;
+            margin-bottom: 24px;
           }
-          .pr-teaching {
-            font-family: var(--font-body);
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
-            line-height: 1.5;
-            margin-bottom: 20px;
-          }
-          .pr-field {
-            margin-bottom: 20px;
-          }
-          .pr-label {
-            display: block;
-            font-family: var(--font-display);
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 8px;
-          }
-          .pr-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 12px 16px;
-            color: #fff;
-            font-family: var(--font-body);
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
-          }
-          .pr-input:focus {
-            border-color: var(--lime);
-          }
-          .pr-input-small {
-            max-width: 320px;
-          }
-          .pr-textarea {
-            min-height: 120px;
-            resize: vertical;
-          }
-          .pr-nav-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 24px;
-          }
-          .pr-btn {
-            background: var(--lime);
-            color: #000;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 44px;
-            transition: opacity 0.2s;
-          }
-          .pr-btn:hover {
-            opacity: 0.9;
-          }
-          .pr-btn-ghost {
-            background: none;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #fff;
-          }
-          .pr-btn-ghost:hover {
-            background: rgba(255, 255, 255, 0.05);
-          }
-          .pr-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-          }
-          .pr-surfaced-list {
-            margin-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 16px;
-          }
-          .pr-surfaced-card {
-            background: rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+          .hio-chip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
+            margin-bottom: 24px;
           }
-          .pr-surfaced-body {
-            font-family: var(--font-body);
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
+          @media (max-width: 480px) {
+            .hio-chip-grid {
+              grid-template-columns: 1fr;
+            }
           }
-          .pr-surfaced-carry {
-            font-size: 11px;
-            padding: 6px 12px;
-            min-height: 32px;
-          }
-          .pr-rotation-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 16px;
-          }
-          .pr-rotation-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-family: var(--font-display);
-            transition: background 0.2s;
-          }
-          .pr-rotation-btn.active {
-            background: var(--lime);
-            color: #000;
-            border-color: var(--lime);
-          }
-          .pr-category-section {
-            margin-top: 32px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 24px;
-          }
-          .pr-category-title {
-            font-family: var(--font-display);
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--lime);
-            margin-bottom: 16px;
-          }
-          .pr-category-empty {
-            font-family: var(--font-body);
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.3);
-            font-style: italic;
-          }
-          .pr-list-card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+          .hio-chip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 16px;
-          }
-          .pr-list-card-body {
-            font-family: var(--font-body);
-            font-size: 14px;
+            font-size: 15px;
             color: #fff;
-            line-height: 1.5;
-            margin-bottom: 12px;
-            padding-right: 28px;
-            word-wrap: break-word;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
           }
-          .pr-list-card-meta {
+          .hio-chip:hover {
+            background: rgba(204, 255, 0, 0.05);
+            border-color: rgba(204, 255, 0, 0.3);
+          }
+          .hio-footnote {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 16px;
+            margin-top: 24px;
+          }
+          .hio-card-choice {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+          .hio-card-choice:hover {
+            border-color: var(--lime);
+            background: rgba(204, 255, 0, 0.03);
+          }
+          .hio-card-choice.active {
+            border-color: var(--lime);
+            background: rgba(204, 255, 0, 0.08);
+          }
+          .hio-tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            width: fit-content;
+          }
+          .hio-tag-private {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+          }
+          .hio-tag-shared {
+            background: rgba(204, 255, 0, 0.15);
+            color: var(--lime);
+          }
+          .hio-ledger-row {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-          }
-          .pr-card-actions {
-            display: flex;
-            gap: 8px;
-          }
-          .pr-card-btn {
-            background: none;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-family: var(--font-display);
-            font-size: 10px;
-            text-transform: uppercase;
-            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
           }
-          .pr-card-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
+          .hio-ledger-row:hover {
+            border-color: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.04);
           }
-          .pr-card-btn-danger {
-            border-color: rgba(255, 0, 0, 0.2);
-            color: rgba(255, 100, 100, 0.8);
+          .hio-status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
           }
-          .pr-card-btn-danger:hover {
-            background: rgba(255, 0, 0, 0.05);
-            border-color: rgba(255, 0, 0, 0.4);
+        </style>
+
+        <div class="hio-container">
+          <!-- Flow Wrapper -->
+          <div id="hioFlowWrapper" class="g-card" style="padding: 28px 24px; margin-bottom: 32px; position: relative;">
+            
+            <!-- STEP 1: The Door -->
+            <div id="hioStepDoor">
+              <div class="hio-kicker">HAND IT OVER</div>
+              <h2 class="hio-title" id="hioDoorHeadline">WHAT ARE YOU CARRYING?</h2>
+              
+              <div class="hio-chip-grid">
+                <button class="hio-chip" onclick="PRAYER.selectCategory('family')"><span>Family</span> <span>👥</span></button>
+                <button class="hio-chip" onclick="PRAYER.selectCategory('work')"><span>Work</span> <span>💼</span></button>
+                <button class="hio-chip" onclick="PRAYER.selectCategory('money')"><span>Money</span> <span>💵</span></button>
+                <button class="hio-chip" onclick="PRAYER.selectCategory('health')"><span>Health</span> <span>❤️</span></button>
+                <button class="hio-chip" onclick="PRAYER.selectCategory('head')"><span>My Own Head</span> <span>🧠</span></button>
+                <button class="hio-chip" onclick="PRAYER.selectCategory('freeform')"><span>Say it your way...</span> <span>💬</span></button>
+              </div>
+
+              <!-- Subline message on door -->
+              <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-bottom:20px;"></p>
+
+              <div class="hio-footnote">
+                Everything you pray here is private by default and saved to My Prayers. Nothing goes on the community Prayer Wall unless you choose to put it there.
+              </div>
+            </div>
+
+            <!-- STEP 2: Name It -->
+            <div id="hioStepName" style="display:none;">
+              <div class="hio-kicker" id="hioNameKicker">Name It</div>
+              <h2 class="hio-title" style="font-size:24px; margin-bottom:16px;">What's the weight?</h2>
+              
+              <!-- Voice mic + Input box -->
+              <div style="position:relative; display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" id="hioNameInput" placeholder="Name it in one simple line..." style="flex:1; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:14px 16px; color:#fff; font-size:16px; font-family:var(--font-body); outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(255,255,255,0.12)';">
+                <!-- voice button -->
+                <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
+              </div>
+
+              <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px;">
+                <button class="btn-ghost" onclick="PRAYER.goBackToDoor()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
+                <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand It Over</button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Hand It -->
+            <div id="hioStepHand" style="display:none;">
+              <div class="hio-kicker">Hand It</div>
+              
+              <!-- Led prayer voice block -->
+              <div style="background:rgba(255,255,255,0.02); border-left:3px solid var(--lime); padding:16px 20px; border-radius:0 12px 12px 0; margin-bottom:24px; font-size:16px; line-height:1.6; font-style:italic; color:rgba(255,255,255,0.95);" id="hioLedLineText">
+                "Father, this house is Yours before it's mine..."
+              </div>
+
+              <!-- Scripture Card -->
+              <div class="g-card" style="padding:20px; border-color:rgba(255,255,255,0.06); cursor:pointer; margin-bottom:20px;" onclick="PRAYER.toggleInlineReader()">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em;">Scripture Promise</span>
+                  <span id="hioPillReadMore" style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.15); border:1px solid rgba(204,255,0,0.3); color:var(--lime); padding:4px 8px; border-radius:100px; text-transform:uppercase;">📖 Read more · tap to open</span>
+                </div>
+                <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;" id="hioScriptureRef">Psalm 127:1</div>
+                <div style="font-size:14px; line-height:1.5; color:rgba(255,255,255,0.7);" id="hioScriptureText">"Unless the Lord builds the house..."</div>
+                
+                <!-- Inline expanded reader section -->
+                <div id="hioInlineReader" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+                  <div id="hioInlineVerses" style="max-height:200px; overflow-y:auto; font-size:13px; line-height:1.6; color:rgba(255,255,255,0.6); margin-bottom:12px; padding-right:6px;">
+                  </div>
+                  <button class="btn-ghost" onclick="PRAYER.openFullScripture(event)" style="font-size:11px; font-weight:700; text-transform:uppercase; padding:6px 12px; height:auto; min-height:auto; width:auto; border-radius:100px;">Open Scripture · read the full chapter</button>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end;">
+                <button class="btn-lime" onclick="PRAYER.goToLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Leave It Here</button>
+              </div>
+            </div>
+
+            <!-- STEP 4: Leave It -->
+            <div id="hioStepLeave" style="display:none;">
+              <div class="hio-kicker">Leave It</div>
+              <h2 class="hio-title" style="font-size:24px; margin-bottom:20px;">Where do you want to place this weight?</h2>
+
+              <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
+                <!-- Choice Private -->
+                <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('private')" id="cardLeavePrivate">
+                  <div class="hio-tag hio-tag-private">Private</div>
+                  <strong style="font-size:15px; color:#fff;">Leave it here</strong>
+                  <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Saved to My Prayers. Only you can ever see it. Nothing is posted anywhere.</p>
+                </div>
+                <!-- Choice Shared -->
+                <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('shared')" id="cardLeaveShared">
+                  <div class="hio-tag hio-tag-shared">Shared</div>
+                  <strong style="font-size:15px; color:#fff;">Lift it to the Prayer Wall</strong>
+                  <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Posts this prayer to the community Prayer Wall. Other stewards will see it and can tap 'I prayed' for you. You can take it down anytime.</p>
+                </div>
+              </div>
+
+              <!-- Shared Post options -->
+              <div id="hioSharedOptions" style="display:none; margin-bottom:20px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); padding:16px; border-radius:12px;">
+                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.4); display:block; margin-bottom:10px;">Post Anonymously?</span>
+                <div style="display:flex; gap:12px;">
+                  <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="signed" checked> Post signed</label>
+                  <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="anonymous"> Post anonymously</label>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn-ghost" onclick="PRAYER.goBackToHand()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
+                <button class="btn-lime" onclick="PRAYER.commitLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Confirm</button>
+              </div>
+            </div>
+
+            <!-- STEP 5: Confirm -->
+            <div id="hioStepConfirm" style="display:none; text-align:center; padding:20px 10px;">
+              <div style="font-size:48px; margin-bottom:16px;">🕊️</div>
+              <h2 class="hio-title" style="font-size:24px; margin-bottom:12px;" id="hioConfirmHeadline">Saved Privately</h2>
+              <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:400px; margin:0 auto 24px; line-height:1.6;" id="hioConfirmText"></p>
+              
+              <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+                <button class="btn-lime" onclick="PRAYER.resetFlow()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand Another Weight Over</button>
+                <a href="javascript:void(0)" id="hioKeepReadingLink" style="font-size:13px; color:var(--lime); text-decoration:none; margin-top:8px;" onclick="PRAYER.goToBibleRead()">Keep reading in My Bible &rarr;</a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- THE LEDGER -->
+          <div>
+            <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:16px;">THE WEIGHTS YOU'VE HANDED OVER</h3>
+            
+            <div id="hioLedgerContent" style="display:flex; flex-direction:column; gap:4px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Answer Dialog Modal -->
+        <div id="hioAnswerModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; padding:16px;">
+          <div class="g-card" style="max-width:480px; width:100%; padding:24px; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px;">
+              <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; color:var(--lime); margin:0;">Did He Answer?</h3>
+              <button class="btn-ghost" onclick="PRAYER.closeAnswerModal()" style="width:24px; height:24px; padding:0; display:flex; align-items:center; justify-content:center; border:none; font-size:16px; color:rgba(255,255,255,0.4);">&times;</button>
+            </div>
+            
+            <textarea id="hioAnswerNote" placeholder="Tell the story... How did He respond to this weight?" style="width:100%; min-height:80px; background:#121316; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px 12px; color:#fff; font-size:14px; font-family:var(--font-body); outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+            
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="hioLiftToTestimony" style="width:16px; height:16px; cursor:pointer;">
+              <label for="hioLiftToTestimony" style="font-size:13px; color:rgba(255,255,255,0.8); cursor:pointer;">Lift this answer to the Testimony Wall</label>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px;">
+              <button class="btn-ghost" onclick="PRAYER.closeAnswerModal()" style="padding:10px 16px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Cancel</button>
+              <button class="btn-lime" onclick="PRAYER.submitAnswer()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Save Answer</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- ============ PRODUCT PORTAL ============ -->
+      <div id="portalView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128230;</div>
+          <div>
+            <h1 class="view-header-title" id="portalTitle">Product Portal</h1>
+            <p class="view-header-subtitle" id="portalSubtitle">Manage subscriptions, billing, and orders.</p>
+          </div>
+        </div>
+        <div class="g-card" style="text-align:center;padding:48px 24px">
+          <div style="font-size:48px;margin-bottom:16px">&#128230;</div>
+          <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#f0f1f3;margin-bottom:8px">Billing &amp; Subscriptions</h2>
+          <p class="g-body" style="max-width:420px;margin:0 auto 24px;color:rgba(255,255,255,0.5);line-height:1.6;">Access your secure billing portal to view active subscriptions, download invoices, update payment methods, and manage delivery schedules.</p>
+          <a href="https://whealthylabel.com/member" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;align-items:center;gap:8px;">Launch Product Portal &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ============ AFFILIATE LINKS ============ -->
+      <div id="affiliateView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128279;</div>
+          <div>
+            <h1 class="view-header-title" id="affiliateTitle">Affiliate Command</h1>
+            <p class="view-header-subtitle" id="affiliateSubtitle">Share your referral invite links and track your progress.</p>
+          </div>
+        </div>
+        <div class="g-card">
+          <div style="padding:24px">
+            <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:24px;line-height:1.6">Generate your custom WHEALTHY funnel links and unlock rewards.</p>
+            <div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;margin-bottom:32px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:12px;font-weight:600;color:#fff">Active Referrals (Unlock Free Month)</span>
+                <span id="affReferralCount" style="color:var(--lime);font-weight:600;font-size:12px">0 / 3</span>
+              </div>
+              <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden"><div id="affReferralProgress" style="height:100%;background:var(--lime);box-shadow:0 0 10px rgba(204,255,0,0.5);width:0%"></div></div>
+            </div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:16px;margin-top:32px">Paste your Skool invite link below to get your ID.</p>
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+              <input type="text" id="skoolLinkInput" placeholder="https://www.skool.com/bakndcreator/about?ref=..." style="flex:1;min-width:200px;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:var(--text);font-size:14px;outline:none">
+              <button class="btn-lime" id="generateAffiliateBtn" onclick="generateAffiliateLink()" style="width:auto;padding:12px 20px;font-size:13px">Generate Links</button>
+            </div>
+            <div id="affiliateAlert" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;margin-bottom:20px;text-align:center"></div>
+            <div id="affiliateLinksList" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ COMMUNITY ============ -->
+      <div id="communityView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">👥</div>
+          <div>
+            <h1 class="view-header-title" id="communityTitle">Community</h1>
+            <p class="view-header-subtitle" id="communitySubtitle">Iron sharpens iron.</p>
+          </div>
+        </div>
+        
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <!-- Community Feed Container -->
+          <div id="communityFeedContainer" style="display:none"></div>
+          
+          <!-- Static Promo (shown if feed is empty) -->
+          <div id="communityPromoCard" class="g-card" style="text-align:center;padding:36px 24px;">
+            <div style="font-size:40px;margin-bottom:12px">&#129309;</div>
+            <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
+            <p class="g-body" style="max-width:480px;margin:0 auto 24px;color:rgba(255,255,255,0.6);line-height:1.55;">Connect with fellow Stewards on Skool. Accountability partners, group challenges, and community support.</p>
+            
+            <!-- Clickthrough screenshot with glowing edges -->
+            <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:block;margin:0 auto 28px;max-width:540px;border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(204,255,0,0.15);border:1px solid rgba(204,255,0,0.25);transition:transform 0.3s ease, box-shadow 0.3s ease;text-decoration:none;" onmouseover="this.style.transform='scale(1.015)';this.style.boxShadow='0 0 25px rgba(204,255,0,0.3)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 20px rgba(204,255,0,0.15)';">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/Screenshot_2026-07-16_at_3.25.52PM-4233600.png?format=webp" alt="WHEALTHY Community" style="width:100%;height:auto;display:block;opacity:0.95;transition:opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.95';">
+            </a>
+
+            <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;padding:12px 32px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;">Open Skool Community</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ ENTER COMMUNITY (in-app room) ============ -->
+      <div id="enterCommunityView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#129309;</div>
+          <div>
+            <h1 class="view-header-title">Enter Community</h1>
+            <p class="view-header-subtitle">The full house on Skool — one click away.</p>
+          </div>
+        </div>
+        <div style="max-width:680px;margin:0 auto;padding:16px;">
+          <div class="g-card" style="text-align:center;padding:36px 24px;">
+            <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
+            <p class="g-body" style="max-width:480px;margin:0 auto 24px;color:rgba(255,255,255,0.6);line-height:1.55;">Connect with fellow Stewards on Skool. Accountability partners, group challenges, and community support.</p>
+            <a href="https://www.skool.com/bakndcreator" target="_blank" style="display:block;margin:0 auto 28px;max-width:540px;border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(204,255,0,0.15);border:1px solid rgba(204,255,0,0.25);transition:transform 0.3s ease, box-shadow 0.3s ease;text-decoration:none;" onmouseover="this.style.transform='scale(1.015)';this.style.boxShadow='0 0 25px rgba(204,255,0,0.3)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 20px rgba(204,255,0,0.15)';">
+              <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/Screenshot_2026-07-16_at_3.25.52PM-4233600.png?format=webp" alt="WHEALTHY Community" style="width:100%;height:auto;display:block;opacity:0.95;transition:opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.95';">
+            </a>
+            <a href="https://www.skool.com/bakndcreator" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;padding:12px 32px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;">Open Skool Community &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ CLAIM BUNDLE ============ -->
+      <div id="claimView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">&#128230;</div>
+          <div>
+            <h1 class="view-header-title" id="claimTitle">Claim Bundle</h1>
+            <p class="view-header-subtitle" id="claimSubtitle">Redeem your Steward monthly supply or select custom blends.</p>
+          </div>
+        </div>
+        <!-- Claimed Banner (populated by JS) -->
+        <div id="claimedBanner" style="display:none"></div>
+        <!-- Hype Message -->
+        <div id="claimIntroMsg" style="text-align:center;padding:32px 24px;background:rgba(204,255,0,0.03);border:1px solid rgba(204,255,0,0.15);border-radius:16px;margin-bottom:24px">
+          <h2 style="color:var(--lime);font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px">Your Bundle is Ready</h2>
+          <div id="claimArchetypeMatch" style="margin-bottom:12px;"></div>
+          <p style="color:rgba(255,255,255,0.45);font-size:15px;line-height:1.6;margin:0">As a verified Steward, your governance bundle is unlocked and waiting. <strong style="color:#fff">Select your bundle below to complete your activation.</strong></p>
+        </div>
+        <!-- Bundle Switcher -->
+        <div id="bundleSwitcherWrap" style="max-width:560px;margin:0 auto 24px">
+          <div id="recHeroSlot"></div>
+          <div id="altSection"></div>
+        </div>
+
+        <!-- Dynamic Product Cards Grid -->
+        <div id="claimProductGrid" class="product-grid"></div>
+
+        <!-- Mixing Instructions Card -->
+        <div id="claimMixingCard" class="mixing-card" style="display:none"></div>
+
+        <!-- More Sales / Mission Details -->
+        <div class="product-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 24px;">
+          <div class="product-card" style="text-align: left; padding: 24px;">
+            <div class="product-card__role">Our Mission</div>
+            <div class="product-card__name" style="font-size: 16px; margin-bottom: 12px;">Governing Your Energy</div>
+            <p class="product-card__desc" style="font-size: 13px; line-height: 1.6;">To equip the faith-forward steward to govern their energy the way they steward everything else that matters: with intention, rhythm, and accountability. We don't sell quick fixes; we build energy resilience.</p>
+          </div>
+          <div class="product-card" style="text-align: left; padding: 24px;">
+            <div class="product-card__role">The System</div>
+            <div class="product-card__name" style="font-size: 16px; margin-bottom: 12px;">Beyond "Just Sleep More"</div>
+            <p class="product-card__desc" style="font-size: 13px; line-height: 1.6;">Telling a steward to "just sleep more" when their whole day runs on borrowed energy is like telling a man with a flat tire to drive faster. Our products stack Hydration, timing, and clean organic adaptogens to restore your natural baseline.</p>
+          </div>
+          <div class="product-card" style="text-align: left; padding: 24px;">
+            <div class="product-card__role">Ambassador Loop</div>
+            <div class="product-card__name" style="font-size: 16px; margin-bottom: 12px;">40% Commission for Life</div>
+            <p class="product-card__desc" style="font-size: 13px; line-height: 1.6;">Stewards who share the ecosystem during launch lock in our highest affiliate rate (40% recurring) for life. Refer just 3 fellow stewards, and your membership is completely covered.</p>
+          </div>
+        </div>
+
+        <div class="g-card" style="padding:24px" id="claimActionCard">
+          <button class="btn-lime" id="claimConfirmBtn" onclick="confirmClaim()" style="width:100%">Start My Routine</button>
+          <p style="font-size:13px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.6;margin-top:14px">
+            Member pricing. Your 10% code WHSBGN applies at checkout.
+          </p>
+        </div>
+
+        <!-- Rich Sales Content: Value Stack, Guarantees, Proof, Routine, Community, Final CTA -->
+        <div id="claimSalesContent" style="margin-top:24px"></div>
+
+        <!-- Checkout Popup Modal -->
+        <div class="checkout-modal" id="checkoutModal">
+  <div class="checkout-modal__backdrop" onclick="closeCheckout()"></div>
+  <div class="checkout-modal__card">
+    <button class="checkout-modal__close" onclick="closeCheckout()">&#10005;</button>
+    <div class="checkout-modal__loading" id="checkoutLoading">
+      <div class="spin"></div>
+      <p style="margin-top: 10px; font-family: var(--font-body); font-size: 14px;">Loading secure checkout...</p>
+    </div>
+    <iframe class="checkout-modal__iframe" id="checkoutIframe" src="" frameborder="0"></iframe>
+  </div>
+</div>
+
+
+
+
+<div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
+          <div class="checkout-modal-card" onclick="event.stopPropagation()">
+            <div class="checkout-modal-header">
+              <span class="checkout-modal-title">Complete Checkout</span>
+              <button class="checkout-modal-close" onclick="closeClaimCheckoutModal(null)">&times;</button>
+            </div>
+            <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank"></iframe>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============ THE RECORD ============ -->
+      <div id="recordView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">R</div>
+          <div>
+            <h1 class="view-header-title" id="recordTitle">Steward's Journal</h1>
+            <p class="view-header-subtitle" id="recordSubtitle">Your words, kept.</p>
+          </div>
+        </div>
+        <div id="recordQuietStateContainer" style="margin-bottom: 20px;"></div>
+
+        <div id="recordWallNudge" class="scribe-line" style="display:none; margin-bottom:24px;"></div>
+
+        <div class="g-card">
+          <div class="g-eyebrow">Steward's Journal</div>
+          <div class="g-title">Tonight's Entry</div>
+          <div id="fastModeChip"></div>
+          <p class="g-body">Hold nothing back and hold the phone. Two minutes, spoken. The scribe keeps your words exactly as you said them.</p>
+          <div class="office-line" id="officeLine"><b>What held.</b> &nbsp;What slipped.&nbsp; <b>What carries into tomorrow.</b></div>
+          <div id="recordArea">
+            <div id="draftNotice"></div>
+            <div class="recorder">
+              <div class="mic-wrap" id="micWrap">
+                <div class="mic-ring" id="ring1"></div>
+                <div class="mic-ring" id="ring2"></div>
+                <button class="mic-btn" id="micBtn" onclick="toggleMic()" aria-label="Record entry">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+              </div>
+              <div class="mic-state" id="micState">Tap to speak</div>
+            </div>
+            <textarea class="transcript" id="transcript" placeholder="Your words land here. Edit anything, they stay yours."></textarea>
+            <div class="g-actions"><button class="btn-lime" id="fileBtn" onclick="triggerFile(false)" style="display:none">File Tonight's Entry</button></div>
+          </div>
+          <p class="demo-note" id="srNote"></p>
+        </div>
+
+        <div class="g-card">
+          <div class="g-eyebrow">Steward's Journal</div>
+          <div class="g-title">The Threads</div>
+          <p class="g-body" style="margin-bottom:16px">The scribe tracks what keeps returning: the people, the burdens, the wins. It names the pattern. It never interprets your heart.</p>
+          <div id="mapArea"></div>
+        </div>
+
+        <div class="g-card">
+          <div class="g-eyebrow">Steward's Journal</div>
+          <div class="g-title">The Wall</div>
+          <p class="g-body" style="margin-bottom:14px">Every entry, a stone laid. Amber held weight. Lime held a win. Tap any stone to read it.</p>
+          <div class="wall" id="wall"></div>
+          <p class="demo-note" id="recordMeta"></p>
+        </div>
+
+        <div class="g-card">
+          <div class="g-eyebrow">Steward's Journal</div>
+          <div class="g-title">The Covenant of the Record</div>
+          <div class="covenant-box">
+            <b>What is remembered:</b> your entries, the threads the scribe names, and what your fasts showed, so the next one is built from what is true.<br>
+            <b>What is never shared:</b> your words. Not with your brother, not with the community, not with anyone. Patterns may inform the whole in aggregate, your words never leave the record.<br>
+            <b>What you control:</b> burn any entry from The Wall. Burned means gone, everywhere, including from what the scribe learns.
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ THE FAST ============ -->
+      <div id="fastView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">F</div>
+          <div>
+            <h1 class="view-header-title" id="fastTitle">The Fast</h1>
+            <p class="view-header-subtitle" id="fastSubtitle">Scripture chooses the pattern. You carry it.</p>
+          </div>
+        </div>
+        <div id="fast-chain-container"></div>
+        <div id="fastQuietStateContainer" style="margin-bottom: 20px;"></div>
+        <div id="fastRoot"></div>
+
+      </div>
+
+      <!-- ============ CIRCLES ============ -->
+      <div id="circleView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">👥</div>
+          <div>
+            <h1 class="view-header-title">Circles</h1>
+            <p class="view-header-subtitle">Your Steward Circle. Bible, body, and business.</p>
+          </div>
+        </div>
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <div id="meCircleContent"></div>
+        </div>
+      </div>
+
+      <!-- ============ COHORT CHALLENGE ============ -->
+      <div id="cohortView" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box">🏆</div>
+          <div>
+            <h1 class="view-header-title">Cohort Challenge</h1>
+            <p class="view-header-subtitle">Fast together. Carry the weight beside your brothers.</p>
+          </div>
+        </div>
+        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+          <div id="cohortViewContent"></div>
+        </div>
+      </div>
+
+      <!-- ============ ADMIN ============ -->
+      <div id="adminView" style="display:none">
+        <style>
+          .admin-nav-bar {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
           }
-          .pr-pin-btn {
+          .admin-nav-btn {
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-            line-height: 1;
-            transition: color 0.2s;
-          }
-          .pr-pin-btn:hover {
-            color: rgba(255, 255, 255, 0.6);
-          }
-          .pr-pin-btn.pinned {
-            color: var(--lime);
-          }
-          .pr-add-form {
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-          }
-          .pr-form-title {
+            color: rgba(255,255,255,0.6);
             font-family: var(--font-display);
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+          }
+          .admin-nav-btn:hover {
             color: #fff;
-            margin: 0 0 16px 0;
+          }
+          .admin-nav-btn.active {
+            color: var(--lime);
+            border-bottom-color: var(--lime);
+          }
+          .admin-tab-content {
+            display: none;
+          }
+          .admin-tab-content.active {
+            display: block;
+          }
+          .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+          }
+          .admin-table th, .admin-table td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+          }
+          .admin-table th {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: rgba(255,255,255,0.45);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            background: rgba(255,255,255,0.02);
+          }
+          .admin-table tr:hover td {
+            background: rgba(255,255,255,0.01);
+          }
+          .admin-pill {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 6px;
+            border-radius: 4px;
+          }
+          .admin-pill-role {
+            background: rgba(204,255,0,0.15);
+            color: var(--lime);
+          }
+          .admin-pill-active {
+            background: rgba(46,204,113,0.15);
+            color: #2ecc71;
+          }
+          .admin-pill-inactive {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+          }
+          .admin-pill-banned {
+            background: rgba(231,76,60,0.15);
+            color: #e74c3c;
           }
         </style>
 
-        <div class="pr-container">
-          <div id="prayerQuietStateContainer" style="margin-bottom: 20px;"></div>
-          <!-- Prayer Rhythm intro card -->
-          <div id="prayerIntroCard" class="g-card" style="margin-bottom:24px;padding:28px 24px;">
-            <div style="font-size:11px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">THE PRAYER RHYTHM</div>
-            <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.04em;margin:0 0 12px;">You pray the Lord's Prayer. One movement at a time.</h2>
-            <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.55;margin-bottom:20px;">Jesus gave the outline. You bring today. Six movements, one honest line each — who you’re talking to, what’s true about Him, what isn’t yours to decide, what you need, what needs forgiving, what needs guarding. Your lines become your prayer.</p>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-              <span style="display:inline-block;padding:8px 14px;background:rgba(204,255,0,0.08);border:1px solid rgba(204,255,0,0.2);border-radius:100px;font-size:12px;font-weight:600;color:var(--lime);">Morning — pray the day forward</span>
-              <span style="display:inline-block;padding:8px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:100px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);">Midday — one breath to reset</span>
-              <span style="display:inline-block;padding:8px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:100px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);">Evening — pray the day back</span>
-            </div>
-            <p style="font-size:12px;color:rgba(255,255,255,0.35);line-height:1.5;margin:0;">Every prayer is saved to My Prayers, private. Lift it to the Prayer Wall only if you choose to.</p>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">🛡️</div>
+          <div>
+            <h1 class="view-header-title">Admin Surface</h1>
+            <p class="view-header-subtitle">Tiered control roster, moderation, and system settings.</p>
           </div>
-          <div class="pr-tabs" id="prTabs">
-            <button class="pr-tab" id="prTabMorning" onclick="PRAYER.switchPass('morning')">Morning</button>
-            <button class="pr-tab" id="prTabMidday" onclick="PRAYER.switchPass('midday')">Midday</button>
-            <button class="pr-tab" id="prTabEvening" onclick="PRAYER.switchPass('evening')">Evening</button>
-            <button class="pr-tab" id="prTabMirror" onclick="PRAYER.switchPass('mirror')">Mirror</button>
-            <button class="pr-tab" id="prTabAnswered" onclick="PRAYER.switchPass('answered')">Answered</button>
+        </div>
+
+        <div style="max-width: 1000px; margin: 0 auto; padding: 16px;">
+          <!-- Tabs Navigation -->
+          <div class="admin-nav-bar">
+            <button class="admin-nav-btn active" onclick="switchAdminTab('challenge')">Challenge</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('members')">Members</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('moderation')">Moderation</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('settings')">Settings</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('audit')">Audit Log</button>
           </div>
 
-          <div id="prPassContent"></div>
-          <div id="listView" style="display:none"></div>
-          <div id="prAnsweredContent" style="display:none"></div>
+          <!-- TAB 1: CHALLENGE -->
+          <div id="adminTabChallenge" class="admin-tab-content active">
+            <div class="g-card" style="max-width:680px; margin: 0 auto;">
+              <div class="plan-sec-title">Create New Cohort</div>
+              <p class="g-body" style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px;">
+                Create a new open challenge cohort. Members will be able to join via the Cohort ID.
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div>
+                  <label style="display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-display); font-weight: 700;">Cohort Name</label>
+                  <input type="text" id="adminCohortName" placeholder="e.g., Summer Fast 2026" class="free-input" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 14px;">
+                </div>
+                <div style="display: flex; gap: 12px;">
+                  <div style="flex: 1;">
+                    <label style="display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-display); font-weight: 700;">Start Date</label>
+                    <input type="date" id="adminCohortStart" class="free-input" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 14px;">
+                  </div>
+                  <div style="flex: 1;">
+                    <label style="display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-display); font-weight: 700;">End Date</label>
+                    <input type="date" id="adminCohortEnd" class="free-input" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 14px;">
+                  </div>
+                </div>
+                <button class="btn-lime" onclick="submitCreateCohort()" style="margin-top: 8px;">Create Cohort</button>
+                <div id="adminCohortMessage" style="font-size: 13px; margin-top: 8px; text-align: center; display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: MEMBERS -->
+          <div id="adminTabMembers" class="admin-tab-content">
+            <div class="g-card" style="margin-bottom: 20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:16px; flex-wrap:wrap;">
+                <h3 class="plan-sec-title" style="margin:0;">Steward Roster</h3>
+                <input type="text" id="adminMemberSearch" placeholder="Search by name, email, or handle..." style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 12px; color:#fff; font-size:13px; width:220px; outline:none;" oninput="filterAdminMembers()">
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Name / Email</th>
+                      <th>Skool</th>
+                      <th>Role</th>
+                      <th>Status</th>
+                      <th>Active</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminMembersTableBody">
+                    <tr><td colspan="6" style="text-align:center; color:rgba(255,255,255,0.4);">Loading roster...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: MODERATION -->
+          <div id="adminTabModeration" class="admin-tab-content">
+            <div class="g-card">
+              <h3 class="plan-sec-title" style="margin-bottom:16px;">Flagged Reports Queue</h3>
+              <div style="overflow-x:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Source</th>
+                      <th>Flagged Content</th>
+                      <th>Reporter Context</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminModerationTableBody">
+                    <tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading report queue...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: SETTINGS -->
+          <div id="adminTabSettings" class="admin-tab-content">
+            <div class="g-card" style="margin-bottom: 24px;">
+              <h3 class="plan-sec-title" style="margin-bottom:16px;">System Configuration Flags</h3>
+              <div style="overflow-x:auto; margin-bottom: 20px;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Setting Key</th>
+                      <th>Value</th>
+                      <th>Updated At</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminSettingsTableBody">
+                    <tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading settings...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Create/Set setting inline form -->
+              <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
+                <h4 style="margin:0 0 12px; font-size:13px; font-weight:700; color:var(--lime); text-transform:uppercase;">Set Setting Key</h4>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+                  <div style="flex:1; min-width:180px;">
+                    <label style="display:block; font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:4px;">Key</label>
+                    <input type="text" id="adminSettingKeyInput" placeholder="e.g. AUTO_INVITE_ENABLED" style="width:100%; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:8px 10px; font-size:13px; outline:none;">
+                  </div>
+                  <div style="flex:1.5; min-width:240px;">
+                    <label style="display:block; font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:4px;">Value</label>
+                    <input type="text" id="adminSettingValInput" placeholder="e.g. true or value string" style="width:100%; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; padding:8px 10px; font-size:13px; outline:none;">
+                  </div>
+                  <button class="btn-lime" onclick="saveAdminSetting()" style="padding:8px 16px; font-size:12px; height:36px; min-height:auto; width:auto; border-radius:6px;">Save Key</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: AUDIT LOG -->
+          <div id="adminTabAudit" class="admin-tab-content">
+            <div class="g-card">
+              <h3 class="plan-sec-title" style="margin-bottom:16px;">Security Audit Log (Last 200 Actions)</h3>
+              <div style="overflow-x:auto; max-height:480px; overflow-y:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Actor</th>
+                      <th>Action</th>
+                      <th>Target</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminAuditTableBody">
+                    <tr><td colspan="5" style="text-align:center; color:rgba(255,255,255,0.4);">Loading audit log...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
         <div class="view-header-block">
@@ -9533,1593 +10224,866 @@ window.MEMBER_EMAIL = MEMBER_EMAIL;
 window.MEMBER_NAME = MEMBER_NAME;
 window.MEMBER_ID = MEMBER_ID;
 
-  const MOVEMENTS = [
-    {
-      num: 1,
-      name: "Our Father in heaven",
-      prompt: "Who are you talking to right now?",
-      teaching: "The first word is Our, not my. Even alone in a room, they are praying in the plural. They were never alone in it.",
-      inputType: "text"
-    },
-    {
-      num: 2,
-      name: "Hallowed be your name",
-      prompt: "What is true about Him today that you need to be true?",
-      teaching: "It is not flattery before a favor. A steward who says who God is out loud has just resized their own problem without touching the problem.",
-      inputType: "text"
-    },
-    {
-      num: 3,
-      name: "Your kingdom come, your will be done",
-      prompt: "What are you holding that is not yours to decide?",
-      teaching: "On earth as in heaven means here. This house, this decision, this week. Not someday and not somewhere else.",
-      inputType: "textarea"
-    },
-    {
-      num: 4,
-      name: "Give us this day our daily bread",
-      prompt: "What do you need today?",
-      teaching: "Daily bread is permission and limit in the same breath. They are allowed to ask. They are asked to ask for today.",
-      inputType: "text-small",
-      surfacedList: true
-    },
-    {
-      num: 5,
-      name: "Forgive us our debts, as we forgive our debtors",
-      prompt: "Forgiveness",
-      teaching: "confession and release in one breath.",
-      customScreen: "movement5"
-    },
-    {
-      num: 6,
-      name: "Lead us not into temptation, but deliver us from evil",
-      prompt: "Where are you likely to fall today?",
-      teaching: "Most stewards pray this after they fall, as damage control. The prayer puts it before, on purpose. They already know where they are weak. Name it before they get there.",
-      inputType: "text"
-    }
+  /* ================== MY BIBLE MODULE ================== */
+  const BIBLE_BOOKS = [
+    { name: "Genesis", chapters: 50 }, { name: "Exodus", chapters: 40 }, { name: "Leviticus", chapters: 27 },
+    { name: "Numbers", chapters: 36 }, { name: "Deuteronomy", chapters: 34 }, { name: "Joshua", chapters: 24 },
+    { name: "Judges", chapters: 21 }, { name: "Ruth", chapters: 4 }, { name: "1 Samuel", chapters: 31 },
+    { name: "2 Samuel", chapters: 24 }, { name: "1 Kings", chapters: 22 }, { name: "2 Kings", chapters: 25 },
+    { name: "1 Chronicles", chapters: 29 }, { name: "2 Chronicles", chapters: 36 }, { name: "Ezra", chapters: 10 },
+    { name: "Nehemiah", chapters: 13 }, { name: "Esther", chapters: 10 }, { name: "Job", chapters: 42 },
+    { name: "Psalms", chapters: 150 }, { name: "Proverbs", chapters: 31 }, { name: "Ecclesiastes", chapters: 12 },
+    { name: "Song of Solomon", chapters: 8 }, { name: "Isaiah", chapters: 66 }, { name: "Jeremiah", chapters: 52 },
+    { name: "Lamentations", chapters: 5 }, { name: "Ezekiel", chapters: 48 }, { name: "Daniel", chapters: 12 },
+    { name: "Hosea", chapters: 14 }, { name: "Joel", chapters: 3 }, { name: "Amos", chapters: 9 },
+    { name: "Obadiah", chapters: 1 }, { name: "Jonah", chapters: 4 }, { name: "Micah", chapters: 7 },
+    { name: "Nahum", chapters: 3 }, { name: "Habakkuk", chapters: 3 }, { name: "Zephaniah", chapters: 3 },
+    { name: "Haggai", chapters: 2 }, { name: "Zechariah", chapters: 14 }, { name: "Malachi", chapters: 4 },
+    { name: "Matthew", chapters: 28 }, { name: "Mark", chapters: 16 }, { name: "Luke", chapters: 24 },
+    { name: "John", chapters: 21 }, { name: "Acts", chapters: 28 }, { name: "Romans", chapters: 16 },
+    { name: "1 Corinthians", chapters: 16 }, { name: "2 Corinthians", chapters: 13 }, { name: "Galatians", chapters: 6 },
+    { name: "Ephesians", chapters: 6 }, { name: "Philippians", chapters: 4 }, { name: "Colossians", chapters: 4 },
+    { name: "1 Thessalonians", chapters: 5 }, { name: "2 Thessalonians", chapters: 3 }, { name: "1 Timothy", chapters: 6 },
+    { name: "2 Timothy", chapters: 4 }, { name: "Titus", chapters: 3 }, { name: "Philemon", chapters: 1 },
+    { name: "Hebrews", chapters: 13 }, { name: "James", chapters: 5 }, { name: "1 Peter", chapters: 5 },
+    { name: "2 Peter", chapters: 3 }, { name: "1 John", chapters: 5 }, { name: "2 John", chapters: 1 },
+    { name: "3 John", chapters: 1 }, { name: "Jude", chapters: 1 }, { name: "Revelation", chapters: 22 }
   ];
 
+  const BIBLE_READER = {
+    currentBook: "Matthew",
+    currentChapter: 1,
+    selectedVerse: null,
+    marks: [],
+    loadedVerses: [],
+
+    async init() {
+      const select = document.getElementById("myBibleBookSelect");
+      if (select && select.children.length === 0) {
+        select.innerHTML = BIBLE_BOOKS.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+      }
+      await this.loadState();
+      await this.loadMarks();
+      this.syncUI();
+      await this.loadChapterContent();
+    },
+
+    syncUI() {
+      const select = document.getElementById("myBibleBookSelect");
+      if (select) select.value = this.currentBook;
+      const bookObj = BIBLE_BOOKS.find(b => b.name === this.currentBook) || BIBLE_BOOKS[39];
+      const chipsContainer = document.getElementById("myBibleChapterChips");
+      if (chipsContainer) {
+        chipsContainer.innerHTML = Array.from({ length: bookObj.chapters }, (_, i) => i + 1).map(ch => `
+          <button onclick="BIBLE_READER.setChapter(${ch})" style="flex-shrink:0; width:40px; height:40px; border-radius:8px; border:1px solid ${ch === this.currentChapter ? 'var(--lime)' : 'rgba(255,255,255,0.1)'}; background:${ch === this.currentChapter ? 'rgba(204,255,0,0.1)' : 'rgba(255,255,255,0.02)'}; color:${ch === this.currentChapter ? 'var(--lime)' : '#fff'}; font-family:var(--font-display); font-weight:700; cursor:pointer; transition: all 0.2s;">${ch}</button>
+        `).join('');
+        const activeChip = chipsContainer.children[this.currentChapter - 1];
+        if (activeChip) activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+      const readerTitle = document.getElementById("myBibleReaderTitle");
+      if (readerTitle) readerTitle.textContent = `${this.currentBook} ${this.currentChapter}`;
+    },
+
+    async setBook(bookName) {
+      this.currentBook = bookName;
+      this.currentChapter = 1;
+      this.syncUI();
+      await this.loadChapterContent();
+      await this.saveState();
+    },
+
+    async setChapter(ch) {
+      this.currentChapter = ch;
+      this.syncUI();
+      await this.loadChapterContent();
+      await this.saveState();
+    },
+
+    async navigateChapter(dir) {
+      const bookObj = BIBLE_BOOKS.find(b => b.name === this.currentBook);
+      let ch = this.currentChapter + dir;
+      if (ch < 1) {
+        const bookIdx = BIBLE_BOOKS.findIndex(b => b.name === this.currentBook);
+        if (bookIdx > 0) {
+          const prevBookObj = BIBLE_BOOKS[bookIdx - 1];
+          this.currentBook = prevBookObj.name;
+          this.currentChapter = prevBookObj.chapters;
+        }
+      } else if (ch > bookObj.chapters) {
+        const bookIdx = BIBLE_BOOKS.findIndex(b => b.name === this.currentBook);
+        if (bookIdx < BIBLE_BOOKS.length - 1) {
+          const nextBookObj = BIBLE_BOOKS[bookIdx + 1];
+          this.currentBook = nextBookObj.name;
+          this.currentChapter = 1;
+        }
+      } else {
+        this.currentChapter = ch;
+      }
+      this.syncUI();
+      await this.loadChapterContent();
+      await this.saveState();
+    },
+
+    async loadChapterContent() {
+      const container = document.getElementById("myBibleVerseContainer");
+      if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,255,255,0.4);">Loading chapter...</div>';
+      try {
+        const url = `${FN_BASE}/bible-verses?ref=${encodeURIComponent(this.currentBook + ' ' + this.currentChapter)}`;
+        const res = await fetch(url);
+        if (res.status !== 200) throw new Error("Load failed");
+        const data = await res.json();
+        this.loadedVerses = data.verses || [];
+        this.renderVerses();
+      } catch (e) {
+        if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,100,100,0.8);">Failed to load chapter scripture.</div>';
+      }
+    },
+
+    renderVerses() {
+      const container = document.getElementById("myBibleVerseContainer");
+      if (!container) return;
+      container.innerHTML = this.loadedVerses.map(v => {
+        const hasHighlight = this.marks.some(m => m.book === v.book_name && m.chapter === v.chapter && m.verse === v.verse && m.kind === 'highlight');
+        const noteMark = this.marks.find(m => m.book === v.book_name && m.chapter === v.chapter && m.verse === v.verse && m.kind === 'note');
+        return `
+          <span class="bible-verse-row ${hasHighlight ? 'highlighted' : ''}" data-verse="${v.verse}" onclick="BIBLE_READER.selectVerse(${v.verse}, event)">
+            <span class="verse-num">${v.verse}</span>${v.text.trim()}
+            ${noteMark ? `<span class="verse-note-indicator" onclick="BIBLE_READER.viewNote(${v.verse}, event)" title="${noteMark.body.replace(/"/g, '&quot;')}">💬 note</span>` : ''}
+          </span>
+        `;
+      }).join(' ');
+    },
+
+    selectVerse(verseNum, event) {
+      if (event) event.stopPropagation();
+      this.selectedVerse = verseNum;
+      const noteMark = this.marks.find(m => m.book === this.currentBook && m.chapter === this.currentChapter && m.verse === verseNum && m.kind === 'note');
+      const card = document.getElementById("verseActionsCard");
+      const label = document.getElementById("selectedVerseLabel");
+      const noteInput = document.getElementById("verseNoteInput");
+      const btnHighlight = document.getElementById("btnHighlightToggle");
+      if (card && label && noteInput) {
+        label.textContent = `${this.currentBook} ${this.currentChapter}:${verseNum}`;
+        noteInput.value = noteMark ? noteMark.body : '';
+        const hasHighlight = this.marks.some(m => m.book === this.currentBook && m.chapter === this.currentChapter && m.verse === verseNum && m.kind === 'highlight');
+        if (btnHighlight) btnHighlight.textContent = hasHighlight ? "Remove Highlight" : "Highlight (Lime)";
+        card.style.display = 'block';
+      }
+    },
+
+    closeVerseActions() {
+      const card = document.getElementById("verseActionsCard");
+      if (card) card.style.display = 'none';
+      this.selectedVerse = null;
+    },
+
+    async toggleHighlightOnSelected() {
+      if (!this.selectedVerse) return;
+      const v = this.selectedVerse;
+      const hasHighlight = this.marks.some(m => m.book === this.currentBook && m.chapter === this.currentChapter && m.verse === v && m.kind === 'highlight');
+      if (hasHighlight) {
+        const mark = this.marks.find(m => m.book === this.currentBook && m.chapter === this.currentChapter && m.verse === v && m.kind === 'highlight');
+        await this.deleteMark(mark.id);
+      } else {
+        await this.addMark(this.currentBook, this.currentChapter, v, 'highlight', '');
+      }
+      this.closeVerseActions();
+    },
+
+    async removeMarkupOnSelected() {
+      if (!this.selectedVerse) return;
+      const v = this.selectedVerse;
+      const matching = this.marks.filter(m => m.book === this.currentBook && m.chapter === this.currentChapter && m.verse === v);
+      for (const m of matching) {
+        await this.deleteMark(m.id);
+      }
+      this.closeVerseActions();
+    },
+
+    async saveNoteOnSelected() {
+      if (!this.selectedVerse) return;
+      const v = this.selectedVerse;
+      const body = document.getElementById("verseNoteInput").value.trim();
+      const existing = this.marks.find(m => m.book === this.currentBook && m.chapter === this.currentChapter && m.verse === v && m.kind === 'note');
+      if (existing) {
+        await this.deleteMark(existing.id);
+      }
+      if (body) {
+        await this.addMark(this.currentBook, this.currentChapter, v, 'note', body);
+      }
+      this.closeVerseActions();
+    },
+
+    viewNote(verseNum, event) {
+      if (event) event.stopPropagation();
+      this.selectVerse(verseNum);
+    },
+
+    async loadState() {
+      try {
+        const res = await fetch(`${FN_BASE}/my-bible-state`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({ action: 'get', email: MEMBER_EMAIL })
+        });
+        if (res.status === 200) {
+          const body = await res.json();
+          if (body.ok && body.state) {
+            const data = body.state;
+            if (data.book) this.currentBook = data.book;
+            if (data.chapter) this.currentChapter = data.chapter;
+            if (data.verse) {
+              const banner = document.getElementById("myBibleResumeBanner");
+              const text = document.getElementById("resumeSpotText");
+              if (banner && text) {
+                text.textContent = `${data.book} ${data.chapter}:${data.verse}`;
+                banner.dataset.book = data.book;
+                banner.dataset.chapter = data.chapter;
+                banner.dataset.verse = data.verse;
+                banner.style.display = 'flex';
+              }
+            }
+            if (data.mode && data.mode !== '365') {
+              switchBibleMode(data.mode);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to load My Bible state:", e);
+      }
+    },
+
+    async saveState(verseNum = null) {
+      try {
+        await fetch(`${FN_BASE}/my-bible-state`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({
+            action: 'set',
+            email: MEMBER_EMAIL,
+            book: this.currentBook,
+            chapter: this.currentChapter,
+            verse: verseNum,
+            mode: document.getElementById('toggleMyBible').style.background !== 'none' ? 'my' : '365'
+          })
+        });
+      } catch (e) {
+        console.warn("Failed to save My Bible state:", e);
+      }
+    },
+
+    async loadMarks() {
+      try {
+        const res = await fetch(`${FN_BASE}/my-bible-marks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({ action: 'list', email: MEMBER_EMAIL })
+        });
+        if (res.status === 200) {
+          const body = await res.json();
+          this.marks = (body.ok && body.marks) ? body.marks : [];
+          this.renderVerses();
+          this.renderMarkupsList();
+        }
+      } catch (e) {
+        console.warn("Failed to load marks:", e);
+      }
+    },
+
+    async addMark(book, chapter, verse, kind, body) {
+      try {
+        const res = await fetch(`${FN_BASE}/my-bible-marks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({ action: 'add', email: MEMBER_EMAIL, book, chapter, verse, kind, body })
+        });
+        if (res.status === 200) {
+          await this.loadMarks();
+        }
+      } catch (e) {
+        console.warn("Failed to add mark:", e);
+      }
+    },
+
+    async deleteMark(id) {
+      try {
+        const res = await fetch(`${FN_BASE}/my-bible-marks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({ action: 'remove', email: MEMBER_EMAIL, id })
+        });
+        if (res.status === 200) {
+          await this.loadMarks();
+        }
+      } catch (e) {
+        console.warn("Failed to delete mark:", e);
+      }
+    },
+
+    renderMarkupsList() {
+      const listContainer = document.getElementById("markupsListContent");
+      if (!listContainer) return;
+      if (this.marks.length === 0) {
+        listContainer.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.3); font-style:italic;">No marks yet. Tap any verse to highlight or add notes.</div>';
+        return;
+      }
+      listContainer.innerHTML = this.marks.map(m => `
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; font-size:12px; cursor:pointer;" onclick="BIBLE_READER.goToSpot('${m.book}', ${m.chapter}, ${m.verse})">
+          <div style="display:flex; justify-content:space-between; font-weight:700; color:var(--lime); margin-bottom:4px;">
+            <span>${m.book} ${m.chapter}:${m.verse}</span>
+            <span style="font-size:10px; font-weight:normal; text-transform:uppercase; color:rgba(255,255,255,0.4);">${m.kind}</span>
+          </div>
+          ${m.body ? `<div style="color:rgba(255,255,255,0.7); line-height:1.4;">${m.body}</div>` : ''}
+        </div>
+      `).join('');
+    },
+
+    goToSpot(book, chapter, verse) {
+      this.currentBook = book;
+      this.currentChapter = chapter;
+      this.syncUI();
+      this.loadChapterContent().then(() => {
+        setTimeout(() => {
+          const rows = document.querySelectorAll("#myBibleVerseContainer .bible-verse-row");
+          rows.forEach(r => {
+            if (parseInt(r.dataset.verse) === verse) {
+              r.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              r.style.outline = '2px solid var(--lime)';
+              setTimeout(() => r.style.outline = 'none', 1500);
+            }
+          });
+        }, 300);
+      });
+      this.saveState(verse);
+    }
+  };
+
+  window.BIBLE_READER = BIBLE_READER;
+
+  window.onBookSelected = function() {
+    const book = document.getElementById("myBibleBookSelect").value;
+    BIBLE_READER.setBook(book);
+  };
+
+  window.navigateChapter = function(dir) {
+    BIBLE_READER.navigateChapter(dir);
+  };
+
+  window.resumeLastSpot = function() {
+    const banner = document.getElementById("myBibleResumeBanner");
+    if (banner) {
+      const book = banner.dataset.book;
+      const chapter = parseInt(banner.dataset.chapter);
+      const verse = parseInt(banner.dataset.verse);
+      BIBLE_READER.goToSpot(book, chapter, verse);
+      banner.style.display = 'none';
+    }
+  };
+
+  window.toggleMarkupsView = function() {
+    const drawer = document.getElementById("markupsListView");
+    const btn = document.getElementById("btnToggleMarkupsView");
+    if (drawer && btn) {
+      const isHidden = drawer.style.display === 'none';
+      drawer.style.display = isHidden ? 'block' : 'none';
+      btn.textContent = isHidden ? "Hide Markups" : "Show Markups";
+    }
+  };
+
+  window.switchBibleMode = function(mode) {
+    const is365 = mode === '365';
+    const t365 = document.getElementById('toggleBible365');
+    const tMy = document.getElementById('toggleMyBible');
+    if (t365) {
+      t365.style.background = is365 ? 'var(--lime)' : 'none';
+      t365.style.color = is365 ? '#000' : 'rgba(255,255,255,0.6)';
+    }
+    if (tMy) {
+      tMy.style.background = !is365 ? 'var(--lime)' : 'none';
+      tMy.style.color = !is365 ? '#000' : 'rgba(255,255,255,0.6)';
+    }
+    const header = document.getElementById('bibleTitleHeader');
+    if (header) header.textContent = is365 ? 'Bible 365' : 'My Bible';
+    const wrapper365 = document.getElementById('bible365ContentWrapper');
+    const myBibleWrapper = document.getElementById('myBibleContentWrapper');
+    if (is365) {
+      if (wrapper365) wrapper365.style.display = 'block';
+      if (myBibleWrapper) myBibleWrapper.style.display = 'none';
+    } else {
+      if (wrapper365) wrapper365.style.display = 'none';
+      if (myBibleWrapper) myBibleWrapper.style.display = 'block';
+      initMyBibleReader();
+    }
+    BIBLE_READER.saveState();
+  };
+
+  window.initMyBibleReader = function() {
+    if (!window._myBibleInited) {
+      window._myBibleInited = true;
+      BIBLE_READER.init();
+    }
+  };
+
+  window.sendBibleChatMessage = async function() {
+    const input = document.getElementById("bibleChatInput");
+    const text = input ? input.value.trim() : '';
+    if (!text) return;
+    input.value = '';
+    const thread = document.getElementById("bibleChatThread");
+    if (!thread) return;
+    thread.innerHTML += `
+      <div style="background:rgba(204,255,0,0.05); border:1px solid rgba(204,255,0,0.15); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; align-self:flex-end; max-width:80%;">
+        <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px;">You</div>
+        ${text}
+      </div>
+    `;
+    thread.scrollTop = thread.scrollHeight;
+    const typingId = 'gov-typing-' + Date.now();
+    thread.innerHTML += `
+      <div id="${typingId}" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
+        <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Governor</div>
+        <span style="color:rgba(255,255,255,0.4); font-style:italic;">Seeking scripture...</span>
+      </div>
+    `;
+    thread.scrollTop = thread.scrollHeight;
+    try {
+      const res = await fetch(`${FN_BASE}/governor-ai`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+        body: JSON.stringify({
+          task: 'bible_study',
+          prompt: text,
+          context: { book: BIBLE_READER.currentBook, chapter: BIBLE_READER.currentChapter },
+          email: MEMBER_EMAIL
+        })
+      });
+      const typingEl = document.getElementById(typingId);
+      if (typingEl) typingEl.remove();
+      if (res.status === 200) {
+        const body = await res.json();
+        if (body.ok && body.out) {
+          const data = body.out;
+          let responseHtml = `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
+              <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Governor</div>
+              <div>${data.reply}</div>
+          `;
+          if (data.verses && data.verses.length > 0) {
+            responseHtml += `<div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">`;
+            for (const refObj of data.verses) {
+              const verseCardId = 'ref-' + Math.random().toString(36).substr(2, 9);
+              const refBook = refObj.reference.split(' ').slice(0, -1).join(' ');
+              const refCoords = refObj.reference.split(' ').pop().split(':');
+              const refChapter = parseInt(refCoords[0]) || 1;
+              const refVerse = parseInt(refCoords[1]) || 1;
+              responseHtml += `
+                <div id="${verseCardId}" style="background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.08); padding:8px 10px; border-radius:8px; font-size:12px; line-height:1.4;">
+                  <div style="font-weight:700; font-size:10px; color:var(--lime); cursor:pointer;" onclick="BIBLE_READER.goToSpot('${refBook}', ${refChapter}, ${refVerse})">📖 ${refObj.reference}</div>
+                  <div class="ref-text" style="color:rgba(255,255,255,0.6); font-style:italic; margin-top:2px;">${refObj.text || 'Reference not found'}</div>
+                </div>
+              `;
+            }
+            responseHtml += `</div>`;
+          }
+          responseHtml += `</div>`;
+          thread.innerHTML += responseHtml;
+        } else {
+          throw new Error("Invalid response format");
+        }
+      } else {
+        thread.innerHTML += `
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,100,100,0.1); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; color:rgba(255,100,100,0.8); max-width:80%;">
+            <div style="font-weight:700; font-size:11px; text-transform:uppercase; margin-bottom:4px;">Governor</div>
+            Sorry, I encountered an issue retrieving scripture.
+          </div>
+        `;
+      }
+      thread.scrollTop = thread.scrollHeight;
+    } catch(e) {
+      console.error(e);
+      const typingEl = document.getElementById(typingId);
+      if (typingEl) typingEl.remove();
+    }
+  };
+
+
   const PRAYER = {
-    activePass: 'morning',
-    morningStep: 1,
-    morningData: {},
-    middayStep: 1,
-    middayInputVal: '',
-    eveningData: {},
-    editingPrayerId: null,
-    publishingPrayerId: null,
-    closingPrayerId: null,
-    closeStateSelected: {},
-    unawareEmptySeen: false,
-    cachedMirrorData: null,
+    activeCategory: null,
+    weightText: '',
+    leaveOption: 'private',
+    ledger: [],
+    selectedLedgerItem: null,
+    recognition: null,
+    isRecording: false,
+    inlineVersesData: null,
 
     async init() {
       const hr = new Date().getHours();
-      let suggested = 'morning';
-      if (hr >= 11 && hr < 17) suggested = 'midday';
-      else if (hr >= 17) suggested = 'evening';
-
-      ['Morning', 'Midday', 'Evening', 'Mirror', 'Answered'].forEach(pass => {
-        const tab = document.getElementById('prTab' + pass);
-        if (tab) {
-          if (pass.toLowerCase() === suggested) {
-            tab.classList.add('suggested');
-          } else {
-            tab.classList.remove('suggested');
-          }
-        }
-      });
-
-      try {
-        const res = await fetch(FN_BASE + '/prayer-state', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'get'
-          })
-        });
-        const data = await res.json();
-        console.log("PRAYER.init: get state response status:", res.status, "data:", JSON.stringify(data));
-        if (res.status === 200) {
-          this.unawareEmptySeen = !!data.unaware_empty_seen;
-          console.log("PRAYER.init: set unawareEmptySeen to:", this.unawareEmptySeen);
-        }
-      } catch (e) {
-        console.error("Failed to load persisted unaware_empty_seen state:", e);
-      }
-
-      this.switchPass(suggested);
-    },
-
-    switchPass(pass) {
-      this.activePass = pass;
-      document.querySelectorAll('.pr-tab').forEach(t => t.classList.remove('active'));
-
-      const tabId = 'prTab' + pass.charAt(0).toUpperCase() + pass.slice(1);
-      const tabEl = document.getElementById(tabId);
-      if (tabEl) tabEl.classList.add('active');
-
-      const passContent = document.getElementById('prPassContent');
-      const listView = document.getElementById('listView');
-      const prAnsweredContent = document.getElementById('prAnsweredContent');
-
-      if (pass === 'mirror') {
-        if (passContent) passContent.style.display = 'none';
-        if (prAnsweredContent) prAnsweredContent.style.display = 'none';
-        if (listView) listView.style.display = 'block';
-        this.renderMirror(true);
-      } else if (pass === 'answered') {
-        if (passContent) passContent.style.display = 'none';
-        if (listView) listView.style.display = 'none';
-        if (prAnsweredContent) prAnsweredContent.style.display = 'block';
-        this.renderAnswered();
-      } else {
-        if (passContent) passContent.style.display = 'block';
-        if (listView) listView.style.display = 'none';
-        if (prAnsweredContent) prAnsweredContent.style.display = 'none';
-
-        if (pass === 'morning') {
-          this.morningStep = 1;
-          this.renderMorningStep();
-        } else if (pass === 'midday') {
-          this.loadMiddayState();
-        } else if (pass === 'evening') {
-          this.eveningData = { m6: '', m5a: '', m5b: '', m4: '' };
-          this.renderEveningPass();
-        }
-      }
-    },
-
-    renderMorningStep() {
-      const container = document.getElementById('prPassContent');
-      if (!container) return;
-
-      const mov = MOVEMENTS[this.morningStep - 1];
-      const valKey = 'm' + this.morningStep;
-
-      let inputHtml = '';
-      if (mov.customScreen === "movement5") {
-        const valA = this.morningData['m5a'] || '';
-        const valB = this.morningData['m5b'] || '';
-        inputHtml = `
-          <div class="pr-field">
-            <label class="pr-label">What do you need forgiven?</label>
-            <input class="pr-input" type="text" id="prM5a" value="${valA.replace(/"/g, '&quot;')}" placeholder="Name their debt..." oninput="PRAYER.morningData['m5a']=this.value">
-          </div>
-          <div class="pr-field">
-            <label class="pr-label">Who are you still holding something against?</label>
-            <input class="pr-input" type="text" id="prM5b" value="${valB.replace(/"/g, '&quot;')}" placeholder="Name the steward or debtor..." oninput="PRAYER.morningData['m5b']=this.value">
-          </div>
-        `;
-      } else if (mov.inputType === "textarea") {
-        const val = this.morningData[valKey] || '';
-        inputHtml = `
-          <div class="pr-field">
-            <textarea class="pr-input pr-textarea" id="prInput" placeholder="Write their response..." oninput="PRAYER.morningData['${valKey}']=this.value">${val}</textarea>
-          </div>
-        `;
-      } else {
-        const val = this.morningData[valKey] || '';
-        const isSmall = mov.inputType === 'text-small';
-        let carryBtnHtml = '';
-        if (mov.num === 4) {
-          carryBtnHtml = `
-            <div style="margin-top: 8px;">
-              <button class="pr-btn pr-btn-ghost" style="font-size: 11px; padding: 6px 12px; min-height: 32px;" onclick="PRAYER.carryBreadToMirror(document.getElementById('prInput').value)">Carry this</button>
-            </div>
-          `;
-        }
-        inputHtml = `
-          <div class="pr-field">
-            <input class="pr-input ${isSmall ? 'pr-input-small' : ''}" type="text" id="prInput" value="${val.replace(/"/g, '&quot;')}" placeholder="Write their response..." oninput="PRAYER.morningData['${valKey}']=this.value">
-            ${carryBtnHtml}
-          </div>
-        `;
-      }
-
-      let listHtml = '';
-      if (mov.surfacedList) {
-        listHtml = `
-          <div class="pr-surfaced-list">
-            <label class="pr-label">📖 Surfaced from their Closet today:</label>
-            <div id="prDailySurfaced">Loading their list...</div>
-          </div>
-        `;
-        this.fetchDailySurfaced();
-      }
-
-      container.innerHTML = `
-        <div class="pr-card">
-          <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
-            Movement ${mov.num} of 6
-          </div>
-          <h2 class="pr-title">${mov.name}</h2>
-          <div class="pr-teaching">${mov.teaching}</div>
-
-          <div class="pr-field">
-            <label class="pr-label">${mov.customScreen ? 'Reflection' : mov.prompt}</label>
-            ${inputHtml}
-          </div>
-
-          ${listHtml}
-
-          <div class="pr-nav-row">
-            <button class="pr-btn pr-btn-ghost" ${this.morningStep === 1 ? 'disabled' : ''} onclick="PRAYER.prevMorningStep()">Back</button>
-            <button class="pr-btn" onclick="PRAYER.nextMorningStep()">${this.morningStep === 6 ? 'Finish' : 'Next'}</button>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => {
-        const inp = document.getElementById('prInput') || document.getElementById('prM5a');
-        if (inp) inp.focus();
-      }, 50);
-    },
-
-    prevMorningStep() {
-      if (this.morningStep > 1) {
-        this.morningStep--;
-        this.renderMorningStep();
-      }
-    },
-
-    nextMorningStep() {
-      if (this.morningStep < 6) {
-        this.morningStep++;
-        this.renderMorningStep();
-      } else {
-        // Show completion screen with assembled prayer
-        this.renderMorningCompletion();
-      }
-    },
-
-    renderMorningCompletion() {
-      const container = document.getElementById('prPassContent');
-      if (!container) { this.morningData = {}; this.morningStep = 1; go('dash'); return; }
-      const lines = [
-        this.morningData.m1, this.morningData.m2, this.morningData.m3,
-        this.morningData.m4, this.morningData.m5a, this.morningData.m5b,
-        this.morningData.m6
-      ].filter(Boolean);
-      const composed = lines.length ? lines.join(' ') : 'Your prayer was lifted in silence.';
-      container.innerHTML = `
-        <div class="pr-card" style="text-align:center;">
-          <div style="font-size:11px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">YOUR PRAYER</div>
-          <p style="font-size:16px;color:#fff;line-height:1.6;font-style:italic;max-width:520px;margin:0 auto 24px;">&ldquo;${composed.replace(/"/g,'&quot;')}&rdquo;</p>
-          <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:24px;">Saved to My Prayers, private. Lift it to the Wall only if you choose to.</p>
-          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-            <button class="pr-btn" onclick="PRAYER.finishMorning(false)">Amen \u00b7 Save to My Prayers</button>
-            <button class="pr-btn pr-btn-ghost" onclick="PRAYER.finishMorning(true)">Lift to the Wall</button>
-          </div>
-        </div>
-      `;
-    },
-
-    finishMorning(liftToWall) {
-      if (liftToWall && typeof this.publishPrayer === 'function') {
-        // Assemble and publish
-        const lines = [
-          this.morningData.m1, this.morningData.m2, this.morningData.m3,
-          this.morningData.m4, this.morningData.m5a, this.morningData.m5b,
-          this.morningData.m6
-        ].filter(Boolean);
-        const body = lines.join(' ');
-        if (body) this.publishPrayer({ body, pass: 'morning' });
-      }
-      this.morningData = {};
-      this.morningStep = 1;
-      go('dash');
-    },
-
-    async fetchDailySurfaced() {
-      try {
-        const res = await fetch(FN_BASE + '/prayers-read', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            view: 'daily'
-          })
-        });
-        const data = await res.json();
-        const listDiv = document.getElementById('prDailySurfaced');
-        if (!listDiv) return;
-
-        if (res.status !== 200 || !Array.isArray(data)) {
-          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Unable to retrieve daily prayers.</div>';
-          return;
-        }
-
-        if (data.length === 0) {
-          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Their prayer closet is currently empty.</div>';
-          return;
-        }
-
-        listDiv.innerHTML = data.map(p => `
-          <div class="pr-surfaced-card">
-            <div class="pr-surfaced-body">${p.body}</div>
-            <button class="pr-btn pr-btn-ghost pr-surfaced-carry" onclick="PRAYER.carryBreadToMirror('${p.body.replace(/'/g, "\\'")}')">Carry</button>
-          </div>
-        `).join('');
-
-      } catch (e) {
-        console.error(e);
-        const listDiv = document.getElementById('prDailySurfaced');
-        if (listDiv) {
-          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Unable to retrieve daily prayers.</div>';
-        }
-      }
-    },
-
-    carryToWall(text) {
-      go('wall');
-      setTimeout(() => {
-        const wallTextArea = document.querySelector('#wallView textarea, #wallView #postBody');
-        if (wallTextArea) {
-          wallTextArea.value = text;
-          wallTextArea.focus();
+      const subline = document.getElementById("hioDoorSubline");
+      if (subline) {
+        if (hr >= 5 && hr < 11) {
+          subline.textContent = "Hand the day over before you carry it.";
         } else {
-          navigator.clipboard.writeText(text);
-        }
-      }, 100);
-    },
-
-    async loadMiddayState() {
-      const container = document.getElementById('prPassContent');
-      if (container) container.innerHTML = '<div style="padding: 20px; color: rgba(255,255,255,0.4);">Loading their midday rotation...</div>';
-
-      try {
-        const res = await fetch(FN_BASE + '/prayer-state', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'get'
-          })
-        });
-        const data = await res.json();
-        if (res.status === 200 && data.midday_next_movement) {
-          this.middayStep = data.midday_next_movement;
-        } else {
-          this.middayStep = 1;
-        }
-        if (this.activePass === 'midday') {
-          this.renderMiddayPass();
-        }
-      } catch (e) {
-        console.error(e);
-        this.middayStep = 1;
-        if (this.activePass === 'midday') {
-          this.renderMiddayPass();
+          subline.textContent = "Don't take tonight's weight to bed.";
         }
       }
+      this.resetFlow();
+      await this.loadLedger();
     },
 
-    renderMiddayPass() {
-      const container = document.getElementById('prPassContent');
-      if (!container) return;
+    resetFlow() {
+      this.activeCategory = null;
+      this.weightText = '';
+      this.leaveOption = 'private';
+      this.selectedLedgerItem = null;
+      this.inlineVersesData = null;
+      
+      const nameInput = document.getElementById("hioNameInput");
+      if (nameInput) nameInput.value = '';
 
-      const mov = MOVEMENTS[this.middayStep - 1];
+      document.getElementById("hioStepDoor").style.display = 'block';
+      document.getElementById("hioStepName").style.display = 'none';
+      document.getElementById("hioStepHand").style.display = 'none';
+      document.getElementById("hioStepLeave").style.display = 'none';
+      document.getElementById("hioStepConfirm").style.display = 'none';
+    },
 
-      let inputHtml = '';
-      if (mov.customScreen === "movement5") {
-        inputHtml = `
-          <div class="pr-field">
-            <label class="pr-label">What do you need forgiven?</label>
-            <input class="pr-input" type="text" id="prMid5a" placeholder="Name their debt...">
-          </div>
-          <div class="pr-field">
-            <label class="pr-label">Who are you still holding something against?</label>
-            <input class="pr-input" type="text" id="prMid5b" placeholder="Name the steward or debtor...">
-          </div>
-        `;
-      } else if (mov.inputType === "textarea") {
-        inputHtml = `
-          <div class="pr-field">
-            <textarea class="pr-input pr-textarea" id="prMidInput" placeholder="Write their response..."></textarea>
-          </div>
-        `;
+    selectCategory(cat) {
+      this.activeCategory = cat;
+      const kicker = document.getElementById("hioNameKicker");
+      if (kicker) kicker.textContent = "Name It · " + cat.toUpperCase();
+      
+      document.getElementById("hioStepDoor").style.display = 'none';
+      document.getElementById("hioStepName").style.display = 'block';
+    },
+
+    goBackToDoor() {
+      document.getElementById("hioStepDoor").style.display = 'block';
+      document.getElementById("hioStepName").style.display = 'none';
+    },
+
+    toggleVoice() {
+      if (this.isRecording) {
+        if (this.recognition) this.recognition.stop();
+        this.isRecording = false;
+        document.getElementById('btnHioVoice').textContent = '🎙️';
+        document.getElementById('hioVoiceStatus').style.display = 'none';
       } else {
-        const isSmall = mov.inputType === 'text-small';
-        let carryBtnHtml = '';
-        if (mov.num === 4) {
-          carryBtnHtml = `
-            <div style="margin-top: 8px;">
-              <button class="pr-btn pr-btn-ghost" style="font-size: 11px; padding: 6px 12px; min-height: 32px;" onclick="PRAYER.carryBreadToMirror(document.getElementById('prMidInput').value)">Carry this</button>
-            </div>
-          `;
-        }
-        inputHtml = `
-          <div class="pr-field">
-            <input class="pr-input ${isSmall ? 'pr-input-small' : ''}" type="text" id="prMidInput" placeholder="Write their response...">
-            ${carryBtnHtml}
-          </div>
-        `;
-      }
-
-      let listHtml = '';
-      if (mov.surfacedList) {
-        listHtml = `
-          <div class="pr-surfaced-list">
-            <label class="pr-label">📖 Surfaced from their Closet today:</label>
-            <div id="prDailySurfacedMidday">Loading their list...</div>
-          </div>
-        `;
-        this.fetchDailySurfacedMidday();
-      }
-
-      const overrideButtons = [1, 2, 3, 4, 5, 6].map(n => `
-        <button class="pr-rotation-btn ${n === this.middayStep ? 'active' : ''}" onclick="PRAYER.overrideRotation(${n})">
-          M${n}
-        </button>
-      `).join('');
-
-      container.innerHTML = `
-        <div class="pr-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em;">
-              Midday Rotation
-            </span>
-            <span style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em;">
-              Movement ${mov.num} of 6
-            </span>
-          </div>
-          <h2 class="pr-title">${mov.name}</h2>
-          <div class="pr-teaching">${mov.teaching}</div>
-
-          <div class="pr-field">
-            <label class="pr-label">${mov.customScreen ? 'Reflection' : mov.prompt}</label>
-            ${inputHtml}
-          </div>
-
-          ${listHtml}
-
-          <div style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
-            <label class="pr-label">Rotation Select</label>
-            <div class="pr-rotation-controls">${overrideButtons}</div>
-          </div>
-
-          <div class="pr-nav-row" style="margin-top: 24px;">
-            <div></div>
-            <button class="pr-btn" id="prMidSubmitBtn" onclick="PRAYER.submitMidday()">Done</button>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => {
-        const inp = document.getElementById('prMidInput') || document.getElementById('prMid5a');
-        if (inp) inp.focus();
-      }, 50);
-    },
-
-    async fetchDailySurfacedMidday() {
-      try {
-        const res = await fetch(FN_BASE + '/prayers-read', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            view: 'daily'
-          })
-        });
-        const data = await res.json();
-        const listDiv = document.getElementById('prDailySurfacedMidday');
-        if (!listDiv) return;
-
-        if (res.status !== 200 || !Array.isArray(data)) {
-          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Unable to retrieve daily prayers.</div>';
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          alert("Speech recognition is not supported in this browser.");
           return;
         }
-
-        if (data.length === 0) {
-          listDiv.innerHTML = '<div style="font-size: 13px; color: rgba(255,255,255,0.4);">Their prayer closet is currently empty.</div>';
-          return;
+        if (!this.recognition) {
+          this.recognition = new SpeechRecognition();
+          this.recognition.continuous = false;
+          this.recognition.interimResults = false;
+          this.recognition.lang = 'en-US';
+          this.recognition.onresult = (event) => {
+            const text = event.results[0][0].transcript;
+            const input = document.getElementById("hioNameInput");
+            if (input) input.value = text;
+          };
+          this.recognition.onend = () => {
+            this.isRecording = false;
+            document.getElementById('btnHioVoice').textContent = '🎙️';
+            document.getElementById('hioVoiceStatus').style.display = 'none';
+          };
         }
-
-        listDiv.innerHTML = data.map(p => `
-          <div class="pr-surfaced-card">
-            <div class="pr-surfaced-body">${p.body}</div>
-            <button class="pr-btn pr-btn-ghost pr-surfaced-carry" onclick="PRAYER.carryBreadToMirror('${p.body.replace(/'/g, "\\'")}')">Carry</button>
-          </div>
-        `).join('');
-
-      } catch (e) {
-        console.error(e);
+        this.recognition.start();
+        this.isRecording = true;
+        document.getElementById('btnHioVoice').textContent = '⏹️';
+        document.getElementById('hioVoiceStatus').style.display = 'block';
       }
     },
 
-    async overrideRotation(num) {
-      try {
-        const res = await fetch(FN_BASE + '/prayer-state', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'jump',
-            movement: num
-          })
-        });
-        const data = await res.json();
-        if (res.status === 200 && data.midday_next_movement) {
-          this.middayStep = data.midday_next_movement;
-          this.renderMiddayPass();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-
-    async submitMidday() {
-      const btn = document.getElementById('prMidSubmitBtn');
-      if (btn) btn.disabled = true;
-
-      try {
-        const res = await fetch(FN_BASE + '/prayer-state', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'advance'
-          })
-        });
-        const data = await res.json();
-        if (res.status === 200 && data.midday_next_movement) {
-          this.middayStep = data.midday_next_movement;
-        }
-        go('dash');
-      } catch (e) {
-        console.error(e);
-        go('dash');
-      }
-    },
-
-    renderEveningPass() {
-      const container = document.getElementById('prPassContent');
-      if (!container) return;
-
-      container.innerHTML = `
-        <div id="prEveningMilestone"></div>
-        <div class="pr-card">
-          <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
-            Evening Review
-          </div>
-          <h2 class="pr-title">Reflect and Record</h2>
-          <div class="pr-teaching">They now know how the day actually went. Revisit the movements in light of today's path.</div>
-
-          <div class="pr-field">
-            <label class="pr-label">Movement 6: You named where you were likely to fall. Did it come? What happened?</label>
-            <textarea class="pr-input pr-textarea" id="prEvM6" placeholder="Write their response..." oninput="PRAYER.eveningData.m6=this.value"></textarea>
-          </div>
-
-          <div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 24px 0; padding-top: 16px;">
-            <label class="pr-label">Movement 5: Confession & Forgiveness</label>
-            <div class="pr-field">
-              <label class="pr-label" style="font-size:10px; color:rgba(255,255,255,0.3)">Anything today you need forgiven?</label>
-              <input class="pr-input" type="text" id="prEvM5a" placeholder="Name their debt..." oninput="PRAYER.eveningData.m5a=this.value">
-            </div>
-            <div class="pr-field">
-              <label class="pr-label" style="font-size:10px; color:rgba(255,255,255,0.3)">Anyone you are still holding something against?</label>
-              <input class="pr-input" type="text" id="prEvM5b" placeholder="Name the steward or debtor..." oninput="PRAYER.eveningData.m5b=this.value">
-            </div>
-          </div>
-
-          <div class="pr-field" style="border-top: 1px solid rgba(255,255,255,0.06); margin: 24px 0; padding-top: 16px;">
-            <label class="pr-label">Movement 4: What did you need today. What happened?</label>
-            <textarea class="pr-input pr-textarea" id="prEvM4" placeholder="Write their response..." oninput="PRAYER.eveningData.m4=this.value"></textarea>
-          </div>
-
-          <div class="pr-nav-row" style="margin-top: 24px;">
-            <div></div>
-            <button class="pr-btn" id="prEvSubmitBtn" onclick="PRAYER.saveEveningReview()">Keep in the Record</button>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => {
-        const inp = document.getElementById('prEvM6');
-        if (inp) inp.focus();
-      }, 50);
-
-      this.loadEveningMilestone();
-    },
-
-    async saveEveningReview() {
-      const btn = document.getElementById('prEvSubmitBtn');
-      if (btn) btn.disabled = true;
-
-      const m6 = (this.eveningData.m6 || '').trim();
-      const m5a = (this.eveningData.m5a || '').trim();
-      const m5b = (this.eveningData.m5b || '').trim();
-      const m4 = (this.eveningData.m4 || '').trim();
-
-      const parts = [];
-      if (m6) parts.push(`Movement 6 (Protection): ${m6}`);
-      if (m5a || m5b) {
-        const m5_parts = [];
-        if (m5a) m5_parts.push(`Need forgiven: ${m5a}`);
-        if (m5b) m5_parts.push(`Holding against: ${m5b}`);
-        parts.push(`Movement 5 (Forgiveness): ${m5_parts.join(' / ')}`);
-      }
-      if (m4) parts.push(`Movement 4 (Daily Bread): ${m4}`);
-
-      if (parts.length === 0) {
-        go('dash');
+    async submitName() {
+      const input = document.getElementById("hioNameInput");
+      const text = input ? input.value.trim() : '';
+      if (!text) {
+        alert("Please describe what you are carrying.");
         return;
       }
+      this.weightText = text;
 
-      const combinedText = parts.join('\n\n');
-      const d = typeof activeFastDay === 'function' ? activeFastDay() : null;
+      const ledLines = {
+        family: "Father, this house is Yours before it's mine. The people I love are Yours before they're mine. I've been carrying them like it all depends on me. It doesn't.",
+        work: "The work is real and the weight is real. But I'm a steward, not the source. Establish the work of my hands, and let me put it down at the end of the day.",
+        money: "You know what this month costs before I count it. I've been doing math at midnight like provision is mine to manufacture. Seek first, that's my job. Supply, that's Yours.",
+        health: "This body is the house You gave me to govern, and today it feels heavier than I can govern. Strength of my heart, be strength where mine fails.",
+        head: "My mind has been running the same lap all day. Keep me in peace, because my thoughts keep me in circles. I hand You the noise."
+      };
+      
+      const scriptures = {
+        family: { ref: "Psalm 127:1", text: "Unless the Lord builds the house, its builders labor in vain." },
+        work: { ref: "Psalm 90:17", text: "May the favor of the Lord our God rest on us; establish the work of our hands for us." },
+        money: { ref: "Matthew 6:33", text: "But seek first his kingdom and his righteousness, and all these things will be given to you as well." },
+        health: { ref: "Psalm 73:26", text: "My flesh and my heart may fail, but God is the strength of my heart and my portion forever." },
+        head: { ref: "Isaiah 26:3", text: "You will keep in perfect peace those whose minds are steadfast, because they trust in you." }
+      };
 
+      const ledLine = ledLines[this.activeCategory] || `Father, I hand You the thoughts in my heart today. Keep me in Your peace and guide my steps.`;
+      const scripture = scriptures[this.activeCategory] || { ref: "Matthew 11:28", text: "Come to me, all you who are weary and burdened, and I will give you rest." };
+
+      document.getElementById("hioLedLineText").textContent = `"${ledLine}"`;
+      document.getElementById("hioScriptureRef").textContent = scripture.ref;
+      document.getElementById("hioScriptureText").textContent = `"${scripture.text}"`;
+
+      this.inlineVersesData = null;
+      const refChapter = scripture.ref.split(':')[0];
       try {
-        const entry = {
-          date: realToday(),
-          text: combinedText,
-          fastDay: d || null,
-          tone: 'mixed',
-          scribe: null,
-          resurface: null,
-          pending: false
-        };
-
-        if (window.S && Array.isArray(S.entries)) {
-          S.entries = S.entries.filter(e => e.date !== entry.date);
-          S.entries.push(entry);
+        const res = await fetch(`${FN_BASE}/bible-verses?ref=${encodeURIComponent(refChapter)}`);
+        if (res.status === 200) {
+          this.inlineVersesData = await res.json();
         }
-
-        await saveEntry(
-          realToday(),
-          combinedText,
-          'mixed',
-          S.fast ? S.fast.id : null,
-          d,
-          null,
-          null
-        );
-
-        if (typeof updateMeta === 'function') updateMeta();
-        if (typeof renderJournalContext === 'function') renderJournalContext();
-
-        go('dash');
       } catch (e) {
-        console.error(e);
-        go('dash');
+        console.warn("Failed to pre-load inline verses:", e);
+      }
+
+      document.getElementById("hioStepName").style.display = 'none';
+      document.getElementById("hioStepHand").style.display = 'block';
+    },
+
+    toggleInlineReader() {
+      const reader = document.getElementById("hioInlineReader");
+      const pill = document.getElementById("hioPillReadMore");
+      if (!reader || !pill) return;
+
+      const isHidden = reader.style.display === 'none';
+      reader.style.display = isHidden ? 'block' : 'none';
+      pill.textContent = isHidden ? "📖 Close the passage" : "📖 Read more · tap to open";
+
+      if (isHidden && this.inlineVersesData) {
+        const container = document.getElementById("hioInlineVerses");
+        if (container) {
+          const anchorRef = document.getElementById("hioScriptureRef").textContent;
+          const anchorVerseNum = parseInt(anchorRef.split(':')[1]) || 1;
+          
+          container.innerHTML = (this.inlineVersesData.verses || []).map(v => `
+            <div style="margin-bottom:6px; ${v.verse === anchorVerseNum ? 'background:rgba(204,255,0,0.15); border-left:2px solid var(--lime); padding-left:6px; color:#fff;' : ''}">
+              <span style="font-weight:700; font-size:10px; margin-right:4px; opacity:0.5;">${v.verse}</span>${v.text}
+            </div>
+          `).join('');
+        }
       }
     },
 
-    getElapsedTimeText(askedOnStr) {
-      if (!askedOnStr) return '';
-      const askedDate = new Date(askedOnStr);
-      const today = new Date();
-      
-      askedDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
-      
-      const diffTime = today.getTime() - askedDate.getTime();
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays <= 0) return 'Asked today';
-      if (diffDays === 1) return 'Asked 1 day ago';
-      if (diffDays < 30) return `Asked ${diffDays} days ago`;
-      
-      const diffMonths = Math.floor(diffDays / 30.43);
-      if (diffMonths <= 1) return 'Asked 1 month ago';
-      return `Asked ${diffMonths} months ago`;
+    openFullScripture(event) {
+      if (event) event.stopPropagation();
+      const anchorRef = document.getElementById("hioScriptureRef").textContent;
+      const parts = anchorRef.split(' ');
+      const book = parts.slice(0, -1).join(' ');
+      const sub = parts[parts.length - 1].split(':');
+      const chapter = parseInt(sub[0]) || 1;
+      const verse = parseInt(sub[1]) || 1;
+
+      go('bible');
+      switchBibleMode('my');
+      BIBLE_READER.goToSpot(book, chapter, verse);
     },
 
-    async renderMirror(forceFetch = true) {
-      const container = document.getElementById('listView');
-      if (!container) return;
+    goToLeave() {
+      document.getElementById("hioStepHand").style.display = 'none';
+      document.getElementById("hioStepLeave").style.display = 'block';
+      this.selectLeaveOption('private');
+    },
 
-      const renderHtml = (data) => {
-        const listContent = document.getElementById('prMirrorListContent');
-        if (!listContent) return;
+    goBackToHand() {
+      document.getElementById("hioStepHand").style.display = 'block';
+      document.getElementById("hioStepLeave").style.display = 'none';
+    },
 
-        const categories = [
-          { key: 'household', label: 'Their household' },
-          { key: 'soul', label: 'Their own soul' },
-          { key: 'provision', label: 'Provision' },
-          { key: 'brothers', label: 'The people around them' },
-          { key: 'unaware', label: 'One who does not know' }
-        ];
+    selectLeaveOption(opt) {
+      this.leaveOption = opt;
+      const cardPrivate = document.getElementById("cardLeavePrivate");
+      const cardShared = document.getElementById("cardLeaveShared");
+      const sharedOpts = document.getElementById("hioSharedOptions");
 
-        let html = '';
-        categories.forEach(cat => {
-          const items = (data[cat.key] || []).filter(p => p.state === 'not_yet');
-          
-          html += `
-            <div class="pr-category-section" id="prCat-${cat.key}">
-              <div class="pr-category-title">${cat.label}</div>
-          `;
+      if (opt === 'private') {
+        if (cardPrivate) cardPrivate.classList.add('active');
+        if (cardShared) cardShared.classList.remove('active');
+        if (sharedOpts) sharedOpts.style.display = 'none';
+      } else {
+        if (cardPrivate) cardPrivate.classList.remove('active');
+        if (cardShared) cardShared.classList.add('active');
+        if (sharedOpts) sharedOpts.style.display = 'block';
+      }
+    },
 
-          if (items.length === 0) {
-            if (cat.key === 'unaware') {
-              if (!this.unawareEmptySeen) {
-                this.unawareEmptySeen = true;
-                html += `<div class="pr-category-empty">This one is empty.</div>`;
-                fetch(FN_BASE + '/prayer-state', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON}`
-                  },
-                  body: JSON.stringify({
-                    email: MEMBER_EMAIL,
-                    action: 'seen_unaware'
-                  })
-                }).then(async r => {
-                  const d = await r.json();
-                  console.log("seen_unaware response status:", r.status, "data:", JSON.stringify(d));
-                }).catch(e => console.error("Failed to persist seen_unaware state:", e));
-              }
-            }
-          } else {
-            items.forEach(p => {
-              const isClosing = this.closingPrayerId === p.id;
-              const isEditing = this.editingPrayerId === p.id;
-              const isPublishing = this.publishingPrayerId === p.id;
-              const elapsed = this.getElapsedTimeText(p.asked_on);
-              
-              html += `
-                <div class="pr-list-card" id="prCard-${p.id}">
-                  <div style="position: absolute; top: 12px; right: 12px;">
-                    <button class="pr-pin-btn ${p.pinned ? 'pinned' : ''}" onclick="PRAYER.togglePin('${p.id}', ${p.pinned})">
-                      ★
-                    </button>
-                  </div>
-              `;
+    async commitLeave() {
+      let prayerId = null;
+      try {
+        const res = await fetch(`${FN_BASE}/prayers-write`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({
+            action: 'create',
+            kind: 'handover',
+            category: this.activeCategory,
+            body: this.weightText,
+            email: MEMBER_EMAIL
+          })
+        });
+        if (res.status === 200) {
+          const data = await res.json();
+          prayerId = data.id;
+        } else {
+          throw new Error("Failed to save handover.");
+        }
 
-              if (isEditing) {
-                html += `
-                  <div class="pr-field">
-                    <textarea class="pr-input pr-textarea" id="prEditBody-${p.id}" maxlength="1000">${p.body}</textarea>
-                  </div>
-                  <div class="pr-card-actions">
-                    <button class="pr-card-btn" onclick="PRAYER.saveEdit('${p.id}', document.getElementById('prEditBody-${p.id}').value)">Save</button>
-                    <button class="pr-card-btn" onclick="PRAYER.cancelEdit()">Cancel</button>
-                  </div>
-                `;
-              } else if (isClosing) {
-                const selected = this.closeStateSelected[p.id] || '';
-                const yesActive = selected === 'yes';
-                const noActive = selected === 'no';
-                html += `
-                  <div class="pr-list-card-body" style="font-weight: 500; font-size: 13px; margin-bottom: 8px;">Closing: ${p.body}</div>
-                  <div class="pr-field">
-                    <label class="pr-label">Is this answered yes or no?</label>
-                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                      <button class="pr-btn pr-btn-ghost" id="prCloseStateYes-${p.id}" onclick="PRAYER.setCloseState('${p.id}', 'yes')" style="flex: 1; padding: 6px; border-color: ${yesActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${yesActive ? 'var(--lime)' : '#fff'}">Yes</button>
-                      <button class="pr-btn pr-btn-ghost" id="prCloseStateNo-${p.id}" onclick="PRAYER.setCloseState('${p.id}', 'no')" style="flex: 1; padding: 6px; border-color: ${noActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${noActive ? 'var(--lime)' : '#fff'}">No</button>
-                    </div>
-                    <label class="pr-label">Outcome (Sentence about what happened)</label>
-                    <textarea class="pr-input pr-textarea" id="prCloseOutcome-${p.id}" placeholder="Sentence about what happened..." maxlength="1000"></textarea>
-                  </div>
-                  <div class="pr-card-actions" style="margin-top: 12px;">
-                    <button class="pr-card-btn" onclick="PRAYER.submitClose('${p.id}')">Save</button>
-                    <button class="pr-card-btn" onclick="PRAYER.cancelClose()">Cancel</button>
-                  </div>
-                `;
-              } else {
-                html += `
-                  <div class="pr-list-card-body">${p.body}</div>
-                  <div class="pr-list-card-meta">
-                    <div>${elapsed}</div>
-                    <div class="pr-card-actions">
-                      <button class="pr-card-btn" onclick="PRAYER.startEdit('${p.id}')">Edit</button>
-                      <button class="pr-card-btn" onclick="PRAYER.startClose('${p.id}')">Close</button>
-                `;
-
-                // Delete guard: not_yet and not published
-                if (p.state === 'not_yet' && !p.wall_post_id) {
-                  html += `<button class="pr-card-btn pr-card-btn-danger" onclick="PRAYER.deletePrayer('${p.id}')">Delete</button>`;
-                }
-
-                // Publish guard: not unaware category
-                if (cat.key !== 'unaware') {
-                  if (!p.wall_post_id) {
-                    if (isPublishing) {
-                      html += `
-                        <span style="font-size: 11px; margin-right: 4px; color: rgba(255,255,255,0.6)">Publish:</span>
-                        <button class="pr-card-btn" onclick="PRAYER.publishPrayer('${p.id}', 'signed')">Signed</button>
-                        <button class="pr-card-btn" onclick="PRAYER.publishPrayer('${p.id}', 'anonymous')">Anon</button>
-                        <button class="pr-card-btn" onclick="PRAYER.cancelPublish()">Cancel</button>
-                      `;
-                    } else {
-                      html += `<button class="pr-card-btn" onclick="PRAYER.startPublish('${p.id}')">Publish</button>`;
-                    }
-                  } else {
-                    html += `<button class="pr-card-btn" onclick="PRAYER.unpublishPrayer('${p.id}')">Unpublish</button>`;
-                  }
-                }
-
-                html += `
-                    </div>
-                  </div>
-                `;
-              }
-
-              html += `
-                </div>
-              `;
+        if (this.leaveOption === 'shared') {
+          const postMode = document.querySelector('input[name="hioPostMode"]:checked').value;
+          const wallRes = await fetch(`${FN_BASE}/wall-post`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+            body: JSON.stringify({
+              member_id: window.MEMBER_ID,
+              body: this.weightText,
+              display_mode: postMode,
+              source: 'prayer_handover',
+              prayer_id: prayerId,
+              email: MEMBER_EMAIL
+            })
+          });
+          if (wallRes.status === 200) {
+            await fetch(`${FN_BASE}/prayers-write`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+              body: JSON.stringify({
+                action: 'lift',
+                id: prayerId,
+                email: MEMBER_EMAIL
+              })
             });
           }
-
-          html += `
-            </div>
-          `;
-        });
-
-        listContent.innerHTML = html;
-      };
-
-      // Ensure form structure is in place
-      const headerForm = document.getElementById('prAddForm');
-      if (!headerForm) {
-        container.innerHTML = `
-          <div class="pr-card">
-            <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
-              Carrying List
-            </div>
-            <h2 class="pr-title">The Closet Mirror</h2>
-            <div class="pr-teaching">The itemized shape of what you are currently under.</div>
-
-            <div class="pr-add-form" id="prAddForm">
-              <h3 class="pr-form-title">Carry a New Weight</h3>
-              <div class="pr-field">
-                <label class="pr-label">What are you carrying?</label>
-                <textarea class="pr-input pr-textarea" id="prAddBody" placeholder="Write their request..." maxlength="1000" minlength="1"></textarea>
-              </div>
-              <div class="pr-field">
-                <label class="pr-label">Category</label>
-                <select class="pr-input" id="prAddCategory">
-                  <option value="" disabled selected>Select a category...</option>
-                  <option value="household">Their household (Spouse, kids, home)</option>
-                  <option value="soul">Their own soul (Their sin, their weakness)</option>
-                  <option value="provision">Provision (Work, money, the weight of providing)</option>
-                  <option value="brothers">The people around them (The ones they carry)</option>
-                  <option value="unaware">One who does not know (One person who does not know they are being prayed for)</option>
-                </select>
-              </div>
-              <div class="pr-nav-row" style="margin-top: 16px;">
-                <div></div>
-                <button class="pr-btn" id="prAddSubmitBtn" onclick="PRAYER.submitAddHand()">Carry Weight</button>
-              </div>
-            </div>
-
-            <div id="prMirrorListContent" style="color: rgba(255,255,255,0.4); font-size:14px;">Loading closet mirror...</div>
-          </div>
-        `;
-      }
-
-      if (!forceFetch && this.cachedMirrorData) {
-        renderHtml(this.cachedMirrorData);
-        return;
-      }
-
-      try {
-        const res = await fetch(FN_BASE + '/prayers-read', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            view: 'mirror'
-          })
-        });
-
-        const data = await res.json();
-        if (res.status !== 200 || typeof data !== 'object' || data === null || Array.isArray(data)) {
-          const listContent = document.getElementById('prMirrorListContent');
-          if (listContent) listContent.innerHTML = 'Unable to load their closet mirror.';
-          return;
         }
 
-        this.cachedMirrorData = data;
-        renderHtml(data);
+        document.getElementById("hioStepLeave").style.display = 'none';
+        document.getElementById("hioStepConfirm").style.display = 'block';
+
+        const headConfirm = document.getElementById("hioConfirmHeadline");
+        const textConfirm = document.getElementById("hioConfirmText");
+        
+        if (this.leaveOption === 'private') {
+          if (headConfirm) headConfirm.textContent = "Saved Privately";
+          if (textConfirm) textConfirm.textContent = "Saved privately to My Prayers. No one else will ever see it. Just you and Him.";
+        } else {
+          if (headConfirm) headConfirm.textContent = "Lifted to the Wall";
+          if (textConfirm) textConfirm.textContent = "Your prayer is now on the Prayer Wall where other stewards can see it and pray for you. A copy lives in My Prayers.";
+        }
+
+        await this.loadLedger();
 
       } catch (e) {
-        console.error(e);
-        const listContent = document.getElementById('prMirrorListContent');
-        if (listContent) {
-          listContent.innerHTML = 'Unable to load their closet mirror.';
-        }
+        alert(e.message || "An error occurred during submission.");
       }
     },
 
-    startEdit(id) {
-      this.editingPrayerId = id;
-      this.renderMirror(false);
+    goToBibleRead() {
+      const anchorRef = document.getElementById("hioScriptureRef").textContent;
+      const parts = anchorRef.split(' ');
+      const book = parts.slice(0, -1).join(' ');
+      const sub = parts[parts.length - 1].split(':');
+      const chapter = parseInt(sub[0]) || 1;
+      const verse = parseInt(sub[1]) || 1;
+
+      go('bible');
+      switchBibleMode('my');
+      BIBLE_READER.goToSpot(book, chapter, verse);
     },
 
-    cancelEdit() {
-      this.editingPrayerId = null;
-      this.renderMirror(false);
-    },
-
-    startPublish(id) {
-      this.publishingPrayerId = id;
-      this.renderMirror(false);
-    },
-
-    cancelPublish() {
-      this.publishingPrayerId = null;
-      this.renderMirror(false);
-    },
-
-    async submitAddHand() {
-      const bodyEl = document.getElementById('prAddBody');
-      const catEl = document.getElementById('prAddCategory');
-      const btn = document.getElementById('prAddSubmitBtn');
-      if (!bodyEl || !catEl) return;
-
-      const body = bodyEl.value.trim();
-      const category = catEl.value;
-
-      if (!body) {
-        alert("Please write the prayer request.");
-        return;
-      }
-      if (!category) {
-        alert("Please select a category.");
-        return;
-      }
-
-      if (btn) btn.disabled = true;
-
+    async loadLedger() {
       try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
+        const res = await fetch(`${FN_BASE}/prayers-read`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'create',
-            body,
-            category
-          })
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body: JSON.stringify({ email: MEMBER_EMAIL })
         });
-
         if (res.status === 200) {
-          bodyEl.value = '';
-          catEl.selectedIndex = 0;
-          this.renderMirror(true);
-        } else {
-          const err = await res.json();
-          alert(err.error || "Unable to save prayer.");
+          const data = await res.json();
+          this.ledger = Array.isArray(data) ? data : (data.handovers || []);
+          this.renderLedger();
         }
       } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
-      } finally {
-        if (btn) btn.disabled = false;
+        console.warn("Failed to load ledger:", e);
       }
     },
 
-    async saveEdit(id, newBody) {
-      const body = newBody.trim();
-      if (!body) {
-        alert("Prayer request body cannot be empty.");
-        return;
-      }
-
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'update',
-            id,
-            body
-          })
-        });
-
-        if (res.status === 200) {
-          this.editingPrayerId = null;
-          this.renderMirror(true);
-        } else {
-          const err = await res.json();
-          alert(err.error || "Unable to update prayer.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
-      }
-    },
-
-    async deletePrayer(id) {
-      if (!confirm("Are you sure you want to delete this carry entry?")) return;
-
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'delete',
-            id
-          })
-        });
-
-        if (res.status === 200) {
-          this.renderMirror(true);
-        } else {
-          const err = await res.json();
-          alert(err.error || "Unable to delete prayer.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
-      }
-    },
-
-    async publishPrayer(id, display_mode) {
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'publish',
-            id,
-            display_mode
-          })
-        });
-
-        if (res.status === 200) {
-          this.publishingPrayerId = null;
-          this.renderMirror(true);
-        } else {
-          const err = await res.json();
-          alert(err.error || "Unable to publish prayer.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
-      }
-    },
-
-    async unpublishPrayer(id) {
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'unpublish',
-            id
-          })
-        });
-
-        if (res.status === 200) {
-          this.renderMirror(true);
-        } else {
-          const err = await res.json();
-          alert(err.error || "Unable to unpublish prayer.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
-      }
-    },
-
-    async togglePin(id, isPinned) {
-      const action = isPinned ? 'unpin' : 'pin';
-      console.log("togglePin called", id, isPinned, "action:", action);
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action,
-            id
-          })
-        });
-
-        if (res.status === 200) {
-          this.renderMirror(true);
-        } else {
-          console.error("Toggle pin failed:", res.status, await res.text());
-        }
-      } catch (e) {
-        console.error("Toggle pin error:", e);
-      }
-    },
-
-    carryBreadToMirror(text) {
-      this.switchPass('mirror');
-      setTimeout(() => {
-        const bodyEl = document.getElementById('prAddBody');
-        if (bodyEl) {
-          bodyEl.value = text;
-          bodyEl.focus();
-        }
-      }, 50);
-    },
-
-    startClose(id) {
-      this.closingPrayerId = id;
-      this.renderMirror(false);
-    },
-
-    cancelClose() {
-      this.closingPrayerId = null;
-      this.renderMirror(false);
-    },
-
-    setCloseState(id, val) {
-      this.closeStateSelected[id] = val;
-      const yesBtn = document.getElementById(`prCloseStateYes-${id}`);
-      const noBtn = document.getElementById(`prCloseStateNo-${id}`);
-      if (yesBtn && noBtn) {
-        if (val === 'yes') {
-          yesBtn.style.borderColor = 'var(--lime)';
-          yesBtn.style.color = 'var(--lime)';
-          noBtn.style.borderColor = 'rgba(255,255,255,0.15)';
-          noBtn.style.color = '#fff';
-        } else {
-          noBtn.style.borderColor = 'var(--lime)';
-          noBtn.style.color = 'var(--lime)';
-          yesBtn.style.borderColor = 'rgba(255,255,255,0.15)';
-          yesBtn.style.color = '#fff';
-        }
-      }
-    },
-
-    async submitClose(id) {
-      const state = this.closeStateSelected[id];
-      if (!state) {
-        alert("Please select whether this request was answered 'yes' or 'no'.");
-        return;
-      }
-      const outcome = document.getElementById(`prCloseOutcome-${id}`).value.trim();
-      if (!outcome) {
-        alert("Outcome is required. Please write what happened.");
-        return;
-      }
-
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'close',
-            id,
-            state,
-            outcome
-          })
-        });
-
-        const data = await res.json();
-        if (res.status !== 200) {
-          alert("Close failed: " + data.error);
-          return;
-        }
-
-        let bodyText = 'closed prayer';
-        if (this.cachedMirrorData) {
-          for (const cat in this.cachedMirrorData) {
-            const found = this.cachedMirrorData[cat].find(p => p.id === id);
-            if (found) {
-              bodyText = found.body;
-              break;
-            }
-          }
-        }
-
-        this.closingPrayerId = null;
-        delete this.closeStateSelected[id];
-
-        if (state === 'no') {
-          this.offerRecordHandoff(bodyText, outcome);
-        } else {
-          this.renderMirror(true);
-        }
-
-      } catch (e) {
-        console.error(e);
-        alert("An error occurred while closing the prayer.");
-      }
-    },
-
-    offerRecordHandoff(bodyText, outcome) {
-      const overlay = document.createElement('div');
-      overlay.className = 'pr-handoff-overlay';
-      overlay.style.position = 'fixed';
-      overlay.style.inset = '0';
-      overlay.style.background = 'rgba(0, 0, 0, 0.75)';
-      overlay.style.backdropFilter = 'blur(8px)';
-      overlay.style.webkitBackdropFilter = 'blur(8px)';
-      overlay.style.zIndex = '9999';
-      overlay.style.display = 'flex';
-      overlay.style.justifyContent = 'center';
-      overlay.style.alignItems = 'center';
-      overlay.style.pointerEvents = 'auto';
-
-      overlay.innerHTML = `
-        <div class="pr-card" style="width: 90%; max-width: 450px; position: relative;">
-          <h3 class="pr-title" style="margin-bottom: 8px;">Keep in the Record?</h3>
-          <div class="pr-teaching" style="margin-bottom: 16px;">
-            A 'no' is an invitation to sit and process. Would you like to save this reflection to your daily Record journal?
-          </div>
-          <div class="pr-field">
-            <textarea class="pr-input pr-textarea" id="prRecordHandoffText" style="height: 100px;"></textarea>
-          </div>
-          <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;">
-            <button class="pr-btn pr-btn-ghost" id="prHandoffCancel" style="padding: 6px 12px; min-height: 36px;">Skip</button>
-            <button class="pr-btn" id="prHandoffSave" style="padding: 6px 12px; min-height: 36px;">Save to Record</button>
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(overlay);
-
-      const txtArea = overlay.querySelector('#prRecordHandoffText');
-      if (txtArea) {
-        txtArea.value = `Outcome: ${outcome}`;
-      }
-
-      overlay.querySelector('#prHandoffCancel').onclick = () => {
-        overlay.remove();
-        this.renderMirror(true);
-      };
-
-      overlay.querySelector('#prHandoffSave').onclick = async () => {
-        const text = overlay.querySelector('#prRecordHandoffText').value.trim();
-        if (text) {
-          const entry = {
-            date: realToday(),
-            text,
-            fastId: S.fast ? S.fast.id : null,
-            fastDay: null,
-            tone: 'mixed',
-            scribe: null,
-            resurface: null,
-            pending: false
-          };
-
-          if (window.S && Array.isArray(S.entries)) {
-            S.entries = S.entries.filter(e => e.date !== entry.date);
-            S.entries.push(entry);
-          }
-
-          saveEntry(realToday(), text, 'mixed', S.fast ? S.fast.id : null, null, null, null).catch(e => {
-            console.error("Handoff save error:", e);
-          });
-        }
-        overlay.remove();
-        this.renderMirror(true);
-      };
-    },
-
-    async reopenPrayer(id) {
-      if (!confirm("Would you like to reopen this prayer and move it back to your active list?")) return;
-
-      try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'reopen',
-            id
-          })
-        });
-
-        if (res.status === 200) {
-          if (this.activePass === 'answered') {
-            this.renderAnswered();
-          } else {
-            this.renderMirror(true);
-          }
-        } else {
-          const err = await res.json();
-          alert(err.error || "Unable to reopen prayer.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
-      }
-    },
-
-    async renderAnswered() {
-      const container = document.getElementById('prAnsweredContent');
+    renderLedger() {
+      const container = document.getElementById("hioLedgerContent");
       if (!container) return;
 
-      container.innerHTML = `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0;">Loading answers...</div>`;
+      if (this.ledger.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:20px; font-size:13px; color:rgba(255,255,255,0.3); font-style:italic;">No weights handed over yet. Let Him carry the weight.</div>';
+        return;
+      }
 
-      try {
-        const res = await fetch(FN_BASE + '/prayers-read', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            view: 'answered',
-            limit: 100
-          })
-        });
-
-        const data = await res.json();
-        if (res.status !== 200) {
-          container.innerHTML = `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0;">Unable to retrieve answered prayers.</div>`;
-          return;
-        }
-
-        const prayers = data.prayers || [];
-        const yesCount = data.yesCount || 0;
-
-        let html = `
-          <div class="pr-card">
-            <div style="font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
-              Answer Log
-            </div>
-            <h2 class="pr-title">The Evidence</h2>
-            <div class="pr-teaching">The record of what happened to each thing on your list.</div>
-            
-            <div style="margin-top: 16px; font-weight: 700; font-size: 14px; color: var(--lime);" id="yesCountDiv">
-              ${yesCount} Yes ${yesCount === 1 ? 'Answer' : 'Answers'}
-            </div>
-            <div style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;"></div>
-            
-            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;" id="answeredListContainer">
-        `;
-
-        if (prayers.length === 0) {
-          html += `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0; text-align: center;">No answered prayers in the log.</div>`;
+      container.innerHTML = this.ledger.map(item => {
+        const dt = new Date(item.created_at).toLocaleDateString();
+        let badgeColor = '';
+        let badgeText = '';
+        if (item.status === 'answered') {
+          badgeColor = 'background:rgba(204,255,0,0.15); color:var(--lime);';
+          badgeText = 'Answered';
+        } else if (item.status === 'lifted') {
+          badgeColor = 'background:rgba(255,255,255,0.08); color:#fff;';
+          badgeText = `Lifted (${item.pray_count || 0})`;
         } else {
-          prayers.forEach(p => {
-            const elapsed = this.getElapsedTimeText(p.asked_on);
-            const closeDate = p.closed_on ? new Date(p.closed_on).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-            const isYes = p.state === 'yes';
-
-            html += `
-              <div class="pr-list-card" style="border-left: 3px solid ${isYes ? 'var(--lime)' : 'rgba(255,255,255,0.3)'}; position: relative;">
-                <div class="pr-list-card-body" style="margin-bottom: 8px;">${p.body}</div>
-                <div style="font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 12px; font-style: italic; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 4px;">
-                  Outcome: ${p.outcome}
-                </div>
-                <div class="pr-list-card-meta">
-                  <div>
-                    <span style="font-weight: 700; color: ${isYes ? 'var(--lime)' : 'rgba(255,255,255,0.6)'}; text-transform: uppercase; font-size: 11px; margin-right: 8px;">
-                      ${isYes ? 'Yes' : 'No'}
-                    </span>
-                    Asked ${elapsed}. Answered ${closeDate}.
-                  </div>
-                  <div class="pr-card-actions">
-                    <button class="pr-card-btn" onclick="PRAYER.reopenPrayer('${p.id}')">Reopen</button>
-                  </div>
-                </div>
-              </div>
-            `;
-          });
+          badgeColor = 'background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.6);';
+          badgeText = 'Private';
         }
 
-        html += `
+        return `
+          <div class="hio-ledger-row" onclick="PRAYER.onLedgerRowClick('${item.id}', '${item.status}')">
+            <div>
+              <div style="font-weight:700; font-size:13px; margin-bottom:4px;">${item.body}</div>
+              <div style="font-size:11px; color:rgba(255,255,255,0.4);">${item.category ? item.category.toUpperCase() : 'FREEFORM'} &middot; ${dt}</div>
             </div>
+            <span class="hio-status-badge" style="${badgeColor}">${badgeText}</span>
           </div>
         `;
-
-        container.innerHTML = html;
-
-      } catch (e) {
-        console.error(e);
-        container.innerHTML = `<div style="font-size: 13px; color: rgba(255,255,255,0.4); padding: 20px 0;">An error occurred while loading answers.</div>`;
-      }
+      }).join('');
     },
 
-    async loadEveningMilestone() {
-      if (this.milestoneAskPrayer) {
-        this.renderMilestoneAskCard();
-        return;
-      }
-      this.milestoneAskPrayer = null;
-      this.milestoneCloseState = '';
-
-      const milestoneDiv = document.getElementById('prEveningMilestone');
-      if (milestoneDiv) milestoneDiv.innerHTML = '';
-
-      console.log("Milestone check: MEMBER_EMAIL is:", MEMBER_EMAIL);
-      try {
-        const res = await fetch(FN_BASE + '/prayers-read', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            view: 'milestone'
-          })
-        });
-
-        const data = await res.json();
-        console.log("Milestone check: status:", res.status, "data:", JSON.stringify(data));
-        if (res.status === 200 && data && data.prayer) {
-          this.milestoneAskPrayer = data.prayer;
-          this.milestoneMilestoneNum = data.milestone;
-
-          fetch(FN_BASE + '/prayers-write', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${SUPABASE_ANON}`
-            },
-            body: JSON.stringify({
-              email: MEMBER_EMAIL,
-              action: 'milestone_shown',
-              id: data.prayer.id,
-              milestone: data.milestone
-            })
-          }).catch(e => console.error("Failed to mark milestone shown:", e));
-
-          this.renderMilestoneAskCard();
-        }
-      } catch (e) {
-        console.error("Failed to load evening milestone ask:", e);
-      }
+    onLedgerRowClick(id, status) {
+      if (status === 'answered') return;
+      this.selectedLedgerItem = id;
+      document.getElementById("hioAnswerModal").style.display = 'flex';
     },
 
-    renderMilestoneAskCard() {
-      const milestoneDiv = document.getElementById('prEveningMilestone');
-      if (!milestoneDiv || !this.milestoneAskPrayer) return;
-
-      const p = this.milestoneAskPrayer;
-      const milestone = this.milestoneMilestoneNum;
-
-      let promptText = '';
-      if (milestone >= 365) {
-        const years = Math.round(milestone / 365);
-        const yearWord = years === 1 ? 'year' : 'years';
-        promptText = `${years === 1 ? 'One' : years} ${yearWord} ago today you asked for this.`;
-      } else {
-        const daysWord = milestone === 90 ? 'ninety' : (milestone === 30 ? 'thirty' : milestone);
-        promptText = `You asked for this ${daysWord} days ago. Anything?`;
-      }
-
-      const selected = this.milestoneCloseState;
-      const yesActive = selected === 'yes';
-      const noActive = selected === 'no';
-
-      let inputHtml = '';
-      if (selected === 'yes' || selected === 'no') {
-        inputHtml = `
-          <div class="pr-field" style="margin-top: 12px;">
-            <label class="pr-label">Outcome (Sentence about what happened)</label>
-            <textarea class="pr-input pr-textarea" id="prMilestoneOutcome" placeholder="Sentence about what happened..." maxlength="1000"></textarea>
-            <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;">
-              <button class="pr-btn" style="font-size: 11px; padding: 4px 10px; min-height: 28px;" onclick="PRAYER.submitMilestoneClose()">Save</button>
-            </div>
-          </div>
-        `;
-      }
-
-      milestoneDiv.innerHTML = `
-        <div class="pr-list-card pr-milestone-card" style="border: 1px solid var(--lime); background: rgba(142, 230, 24, 0.03); margin-bottom: 24px;">
-          <div style="font-size: 10px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
-            Prayer Milestone
-          </div>
-          <div class="pr-list-card-body" style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">
-            "${p.body}"
-          </div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">
-            ${promptText}
-          </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <button class="pr-btn pr-btn-ghost" id="prMilestoneBtnYes" onclick="PRAYER.setMilestoneCloseState('yes')" style="padding: 4px 12px; min-height: 28px; border-color: ${yesActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${yesActive ? 'var(--lime)' : '#fff'}">Yes</button>
-            <button class="pr-btn pr-btn-ghost" id="prMilestoneBtnNo" onclick="PRAYER.setMilestoneCloseState('no')" style="padding: 4px 12px; min-height: 28px; border-color: ${noActive ? 'var(--lime)' : 'rgba(255,255,255,0.15)'}; color: ${noActive ? 'var(--lime)' : '#fff'}">No</button>
-            <button class="pr-btn pr-btn-ghost" onclick="PRAYER.dismissMilestoneAsk()" style="padding: 4px 12px; min-height: 28px; border-color: rgba(255,255,255,0.15);">Still waiting</button>
-          </div>
-          ${inputHtml}
-        </div>
-      `;
+    closeAnswerModal() {
+      document.getElementById("hioAnswerModal").style.display = 'none';
+      document.getElementById("hioAnswerNote").value = '';
+      document.getElementById("hioLiftToTestimony").checked = false;
+      this.selectedLedgerItem = null;
     },
 
-    setMilestoneCloseState(val) {
-      this.milestoneCloseState = val;
-      this.renderMilestoneAskCard();
-    },
-
-    async submitMilestoneClose() {
-      const p = this.milestoneAskPrayer;
-      if (!p) return;
-      const state = this.milestoneCloseState;
-      const outcome = document.getElementById('prMilestoneOutcome').value.trim();
-
-      if (!outcome) {
-        alert("Outcome is required. Please write what happened.");
-        return;
-      }
+    async submitAnswer() {
+      if (!this.selectedLedgerItem) return;
+      const note = document.getElementById("hioAnswerNote").value.trim();
+      const lift = document.getElementById("hioLiftToTestimony").checked;
 
       try {
-        const res = await fetch(FN_BASE + '/prayers-write', {
+        const res = await fetch(`${FN_BASE}/prayers-write`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
           body: JSON.stringify({
-            email: MEMBER_EMAIL,
-            action: 'close',
-            id: p.id,
-            state,
-            outcome
+            action: 'answered',
+            id: this.selectedLedgerItem,
+            note: note,
+            lift_to_testimony: lift,
+            email: MEMBER_EMAIL
           })
         });
-
         if (res.status === 200) {
-          const outcomeWritten = outcome;
-          const bodyText = p.body;
-          this.milestoneAskPrayer = null;
-          this.milestoneCloseState = '';
-          const milestoneDiv = document.getElementById('prEveningMilestone');
-          if (milestoneDiv) milestoneDiv.innerHTML = '';
-
-          if (state === 'no') {
-            this.offerRecordHandoff(bodyText, outcomeWritten);
-          }
+          this.closeAnswerModal();
+          await this.loadLedger();
         } else {
-          const err = await res.json();
-          alert(err.error || "Unable to close milestone prayer.");
+          throw new Error("Failed to save answer.");
         }
       } catch (e) {
-        console.error(e);
-        alert("Server error encountered.");
+        alert(e.message || "Failed to submit answer.");
       }
-    },
-
-    dismissMilestoneAsk() {
-      this.milestoneAskPrayer = null;
-      this.milestoneCloseState = '';
-      const milestoneDiv = document.getElementById('prEveningMilestone');
-      if (milestoneDiv) milestoneDiv.innerHTML = '';
     }
   };
 
@@ -13162,7 +13126,513 @@ async function submitCreateCohort() {
     msgEl.textContent = 'Network or server error occurred.';
   }
 }
-window.toggleSidebar=toggleSidebar;window.closeSidebar=closeSidebar;window.toggleSidebarGroup=toggleSidebarGroup;window.submitCreateCohort=submitCreateCohort;
+let adminMembers = [];
+
+async function getAdminToken() {
+  let token = '';
+  if (typeof sb !== 'undefined' && sb) {
+    try {
+      const { data: sessionData } = await sb.auth.getSession();
+      if (sessionData && sessionData.session) {
+        token = sessionData.session.access_token;
+      }
+    } catch (e) {
+      console.warn("Failed to get session token:", e);
+    }
+  }
+  return token;
+}
+
+async function switchAdminTab(tabName) {
+  const btns = document.querySelectorAll('.admin-nav-btn');
+  btns.forEach(btn => {
+    if (btn.getAttribute('onclick').includes(`'${tabName}'`)) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  const tabs = document.querySelectorAll('.admin-tab-content');
+  tabs.forEach(tab => {
+    if (tab.id === `adminTab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+
+  if (tabName === 'members') {
+    await loadAdminMembers();
+  } else if (tabName === 'moderation') {
+    await loadAdminModeration();
+  } else if (tabName === 'settings') {
+    await loadAdminSettings();
+  } else if (tabName === 'audit') {
+    await loadAdminAudit();
+  }
+}
+
+async function loadAdminMembers() {
+  const tbody = document.getElementById('adminMembersTableBody');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:rgba(255,255,255,0.4);">Loading roster...</td></tr>`;
+  
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-members', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'list'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      adminMembers = data.members || [];
+      renderAdminMembers(adminMembers);
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff6b6b;">${data.error || 'Failed to load roster.'}</td></tr>`;
+    }
+  } catch (e) {
+    console.error(e);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff6b6b;">Network error.</td></tr>`;
+  }
+}
+
+function renderAdminMembers(members) {
+  const tbody = document.getElementById('adminMembersTableBody');
+  if (!tbody) return;
+  
+  if (members.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:rgba(255,255,255,0.4);">No members found.</td></tr>`;
+    return;
+  }
+  
+  tbody.innerHTML = members.map(m => {
+    const rolePill = m.admin_role ? `<span class="admin-pill admin-pill-role">${m.admin_role}</span>` : `<span style="color:rgba(255,255,255,0.3);">steward</span>`;
+    const statusPill = m.member_status === 'banned' ? `<span class="admin-pill admin-pill-banned">banned</span>` : `<span class="admin-pill admin-pill-inactive">${m.member_status || 'member'}</span>`;
+    const activePill = m.active ? `<span class="admin-pill admin-pill-active">active</span>` : `<span class="admin-pill admin-pill-inactive">inactive</span>`;
+    
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:700; color:#fff;">${m.name || 'Anonymous'} ${m.last_name || ''}</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4);">${m.email}</div>
+        </td>
+        <td style="color:rgba(255,255,255,0.7);">${m.skool_handle || '—'}</td>
+        <td>${rolePill}</td>
+        <td>${statusPill}</td>
+        <td>${activePill}</td>
+        <td>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <select onchange="setMemberRole('${m.email}', this.value)" style="background:#121316; border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#fff; font-size:11px; padding:2px 4px; outline:none;">
+              <option value="" ${!m.admin_role ? 'selected' : ''}>Set Role: Steward</option>
+              <option value="moderator" ${m.admin_role === 'moderator' ? 'selected' : ''}>Moderator</option>
+              <option value="admin" ${m.admin_role === 'admin' ? 'selected' : ''}>Admin</option>
+            </select>
+            <select onchange="setMemberStatus('${m.email}', this.value)" style="background:#121316; border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#fff; font-size:11px; padding:2px 4px; outline:none;">
+              <option value="member" ${m.member_status === 'member' ? 'selected' : ''}>Set Status: Member</option>
+              <option value="lead" ${m.member_status === 'lead' ? 'selected' : ''}>Lead</option>
+            </select>
+            <button onclick="toggleMemberActive('${m.email}', ${m.active})" class="btn-ghost" style="padding:2px 6px; font-size:11px; height:auto; min-height:auto; width:auto; border-radius:4px;">${m.active ? 'Deactivate' : 'Activate'}</button>
+            ${m.member_status === 'banned' ? `
+              <button onclick="executeMemberCommand('${m.email}', 'unban')" class="btn-lime" style="padding:2px 8px; font-size:11px; height:auto; min-height:auto; width:auto; border-radius:4px;">Unban</button>
+            ` : `
+              <button onclick="executeMemberCommand('${m.email}', 'ban')" class="btn-ghost" style="padding:2px 8px; font-size:11px; height:auto; min-height:auto; width:auto; border-radius:4px; color:#ff6b6b; border-color:rgba(255,107,107,0.3);">Ban</button>
+            `}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterAdminMembers() {
+  const query = document.getElementById('adminMemberSearch').value.toLowerCase().trim();
+  if (!query) {
+    renderAdminMembers(adminMembers);
+    return;
+  }
+  const filtered = adminMembers.filter(m => 
+    (m.name && m.name.toLowerCase().includes(query)) ||
+    (m.last_name && m.last_name.toLowerCase().includes(query)) ||
+    (m.email && m.email.toLowerCase().includes(query)) ||
+    (m.skool_handle && m.skool_handle.toLowerCase().includes(query))
+  );
+  renderAdminMembers(filtered);
+}
+
+async function setMemberRole(targetEmail, role) {
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-members', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'set_role',
+        target_email: targetEmail,
+        role: role || null
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminMembers();
+    } else {
+      alert(data.error || 'Failed to set member role.');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function setMemberStatus(targetEmail, status) {
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-members', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'set_status',
+        target_email: targetEmail,
+        status
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminMembers();
+    } else {
+      alert(data.error || 'Failed to set member status.');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function toggleMemberActive(targetEmail, currentActive) {
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-members', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'set_active',
+        target_email: targetEmail,
+        active: !currentActive
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminMembers();
+    } else {
+      alert(data.error || 'Failed to set active status.');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function executeMemberCommand(targetEmail, cmd) {
+  if (cmd === 'ban' && !confirm(`Are you sure you want to BAN ${targetEmail}?`)) return;
+  
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-members', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: cmd,
+        target_email: targetEmail
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminMembers();
+    } else {
+      alert(data.error || `Failed to execute ${cmd} command.`);
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function loadAdminModeration() {
+  const tbody = document.getElementById('adminModerationTableBody');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading report queue...</td></tr>`;
+  
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/wall-moderate', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'x-admin-email': window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email')
+      }
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const queue = data.queue || [];
+      if (queue.length === 0) {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Queue is empty. All clear.</td></tr>`;
+        return;
+      }
+      if (tbody) {
+        tbody.innerHTML = queue.map(item => `
+          <tr>
+            <td style="font-weight:700; color:var(--lime); text-transform:uppercase; font-size:11px;">${item.source || 'wall'}</td>
+            <td>
+              <div style="font-weight:700; color:#fff; margin-bottom:4px;">Post ID: ${item.post_id || item.id}</div>
+              <div style="color:rgba(255,255,255,0.9); line-height:1.4;">${item.body}</div>
+            </td>
+            <td style="color:rgba(255,255,255,0.6); font-style:italic;">Reported by users.</td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <button onclick="moderateAction('${item.post_id || item.id}', 'uphold', '${item.source || 'wall'}')" class="btn-ghost" style="padding:6px 12px; font-size:11px; height:auto; min-height:auto; width:auto; border-radius:4px; color:#ff6b6b; border-color:rgba(255,107,107,0.3);">Uphold (Del)</button>
+                <button onclick="moderateAction('${item.post_id || item.id}', 'dismiss', '${item.source || 'wall'}')" class="btn-lime" style="padding:6px 12px; font-size:11px; height:auto; min-height:auto; width:auto; border-radius:4px;">Dismiss</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">${data.error || 'Failed to load moderation queue.'}</td></tr>`;
+    }
+  } catch (e) {
+    console.error(e);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">Network error.</td></tr>`;
+  }
+}
+
+async function moderateAction(postId, action, source) {
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/wall-moderate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        post_id: postId,
+        action,
+        source
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminModeration();
+    } else {
+      alert(data.error || `Failed to ${action} report.`);
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function loadAdminSettings() {
+  const tbody = document.getElementById('adminSettingsTableBody');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading settings...</td></tr>`;
+  
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-settings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'list'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const list = data.settings || [];
+      if (list.length === 0) {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">No settings found.</td></tr>`;
+        return;
+      }
+      if (tbody) {
+        tbody.innerHTML = list.map(item => `
+          <tr>
+            <td style="font-family:monospace; font-weight:700; color:#fff;">${item.key}</td>
+            <td style="color:var(--lime); font-family:monospace;">${item.value}</td>
+            <td style="color:rgba(255,255,255,0.5);">${item.updated_at ? new Date(item.updated_at).toLocaleString() : '—'}</td>
+            <td>
+              <button onclick="deleteAdminSetting('${item.key}')" class="btn-ghost" style="padding:4px 8px; font-size:11px; height:auto; min-height:auto; width:auto; border-radius:4px; color:#ff6b6b; border-color:rgba(255,107,107,0.2);">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">${data.error || 'Failed to load settings.'}</td></tr>`;
+    }
+  } catch (e) {
+    console.error(e);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">Network error.</td></tr>`;
+  }
+}
+
+async function saveAdminSetting() {
+  const keyInput = document.getElementById('adminSettingKeyInput');
+  const valInput = document.getElementById('adminSettingValInput');
+  const key = keyInput ? keyInput.value.trim() : '';
+  const value = valInput ? valInput.value.trim() : '';
+  
+  if (!key || !value) {
+    alert('Both key and value are required.');
+    return;
+  }
+  
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-settings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'set',
+        key,
+        value
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      if (keyInput) keyInput.value = '';
+      if (valInput) valInput.value = '';
+      await loadAdminSettings();
+    } else {
+      alert(data.error || 'Failed to save setting.');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function deleteAdminSetting(key) {
+  if (!confirm(`Are you sure you want to delete settings key: ${key}?`)) return;
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-settings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'delete',
+        key
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminSettings();
+    } else {
+      alert(data.error || 'Failed to delete setting.');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Network error.');
+  }
+}
+
+async function loadAdminAudit() {
+  const tbody = document.getElementById('adminAuditTableBody');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:rgba(255,255,255,0.4);">Loading audit log...</td></tr>`;
+  
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-members', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'audit'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const logs = data.audit || [];
+      if (logs.length === 0) {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:rgba(255,255,255,0.4);">No audit entries yet.</td></tr>`;
+        return;
+      }
+      if (tbody) {
+        tbody.innerHTML = logs.map(log => `
+          <tr>
+            <td style="color:rgba(255,255,255,0.5);">${log.created_at ? new Date(log.created_at).toLocaleString() : '—'}</td>
+            <td>
+              <div style="font-weight:700; color:#fff;">${log.actor_email}</div>
+              <div style="font-size:10px; color:var(--lime); text-transform:uppercase;">${log.actor_role}</div>
+            </td>
+            <td style="font-family:monospace; font-weight:700;">${log.action}</td>
+            <td style="color:rgba(255,255,255,0.7);">${log.target || '—'}</td>
+            <td style="font-size:11px; font-family:monospace; color:rgba(255,255,255,0.6); max-width:240px; word-break:break-all;">${JSON.stringify(log.details || {})}</td>
+          </tr>
+        `).join('');
+      }
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ff6b6b;">${data.error || 'Failed to load audit logs.'}</td></tr>`;
+    }
+  } catch (e) {
+    console.error(e);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ff6b6b;">Network error.</td></tr>`;
+  }
+}
+
+window.toggleSidebar=toggleSidebar;
+window.closeSidebar=closeSidebar;
+window.toggleSidebarGroup=toggleSidebarGroup;
+window.submitCreateCohort=submitCreateCohort;
+window.switchAdminTab=switchAdminTab;
+window.loadAdminMembers=loadAdminMembers;
+window.renderAdminMembers=renderAdminMembers;
+window.filterAdminMembers=filterAdminMembers;
+window.setMemberRole=setMemberRole;
+window.setMemberStatus=setMemberStatus;
+window.toggleMemberActive=toggleMemberActive;
+window.executeMemberCommand=executeMemberCommand;
+window.loadAdminModeration=loadAdminModeration;
+window.moderateAction=moderateAction;
+window.loadAdminSettings=loadAdminSettings;
+window.saveAdminSetting=saveAdminSetting;
+window.deleteAdminSetting=deleteAdminSetting;
+window.loadAdminAudit=loadAdminAudit;
 function ceremony(title,sub,ms){
   document.getElementById('cerTitle').textContent=title;
   document.getElementById('cerSub').textContent=sub;
