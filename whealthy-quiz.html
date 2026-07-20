@@ -4036,7 +4036,51 @@ function submitContactForm(){
   // Store contact info globally for the webhook. Phone stays empty here; captured optionally on the result page.
   lastContactInfo={first_name:firstName,last_name:'',phone:'',email:email};
 
-  // Proceed to countdown
+  // Show the optional SMS notification screen
+  showSmsForm();
+}
+
+function showSmsForm(){
+  const body = document.getElementById('qmBody');
+  slideIn(body, `<div class="quiz-slide">
+    <div style="text-align:center">
+      <div class="quiz-modal__chapter" style="color: var(--lime); font-weight: 700; letter-spacing: 0.15em; margin-bottom: 24px;">SMS NOTIFICATION</div>
+      <div class="quiz-modal__q-num" style="margin-bottom: 12px;">OPTIONAL UPDATES</div>
+      <div class="quiz-modal__question" style="font-size:clamp(18px,3.5vw,24px);margin-bottom:12px">Get SMS Updates?</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.6">Enter your phone number below to receive updates about your energy pattern and next steps via text.</p>
+
+      <div class="email-capture__form" style="text-align:left">
+        <input type="tel" class="email-capture__input" id="captPhone" placeholder="Phone (###-###-####)" autocomplete="tel" oninput="formatPhone(this)">
+        <p class="email-capture__error" id="captPhoneError"></p>
+        <button class="btn-primary quiz-modal__next ready" onclick="submitSmsForm()" style="width:100%;justify-content:center;margin-bottom:14px">Notify Me via SMS</button>
+        <button class="btn-secondary" onclick="skipSmsForm()" style="width:100%;justify-content:center;background:none;border:1px solid var(--border-mid);color:var(--text-muted);cursor:pointer;padding:12px 22px;border-radius:14px;font-family:var(--font-display);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase">Skip this step</button>
+      </div>
+      <p style="font-size:11px;color:var(--text-dim);margin-top:12px">Standard message and data rates may apply. Unsubscribe anytime by replying STOP.</p>
+    </div>
+  </div>`);
+}
+
+function submitSmsForm(){
+  const phoneEl = document.getElementById('captPhone');
+  const errorEl = document.getElementById('captPhoneError');
+  phoneEl.classList.remove('error');
+  errorEl.classList.remove('visible');
+  errorEl.textContent = '';
+
+  const phone = phoneEl.value.trim();
+  if(!phone || !validatePhone(phone)){
+    phoneEl.classList.add('error');
+    errorEl.textContent = 'Phone must be ###-###-####';
+    errorEl.classList.add('visible');
+    return;
+  }
+
+  lastContactInfo.phone = phone;
+  showCountdown(lastQuizResult, lastBundleKey);
+}
+
+function skipSmsForm(){
+  lastContactInfo.phone = '';
   showCountdown(lastQuizResult, lastBundleKey);
 }
 
