@@ -1974,7 +1974,27 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         The Steward's Rhythm is built for members of the WHEALTHY Stewards community. Step inside and it all opens up &mdash; your rhythm, the Word, the prayer wall, and your <span id="joinDiscountPct">10</span>% member code.
       </div>
       <button class="claim-modal-btn" onclick="joinStewardsSkool()" style="width:100%; margin-bottom:12px;">JOIN THE STEWARDS</button>
+      <div style="font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:16px; text-align:center;">
+        Already joined Skool?
+        <a href="#" onclick="requestAccessFromJoinPopup(); return false;" style="color:var(--lime); font-weight:700; text-decoration:none;">Request your access &rarr;</a>
+      </div>
       <button class="claim-modal-dismiss" onclick="closeJoinPopup()">Already a member? Use the email tied to your community account.</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PENDING REGISTRATION POPUP MODAL ═══ -->
+<div class="claim-modal-overlay" id="pendingModal">
+  <div class="claim-modal" style="position:relative">
+    <div class="claim-modal-glow"></div>
+    <div class="claim-modal-body">
+      <div class="claim-modal-icon">⌛</div>
+      <div class="claim-modal-title" style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--lime); margin-bottom:8px;">WHEALTHY / STEWARDS</div>
+      <div class="claim-modal-bundle" style="font-size:22px; line-height:1.2; margin-bottom:12px; color:#fff;">You're on the list.</div>
+      <div class="claim-modal-text" id="pendingModalText" style="font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.7); margin-bottom:24px;">
+        Your request is in. We review new stewards within 24 hours, and you'll get access once you're approved.
+      </div>
+      <button class="claim-modal-btn" onclick="closePendingModal()" style="width:100%;">CLOSE</button>
     </div>
   </div>
 </div>
@@ -8582,6 +8602,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <!-- Tabs Navigation -->
           <div class="admin-nav-bar">
             <button class="admin-nav-btn active" onclick="switchAdminTab('challenge')">Challenge</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('registrations')" style="position:relative;">
+              Registrations
+              <span id="adminPendingCountBadge" style="display:none; background:var(--lime); color:#000; font-size:10px; font-weight:900; padding:2px 6px; border-radius:10px; margin-left:6px; vertical-align:middle;">0</span>
+            </button>
             <button class="admin-nav-btn" onclick="switchAdminTab('members')">Members</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('moderation')">Moderation</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('settings')">Settings</button>
@@ -8612,6 +8636,30 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <button class="btn-lime" onclick="submitCreateCohort()" style="margin-top: 8px;">Create Cohort</button>
                 <div id="adminCohortMessage" style="font-size: 13px; margin-top: 8px; text-align: center; display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: REGISTRATIONS -->
+          <div id="adminTabRegistrations" class="admin-tab-content">
+            <div class="g-card" style="margin-bottom: 20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:16px; flex-wrap:wrap;">
+                <h3 class="plan-sec-title" style="margin:0;">Pending Registrations</h3>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Name / Email</th>
+                      <th>Skool Handle</th>
+                      <th>Requested Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminRegistrationsTableBody">
+                    <tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading requests...</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -12184,6 +12232,13 @@ async function waRunGate(emailArg){
     console.warn('[gate] onboarding-state call failed:', e);
   }
 
+  if (onboard && onboard.gate === 'pending') {
+    try { if (sb) await sb.auth.signOut(); } catch(e){}
+    waResetAll();
+    openPendingModal(onboard.message);
+    return;
+  }
+
   if (onboard && (onboard.gate === 'join' || onboard.verified !== true)) {
     try { if (sb) await sb.auth.signOut(); } catch(e){}
     waResetAll();
@@ -12235,6 +12290,7 @@ async function waRunGate(emailArg){
           if (adminBtn) {
             if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
               adminBtn.style.display = 'flex';
+              try { loadAdminRegistrationsCountSilently(); } catch(e){}
             } else {
               adminBtn.style.display = 'none';
             }
@@ -13465,6 +13521,8 @@ async function switchAdminTab(tabName) {
 
   if (tabName === 'members') {
     await loadAdminMembers();
+  } else if (tabName === 'registrations') {
+    await loadAdminRegistrations();
   } else if (tabName === 'moderation') {
     await loadAdminModeration();
   } else if (tabName === 'settings') {
@@ -13473,6 +13531,148 @@ async function switchAdminTab(tabName) {
     await loadAdminAudit();
   }
 }
+
+async function loadAdminRegistrations() {
+  const tbody = document.getElementById('adminRegistrationsTableBody');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading requests...</td></tr>`;
+
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-registrations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'list'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const registrations = data.registrations || [];
+      renderAdminRegistrations(registrations);
+      updatePendingCountBadge(data.pending_count);
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">${data.error || 'Failed to load requests.'}</td></tr>`;
+    }
+  } catch (e) {
+    console.error(e);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">Network error.</td></tr>`;
+  }
+}
+window.loadAdminRegistrations = loadAdminRegistrations;
+
+function renderAdminRegistrations(registrations) {
+  const tbody = document.getElementById('adminRegistrationsTableBody');
+  if (!tbody) return;
+  if (!registrations || registrations.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">No pending registrations.</td></tr>`;
+    return;
+  }
+  let html = '';
+  registrations.forEach(r => {
+    const nameStr = r.name ? r.name : 'Unknown';
+    const emailStr = r.email || '';
+    const handleStr = r.skool_handle || 'N/A';
+    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString() : 'N/A';
+    html += `
+      <tr>
+        <td>
+          <div style="font-weight:700; color:#fff;">${nameStr}</div>
+          <div style="font-size:12px; color:rgba(255,255,255,0.5);">${emailStr}</div>
+        </td>
+        <td style="color:rgba(255,255,255,0.85);">${handleStr}</td>
+        <td style="color:rgba(255,255,255,0.6);">${dateStr}</td>
+        <td>
+          <div style="display:flex; gap:8px;">
+            <button class="admin-action-btn btn-lime-small" onclick="handleRegistrationAction('${r.id}', 'approve', this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:4px; cursor:pointer;">Approve</button>
+            <button class="admin-action-btn btn-danger-small" onclick="handleRegistrationAction('${r.id}', 'reject', this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:4px; cursor:pointer; background:#e74c3c; border:none; color:#fff;">Reject</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+window.renderAdminRegistrations = renderAdminRegistrations;
+
+async function handleRegistrationAction(id, action, btnEl) {
+  if (btnEl) btnEl.disabled = true;
+  const originalText = btnEl ? btnEl.textContent : '';
+  if (btnEl) btnEl.textContent = action === 'approve' ? 'Approving...' : 'Rejecting...';
+
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-registrations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: action,
+        id: id
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminRegistrations();
+    } else {
+      alert(data.error || `Failed to ${action} registration.`);
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = originalText;
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    alert(`Network error during ${action} registration.`);
+    if (btnEl) {
+      btnEl.disabled = false;
+      btnEl.textContent = originalText;
+    }
+  }
+}
+window.handleRegistrationAction = handleRegistrationAction;
+
+function updatePendingCountBadge(count) {
+  const badge = document.getElementById('adminPendingCountBadge');
+  if (!badge) return;
+  if (count && count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+window.updatePendingCountBadge = updatePendingCountBadge;
+
+async function loadAdminRegistrationsCountSilently() {
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-registrations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'list'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      updatePendingCountBadge(data.pending_count);
+    }
+  } catch (e) {
+    console.warn('Failed to silently fetch registration count:', e);
+  }
+}
+window.loadAdminRegistrationsCountSilently = loadAdminRegistrationsCountSilently;
 
 async function loadAdminMembers() {
   const tbody = document.getElementById('adminMembersTableBody');
@@ -16699,6 +16899,8 @@ async function checkClaimModal(){
         openClaimModal();
       } else if (d.gate === 'join') {
         openJoinPopup(d.skool_url, d.discount_pct);
+      } else if (d.gate === 'pending') {
+        openPendingModal(d.message);
       }
     }, 1500);
   } catch (e) {
@@ -16706,6 +16908,56 @@ async function checkClaimModal(){
   }
 }
 window.checkClaimModal = checkClaimModal;
+
+window.openPendingModal = function(msg) {
+  const modal = document.getElementById('pendingModal');
+  const textEl = document.getElementById('pendingModalText');
+  if (textEl && msg) {
+    textEl.textContent = msg;
+  }
+  if (modal) modal.classList.add('open');
+};
+
+window.closePendingModal = function() {
+  const modal = document.getElementById('pendingModal');
+  if (modal) modal.classList.remove('open');
+};
+
+window.requestAccessFromJoinPopup = async function() {
+  const emailInput = document.getElementById('waEmail');
+  const email = (emailInput && emailInput.value || localStorage.getItem('wh_steward_email') || '').trim().toLowerCase();
+  
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    alert("Please enter a valid email address first.");
+    return;
+  }
+
+  const payload = { email };
+  if (typeof waState !== 'undefined' && waState.profile) {
+    if (waState.profile.name) payload.name = waState.profile.name;
+    if (waState.profile.handle) payload.skool_handle = waState.profile.handle;
+  } else if (typeof waState !== 'undefined' && waState.handle) {
+    payload.skool_handle = waState.handle;
+  }
+
+  try {
+    const res = await fetch(FN_BASE + '/request-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const d = await res.json();
+    if (res.ok && d.ok) {
+      closeJoinPopup();
+      openPendingModal(d.message);
+    } else {
+      alert(d.error || d.message || "Failed to request access. Please try again.");
+    }
+  } catch (e) {
+    console.error("Failed to request access:", e);
+    alert("Failed to request access. Check your connection.");
+  }
+};
 
 function renderClaimView(){
   var nameEl=document.getElementById('claimViewBundleName');
