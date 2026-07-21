@@ -19079,7 +19079,7 @@ async function loadAndInit(){
       try {
         const token = await RHYTHM_BUILDER.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
-        const res = await fetch(`${FN_BASE}/rhythm-status`, {
+        const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -19308,7 +19308,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
 
         // 1. Submit Assessment
-        const res = await fetch(`${FN_BASE}/rhythm-assess`, {
+        const res = await fetch(`${FN_BASE}/rhythm-assess?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
           body: JSON.stringify({
@@ -19325,7 +19325,7 @@ async function loadAndInit(){
 
         // 2. Trigger Build
         document.getElementById('rhyLoaderText').textContent = 'Drafting your personalized rhythm...';
-        const buildRes = await fetch(`${FN_BASE}/rhythm-build`, {
+        const buildRes = await fetch(`${FN_BASE}/rhythm-build?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
           body: JSON.stringify({ email: window.MEMBER_EMAIL })
@@ -19348,7 +19348,7 @@ async function loadAndInit(){
       try {
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
-        const res = await fetch(`${FN_BASE}/rhythm-status`, {
+        const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
         });
         const d = await res.json();
@@ -19387,7 +19387,7 @@ async function loadAndInit(){
       try {
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
-        const res = await fetch(`${FN_BASE}/rhythm-activate`, {
+        const res = await fetch(`${FN_BASE}/rhythm-activate?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
           body: JSON.stringify({ plan_id: this.state.pendingDraftId })
@@ -19493,7 +19493,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const today = new Date().toISOString().split('T')[0];
 
-        const res = await fetch(`${FN_BASE}/rhythm-checkin`, {
+        const res = await fetch(`${FN_BASE}/rhythm-checkin?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
           body: JSON.stringify({
@@ -19524,7 +19524,7 @@ async function loadAndInit(){
       try {
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
-        const res = await fetch(`${FN_BASE}/rhythm-nudge-check`, {
+        const res = await fetch(`${FN_BASE}/rhythm-nudge-check?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
           body: JSON.stringify({ email: window.MEMBER_EMAIL })
@@ -19570,5 +19570,43 @@ async function loadAndInit(){
   };
 })();
 </script>
+<!-- ===== PAGE HELP + DESCRIPTIONS (Claude) ===== -->
+<style>
+  .view-header-desc{margin:6px 0 0;font-size:13px;line-height:1.5;color:rgba(240,241,243,0.55);max-width:640px}
+  .view-header-block{position:relative}
+  .vh-help{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(204,255,0,0.35);background:rgba(204,255,0,0.08);color:#ccff00;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;line-height:24px;text-align:center;cursor:pointer;transition:all .2s;z-index:2}
+  .vh-help:hover{background:rgba(204,255,0,0.18);transform:scale(1.08)}
+  .vh-pop-back{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:99990;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .vh-pop-back.open{opacity:1;pointer-events:auto}
+  .vh-pop{width:100%;max-width:420px;background:#121316;border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:22px 22px 18px;box-shadow:0 24px 60px rgba(0,0,0,0.5)}
+  .vh-pop h4{margin:0 0 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:#f0f1f3}
+  .vh-pop p{margin:0 0 16px;font-size:14px;line-height:1.6;color:rgba(240,241,243,0.7)}
+  .vh-pop button{width:100%;padding:11px;border:none;border-radius:12px;background:#ccff00;color:#0e0f11;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+  @media (max-width:480px){ .vh-help{top:10px;right:10px} }
+</style>
+<div class="vh-pop-back" id="vhPopBack" onclick="if(event.target===this)vhCloseHelp()">
+  <div class="vh-pop"><h4 id="vhPopTitle">Help</h4><p id="vhPopBody"></p><button onclick="vhCloseHelp()">Got it</button></div>
+</div>
+<script>
+(function(){
+  var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
+  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',portalView:'Manage your orders, subscriptions, and deliveries.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
+  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',portalView:'Update payment, delivery timing, or pause a subscription any time from here.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
+  window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
+  window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
+  function enhance(){
+    document.querySelectorAll('.view-header-block').forEach(function(bl){
+      var host=bl.closest('[id$="View"]'); if(!host)return; var id=host.id;
+      if(bl.getAttribute('data-vh'))return; bl.setAttribute('data-vh','1');
+      if(DESC[id] && !bl.querySelector('.view-header-desc')){ var inner=bl.querySelector('div:not(.view-header-icon-box)')||bl; var p=document.createElement('p'); p.className='view-header-desc'; p.textContent=DESC[id]; inner.appendChild(p); }
+      if(HELP[id]){ var q=document.createElement('button'); q.className='vh-help'; q.type='button'; q.setAttribute('aria-label','Help for this page'); q.textContent='?'; q.onclick=function(){ openHelp(id); }; bl.appendChild(q); }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',enhance); else enhance();
+  setTimeout(enhance,1500);
+})();
+</script>
+<!-- ===== /PAGE HELP ===== -->
+
 </body>
 </html>
