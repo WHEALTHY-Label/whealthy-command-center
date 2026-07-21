@@ -2476,6 +2476,46 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
           <!-- SCREEN 4: Active Daily timeline -->
           <div id="rhyScreenTimeline" class="rhy-screen" style="flex-direction:column; gap:20px;">
+
+            <!-- Fresh-Start Moment Card (Sun/Mon only) -->
+            <div id="rhyFreshStartCard" style="display:none; background:linear-gradient(135deg, rgba(204,255,0,0.06) 0%, rgba(204,255,0,0.02) 100%); border:1px solid rgba(204,255,0,0.15); border-radius:14px; padding:16px 20px; position:relative;">
+              <button onclick="RHYTHM_BUILDER.dismissFreshStart()" style="position:absolute; top:10px; right:12px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:16px; cursor:pointer; padding:4px;">&times;</button>
+              <div style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:6px;">New Week</div>
+              <div id="rhyFreshStartLine" style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; margin-bottom:4px;"></div>
+              <div id="rhyFreshStartReflection" style="font-size:12px; color:rgba(255,255,255,0.45);"></div>
+            </div>
+
+            <!-- Season Strip -->
+            <div id="rhySeasonStrip" style="display:none;">
+              <!-- Active season: progress bar -->
+              <div id="rhySeasonActive" style="display:none; background:#0e1013; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-family:var(--font-display); font-size:13px; font-weight:700; color:#fff;"><span id="rhySeasonDayLabel">Day 1 of 40</span></span>
+                    <span id="rhySeasonCohortNote" style="font-size:10px; color:rgba(255,255,255,0.4); display:none;">with your cohort</span>
+                  </div>
+                  <span id="rhySeasonDaysLeft" style="font-size:11px; color:rgba(255,255,255,0.45);"></span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+                  <div id="rhySeasonProgressBar" style="height:100%; background:var(--lime); border-radius:3px; transition:width 0.4s;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                  <span id="rhySeasonLabel" style="font-size:12px; color:rgba(255,255,255,0.5);"></span>
+                  <button id="rhySeasonEndBtn" onclick="RHYTHM_BUILDER.endSeason()" style="display:none; background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; text-decoration:underline;">End season</button>
+                </div>
+              </div>
+              <!-- Completed season: celebration -->
+              <div id="rhySeasonCompleted" style="display:none; background:linear-gradient(135deg, rgba(204,255,0,0.08) 0%, rgba(204,255,0,0.02) 100%); border:1px solid rgba(204,255,0,0.2); border-radius:14px; padding:16px 20px; text-align:center;">
+                <div style="font-size:20px; margin-bottom:6px;">🏆</div>
+                <div id="rhySeasonCompletedText" style="font-size:14px; font-weight:700; color:#fff;"></div>
+              </div>
+              <!-- No season: commit prompt -->
+              <div id="rhySeasonPrompt" style="display:none; background:#0e1013; border:1px dashed rgba(255,255,255,0.1); border-radius:14px; padding:16px 20px; text-align:center;">
+                <div style="font-size:14px; color:rgba(255,255,255,0.7); margin-bottom:12px;">Hold your rhythm for a season</div>
+                <div id="rhySeasonOptions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;"></div>
+              </div>
+            </div>
+
             
             <!-- Timeline Status Header Card -->
             <div class="rhy-card" style="display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;">
@@ -19576,6 +19616,8 @@ async function loadAndInit(){
         this.state.adherencePct = d.adherence_pct || 0;
         this.state.icsToken = d.ics_token;
         this.state.adherenceHistory = d.adherence_history || [];
+        this.state.season = d.season || null;
+        this.state.freshStart = d.fresh_start || null;
 
         // Check if there is any custom nudge
         this.pollNudges();
@@ -19584,6 +19626,8 @@ async function loadAndInit(){
           this.showScreen('Threshold');
         } else if (this.state.activePlan) {
           this.renderTimeline();
+          this.renderSeason();
+          this.renderFreshStart();
           this.showScreen('Timeline');
         } else if (this.state.pendingDraftId) {
           await this.loadDraft();
@@ -20099,10 +20143,122 @@ async function loadAndInit(){
         const d = await res.json();
         if (d && d.nudges && d.nudges.length > 0) {
           d.nudges.forEach(n => {
+            // Suppress fresh_start toast when the card is visible
+            if (n.type === 'fresh_start' && !this.state._freshStartDismissed && this.state.freshStart && this.state.freshStart.show) return;
             this.showToast(n.message || 'Time for your scheduled discipline.');
           });
         }
       } catch (e) {}
+    },
+
+    renderSeason() {
+      const strip = document.getElementById('rhySeasonStrip');
+      const activeEl = document.getElementById('rhySeasonActive');
+      const completedEl = document.getElementById('rhySeasonCompleted');
+      const promptEl = document.getElementById('rhySeasonPrompt');
+      if (!strip) return;
+
+      const s = this.state.season;
+      activeEl.style.display = 'none';
+      completedEl.style.display = 'none';
+      promptEl.style.display = 'none';
+
+      if (!s) { strip.style.display = 'none'; return; }
+      strip.style.display = 'block';
+
+      if (s.source && s.completed) {
+        completedEl.style.display = 'block';
+        document.getElementById('rhySeasonCompletedText').textContent = `You finished your ${s.total}-day season. Well carried.`;
+      } else if (s.source) {
+        activeEl.style.display = 'block';
+        document.getElementById('rhySeasonDayLabel').textContent = `Day ${s.day} of ${s.total}`;
+        document.getElementById('rhySeasonDaysLeft').textContent = `${s.days_left} day${s.days_left === 1 ? '' : 's'} left`;
+        const pct = Math.min(100, Math.round((s.day / s.total) * 100));
+        document.getElementById('rhySeasonProgressBar').style.width = pct + '%';
+        document.getElementById('rhySeasonLabel').textContent = s.label || '';
+        const cohortNote = document.getElementById('rhySeasonCohortNote');
+        cohortNote.style.display = s.cohort_id ? 'inline' : 'none';
+        const endBtn = document.getElementById('rhySeasonEndBtn');
+        endBtn.style.display = s.source === 'rhythm' ? 'inline' : 'none';
+      } else if (s.can_commit) {
+        promptEl.style.display = 'block';
+        const optContainer = document.getElementById('rhySeasonOptions');
+        optContainer.innerHTML = '';
+        (s.options || [21, 40, 90]).forEach(len => {
+          optContainer.innerHTML += `<button onclick="RHYTHM_BUILDER.commitSeason(${len})" class="rhy-btn-ghost" style="padding:10px 20px; font-size:12px; height:auto; min-height:auto; border-color:rgba(204,255,0,0.3); color:var(--lime);">${len} days</button>`;
+        });
+      } else {
+        strip.style.display = 'none';
+      }
+    },
+
+    renderFreshStart() {
+      const card = document.getElementById('rhyFreshStartCard');
+      if (!card) return;
+      const fs = this.state.freshStart;
+      if (!fs || !fs.show || this.state._freshStartDismissed) {
+        card.style.display = 'none';
+        return;
+      }
+      card.style.display = 'block';
+      document.getElementById('rhyFreshStartLine').textContent = fs.line || 'A new week, a clean page. Carry it well.';
+      const reflection = document.getElementById('rhyFreshStartReflection');
+      if (fs.last_week_done !== undefined) {
+        reflection.textContent = `Last week you held ${fs.last_week_done} anchor${fs.last_week_done === 1 ? '' : 's'} across the week.`;
+      } else if (fs.last_week_adherence !== undefined) {
+        reflection.textContent = `Last week: ${fs.last_week_adherence}% adherence.`;
+      } else {
+        reflection.textContent = '';
+      }
+    },
+
+    dismissFreshStart() {
+      this.state._freshStartDismissed = true;
+      const card = document.getElementById('rhyFreshStartCard');
+      if (card) card.style.display = 'none';
+    },
+
+    async commitSeason(lengthDays) {
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ action: 'commit', length_days: lengthDays })
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          this.showToast(errData.message || 'Could not start season.');
+          return;
+        }
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] commitSeason failed:', e);
+        this.showToast('Could not start season.');
+      }
+    },
+
+    async endSeason() {
+      if (!confirm('End your current rhythm season? Your anchors stay, only the season counter resets.')) return;
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ action: 'end' })
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          this.showToast(errData.message || 'Could not end season.');
+          return;
+        }
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] endSeason failed:', e);
+        this.showToast('Could not end season.');
+      }
     },
 
     openAddSlotModal() {
