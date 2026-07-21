@@ -2552,6 +2552,203 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
       </div>
 
+        <!-- ============ MY BIBLE CONTENT WRAPPER ============ -->
+        <div id="myBibleContentWrapper" style="display:none;">
+          <style>
+            .mybible-grid {
+              display: grid;
+              grid-template-columns: 1.4fr 1fr;
+              gap: 24px;
+            }
+            @media (max-width: 1024px) {
+              .mybible-grid {
+                grid-template-columns: 1fr;
+              }
+            }
+            .mybible-reader-card {
+              min-width: 0;
+              background: #0e1013;
+              border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 16px;
+              padding: 24px;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+            }
+            .mybible-verses-box {
+              background: rgba(0,0,0,0.15);
+              border: 1px solid rgba(255,255,255,0.05);
+              border-radius: 12px;
+              padding: 24px 26px;
+              font-family: var(--font-body);
+              font-size: 17px;
+              line-height: 1.95;
+              color: rgba(255,255,255,0.92);
+              max-height: 62vh;
+              overflow-y: auto;
+              overflow-x: hidden;
+              overflow-wrap: anywhere;
+              word-break: break-word;
+              max-width: 100%;
+              user-select: text;
+            }
+            @media (max-width: 640px) {
+              .mybible-reader-card { padding: 16px; }
+              .mybible-verses-box { padding: 18px 16px; font-size: 16px; line-height: 1.9; max-height: 70vh; }
+            }
+            .bible-verse-row {
+              cursor: pointer;
+              transition: background 0.15s, color 0.15s;
+              padding: 2px 4px;
+              border-radius: 4px;
+              display: inline;
+            }
+            .bible-verse-row:hover {
+              background: rgba(255,255,255,0.06);
+              color: #fff;
+            }
+            .bible-verse-row.highlighted {
+              background: rgba(204,255,0,0.25);
+              border-bottom: 2px solid var(--lime);
+              color: #fff;
+            }
+            .verse-num {
+              font-weight: 700;
+              font-size: 10px;
+              color: var(--lime);
+              vertical-align: super;
+              margin-right: 4px;
+              user-select: none;
+            }
+            .verse-note-indicator {
+              font-size: 10px;
+              font-weight: 700;
+              background: rgba(255,255,255,0.1);
+              color: rgba(255,255,255,0.7);
+              padding: 1px 4px;
+              border-radius: 4px;
+              margin-left: 4px;
+              vertical-align: middle;
+              display: inline-block;
+              cursor: pointer;
+            }
+            .verse-note-indicator:hover {
+              background: var(--lime);
+              color: #000;
+            }
+            .mybible-sidebar {
+              min-width: 0;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+            }
+            .bible-chat-thread {
+              background: rgba(0,0,0,0.15);
+              border: 1px solid rgba(255,255,255,0.05);
+              border-radius: 12px;
+              height: 280px;
+              overflow-y: auto;
+              padding: 16px;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+            }
+          </style>
+
+          <!-- Resume spot banner -->
+          <div id="myBibleResumeBanner" style="display:none; align-items:center; justify-content:space-between; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.2); padding:12px 20px; border-radius:12px; margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:18px;">📖</span>
+              <span style="font-size:13px; color:rgba(255,255,255,0.95);">Resume where you left off: <strong id="resumeSpotText" style="color:var(--lime);">Matthew 1:1</strong></span>
+            </div>
+            <button class="btn-lime" onclick="resumeLastSpot()" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; text-transform:uppercase; border-radius:6px;">Resume</button>
+          </div>
+
+          <div class="mybible-grid">
+            
+            <!-- Left: Reader -->
+            <div class="mybible-reader-card">
+              <!-- Book & Chapter picker row -->
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase;">Book</span>
+                  <select id="myBibleBookSelect" onchange="onBookSelected()" style="background:#121316; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:14px; font-weight:700; outline:none; cursor:pointer;">
+                  </select>
+                </div>
+                
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button onclick="navigateChapter(-1)" class="btn-ghost" style="width:36px; height:36px; padding:0; border-radius:8px; font-size:14px;">&larr;</button>
+                  <h2 id="myBibleReaderTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin:0; text-transform:uppercase; letter-spacing:0.02em; min-width:120px; text-align:center;">Matthew 1</h2>
+                  <button onclick="navigateChapter(1)" class="btn-ghost" style="width:36px; height:36px; padding:0; border-radius:8px; font-size:14px;">&rarr;</button>
+                </div>
+              </div>
+
+              <!-- Horizontal scroll chapter chips -->
+              <div id="myBibleChapterChips" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.06); scrollbar-width:thin;">
+              </div>
+
+              <!-- Verses content container -->
+              <div id="myBibleVerseContainer" class="mybible-verses-box">
+              </div>
+
+              <!-- Interactive verse markup actions card -->
+              <div id="verseActionsCard" class="g-card" style="display:none; padding:16px; border-color:var(--lime); background:rgba(204,255,0,0.02); position:relative;">
+                <button onclick="BIBLE_READER.closeVerseActions()" style="position:absolute; top:12px; right:12px; background:none; border:none; color:rgba(255,255,255,0.4); font-size:16px; cursor:pointer;">&times;</button>
+                <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:8px;" id="selectedVerseLabel">Matthew 1:1</div>
+                
+                <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+                  <button id="btnHighlightToggle" onclick="BIBLE_READER.toggleHighlightOnSelected()" class="btn-lime" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:6px;">Highlight (Lime)</button>
+                  <button onclick="BIBLE_READER.removeMarkupOnSelected()" class="btn-ghost" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:6px; color:rgba(255,255,255,0.6);">Clear Markup</button>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="verseNoteInput" placeholder="Add a personal study note..." style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:13px; outline:none;">
+                  <button onclick="BIBLE_READER.saveNoteOnSelected()" class="btn-lime" style="padding:8px 14px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:8px; text-transform:uppercase;">Save Note</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Sidebar (Governor AI & markup ledger) -->
+            <div class="mybible-sidebar">
+              <!-- Governor AI study assistant -->
+              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">The Steward's Bible Buddy</h3>
+                  <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.08); padding:3px 6px; border-radius:4px; text-transform:uppercase; color:rgba(255,255,255,0.6);">Interactive</span>
+                </div>
+                
+                <div id="bibleChatThread" class="bible-chat-thread">
+                  <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
+                    <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
+                    Ask me anything about today's scripture passage, or highlight a verse to study its context together.
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="bibleChatInput" placeholder="Ask about this chapter..." style="flex:1; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:10px 12px; color:#fff; font-size:13px; outline:none;" onkeydown="if(event.key==='Enter') sendBibleChatMessage()">
+                  <button onclick="sendBibleChatMessage()" class="btn-lime" style="width:40px; height:40px; padding:0; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px;">&rarr;</button>
+                </div>
+              </div>
+
+              <!-- Study markups ledger -->
+              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">Study Ledger (Marks)</h3>
+                  <button id="btnToggleMarkupsView" onclick="toggleMarkupsView()" class="btn-ghost" style="padding:4px 8px; font-size:10px; width:auto; height:auto; min-height:auto; border-radius:4px; text-transform:uppercase; font-weight:700;">Hide Markups</button>
+                </div>
+
+                <div id="markupsListView">
+                  <div id="markupsListContent" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:4px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /bibleView (closed here; was left open by 5f43c81) -->
+
 <div id="tryallView" style="display:none;">
 <div class="view-header-block">
   <div class="view-header-icon-box">&#128300;</div>
@@ -6123,202 +6320,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       </div>
 
       
-        </div>
 
-        <!-- ============ MY BIBLE CONTENT WRAPPER ============ -->
-        <div id="myBibleContentWrapper" style="display:none;">
-          <style>
-            .mybible-grid {
-              display: grid;
-              grid-template-columns: 1.4fr 1fr;
-              gap: 24px;
-            }
-            @media (max-width: 1024px) {
-              .mybible-grid {
-                grid-template-columns: 1fr;
-              }
-            }
-            .mybible-reader-card {
-              min-width: 0;
-              background: #0e1013;
-              border: 1px solid rgba(255,255,255,0.06);
-              border-radius: 16px;
-              padding: 24px;
-              display: flex;
-              flex-direction: column;
-              gap: 20px;
-            }
-            .mybible-verses-box {
-              background: rgba(0,0,0,0.15);
-              border: 1px solid rgba(255,255,255,0.05);
-              border-radius: 12px;
-              padding: 24px 26px;
-              font-family: var(--font-body);
-              font-size: 17px;
-              line-height: 1.95;
-              color: rgba(255,255,255,0.92);
-              max-height: 62vh;
-              overflow-y: auto;
-              overflow-x: hidden;
-              overflow-wrap: anywhere;
-              word-break: break-word;
-              max-width: 100%;
-              user-select: text;
-            }
-            @media (max-width: 640px) {
-              .mybible-reader-card { padding: 16px; }
-              .mybible-verses-box { padding: 18px 16px; font-size: 16px; line-height: 1.9; max-height: 70vh; }
-            }
-            .bible-verse-row {
-              cursor: pointer;
-              transition: background 0.15s, color 0.15s;
-              padding: 2px 4px;
-              border-radius: 4px;
-              display: inline;
-            }
-            .bible-verse-row:hover {
-              background: rgba(255,255,255,0.06);
-              color: #fff;
-            }
-            .bible-verse-row.highlighted {
-              background: rgba(204,255,0,0.25);
-              border-bottom: 2px solid var(--lime);
-              color: #fff;
-            }
-            .verse-num {
-              font-weight: 700;
-              font-size: 10px;
-              color: var(--lime);
-              vertical-align: super;
-              margin-right: 4px;
-              user-select: none;
-            }
-            .verse-note-indicator {
-              font-size: 10px;
-              font-weight: 700;
-              background: rgba(255,255,255,0.1);
-              color: rgba(255,255,255,0.7);
-              padding: 1px 4px;
-              border-radius: 4px;
-              margin-left: 4px;
-              vertical-align: middle;
-              display: inline-block;
-              cursor: pointer;
-            }
-            .verse-note-indicator:hover {
-              background: var(--lime);
-              color: #000;
-            }
-            .mybible-sidebar {
-              min-width: 0;
-              display: flex;
-              flex-direction: column;
-              gap: 20px;
-            }
-            .bible-chat-thread {
-              background: rgba(0,0,0,0.15);
-              border: 1px solid rgba(255,255,255,0.05);
-              border-radius: 12px;
-              height: 280px;
-              overflow-y: auto;
-              padding: 16px;
-              display: flex;
-              flex-direction: column;
-              gap: 12px;
-            }
-          </style>
-
-          <!-- Resume spot banner -->
-          <div id="myBibleResumeBanner" style="display:none; align-items:center; justify-content:space-between; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.2); padding:12px 20px; border-radius:12px; margin-bottom:20px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="font-size:18px;">📖</span>
-              <span style="font-size:13px; color:rgba(255,255,255,0.95);">Resume where you left off: <strong id="resumeSpotText" style="color:var(--lime);">Matthew 1:1</strong></span>
-            </div>
-            <button class="btn-lime" onclick="resumeLastSpot()" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; text-transform:uppercase; border-radius:6px;">Resume</button>
-          </div>
-
-          <div class="mybible-grid">
-            
-            <!-- Left: Reader -->
-            <div class="mybible-reader-card">
-              <!-- Book & Chapter picker row -->
-              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase;">Book</span>
-                  <select id="myBibleBookSelect" onchange="onBookSelected()" style="background:#121316; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:14px; font-weight:700; outline:none; cursor:pointer;">
-                  </select>
-                </div>
-                
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <button onclick="navigateChapter(-1)" class="btn-ghost" style="width:36px; height:36px; padding:0; border-radius:8px; font-size:14px;">&larr;</button>
-                  <h2 id="myBibleReaderTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin:0; text-transform:uppercase; letter-spacing:0.02em; min-width:120px; text-align:center;">Matthew 1</h2>
-                  <button onclick="navigateChapter(1)" class="btn-ghost" style="width:36px; height:36px; padding:0; border-radius:8px; font-size:14px;">&rarr;</button>
-                </div>
-              </div>
-
-              <!-- Horizontal scroll chapter chips -->
-              <div id="myBibleChapterChips" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.06); scrollbar-width:thin;">
-              </div>
-
-              <!-- Verses content container -->
-              <div id="myBibleVerseContainer" class="mybible-verses-box">
-              </div>
-
-              <!-- Interactive verse markup actions card -->
-              <div id="verseActionsCard" class="g-card" style="display:none; padding:16px; border-color:var(--lime); background:rgba(204,255,0,0.02); position:relative;">
-                <button onclick="BIBLE_READER.closeVerseActions()" style="position:absolute; top:12px; right:12px; background:none; border:none; color:rgba(255,255,255,0.4); font-size:16px; cursor:pointer;">&times;</button>
-                <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:8px;" id="selectedVerseLabel">Matthew 1:1</div>
-                
-                <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
-                  <button id="btnHighlightToggle" onclick="BIBLE_READER.toggleHighlightOnSelected()" class="btn-lime" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:6px;">Highlight (Lime)</button>
-                  <button onclick="BIBLE_READER.removeMarkupOnSelected()" class="btn-ghost" style="padding:6px 12px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:6px; color:rgba(255,255,255,0.6);">Clear Markup</button>
-                </div>
-
-                <div style="display:flex; gap:8px;">
-                  <input type="text" id="verseNoteInput" placeholder="Add a personal study note..." style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:13px; outline:none;">
-                  <button onclick="BIBLE_READER.saveNoteOnSelected()" class="btn-lime" style="padding:8px 14px; font-size:11px; width:auto; height:auto; min-height:auto; border-radius:8px; text-transform:uppercase;">Save Note</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right: Sidebar (Governor AI & markup ledger) -->
-            <div class="mybible-sidebar">
-              <!-- Governor AI study assistant -->
-              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">The Steward's Bible Buddy</h3>
-                  <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.08); padding:3px 6px; border-radius:4px; text-transform:uppercase; color:rgba(255,255,255,0.6);">Interactive</span>
-                </div>
-                
-                <div id="bibleChatThread" class="bible-chat-thread">
-                  <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
-                    <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
-                    Ask me anything about today's scripture passage, or highlight a verse to study its context together.
-                  </div>
-                </div>
-
-                <div style="display:flex; gap:8px;">
-                  <input type="text" id="bibleChatInput" placeholder="Ask about this chapter..." style="flex:1; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:10px 12px; color:#fff; font-size:13px; outline:none;" onkeydown="if(event.key==='Enter') sendBibleChatMessage()">
-                  <button onclick="sendBibleChatMessage()" class="btn-lime" style="width:40px; height:40px; padding:0; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px;">&rarr;</button>
-                </div>
-              </div>
-
-              <!-- Study markups ledger -->
-              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">Study Ledger (Marks)</h3>
-                  <button id="btnToggleMarkupsView" onclick="toggleMarkupsView()" class="btn-ghost" style="padding:4px 8px; font-size:10px; width:auto; height:auto; min-height:auto; border-radius:4px; text-transform:uppercase; font-weight:700;">Hide Markups</button>
-                </div>
-
-                <div id="markupsListView">
-                  <div id="markupsListContent" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:4px;">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
 <script>
         (function() {
           const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
