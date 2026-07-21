@@ -231,32 +231,6 @@ textarea,input,select{font-size:16px}
 }
 
 /* ===== FLOATING MIC & BOTTOM SHEET ===== */
-.floating-mic-btn {
-  position: fixed;
-  bottom: calc(20px + env(safe-area-inset-bottom));
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--lime);
-  color: #080809;
-  box-shadow: 0 8px 24px rgba(204,255,0,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9900;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s;
-}
-.floating-mic-btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(204,255,0,0.5);
-}
-.floating-mic-btn svg {
-  width: 24px;
-  height: 24px;
-}
 .capture-sheet-overlay {
   position: fixed;
   inset: 0;
@@ -8353,10 +8327,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
   </main>
 </div>
 
-<!-- Floating Mic Affordance -->
-<button id="floatingMicBtn" onclick="openCaptureSheet()" aria-label="Open voice capture" class="floating-mic-btn">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-</button>
 
 <!-- Bottom Sheet Capture Panel -->
 <div id="captureSheetOverlay" class="capture-sheet-overlay" onclick="closeCaptureSheet(event)">
