@@ -18378,11 +18378,12 @@ async function loadAndInit(){
     var m=d.members||{},mh=d.memberHealth||{},f=d.fasts||{},fx=d.fastsExtra||{},q=d.quiz||{},dm=d.demo||{},a=d.affiliates||{},e=d.engagement||{},r=d.record||{},b=d.bundles||{},bo=d.bundleOps||{},gr=d.growth||{labels:[]},tr=d.trends||{};
 
     S(function(){return grid([
-      kpi('Free Members',fmt(m.free),dtxt(m.dFree)),
-      kpi('Paid Stewards',fmt(m.paid),dtxt(m.dPaid)),
+      kpi('Free Members',fmt(m.free),'verified in Skool, '+dtxt(m.dFree)),
+      kpi('Unverified',fmt(m.unverified),'quiz leads, not in Skool'),
+      kpi('Premium Stewards',fmt(m.paid),'paid tier, not launched yet'),
       kpi('Product Purchasers',fmt(m.purchasers),dtxt(m.dBuyers)),
-      kpi('Free to Paid',(m.conv==null?0:m.conv)+'%','conversion'),
-      kpi('MRR','$'+fmt(mh.mrr),'active price sum'),
+      kpi('Free to Premium',(m.conv==null?0:m.conv)+'%','upgrade conversion'),
+      kpi('MRR','$'+fmt(mh.mrr),'premium price sum'),
       kpi('Lapsed',fmt(mh.churned),'active_through passed')
     ]);});
     S(function(){return card('Growth Trend',box('whaTrend'));});
@@ -18456,7 +18457,7 @@ async function loadAndInit(){
 
     var TC=[LIME,GREEN,AMBER,'rgba(240,241,243,0.45)'];
     try{ lineChart(el('whaTrend'),gr.labels||[],[{name:'Fasts Started',color:LIME,fill:'rgba(204,255,0,0.08)',values:tr.fastsStarted||[]},{name:'Fasts Completed',color:GREEN,fill:'rgba(0,230,118,0.06)',values:tr.fastsCompleted||[]}]); }catch(e){}
-    try{ doughnut(el('whaMemberStatus'),[{name:'Free (lead)',value:m.free,color:LIME},{name:'Paid Steward',value:m.paid,color:GREEN},{name:'Lapsed',value:mh.churned,color:AMBER}],'MEMBERS'); }catch(e){}
+    try{ doughnut(el('whaMemberStatus'),[{name:'Free (in Skool)',value:m.free,color:LIME},{name:'Unverified (quiz lead)',value:m.unverified,color:'rgba(240,241,243,0.35)'},{name:'Premium',value:m.paid,color:GREEN},{name:'Lapsed',value:mh.churned,color:AMBER}],'PROFILES'); }catch(e){}
     try{ doughnut(el('whaArch'),(q.archetypes||[]).map(function(x,i){return {name:x[0],value:x[1],color:TC[i%TC.length]};}),'TAKEN'); }catch(e){}
     try{ hBar(el('whaSeason'),(q.seasons||[]).map(function(x,i){return {name:x[0],value:x[1],color:[AMBER,LIME,GREEN][i%3]};})); }catch(e){}
     try{ hBar(el('whaAge'),(dm.age||[]).map(function(x){return {name:x[0],value:x[1],color:LIME};})); }catch(e){}
