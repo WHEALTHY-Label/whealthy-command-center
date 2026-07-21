@@ -19470,8 +19470,9 @@ async function loadAndInit(){
 
     async init() {
       this.showScreen('Loader');
-      document.getElementById('rhyLoaderText').textContent = 'Loading your rhythm status...';
-      await this.fetchStatus();
+      var _lt = document.getElementById('rhyLoaderText'); if(_lt) _lt.textContent = 'Loading your rhythm status...';
+      try { await this.fetchStatus(); } catch(e){ console.warn('[Rhythm] init', e); }
+      if (!document.querySelector('#rhythmView .rhy-screen.active')) this.startAssessment();
     },
 
     async fetchStatus() {
@@ -19967,6 +19968,8 @@ async function loadAndInit(){
   window.initRhythm = function() {
     RHYTHM_BUILDER.init();
   };
+  // Direct load onto #rhythm: the initial route can fire before initRhythm is defined; mount now.
+  if ((location.hash || '').replace('#','') === 'rhythm') { try { RHYTHM_BUILDER.init(); } catch(e){} }
 })();
 </script>
 <!-- ===== PAGE HELP + DESCRIPTIONS (Claude) ===== -->
