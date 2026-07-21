@@ -1643,6 +1643,60 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     transform: translateY(0);
   }
 }
+/* ============ ORDER CARDS (Product Portal) ============ */
+.orders-section{max-width:680px;margin:0 auto;padding:0 16px}
+.orders-section__title{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.orders-section__title span{font-size:22px}
+.order-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;transition:border-color var(--transition)}
+.order-card:hover{border-color:var(--border-mid)}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.order-number{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.04em;color:var(--text)}
+.order-pill{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;line-height:1}
+.order-pill--preparing{background:rgba(255,255,255,0.08);color:var(--text-dim)}
+.order-pill--shipped{background:var(--lime);color:#080809}
+.order-pill--financial{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.04em;padding:3px 8px;border-radius:12px;background:rgba(255,179,0,0.12);color:var(--amber);margin-left:6px}
+.order-items{border-top:1px solid var(--border);padding-top:12px;margin-bottom:12px}
+.order-item-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:6px 0;font-family:var(--font-body);font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5}
+.order-item-row .order-item-title{flex:1;min-width:0}
+.order-item-row .order-item-qty{color:var(--text-dim);white-space:nowrap}
+.order-item-row .order-item-price{color:var(--text-muted);white-space:nowrap;text-align:right;min-width:60px}
+.order-total-row{display:flex;justify-content:space-between;padding:10px 0 0;border-top:1px solid var(--border);font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--text)}
+.order-total-row .order-total-amount{color:var(--lime)}
+.order-meta{font-family:var(--font-body);font-size:12px;color:var(--text-dim);margin-top:10px}
+.order-tracking{margin-top:14px;padding:14px 16px;background:rgba(204,255,0,0.04);border:1px solid rgba(204,255,0,0.15);border-radius:12px}
+.order-tracking__carrier{font-family:var(--font-body);font-size:12px;color:var(--text-muted);margin-bottom:4px}
+.order-tracking__number{font-family:var(--font-body);font-size:13px;color:var(--text);word-break:break-all;margin-bottom:10px}
+.order-tracking__date{font-family:var(--font-body);font-size:11px;color:var(--text-dim);margin-top:8px}
+.order-track-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--lime);color:#080809;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:8px;border:none;cursor:pointer;transition:transform var(--transition),box-shadow var(--transition)}
+.order-track-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(204,255,0,0.3)}
+.orders-loading{text-align:center;padding:40px 0}
+.orders-loading__dots{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+.orders-loading__dot{width:8px;height:8px;border-radius:50%;background:var(--lime);opacity:0.3;animation:orderPulse 1.2s ease-in-out infinite}
+.orders-loading__dot:nth-child(2){animation-delay:0.2s}
+.orders-loading__dot:nth-child(3){animation-delay:0.4s}
+@keyframes orderPulse{0%,80%,100%{opacity:0.3;transform:scale(1)}40%{opacity:1;transform:scale(1.2)}}
+.orders-loading__text{font-family:var(--font-body);font-size:13px;color:var(--text-dim)}
+.orders-empty{text-align:center;padding:48px 24px}
+.orders-empty__icon{font-size:40px;margin-bottom:12px;opacity:0.6}
+.orders-empty__text{font-family:var(--font-body);font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:400px;margin:0 auto}
+.orders-empty__link{color:var(--lime);text-decoration:none;font-weight:600}
+.orders-empty__link:hover{text-decoration:underline}
+.orders-error{text-align:center;padding:40px 24px}
+.orders-error__text{font-family:var(--font-body);font-size:14px;color:rgba(255,255,255,0.45);line-height:1.6}
+.order-billing-link{display:block;text-align:center;margin-top:24px;padding:20px;background:var(--glass);border:1px solid var(--border);border-radius:14px;transition:border-color var(--transition)}
+.order-billing-link:hover{border-color:var(--border-mid)}
+.order-billing-link__text{font-family:var(--font-body);font-size:13px;color:var(--text-muted);margin-bottom:10px}
+.order-billing-link__btn{color:var(--lime);font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+.order-billing-link__btn:hover{text-decoration:underline}
+@media(max-width:600px){
+  .orders-section{padding:0 12px}
+  .order-card{padding:16px}
+  .order-header{flex-direction:column;align-items:flex-start;gap:6px}
+  .order-item-row{flex-wrap:wrap}
+  .order-item-row .order-item-price{width:100%;text-align:left;padding-left:0;margin-top:2px}
+  .order-track-btn{width:100%;justify-content:center;padding:14px 20px;font-size:14px}
+  .order-tracking{padding:12px}
+}
 </style>
 </head>
 <body>
@@ -8311,14 +8365,49 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <div class="view-header-icon-box">&#128230;</div>
           <div>
             <h1 class="view-header-title" id="portalTitle">Product Portal</h1>
-            <p class="view-header-subtitle" id="portalSubtitle">Manage subscriptions, billing, and orders.</p>
+            <p class="view-header-subtitle" id="portalSubtitle">Your orders, tracking, and billing in one place.</p>
           </div>
         </div>
-        <div class="g-card" style="text-align:center;padding:48px 24px">
-          <div style="font-size:48px;margin-bottom:16px">&#128230;</div>
-          <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#f0f1f3;margin-bottom:8px">Billing &amp; Subscriptions</h2>
-          <p class="g-body" style="max-width:420px;margin:0 auto 24px;color:rgba(255,255,255,0.5);line-height:1.6;">Access your secure billing portal to view active subscriptions, download invoices, update payment methods, and manage delivery schedules.</p>
-          <a href="https://whealthylabel.com/member" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;align-items:center;gap:8px;">Launch Product Portal &rarr;</a>
+
+        <!-- Your Orders Section -->
+        <div class="orders-section" id="ordersSection">
+          <div class="orders-section__title"><span>&#128666;</span> Your Orders</div>
+
+          <!-- Loading state -->
+          <div id="ordersLoading" class="g-card" style="display:none">
+            <div class="orders-loading">
+              <div class="orders-loading__dots">
+                <div class="orders-loading__dot"></div>
+                <div class="orders-loading__dot"></div>
+                <div class="orders-loading__dot"></div>
+              </div>
+              <div class="orders-loading__text">Loading your orders&hellip;</div>
+            </div>
+          </div>
+
+          <!-- Error state -->
+          <div id="ordersError" class="g-card" style="display:none">
+            <div class="orders-error">
+              <div class="orders-error__text">We couldn&rsquo;t load your orders right now. Check back in a moment.</div>
+            </div>
+          </div>
+
+          <!-- Empty state -->
+          <div id="ordersEmpty" class="g-card" style="display:none">
+            <div class="orders-empty">
+              <div class="orders-empty__icon">&#128230;</div>
+              <div class="orders-empty__text">No orders yet. When you order from the label, it shows up here with live tracking. <a href="#tryall" onclick="go('tryall')" class="orders-empty__link">Browse products &rarr;</a></div>
+            </div>
+          </div>
+
+          <!-- Order cards render here -->
+          <div id="ordersList"></div>
+
+          <!-- Billing portal link -->
+          <div class="order-billing-link" id="orderBillingLink" style="display:none">
+            <div class="order-billing-link__text">Manage subscriptions, payment methods, and delivery schedules</div>
+            <a href="https://whealthylabel.com/member" target="_blank" rel="noopener" class="order-billing-link__btn">Launch Billing Portal &rarr;</a>
+          </div>
         </div>
       </div>
 
@@ -13398,6 +13487,149 @@ window.applyProductExclusions = function() {
   if (chg) chg.style.display = ex.has('Charge') ? 'none' : '';
 };
 
+/* ============ ORDER HISTORY (Product Portal) ============ */
+async function loadMemberOrders() {
+  var loading = document.getElementById('ordersLoading');
+  var error = document.getElementById('ordersError');
+  var empty = document.getElementById('ordersEmpty');
+  var list = document.getElementById('ordersList');
+  var billing = document.getElementById('orderBillingLink');
+  if (!loading || !list) return;
+
+  // Reset states
+  loading.style.display = 'none';
+  error.style.display = 'none';
+  empty.style.display = 'none';
+  list.innerHTML = '';
+  if (billing) billing.style.display = 'none';
+
+  var email = MEMBER_EMAIL || '';
+  if (!email) {
+    empty.style.display = 'block';
+    return;
+  }
+
+  loading.style.display = 'block';
+
+  try {
+    var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email));
+    var data = await res.json();
+    loading.style.display = 'none';
+
+    if (!res.ok || !data.ok) {
+      error.style.display = 'block';
+      return;
+    }
+
+    if (!data.orders || data.count === 0) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    // Render order cards
+    var html = '';
+    data.orders.forEach(function(order) {
+      // Fulfillment pill
+      var fStatus = order.fulfillment_status;
+      var pillClass = (fStatus === 'fulfilled') ? 'order-pill--shipped' : 'order-pill--preparing';
+      var pillLabel = (fStatus === 'fulfilled') ? 'Shipped' : 'Preparing';
+
+      // Financial badge (only show if not "paid")
+      var finBadge = '';
+      if (order.financial_status && order.financial_status !== 'paid') {
+        var finLabel = order.financial_status.replace(/_/g, ' ');
+        finLabel = finLabel.charAt(0).toUpperCase() + finLabel.slice(1);
+        finBadge = '<span class="order-pill--financial">' + finLabel + '</span>';
+      }
+
+      // Line items
+      var itemsHtml = '';
+      if (order.line_items && order.line_items.length) {
+        order.line_items.forEach(function(item) {
+          var title = item.title || 'Item';
+          var variant = item.variant ? ' — ' + item.variant : '';
+          var qty = item.quantity || 1;
+          var price = item.price ? formatOrderCurrency(parseFloat(item.price), order.currency) : '';
+          itemsHtml += '<div class="order-item-row">' +
+            '<div class="order-item-title">' + escOrderHtml(title + variant) + '</div>' +
+            (qty > 1 ? '<div class="order-item-qty">&times;' + qty + '</div>' : '') +
+            '<div class="order-item-price">' + price + '</div>' +
+            '</div>';
+        });
+      }
+
+      // Total
+      var totalFormatted = formatOrderCurrency(order.total_price, order.currency);
+
+      // Ordered date
+      var orderedDate = order.ordered_at ? formatOrderDate(order.ordered_at) : '';
+
+      // Tracking block
+      var trackingHtml = '';
+      if (order.tracking_url) {
+        var carrier = order.tracking_company || 'Carrier';
+        var trackNum = order.tracking_number || '';
+        var shippedDate = order.fulfilled_at ? formatOrderDate(order.fulfilled_at) : '';
+        trackingHtml = '<div class="order-tracking">' +
+          '<div class="order-tracking__carrier">' + escOrderHtml(carrier) + '</div>' +
+          (trackNum ? '<div class="order-tracking__number">' + escOrderHtml(trackNum) + '</div>' : '') +
+          '<a href="' + escOrderAttr(order.tracking_url) + '" target="_blank" rel="noopener" class="order-track-btn">Track Shipment &rarr;</a>' +
+          (shippedDate ? '<div class="order-tracking__date">Shipped ' + shippedDate + '</div>' : '') +
+          '</div>';
+      }
+
+      html += '<div class="order-card">' +
+        '<div class="order-header">' +
+          '<div class="order-number">' + escOrderHtml(order.order_number || '') + '</div>' +
+          '<div><span class="order-pill ' + pillClass + '">' + pillLabel + '</span>' + finBadge + '</div>' +
+        '</div>' +
+        '<div class="order-items">' + itemsHtml + '</div>' +
+        '<div class="order-total-row">' +
+          '<span>Total</span>' +
+          '<span class="order-total-amount">' + totalFormatted + '</span>' +
+        '</div>' +
+        (orderedDate ? '<div class="order-meta">Ordered ' + orderedDate + '</div>' : '') +
+        trackingHtml +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+    if (billing) billing.style.display = 'block';
+
+  } catch (e) {
+    loading.style.display = 'none';
+    error.style.display = 'block';
+  }
+}
+
+function formatOrderCurrency(amount, currency) {
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency: currency || 'USD' }).format(amount);
+  } catch (e) {
+    return '$' + (typeof amount === 'number' ? amount.toFixed(2) : amount);
+  }
+}
+
+function formatOrderDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch (e) {
+    return iso;
+  }
+}
+
+function escOrderHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function escOrderAttr(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+window.loadMemberOrders = loadMemberOrders;
+
 /* ================== NAV ================== */
 function go(view,el,label){
   if ('speechSynthesis' in window) {
@@ -13451,6 +13683,9 @@ function go(view,el,label){
   } else if(['affiliate','community','portal','tryall'].indexOf(view)>=0){
     const labels={affiliate:'Affiliate Links',community:'Community',portal:'Product Portal',tryall:'Try All'};
     document.getElementById('headerLine').textContent=labels[view]||'Module';
+    if(view==='portal'){
+      if(typeof loadMemberOrders==='function') loadMemberOrders();
+    }
     if(view==='tryall'){
       try { loadMemberDiscount(MEMBER_EMAIL); } catch(e) {}
       applyProductExclusions();
@@ -20506,6 +20741,7 @@ async function loadAndInit(){
   // Direct load onto #rhythm: the initial route can fire before initRhythm is defined; mount now.
   if ((location.hash || '').replace('#','') === 'rhythm') { try { RHYTHM_BUILDER.init(); } catch(e){} }
 })();
+
 </script>
 <!-- ===== PAGE HELP + DESCRIPTIONS (Claude) ===== -->
 <style>
@@ -20527,8 +20763,8 @@ async function loadAndInit(){
 <script>
 (function(){
   var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
-  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',portalView:'Manage your orders, subscriptions, and deliveries.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
-  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',portalView:'Update payment, delivery timing, or pause a subscription any time from here.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
+  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',portalView:'Your order history with live tracking and billing.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
+  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',portalView:'Your orders from the label show up here automatically with live tracking. When something ships, you will see the carrier, tracking number, and a link to follow it. Billing and subscription management is at the bottom.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
   window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
   function enhance(){
