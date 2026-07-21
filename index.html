@@ -1790,7 +1790,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <p class="wa-sub" id="waNotFoundBody">Check the spelling, or try a different handle. Plenty of stewards have no public Skool profile at all, and that is fine. You can go straight to signing in.</p>
 
         <button class="wa-btn wa-btn--primary" id="waSearchAgainBtn" type="button">Search again</button>
-        <button class="wa-btn wa-btn--ghost" id="waNotFoundSkipBtn" type="button">Continue without it</button>
+        <button class="wa-btn wa-btn--ghost" id="waNotFoundSkipBtn" type="button">I'm already a Steward</button>
+        <p style="font-size:12px; color:rgba(255,255,255,0.45); text-align:center; margin-top:16px; line-height:1.5;">
+          New here? The Rhythm is for community members.
+          <a href="#" onclick="openJoinPopup(); return false;" style="color:var(--lime); font-weight:700; text-decoration:none;">Join the Stewards &rarr;</a>
+        </p>
       </section>
 
       <!-- ── SCREEN 2: ACCESS ───────────────────────────────── -->
@@ -1953,6 +1957,44 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       </div>
       <button class="claim-modal-btn" onclick="claimBundle()">Claim My Bundle</button>
       <button class="claim-modal-dismiss" onclick="closeClaimModal()">I'll claim later</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ JOIN STEWARDS POPUP MODAL ═══ -->
+<div class="claim-modal-overlay" id="joinModal">
+  <div class="claim-modal" style="position:relative">
+    <div class="claim-modal-glow"></div>
+    <button class="claim-modal-close" onclick="closeJoinPopup()">&times;</button>
+    <div class="claim-modal-body">
+      <div class="claim-modal-icon">👋</div>
+      <div class="claim-modal-title" style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--lime); margin-bottom:8px;">WHEALTHY / STEWARDS</div>
+      <div class="claim-modal-bundle" style="font-size:22px; line-height:1.2; margin-bottom:12px; color:#fff;">This one's for the Stewards.</div>
+      <div class="claim-modal-text" style="font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.7); margin-bottom:24px;">
+        The Steward's Rhythm is built for members of the WHEALTHY Stewards community. Step inside and it all opens up &mdash; your rhythm, the Word, the prayer wall, and your <span id="joinDiscountPct">10</span>% member code.
+      </div>
+      <button class="claim-modal-btn" onclick="joinStewardsSkool()" style="width:100%; margin-bottom:12px;">JOIN THE STEWARDS</button>
+      <button class="claim-modal-dismiss" onclick="closeJoinPopup()">Already a member? Use the email tied to your community account.</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ONBOARDING POPUP MODAL ═══ -->
+<div class="claim-modal-overlay" id="quizOnboardingModal">
+  <div class="claim-modal" style="position:relative">
+    <div class="claim-modal-glow"></div>
+    <button class="claim-modal-close" onclick="closeQuizOnboardingModal()">&times;</button>
+    <div class="claim-modal-body">
+      <div class="claim-modal-icon">📝</div>
+      <div class="claim-modal-title" style="font-size:22px; line-height:1.2; margin-bottom:12px; color:#fff;">First, your season.</div>
+      <div class="claim-modal-text" style="font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.7); margin-bottom:16px;">
+        Your rhythm and your matched bundle are both built from your Genius Quiz. Take the 3-minute quiz and we'll set you up right.
+      </div>
+      <div style="font-size:11px; font-style:italic; color:rgba(255,255,255,0.45); margin:0 0 24px; line-height:1.4; text-align:center;">
+        "Let all things be done decently and in order." &mdash; 1 Corinthians 14:40
+      </div>
+      <button class="claim-modal-btn" onclick="startQuizFromOnboarding()" style="width:100%; margin-bottom:12px;">TAKE THE QUIZ</button>
+      <button class="claim-modal-dismiss" onclick="closeQuizOnboardingModal()">I'll do it later</button>
     </div>
   </div>
 </div>
@@ -11912,7 +11954,7 @@ function waSetMode(mode){
 
   const sub = waEl('waAccessSub');
   if (sub) sub.textContent = isSignup
-    ? 'Pick the email you want tied to your steward account.'
+    ? 'Use the email tied to your Stewards community membership.'
     : 'Use the email tied to your steward account.';
 
   const title = waEl('waAccessTitle');
@@ -12051,6 +12093,27 @@ async function waSubmitAccess(){
 
   try {
     if (isSignup){
+      // Check onboarding-state first
+      let onboard = null;
+      try {
+        const url = `${FN_BASE}/onboarding-state?email=${encodeURIComponent(email)}`;
+        const r = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (r.ok) {
+          onboard = await r.json();
+        }
+      } catch (e) {
+        console.warn('onboarding-state check failed during signup:', e);
+      }
+
+      if (onboard && (onboard.gate === 'join' || onboard.verified !== true)) {
+        waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
+        openJoinPopup(onboard.skool_url, onboard.discount_pct);
+        return;
+      }
+
       const opts = { emailRedirectTo: window.location.href };
       if (waState.handle) opts.data = { skool_handle: waState.handle };
 
@@ -12104,6 +12167,28 @@ async function waRunGate(emailArg){
     // Keep loader showing
   } else {
     // Show a loader if not already showing
+  }
+
+  let onboard = null;
+  try {
+    const url = `${FN_BASE}/onboarding-state?email=${encodeURIComponent(email)}`;
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (r.ok) {
+      onboard = await r.json();
+      window.ONBOARDING_STATE = onboard;
+    }
+  } catch (e) {
+    console.warn('[gate] onboarding-state call failed:', e);
+  }
+
+  if (onboard && (onboard.gate === 'join' || onboard.verified !== true)) {
+    try { if (sb) await sb.auth.signOut(); } catch(e){}
+    waResetAll();
+    openJoinPopup(onboard.skool_url, onboard.discount_pct);
+    return;
   }
 
   let d = null;
@@ -16520,16 +16605,9 @@ function openClaimModal(){
   // Update text based on state
   const textEl=document.getElementById('claimModalText');
   if(textEl){
-    if(productState==='unequipped'){
-      textEl.innerHTML='You have not set up your bundle yet. <strong>Join a bundle subscription</strong> to get your monthly supply and unlock full stewardship features.';
-    } else if(window._nextEligible){
-      const today=new Date().toISOString().split('T')[0];
-      if(today < window._nextEligible){
-        textEl.innerHTML='Your next bundle is eligible on <strong>'+new Date(window._nextEligible+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric'})+'</strong>. You are covered for this cycle. Keep governing.';
-      } else {
-        textEl.innerHTML='Your bundle is ready to claim for this month. <strong>Consistent stewardship starts with consistent supply.</strong> Claim now so nothing interrupts your rhythm.';
-      }
-    }
+    const pct = window._discountPct || 10;
+    const code = window._discountCode || 'WHSBGN';
+    textEl.innerHTML = 'You have not set up your bundle yet. Claim it to get your monthly supply &mdash; with your ' + pct + '% member discount (' + code + ') &mdash; and unlock full stewardship features.';
   }
   modal.classList.add('open');
 }
@@ -16554,11 +16632,80 @@ function claimBundle(){
 }
 window.claimBundle=claimBundle;
 
-function checkClaimModal(){
-  if(isClaimWindowOpen()){
-    setTimeout(function(){openClaimModal();},1500);
+window.openJoinPopup = function(skoolUrl, discountPct) {
+  const modal = document.getElementById('joinModal');
+  if (!modal) return;
+  if (skoolUrl) {
+    window._skoolUrl = skoolUrl;
+  }
+  const pctEl = document.getElementById('joinDiscountPct');
+  if (pctEl && discountPct) {
+    pctEl.textContent = discountPct;
+  }
+  modal.classList.add('open');
+};
+
+window.closeJoinPopup = function() {
+  const modal = document.getElementById('joinModal');
+  if (modal) modal.classList.remove('open');
+};
+
+window.joinStewardsSkool = function() {
+  const url = window._skoolUrl || 'https://www.skool.com/bakndcreator';
+  window.open(url, '_blank');
+};
+
+window.openQuizOnboardingModal = function() {
+  const modal = document.getElementById('quizOnboardingModal');
+  if (modal) modal.classList.add('open');
+};
+
+window.closeQuizOnboardingModal = function() {
+  const modal = document.getElementById('quizOnboardingModal');
+  if (modal) modal.classList.remove('open');
+  __lsSet('wh_claim_dismissed_month',new Date().toISOString().slice(0,7));
+};
+
+window.startQuizFromOnboarding = function() {
+  window.closeQuizOnboardingModal();
+  go('rhythm');
+};
+
+async function checkClaimModal(){
+  const dismissed = __lsGet('wh_claim_dismissed_month');
+  const curMonth = new Date().toISOString().slice(0,7);
+  if (dismissed === curMonth) return;
+
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email');
+  if (!email) return;
+
+  try {
+    const url = `${FN_BASE}/onboarding-state?email=${encodeURIComponent(email)}`;
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!r.ok) return;
+    const d = await r.json();
+    window.ONBOARDING_STATE = d;
+
+    setTimeout(function() {
+      if (d.gate === 'quiz') {
+        openQuizOnboardingModal();
+      } else if (d.gate === 'bundle') {
+        window._bundleName = d.bundle ? d.bundle.name : null;
+        window._discountPct = d.discount_pct;
+        window._discountCode = d.discount_code;
+        openClaimModal();
+      } else if (d.gate === 'join') {
+        openJoinPopup(d.skool_url, d.discount_pct);
+      }
+    }, 1500);
+  } catch (e) {
+    console.warn('Failed to check onboarding state for popup:', e);
   }
 }
+window.checkClaimModal = checkClaimModal;
 
 function renderClaimView(){
   var nameEl=document.getElementById('claimViewBundleName');
