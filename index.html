@@ -18295,7 +18295,7 @@ async function loadAndInit(){
 <div id="tourDimOverlay" class="tour-dim-overlay"></div>
 <div id="tourCard" class="tour-card"></div>
 <script>
-/* ===== CONTROL PANEL — native analytics (no iframe, reuses app session) ===== */
+/* ===== CONTROL PANEL — native analytics v2 (sectioned; no iframe, reuses app session) ===== */
 (function(){
   var WHA_URL='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats';
   var LIME='#ccff00',GREEN='#00e676',AMBER='#ffb300',RED='#ff5252';
@@ -18304,7 +18304,7 @@ async function loadAndInit(){
   function fmt(n){return (n==null)?'0':Number(n).toLocaleString('en-US');}
   function pctd(v){return (v==null)?0:v;}
   function el(id){return document.getElementById(id);}
-  function gpath(o,p,dflt){try{return p.split('.').reduce(function(a,k){return a[k];},o);}catch(e){return dflt;}}
+  function gpath(o,p,dflt){try{var r=p.split('.').reduce(function(a,k){return a[k];},o);return r==null?dflt:r;}catch(e){return dflt;}}
 
   async function whaToken(){
     try{ if(typeof getAdminToken==='function'){ var t=await getAdminToken(); if(t) return t; } }catch(e){}
@@ -18356,7 +18356,7 @@ async function loadAndInit(){
     var leg=items.map(function(it){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid '+BORDER+';font-size:13px"><span style="display:flex;align-items:center;gap:8px;color:'+MUT+'"><i style="width:10px;height:10px;border-radius:3px;background:'+it.color+';display:inline-block"></i>'+it.name+'</span><b>'+fmt(it.value)+' &middot; '+Math.round((it.value||0)/total*100)+'%</b></div>';}).join('');
     e2.innerHTML='<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap"><svg viewBox="0 0 220 220" width="200" style="flex:none">'+svg+'</svg><div style="flex:1;min-width:200px">'+leg+'</div></div>';
   }
-  function hBar(e2,items){ if(!e2)return; e2.innerHTML=items.map(function(it){return '<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:'+MUT+'">'+it.name+'</span><b style="font-size:15px">'+pctd(it.value)+'%</b></div><div style="height:14px;border-radius:999px;background:'+GLASS+';overflow:hidden"><div style="width:'+pctd(it.value)+'%;height:100%;border-radius:999px;background:'+it.color+'"></div></div></div>';}).join(''); }
+  function hBar(e2,items){ if(!e2)return; e2.innerHTML=items.map(function(it){return '<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:'+MUT+'">'+it.name+'</span><b style="font-size:15px">'+pctd(it.value)+'%</b></div><div style="height:14px;border-radius:999px;background:'+GLASS+';overflow:hidden"><div style="width:'+Math.min(100,pctd(it.value))+'%;height:100%;border-radius:999px;background:'+it.color+'"></div></div></div>';}).join(''); }
   function groupedBar(e2,labels,series){
     if(!e2)return; var W=620,H=260,padL=40,padR=10,padT=14,padB=30,iw=W-padL-padR,ih=H-padT-padB;
     var all=[]; series.forEach(function(s){s.values.forEach(function(v){all.push(v==null?0:v);});}); var max=(Math.max.apply(null,[0].concat(all))*1.15)||1; var groupW=iw/(labels.length||1),barW=Math.min(26,groupW/(series.length+1)); var svg='';
@@ -18364,6 +18364,7 @@ async function loadAndInit(){
     labels.forEach(function(l,i){ var gx=padL+groupW*i+groupW/2; svg+='<text x="'+gx+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="'+AXIS+'">'+l+'</text>'; series.forEach(function(s,si){ var v=s.values[i]==null?0:s.values[i],bh=(v/max)*ih,bx=gx-(series.length*barW)/2+si*barW+1; svg+='<rect x="'+bx+'" y="'+(padT+ih-bh)+'" width="'+(barW-2)+'" height="'+Math.max(bh,2)+'" rx="5" fill="'+s.color+'"/><text x="'+(bx+(barW-2)/2)+'" y="'+(padT+ih-bh-5)+'" text-anchor="middle" font-size="9" fill="'+AXIS+'">'+v+'</text>'; }); });
     e2.innerHTML=legend(series.map(function(s){return [s.name,s.color];}))+'<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block" preserveAspectRatio="xMidYMid meet">'+svg+'</svg>';
   }
+  function countBar(e2,pairs,color,label){ if(!e2)return; groupedBar(e2,pairs.map(function(p){return p[0];}),[{name:label||'Count',color:color||LIME,values:pairs.map(function(p){return p[1];})}]); }
 
   function kpi(l,v,sub){return '<div class="wha-kpi"><div class="l">'+l+'</div><div class="v">'+v+'</div>'+(sub?'<div class="wha-sub">'+sub+'</div>':'')+'</div>';}
   function grid(arr){return '<div class="wha-kpis">'+arr.join('')+'</div>';}
@@ -18375,8 +18376,10 @@ async function loadAndInit(){
   function whaRender(d){
     var secs=[];
     function S(fn){ try{ secs.push(fn()); }catch(e){} }
-    var m=d.members||{},mh=d.memberHealth||{},f=d.fasts||{},fx=d.fastsExtra||{},q=d.quiz||{},dm=d.demo||{},a=d.affiliates||{},e=d.engagement||{},r=d.record||{},b=d.bundles||{},bo=d.bundleOps||{},gr=d.growth||{labels:[]},tr=d.trends||{};
+    var m=d.members||{},mh=d.memberHealth||{},act=d.activity||{},f=d.fasts||{},fx=d.fastsExtra||{},q=d.quiz||{},dm=d.demo||{},a=d.affiliates||{},e=d.engagement||{},r=d.record||{},b=d.bundles||{},bo=d.bundleOps||{},gr=d.growth||{labels:[]},tr=d.trends||{},pr=d.prayer||{},sc=d.scripture||{},cm=d.community||{},gg=d.groups||{},ob=d.onboarding||{},po=d.portal||{};
+    var communityTotal=(m.free||0)+(m.paid||0);
 
+    /* ===== OVERVIEW ===== */
     S(function(){return grid([
       kpi('Free Members',fmt(m.free),'verified in Skool, '+dtxt(m.dFree)),
       kpi('Unverified',fmt(m.unverified),'quiz leads, not in Skool'),
@@ -18386,66 +18389,152 @@ async function loadAndInit(){
       kpi('MRR','$'+fmt(mh.mrr),'premium price sum'),
       kpi('Lapsed',fmt(mh.churned),'active_through passed')
     ]);});
-    S(function(){return card('Growth Trend',box('whaTrend'));});
-    S(function(){return card('Nurture', grid([
-      kpi('Queued',fmt(gpath(mh,'nurture.queued',0))),
-      kpi('Sent',fmt(gpath(mh,'nurture.sent',0))),
-      kpi('Joined',fmt(gpath(mh,'nurture.joined',0)))
-    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaMemberStatus')+'</div>');});
-    S(function(){return card('Quiz &amp; Funnel', grid([
-      kpi('Page Views',fmt(q.pageViews)),
-      kpi('Quiz Opens',fmt(q.starts)),
-      kpi('Completions',fmt(q.completions)),
-      kpi('Completion Rate',(q.rate==null?0:q.rate)+'%'),
-      kpi('Drop-offs',fmt(q.dropoffs)),
-      kpi('CTA Clicks',fmt(q.ctaClicks))
-    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaArch')+box('whaSeason')+'</div>');});
-    S(function(){return card('Demographics','<div class="wha-grid">'+box('whaAge')+box('whaJob')+box('whaHours')+box('whaConsumption')+'</div>');});
+    S(function(){return card('Member Growth',box('whaMemberGrowth'));});
+    S(function(){return card('App Activity', grid([
+      kpi('Active Today',fmt(act.dau),'opened the app'),
+      kpi('Active 7 Days',fmt(act.wau),''),
+      kpi('Active 30 Days',fmt(act.mau),''),
+      kpi('Opens This Range',fmt(act.opens),'')
+    ])+box('whaActivity')+'<div class="wha-sub" style="margin-top:8px;color:rgba(240,241,243,0.4)">Collecting since '+(act.collectingSince||'today')+'. History before that date was never recorded.</div>');});
+
+    /* ===== MEMBERS: FREE & PAID ===== */
+    S(function(){return card('Members: Free &amp; Paid','<div class="wha-grid">'+box('whaMemberStatus')+'</div>'+
+      '<div style="margin-top:16px">'+grid([
+      kpi('Nurture Queued',fmt(gpath(mh,'nurture.queued',0)),''),
+      kpi('Nurture Sent',fmt(gpath(mh,'nurture.sent',0)),''),
+      kpi('Nurture Joined',fmt(gpath(mh,'nurture.joined',0)),'came back to Skool')
+    ])+'</div>');});
     S(function(){
-      var cards=Array.isArray(f.types)?'<div class="wha-fastcards">'+f.types.map(function(t){return '<div class="wha-fastcard"><span class="fig">'+(t.figure||'')+'</span><h4>'+(t.name||'')+'</h4><div class="wha-frow"><span>Started</span><b>'+fmt(t.started)+'</b></div><div class="wha-frow"><span>Completed</span><b>'+fmt(t.completed)+'</b></div><div class="wha-fbar"><i style="width:'+(t.rate||0)+'%"></i></div><div class="wha-fpct">'+(t.rate||0)+'% completion</div></div>';}).join('')+'</div>':'';
-      return card('The Fast', grid([
-        kpi('Started',fmt(f.started)),
-        kpi('Active Now',fmt(f.active)),
-        kpi('Completed',fmt(f.completed)),
-        kpi('Ended Early',fmt(f.endedEarly)),
-        kpi('Completion Rate',(f.completionRate==null?0:f.completionRate)+'%'),
-        kpi('Structure Only',(fx.structureOnlyPct==null?0:fx.structureOnlyPct)+'%')
-      ])+cards+'<div class="wha-grid" style="margin-top:16px">'+box('whaDropoff')+box('whaPeople')+'</div>');
+      var fsPairs=(ob.firstSteps||[]).map(function(p){return {name:p[0],value:communityTotal?Math.round(p[1]/communityTotal*100):0,color:LIME};});
+      return card('Onboarding', grid([
+        kpi('Tour Completed',fmt(ob.tourDone),(ob.tourPct||0)+'% of members'),
+        kpi('Avg First Steps',(ob.avgSteps==null?0:ob.avgSteps)+' / 7',''),
+        kpi('All 7 Done',fmt(ob.complete7),'')
+      ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaFirstSteps')+'</div>');
     });
+
+    /* ===== PRODUCT PURCHASES ===== */
     S(function(){
       var sug=(b.suggested||[]).reduce(function(x,y){return x+y;},0),pur=(b.purchased||[]).reduce(function(x,y){return x+y;},0),top=b.top||{};
-      return card('Bundles', grid([
-        kpi('Suggested',fmt(sug)),
-        kpi('Purchased',fmt(pur)),
-        kpi('Match Rate',(b.matchRate==null?0:b.matchRate)+'%'),
-        kpi('Claim Rate',(bo.claimRate==null?0:bo.claimRate)+'%'),
-        kpi('Shipped',fmt(bo.shipped)),
-        kpi('Active Subs',fmt(gpath(bo,'subs.active',0)))
-      ])+(top.name?'<div class="wha-spot">Top bundle &middot; <b>'+top.name+'</b> - '+(top.rate||0)+'% ('+fmt(top.purchased)+' of '+fmt(top.suggested)+')</div>':''));
+      return card('Product Purchases', 
+      '<div class="wha-sub" style="margin-bottom:10px;color:rgba(240,241,243,0.5)">SINGLES (try + portal)</div>'+grid([
+        kpi('Try Orders',fmt((d.tryOrders||[]).reduce(function(x,y){return x+y[1];},0)),'single product tries'),
+        kpi('Portal Orders',fmt(po.orders),''),
+        kpi('Portal Revenue','$'+fmt(po.revenue),''),
+        kpi('Try to Member',(bo.tryToMember==null?0:bo.tryToMember)+'%','try buyers who joined')
+      ])+
+      '<div class="wha-sub" style="margin:18px 0 10px;color:rgba(240,241,243,0.5)">BUNDLES</div>'+grid([
+        kpi('Suggested',fmt(sug),''),
+        kpi('Purchased',fmt(pur),''),
+        kpi('Match Rate',(b.matchRate==null?0:b.matchRate)+'%','bought what was suggested'),
+        kpi('Claim Rate',(bo.claimRate==null?0:bo.claimRate)+'%','members who claimed'),
+        kpi('Shipped',fmt(bo.shipped),''),
+        kpi('Active Subs',fmt(gpath(bo,'subs.active',0)),'')
+      ])+(top.name&&top.name!=='n/a'?'<div class="wha-spot">Top bundle &middot; <b>'+top.name+'</b> - '+(top.rate||0)+'% ('+fmt(top.purchased)+' of '+fmt(top.suggested)+')</div>':'')+
+      '<div class="wha-grid" style="margin-top:16px">'+box('whaTryProducts')+box('whaOrderTrend')+'</div>');
     });
-    S(function(){return card('Affiliates', grid([
-      kpi('Registered',fmt(a.registered)),
-      kpi('Active',fmt(a.active)),
-      kpi('Referred Joins',fmt(a.referred)),
-      kpi('Try Referrals',fmt(a.tryRefs))
-    ])+(Array.isArray(a.top)?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));});
-    S(function(){return card('Engagement', grid([
-      kpi('Active Journalers',fmt(e.journalers)),
-      kpi('Entries / Member',e.entriesPerMember==null?'0':e.entriesPerMember),
-      kpi('Avg Streak',(e.avgStreak==null?0:e.avgStreak)+' days'),
-      kpi('Scripture Engaged',(e.scriptureEngagedPct==null?0:e.scriptureEngagedPct)+'%')
-    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaComfort')+'</div>'+(Array.isArray(e.leaderboard)?'<div class="wha-mini" style="margin-top:12px">'+e.leaderboard.map(function(t,i){return '<div class="wha-mrow"><span><b style="color:'+LIME+';min-width:18px;display:inline-block">'+(i+1)+'</b> '+slab(t[0])+'</span><b>'+fmt(t[1])+' days</b></div>';}).join('')+'</div>':''));});
+
+    /* ===== DISCIPLINES ===== */
     S(function(){
-      var tot=(r.heavy||0)+(r.win||0)+(r.mixed||0)||1;
-      return card('The Record', grid([
-        kpi('Entries Filed',fmt(r.entries)),
-        kpi('Heavy',(r.heavy==null?0:r.heavy)+'%'),
-        kpi('Win',(r.win==null?0:r.win)+'%'),
-        kpi('Mixed',(r.mixed==null?0:r.mixed)+'%'),
-        kpi('Burned',fmt(r.burned)),
-        kpi('Scribe Coverage',gpath(d,'recordExtra.scribePct',0)+'%')
-      ])+'<div class="wha-tonebar"><i style="width:'+((r.heavy||0)/tot*100)+'%;background:'+AMBER+'"></i><i style="width:'+((r.win||0)/tot*100)+'%;background:'+LIME+'"></i><i style="width:'+((r.mixed||0)/tot*100)+'%;background:rgba(240,241,243,0.3)"></i></div>');
+      var cards=Array.isArray(f.types)&&f.types.length?'<div class="wha-fastcards">'+f.types.map(function(t){return '<div class="wha-fastcard"><span class="fig">'+(t.figure||'')+'</span><h4>'+(t.name||'')+'</h4><div class="wha-frow"><span>Started</span><b>'+fmt(t.started)+'</b></div><div class="wha-frow"><span>Completed</span><b>'+fmt(t.completed)+'</b></div><div class="wha-fbar"><i style="width:'+(t.rate||0)+'%"></i></div><div class="wha-fpct">'+(t.rate||0)+'% completion</div></div>';}).join('')+'</div>':'';
+      return card('Disciplines: Fasting', grid([
+        kpi('Started',fmt(f.started),''),
+        kpi('Active Now',fmt(f.active),''),
+        kpi('Completed',fmt(f.completed),''),
+        kpi('Ended Early',fmt(f.endedEarly),''),
+        kpi('Completion Rate',(f.completionRate==null?0:f.completionRate)+'%',''),
+        kpi('Day Adherence',(f.adherence==null?0:f.adherence)+'%','days filed vs elapsed'),
+        kpi('Structure Only',(fx.structureOnlyPct==null?0:fx.structureOnlyPct)+'%','')
+      ])+cards+'<div class="wha-grid" style="margin-top:16px">'+box('whaFastTrend')+box('whaDropoff')+box('whaPeople')+'</div>');
     });
+    S(function(){return card('Disciplines: Prayer', grid([
+      kpi('Handed Over',fmt(pr.handedAll),'burdens, all time'),
+      kpi('Kept Private',fmt(pr.privateCt),''),
+      kpi('Lifted to the Wall',fmt(pr.lifted),''),
+      kpi('Answered',fmt(pr.answered),''),
+      kpi('Testimonies',fmt(pr.testimonies),'answered on the wall'),
+      kpi('Prayers Received',fmt(pr.praysReceived),'on wall posts'),
+      kpi('Prayers Given',fmt(pr.praysGiven),'this range'),
+      kpi('Amens',fmt(pr.amens),''),
+      kpi('Open Reports',fmt(pr.reportsOpen),'moderation queue')
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaPrayerCats')+box('whaPrayerTrend')+'</div>');});
+    S(function(){return card('Disciplines: Scripture', grid([
+      kpi('Bible 365 Readers',fmt(sc.b365Users),''),
+      kpi('Days Completed',fmt(sc.b365DaysCompleted),'all readers combined'),
+      kpi('Avg Streak',(sc.b365AvgStreak==null?0:sc.b365AvgStreak)+' days',''),
+      kpi('Reflections',fmt(sc.reflectionsAll),''),
+      kpi('My Bible Readers',fmt(sc.myBibleReaders),'saved a spot'),
+      kpi('Highlights',fmt(sc.highlights),''),
+      kpi('Notes',fmt(sc.notes),''),
+      kpi('Words Delivered',fmt(sc.wordDeliveriesAll),'daily word'),
+      kpi('Scripture Engaged',(sc.engagedPct==null?0:sc.engagedPct)+'%','')
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaComfort')+'</div>');});
+    S(function(){
+      var cohortRows=(gg.cohorts||[]).map(function(c){return '<div class="wha-mrow"><span>'+c[0]+'</span><b>'+(c[1]||'')+'</b></div>';}).join('');
+      return card('Disciplines: Circles &amp; Cohorts', grid([
+        kpi('Circles',fmt(gg.circles),''),
+        kpi('Circle Members',fmt(gg.circleMembers),''),
+        kpi('Circle Prayers',fmt(gg.circlePraysAll),'all time'),
+        kpi('Cohorts',fmt((gg.cohorts||[]).length),(gg.activeCohorts||0)+' active')
+      ])+(cohortRows?'<div class="wha-mini">'+cohortRows+'</div>':''));
+    });
+
+    /* ===== JOURNALS ===== */
+    S(function(){
+      var tot2=(r.heavy||0)+(r.win||0)+(r.mixed||0)||1;
+      return card('Journals: The Record', grid([
+        kpi('Entries Filed',fmt(r.entries),''),
+        kpi('Active Journalers',fmt(e.journalers),''),
+        kpi('Entries / Member',e.entriesPerMember==null?'0':e.entriesPerMember,''),
+        kpi('Avg Streak',(e.avgStreak==null?0:e.avgStreak)+' days',''),
+        kpi('Heavy',(r.heavy==null?0:r.heavy)+'%',''),
+        kpi('Win',(r.win==null?0:r.win)+'%',''),
+        kpi('Mixed',(r.mixed==null?0:r.mixed)+'%',''),
+        kpi('Burned',fmt(r.burned),''),
+        kpi('Scribe Coverage',gpath(d,'recordExtra.scribePct',0)+'%',''),
+        kpi('Resurfaced',fmt(gpath(d,'recordExtra.resurfaced',0)),'')
+      ])+'<div class="wha-tonebar"><i style="width:'+((r.heavy||0)/tot2*100)+'%;background:'+AMBER+'"></i><i style="width:'+((r.win||0)/tot2*100)+'%;background:'+LIME+'"></i><i style="width:'+((r.mixed||0)/tot2*100)+'%;background:rgba(240,241,243,0.3)"></i></div>'+
+      '<div class="wha-grid" style="margin-top:16px">'+box('whaEntriesTrend')+'</div>'+
+      (Array.isArray(e.leaderboard)&&e.leaderboard.length?'<div class="wha-mini" style="margin-top:12px">'+e.leaderboard.map(function(t,i){return '<div class="wha-mrow"><span><b style="color:'+LIME+';min-width:18px;display:inline-block">'+(i+1)+'</b> '+slab(t[0])+'</span><b>'+fmt(t[1])+' days</b></div>';}).join('')+'</div>':''));
+    });
+
+    /* ===== QUIZ & FUNNEL ===== */
+    S(function(){
+      var stages=gpath(d,'funnel.stages',[]);
+      var strip=stages.length?'<div style="display:flex;gap:10px;overflow-x:auto;padding:6px 0;margin-bottom:14px">'+stages.map(function(s,i){var conn=i===0?'':'<div style="align-self:center;color:'+AXIS+';font-size:12px;white-space:nowrap">'+Math.round(s[1]/(stages[i-1][1]||1)*100)+'% &rarr;</div>';return conn+'<div style="flex:none;background:rgba(255,255,255,0.03);border:1px solid '+BORDER+';border-radius:12px;padding:12px 16px;text-align:center;min-width:110px"><div style="font-family:var(--font-display);font-size:22px;color:'+LIME+'">'+fmt(s[1])+'</div><div style="font-size:11px;color:'+MUT+';text-transform:uppercase;letter-spacing:0.04em">'+s[0]+'</div></div>';}).join('')+'</div>':'';
+      return card('Quiz &amp; Funnel', strip+grid([
+        kpi('Page Views',fmt(q.pageViews),''),
+        kpi('Quiz Opens',fmt(q.starts),''),
+        kpi('Quiz Completes',fmt(q.completes),'quiz_complete events'),
+        kpi('Completions Saved',fmt(q.completions),'quiz_history'),
+        kpi('Completion Rate',(q.rate==null?0:q.rate)+'%',''),
+        kpi('Drop-offs',fmt(q.dropoffs),''),
+        kpi('Contact Forms',fmt(q.contactForms),''),
+        kpi('CTA Clicks',fmt(q.ctaClicks),''),
+        kpi('Avg Time on Page',fmt(q.avgTimeOnPage)+'s','')
+      ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaQFunnel')+box('whaArch')+box('whaSeason')+'</div>');
+    });
+    S(function(){return card('Demographics','<div class="wha-grid">'+box('whaAge')+box('whaJob')+box('whaHours')+box('whaConsumption')+'</div>');});
+
+    /* ===== COMMUNITY / SKOOL ===== */
+    S(function(){return card('Community (Skool)', grid([
+      kpi('Skool Members',fmt(cm.skoolMembers),'synced roster'),
+      kpi('No Email on File',fmt(cm.skoolEmailless),'cannot get app access'),
+      kpi('Posts',fmt(cm.skoolPosts),fmt(cm.skoolPostsRange)+' this range'),
+      kpi('Likes',fmt(cm.likes),''),
+      kpi('Comments',fmt(cm.comments),''),
+      kpi('Last Sync',cm.lastSync||'never','')
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaSkoolTrend')+'</div>');});
+
+    /* ===== AFFILIATES ===== */
+    S(function(){return card('Affiliates', grid([
+      kpi('Registered',fmt(a.registered),''),
+      kpi('Active',fmt(a.active),''),
+      kpi('Referred Joins',fmt(a.referred),''),
+      kpi('Try Referrals',fmt(a.tryRefs),'')
+    ])+(Array.isArray(a.top)&&a.top.length?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));});
+
+    /* ===== STEWARD LOG ===== */
     S(function(){
       var sl=d.stewardLog||[]; if(!sl.length) return '';
       var rows=[]; sl.forEach(function(s){(s.log||[]).forEach(function(x){var o=Object.assign({},x); o.who=slab(s.id); rows.push(o);});});
@@ -18456,17 +18545,27 @@ async function loadAndInit(){
     el('whaBody').innerHTML=secs.join('');
 
     var TC=[LIME,GREEN,AMBER,'rgba(240,241,243,0.45)'];
-    try{ lineChart(el('whaTrend'),gr.labels||[],[{name:'Fasts Started',color:LIME,fill:'rgba(204,255,0,0.08)',values:tr.fastsStarted||[]},{name:'Fasts Completed',color:GREEN,fill:'rgba(0,230,118,0.06)',values:tr.fastsCompleted||[]}]); }catch(e){}
-    try{ doughnut(el('whaMemberStatus'),[{name:'Free (in Skool)',value:m.free,color:LIME},{name:'Unverified (quiz lead)',value:m.unverified,color:'rgba(240,241,243,0.35)'},{name:'Premium',value:m.paid,color:GREEN},{name:'Lapsed',value:mh.churned,color:AMBER}],'PROFILES'); }catch(e){}
-    try{ doughnut(el('whaArch'),(q.archetypes||[]).map(function(x,i){return {name:x[0],value:x[1],color:TC[i%TC.length]};}),'TAKEN'); }catch(e){}
-    try{ hBar(el('whaSeason'),(q.seasons||[]).map(function(x,i){return {name:x[0],value:x[1],color:[AMBER,LIME,GREEN][i%3]};})); }catch(e){}
-    try{ hBar(el('whaAge'),(dm.age||[]).map(function(x){return {name:x[0],value:x[1],color:LIME};})); }catch(e){}
-    try{ hBar(el('whaJob'),(dm.job||[]).map(function(x){return {name:x[0],value:x[1],color:GREEN};})); }catch(e){}
-    try{ hBar(el('whaHours'),(dm.hours||[]).map(function(x){return {name:x[0],value:x[1],color:'rgba(204,255,0,0.6)'};})); }catch(e){}
-    try{ hBar(el('whaConsumption'),(dm.consumption||[]).map(function(x){return {name:x[0],value:x[1],color:AMBER};})); }catch(e){}
-    try{ groupedBar(el('whaDropoff'),(fx.dropoff||[]).map(function(x){return x[0];}),[{name:'Ended early',color:AMBER,values:(fx.dropoff||[]).map(function(x){return x[1];})}]); }catch(e){}
-    try{ var p=fx.people||{}; doughnut(el('whaPeople'),[{name:'Completed',value:p.completed,color:LIME},{name:'Did not complete',value:p.endedEarly,color:AMBER},{name:'Still fasting',value:p.active,color:GREEN}],'PEOPLE'); }catch(e){}
-    try{ hBar(el('whaComfort'),(e.comfort||[]).map(function(v,i){return {name:'Level '+(i+1),value:v,color:'rgba(204,255,0,'+(0.25+i*0.19)+')'};})); }catch(e){}
+    try{ lineChart(el('whaMemberGrowth'),gr.labels||[],[{name:'Free Members',color:LIME,fill:'rgba(204,255,0,0.08)',values:gr.free||[]},{name:'Premium',color:GREEN,fill:'rgba(0,230,118,0.06)',values:gr.paid||[]}]); }catch(e2){}
+    try{ lineChart(el('whaActivity'),gr.labels||[],[{name:'Active Members',color:LIME,fill:'rgba(204,255,0,0.08)',values:act.series||[]}]); }catch(e2){}
+    try{ doughnut(el('whaMemberStatus'),[{name:'Free (in Skool)',value:m.free,color:LIME},{name:'Unverified (quiz lead)',value:m.unverified,color:'rgba(240,241,243,0.35)'},{name:'Premium',value:m.paid,color:GREEN},{name:'Lapsed',value:mh.churned,color:AMBER}],'PROFILES'); }catch(e2){}
+    try{ countBar(el('whaFirstSteps'),ob.firstSteps||[],LIME,'Members done'); }catch(e2){}
+    try{ countBar(el('whaTryProducts'),(d.tryOrders||[]).slice(0,8),AMBER,'Try Orders'); }catch(e2){}
+    try{ lineChart(el('whaOrderTrend'),gr.labels||[],[{name:'Bundle Orders',color:LIME,fill:'rgba(204,255,0,0.08)',values:tr.orders||[]},{name:'Try Orders',color:AMBER,fill:'rgba(255,179,0,0.06)',values:tr.tryOrdersTrend||[]},{name:'Portal Orders',color:GREEN,fill:'rgba(0,230,118,0.06)',values:po.trend||[]}]); }catch(e2){}
+    try{ lineChart(el('whaFastTrend'),gr.labels||[],[{name:'Started',color:LIME,fill:'rgba(204,255,0,0.08)',values:tr.fastsStarted||[]},{name:'Completed',color:GREEN,fill:'rgba(0,230,118,0.06)',values:tr.fastsCompleted||[]}]); }catch(e2){}
+    try{ countBar(el('whaDropoff'),fx.dropoff||[],AMBER,'Ended early'); }catch(e2){}
+    try{ var p=fx.people||{}; doughnut(el('whaPeople'),[{name:'Completed',value:p.completed,color:LIME},{name:'Did not complete',value:p.endedEarly,color:AMBER},{name:'Still fasting',value:p.active,color:GREEN}],'PEOPLE'); }catch(e2){}
+    try{ countBar(el('whaPrayerCats'),(pr.categories||[]).slice(0,8),LIME,'Burdens'); }catch(e2){}
+    try{ lineChart(el('whaPrayerTrend'),gr.labels||[],[{name:'Handed Over',color:LIME,fill:'rgba(204,255,0,0.08)',values:pr.trend||[]},{name:'Wall Posts',color:GREEN,fill:'rgba(0,230,118,0.06)',values:pr.wallTrend||[]}]); }catch(e2){}
+    try{ hBar(el('whaComfort'),(sc.comfort||[]).map(function(v,i){return {name:'Comfort Level '+(i+1),value:v,color:'rgba(204,255,0,'+(0.25+i*0.19)+')'};})); }catch(e2){}
+    try{ lineChart(el('whaEntriesTrend'),gr.labels||[],[{name:'Entries Filed',color:LIME,fill:'rgba(204,255,0,0.08)',values:tr.entriesFiled||[]},{name:'Burned',color:RED,fill:'rgba(255,82,82,0.06)',values:tr.burned||[]}]); }catch(e2){}
+    try{ countBar(el('whaQFunnel'),(q.questionFunnel||[]).slice(0,12),LIME,'Reached'); }catch(e2){}
+    try{ doughnut(el('whaArch'),(q.archetypes||[]).map(function(x,i){return {name:x[0],value:x[1],color:TC[i%TC.length]};}),'TAKEN'); }catch(e2){}
+    try{ hBar(el('whaSeason'),(q.seasons||[]).map(function(x,i){return {name:x[0],value:x[1],color:[AMBER,LIME,GREEN][i%3]};})); }catch(e2){}
+    try{ hBar(el('whaAge'),(dm.age||[]).map(function(x){return {name:x[0],value:x[1],color:LIME};})); }catch(e2){}
+    try{ hBar(el('whaJob'),(dm.job||[]).map(function(x){return {name:x[0],value:x[1],color:GREEN};})); }catch(e2){}
+    try{ hBar(el('whaHours'),(dm.hours||[]).map(function(x){return {name:x[0],value:x[1],color:'rgba(204,255,0,0.6)'};})); }catch(e2){}
+    try{ hBar(el('whaConsumption'),(dm.consumption||[]).map(function(x){return {name:x[0],value:x[1],color:AMBER};})); }catch(e2){}
+    try{ lineChart(el('whaSkoolTrend'),gr.labels||[],[{name:'Skool Posts',color:LIME,fill:'rgba(204,255,0,0.08)',values:cm.postTrend||[]}]); }catch(e2){}
   }
 })();
 </script>
