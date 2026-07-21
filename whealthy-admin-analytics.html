@@ -17,10 +17,9 @@
 <!--
   WHEALTHY ADMIN ANALYTICS — standalone page, no changes to any other file.
   DATA MODE: LIVE ONLY. All numbers come from the admin-stats edge function
-  (read-only aggregates). Admin key is entered once and checked server-side
-  as a SHA-256 hash. No keys, names, or emails ever live in this file.
+  (read-only aggregates). Authorized purely via Supabase Auth session JWT.
   Expected live endpoint: POST https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats
-  Body: { "range": "7d" | "30d" | "90d" | "all", "admin_key": "<checked server-side>" }
+  Body: { "range": "7d" | "30d" | "90d" | "all", "email": "<session user email>" }
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -348,9 +347,9 @@ h1,h2,h3{font-family:var(--font-display);text-transform:uppercase;letter-spacing
         <p>Every number on this page is governed by the record. The range selector above applies to every view.</p>
         <div class="hero-stats">
           <div class="hero-stat"><div class="v" id="hFree">—</div><div class="l">Free Members</div></div>
-          <div class="hero-stat"><div class="v" id="hPaid">—</div><div class="l">Paid Stewards</div></div>
+          <div class="hero-stat"><div class="v" id="hPaid">—</div><div class="l">Premium Stewards</div></div>
           <div class="hero-stat"><div class="v" id="hBuyers">—</div><div class="l">Product Purchasers</div></div>
-          <div class="hero-stat"><div class="v" id="hConv">—</div><div class="l">Free → Paid</div></div>
+          <div class="hero-stat"><div class="v" id="hConv">—</div><div class="l">Free → Premium</div></div>
         </div>
         <div class="hero-actions" style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
           <button class="btn btn-lime" data-action="export-pdf">Export PDF Report</button>
@@ -802,9 +801,9 @@ async function render(range, bypassCache = false){
   // ---- members ----
   $("memberKpis").innerHTML = [
     ["Free Members",fmt(d.members.free),delta(d.members.dFree)],
-    ["Paid Stewards",fmt(d.members.paid),delta(d.members.dPaid)],
+    ["Premium Stewards",fmt(d.members.paid),delta(d.members.dPaid)],
     ["Product Purchasers",fmt(d.members.purchasers),delta(d.members.dBuyers)],
-    ["Free → Paid",d.members.conv+"%",'<div class="d flat">conversion</div>'],
+    ["Free → Premium",d.members.conv+"%",'<div class="d flat">conversion</div>'],
     ["MRR",'$'+fmt(d.memberHealth.mrr),'<div class="d flat">sum of active price</div>'],
     ["Lapsed",fmt(d.memberHealth.churned),'<div class="d down">active_through passed</div>'],
     ["Nurture Queued",fmt(d.memberHealth.nurture.queued),'<div class="d flat">nurture_queue</div>'],
@@ -1162,7 +1161,7 @@ function drawPrimaryChartsJs(d){
     killChart("growth");
     chartInstances.growth = new Chart(canvasIn("growthChart"),{type:"line",data:{labels:d.growth.labels,datasets:[
       {label:"Free",data:d.growth.free,borderColor:"#ccff00",backgroundColor:"rgba(204,255,0,0.12)",fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:"#ccff00"},
-      {label:"Paid Stewards",data:d.growth.paid,borderColor:"#00e676",backgroundColor:"rgba(0,230,118,0.08)",fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:"#00e676"}
+      {label:"Premium Stewards",data:d.growth.paid,borderColor:"#00e676",backgroundColor:"rgba(0,230,118,0.08)",fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:"#00e676"}
     ]},options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:true}}},
       scales:{x:{grid:{color:grid}},y:{grid:{color:grid},beginAtZero:true}}}});
@@ -1198,7 +1197,7 @@ function drawPrimaryChartsJs(d){
 function drawPrimaryChartsSvg(d){
   lineChart($("growthChart"), d.growth.labels, [
     {name:"Free", color:"#ccff00", fill:"rgba(204,255,0,0.10)", values:d.growth.free},
-    {name:"Paid Stewards", color:"#00e676", fill:"rgba(0,230,118,0.08)", values:d.growth.paid}
+    {name:"Premium Stewards", color:"#00e676", fill:"rgba(0,230,118,0.08)", values:d.growth.paid}
   ]);
   doughnutChart($("typeChart"), d.fasts.types.map((t,i)=>({name:t.name, value:t.started, color:TYPE_COLORS[i%TYPE_COLORS.length]})), "STARTED");
   groupedBarChart($("bundleChart"), d.bundles.keys, [
@@ -1263,10 +1262,10 @@ function buildMarkdown(){
   L.push("## Members");
   L.push("");
   L.push(mdTable([
-    ["Free members (lead)", fmt(d.members.free)],
-    ["Paid Stewards", fmt(d.members.paid)],
+    ["Free members", fmt(d.members.free)],
+    ["Premium Stewards", fmt(d.members.paid)],
     ["Product purchasers", fmt(d.members.purchasers)],
-    ["Free to paid", d.members.conv + "%"],
+    ["Free to premium", d.members.conv + "%"],
     ["MRR", "$" + fmt(d.memberHealth.mrr)],
     ["Lapsed", fmt(d.memberHealth.churned)],
     ["Nurture queued / sent / joined", fmt(d.memberHealth.nurture.queued) + " / " + fmt(d.memberHealth.nurture.sent) + " / " + fmt(d.memberHealth.nurture.joined)]
