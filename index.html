@@ -2047,7 +2047,12 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item" id="navAffiliate" onclick="go('affiliate',this)"><span class="si-dot"></span> Affiliate Center</button>
       <button class="sidebar-item" id="navPortal" onclick="go('portal',this)"><span class="si-dot"></span> Product Portal</button>
       <button class="sidebar-item" id="navRetakeTour" onclick="startGuidedTour(true)"><span class="si-dot"></span> Retake the Tour</button>
-      <button class="sidebar-item" id="navAdmin" onclick="go('admin',this)" style="display: none;"><span class="si-dot"></span> Admin</button>
+      <!-- Admin Group (admin-only; parent revealed after verify-member) -->
+      <button class="sidebar-item" id="parentAdmin" onclick="toggleSidebarGroup(this)" style="display: none;"><span class="si-dot"></span> Admin <span class="si-chevron">&#9656;</span></button>
+      <div class="sidebar-sub-nav">
+        <button class="sidebar-sub-item" id="navAdmin" onclick="go('admin',this)">Surface</button>
+        <button class="sidebar-sub-item" id="navAdminAnalytics" onclick="go('adminAnalytics',this)">Control Panel</button>
+      </div>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
@@ -8126,15 +8131,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         <div style="max-width: 1000px; margin: 0 auto; padding: 16px;">
 
-          <!-- LEVEL 1 — Admin sub-tabs -->
-          <div class="admin-group-bar">
-            <button class="admin-group-btn active" onclick="switchAdminGroup('surface')">Surface</button>
-            <button class="admin-group-btn" onclick="switchAdminGroup('analytics')">Analytics</button>
-          </div>
-
-          <!-- SUB-TAB: SURFACE (roster, moderation, settings, audit) -->
-          <div id="adminGroupSurface" class="admin-group-content active">
-
           <!-- Tabs Navigation -->
           <div class="admin-nav-bar">
             <button class="admin-nav-btn active" onclick="switchAdminTab('challenge')">Challenge</button>
@@ -8282,13 +8278,74 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             </div>
           </div>
 
-          </div><!-- /adminGroupSurface -->
+        </div>
+      </div>
 
-          <!-- SUB-TAB: ANALYTICS (embedded dashboard, lazy-loaded) -->
-          <div id="adminGroupAnalytics" class="admin-group-content">
-            <iframe id="controlCenterFrame" data-src="whealthy-admin-analytics.html" title="Analytics" style="width:100%; height:calc(100svh - 210px); min-height:560px; border:0; border-radius:12px; background:#080809; display:block;"></iframe>
+      <!-- ADMIN - CONTROL PANEL (native analytics, app design system, no iframe) -->
+      <div id="adminAnalyticsView" style="display:none">
+        <style>
+        #adminAnalyticsView .wha-wrap{max-width:1100px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:18px}
+        #adminAnalyticsView .wha-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+        #adminAnalyticsView .wha-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:4px;overflow-x:auto}
+        #adminAnalyticsView .wha-tab{font-family:var(--font-display);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,0.55);padding:8px 14px;border-radius:8px;white-space:nowrap;border:none;background:none;cursor:pointer}
+        #adminAnalyticsView .wha-tab.active{background:var(--lime);color:#0a0a0a}
+        #adminAnalyticsView .wha-refresh{font-family:var(--font-display);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--lime);background:rgba(204,255,0,0.10);border:1px solid rgba(204,255,0,0.3);border-radius:10px;padding:9px 16px;cursor:pointer}
+        #adminAnalyticsView .wha-status{background:rgba(255,82,82,0.10);border:1px solid rgba(255,82,82,0.3);color:#ff8a8a;border-radius:10px;padding:12px 14px;font-size:13px}
+        #adminAnalyticsView .wha-body{display:flex;flex-direction:column;gap:18px}
+        #adminAnalyticsView .wha-body.wha-dim{opacity:0.5;pointer-events:none}
+        #adminAnalyticsView .wha-loading{color:rgba(240,241,243,0.5);padding:40px;text-align:center}
+        #adminAnalyticsView .wha-card{padding:20px}
+        #adminAnalyticsView .wha-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+        #adminAnalyticsView .wha-kpi{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px}
+        #adminAnalyticsView .wha-kpi .v{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--lime);line-height:1.1}
+        #adminAnalyticsView .wha-kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:rgba(240,241,243,0.52);margin-bottom:6px}
+        #adminAnalyticsView .wha-kpi .wha-sub{font-size:11px;color:rgba(240,241,243,0.4);margin-top:4px}
+        #adminAnalyticsView .wha-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+        #adminAnalyticsView .wha-chartbox{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;min-height:120px}
+        #adminAnalyticsView .wha-fastcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
+        #adminAnalyticsView .wha-fastcard{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px}
+        #adminAnalyticsView .wha-fastcard .fig{font-size:11px;color:var(--lime);text-transform:uppercase;letter-spacing:0.05em}
+        #adminAnalyticsView .wha-fastcard h4{font-family:var(--font-display);font-size:16px;margin:4px 0 10px}
+        #adminAnalyticsView .wha-frow{display:flex;justify-content:space-between;font-size:13px;color:rgba(240,241,243,0.6);margin-bottom:4px}
+        #adminAnalyticsView .wha-fbar{height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin:8px 0 6px}
+        #adminAnalyticsView .wha-fbar i{display:block;height:100%;background:var(--lime);border-radius:999px}
+        #adminAnalyticsView .wha-fpct{font-size:12px;color:var(--lime);font-family:var(--font-display)}
+        #adminAnalyticsView .wha-spot{margin-top:14px;padding:12px 14px;background:rgba(204,255,0,0.06);border:1px solid rgba(204,255,0,0.2);border-radius:10px;font-size:14px}
+        #adminAnalyticsView .wha-mini{margin-top:12px;display:flex;flex-direction:column}
+        #adminAnalyticsView .wha-mrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,0.06);font-size:13px;color:rgba(240,241,243,0.7)}
+        #adminAnalyticsView .wha-tonebar{display:flex;height:14px;border-radius:999px;overflow:hidden;margin-top:14px}
+        #adminAnalyticsView .wha-tonebar i{display:block;height:100%}
+        #adminAnalyticsView .wha-log{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-height:520px;overflow-y:auto}
+        #adminAnalyticsView .wha-logrow{display:grid;grid-template-columns:88px 1fr auto auto;gap:12px;align-items:center;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;font-size:12px}
+        #adminAnalyticsView .wha-chip{font-size:10px;font-weight:700;text-transform:uppercase;padding:4px 8px;border-radius:6px;text-align:center}
+        #adminAnalyticsView .wha-chip.active{background:rgba(0,230,118,0.15);color:#00e676}
+        #adminAnalyticsView .wha-chip.completed{background:rgba(204,255,0,0.15);color:var(--lime)}
+        #adminAnalyticsView .wha-chip.ended{background:rgba(255,179,0,0.15);color:#ffb300}
+        #adminAnalyticsView .wha-fastname b{display:block}
+        #adminAnalyticsView .wha-fastname span{color:rgba(240,241,243,0.45);font-size:11px}
+        #adminAnalyticsView .wha-prog{color:rgba(240,241,243,0.6)}
+        #adminAnalyticsView .wha-when{color:rgba(240,241,243,0.4)}
+        @media(max-width:640px){#adminAnalyticsView .wha-wrap{padding:12px}#adminAnalyticsView .wha-kpi .v{font-size:22px}#adminAnalyticsView .wha-logrow{grid-template-columns:70px 1fr;row-gap:4px}#adminAnalyticsView .wha-prog,#adminAnalyticsView .wha-when{grid-column:2}}
+        </style>
+        <div class="view-header-block">
+          <div class="view-header-icon-box">📊</div>
+          <div>
+            <h1 class="view-header-title">Control Panel</h1>
+            <p class="view-header-subtitle">Live analytics across members, quiz, fasts, bundles, and the record.</p>
           </div>
-
+        </div>
+        <div class="wha-wrap">
+          <div class="wha-bar">
+            <div class="wha-tabs" id="whaRangeTabs">
+              <button class="wha-tab" data-range="7d" onclick="whaSetRange('7d')">7 Days</button>
+              <button class="wha-tab active" data-range="30d" onclick="whaSetRange('30d')">30 Days</button>
+              <button class="wha-tab" data-range="90d" onclick="whaSetRange('90d')">90 Days</button>
+              <button class="wha-tab" data-range="all" onclick="whaSetRange('all')">All Time</button>
+            </div>
+            <button class="wha-refresh" id="whaRefreshBtn" onclick="whaRefresh()">Refresh</button>
+          </div>
+          <div class="wha-status" id="whaStatus" style="display:none"></div>
+          <div class="wha-body" id="whaBody"><div class="wha-loading">Loading live analytics...</div></div>
         </div>
       </div>
 
@@ -11681,7 +11738,7 @@ async function waRunGate(emailArg){
           window.ADMIN_ROLE = vd.admin_role || null;
           window.TOUR_DONE_AT = vd.tour_done_at || null;
           window.FIRST_STEPS = vd.first_steps || {};
-          const adminBtn = document.getElementById('navAdmin');
+          const adminBtn = document.getElementById('parentAdmin');
           if (adminBtn) {
             if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
               adminBtn.style.display = 'flex';
@@ -12675,8 +12732,8 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   
   // Reset all active/expanded states first
@@ -12709,7 +12766,10 @@ function go(view,el,label){
   } else if(view==='communityEnter'){
     document.getElementById('headerLine').textContent='Enter Community';
   } else if(view==='admin'){
-    document.getElementById('headerLine').textContent='Admin Surface';
+    document.getElementById('headerLine').textContent='Surface';
+  } else if(view==='adminAnalytics'){
+    document.getElementById('headerLine').textContent='Control Panel';
+    if(typeof initControlPanel==='function') initControlPanel();
   } else if(view==='bible'){
     document.getElementById('headerLine').textContent='Bible 365';
     if(typeof initBible365==='function'&&!window._bibleInited){window._bibleInited=true;initBible365();}
@@ -12886,19 +12946,6 @@ async function getAdminToken() {
     }
   }
   return token;
-}
-
-function switchAdminGroup(group) {
-  document.querySelectorAll('.admin-group-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${group}'`));
-  });
-  document.querySelectorAll('.admin-group-content').forEach(c => c.classList.remove('active'));
-  const target = document.getElementById('adminGroup' + group.charAt(0).toUpperCase() + group.slice(1));
-  if (target) target.classList.add('active');
-  if (group === 'analytics') {
-    const f = document.getElementById('controlCenterFrame');
-    if (f && !f.getAttribute('src')) { f.setAttribute('src', f.dataset.src); }
-  }
 }
 
 async function switchAdminTab(tabName) {
@@ -17991,11 +18038,11 @@ async function loadAndInit(){
       adminOnly: false
     });
 
-    // Step 18: Admin (admin-only)
+    // Step 18: Admin (admin-only) - expands the Admin group and spotlights it
     steps.push({
-      target: 'navAdmin', view: 'admin', group: null,
+      target: 'parentAdmin', view: 'admin', group: 'parentAdmin',
       title: 'Admin',
-      body: 'The master key. Cohorts, the roster, the controls. Only you see this room.',
+      body: 'The master key, and only you see it. Surface holds cohorts, the roster, moderation, and settings. Control Panel is your live analytics.',
       adminOnly: true
     });
 
@@ -18277,5 +18324,180 @@ async function loadAndInit(){
 <!-- Tour Overlays -->
 <div id="tourDimOverlay" class="tour-dim-overlay"></div>
 <div id="tourCard" class="tour-card"></div>
+<script>
+/* ===== CONTROL PANEL — native analytics (no iframe, reuses app session) ===== */
+(function(){
+  var WHA_URL='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-stats';
+  var LIME='#ccff00',GREEN='#00e676',AMBER='#ffb300',RED='#ff5252';
+  var GRID='rgba(255,255,255,0.08)',AXIS='rgba(240,241,243,0.45)',BORDER='rgba(255,255,255,0.08)',GLASS='rgba(255,255,255,0.06)',TXT='#f0f1f3',MUT='rgba(240,241,243,0.6)';
+  var whaRange='30d',whaData=null,whaInited=false;
+  function fmt(n){return (n==null)?'0':Number(n).toLocaleString('en-US');}
+  function pctd(v){return (v==null)?0:v;}
+  function el(id){return document.getElementById(id);}
+  function gpath(o,p,dflt){try{return p.split('.').reduce(function(a,k){return a[k];},o);}catch(e){return dflt;}}
+
+  async function whaToken(){
+    try{ if(typeof getAdminToken==='function'){ var t=await getAdminToken(); if(t) return t; } }catch(e){}
+    try{ if(typeof sb!=='undefined' && sb){ var s=await sb.auth.getSession(); if(s&&s.data&&s.data.session) return s.data.session.access_token; } }catch(e){}
+    return '';
+  }
+  function whaStatus(msg){ var s=el('whaStatus'); if(!s)return; if(!msg){s.style.display='none';return;} s.textContent=msg; s.style.display=''; }
+
+  async function whaFetch(range,bypass){
+    var token=await whaToken();
+    if(!token){ whaStatus('Sign in as an admin to load analytics.'); return null; }
+    var anon=(typeof SUPABASE_ANON!=='undefined')?SUPABASE_ANON:'';
+    var email=(window.MEMBER_EMAIL||localStorage.getItem('wh_steward_email')||'');
+    try{
+      var r=await fetch(WHA_URL,{method:'POST',headers:{'content-type':'application/json','Authorization':'Bearer '+token,'apikey':anon,'x-admin-email':email},body:JSON.stringify({range:range,bypass_cache:!!bypass,email:email})});
+      if(r.status===401||r.status===403){ whaStatus('Admin access required.'); return null; }
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      whaStatus('');
+      return await r.json();
+    }catch(e){ whaStatus('Live data unavailable. Check connection, then Refresh.'); return null; }
+  }
+
+  async function whaLoad(range){
+    var body=el('whaBody'); if(body) body.classList.add('wha-dim');
+    var d=await whaFetch(range);
+    if(body) body.classList.remove('wha-dim');
+    if(!d) return;
+    whaData=d; whaRender(d);
+  }
+  window.initControlPanel=async function(){ if(whaInited) return; whaInited=true; await whaLoad(whaRange); };
+  window.whaSetRange=function(r){ whaRange=r; var ts=document.querySelectorAll('#whaRangeTabs .wha-tab'); ts.forEach(function(t){t.classList.toggle('active',t.dataset.range===r);}); whaLoad(r); };
+  window.whaRefresh=async function(){ var b=el('whaRefreshBtn'); if(b){b.disabled=true;b.textContent='Refreshing...';} var d=await whaFetch(whaRange,true); if(d){whaData=d;whaRender(d);} if(b){b.disabled=false;b.textContent='Refresh';} };
+
+  function legend(items){ return '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px">'+items.map(function(i){return '<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:'+MUT+'"><i style="width:10px;height:10px;border-radius:3px;background:'+i[1]+';display:inline-block"></i>'+i[0]+'</span>';}).join('')+'</div>'; }
+  function lineChart(e2,labels,series){
+    if(!e2)return; var W=620,H=240,padL=44,padR=14,padT=12,padB=28,iw=W-padL-padR,ih=H-padT-padB;
+    var all=[]; series.forEach(function(s){s.values.forEach(function(v){all.push(v==null?0:v);});}); var max=(Math.max.apply(null,[0].concat(all))*1.15)||1;
+    var x=function(i){return padL+iw*(labels.length===1?0.5:i/(labels.length-1));}; var y=function(v){return padT+ih-((v==null?0:v)/max)*ih;};
+    var svg='';
+    for(var g=0;g<=4;g++){ var gv=max*g/4,gy=y(gv); svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="'+AXIS+'">'+Math.round(gv)+'</text>'; }
+    labels.forEach(function(l,i){ svg+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="'+AXIS+'">'+l+'</text>'; });
+    series.forEach(function(s){ var pts=s.values.map(function(v,i){return x(i)+','+y(v);}).join(' '); svg+='<polygon points="'+x(0)+','+y(0)+' '+pts+' '+x(s.values.length-1)+','+y(0)+'" fill="'+s.fill+'"/><polyline points="'+pts+'" fill="none" stroke="'+s.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'; s.values.forEach(function(v,i){ svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="3.5" fill="'+s.color+'" stroke="#0e0f11" stroke-width="1.5"/>'; }); });
+    e2.innerHTML=legend(series.map(function(s){return [s.name,s.color];}))+'<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block" preserveAspectRatio="xMidYMid meet">'+svg+'</svg>';
+  }
+  function doughnut(e2,items,center){
+    if(!e2)return; items=items.filter(function(it){return it&&it.value!=null;}); var total=items.reduce(function(a,b){return a+(b.value||0);},0)||1; var R=80,C=2*Math.PI*R,cx=110,cy=110; var off=0,svg='';
+    items.forEach(function(it){ var len=(it.value||0)/total*C; svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="'+it.color+'" stroke-width="30" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"/>'; off+=len; });
+    svg+='<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" font-size="26" font-weight="600" fill="'+TXT+'">'+fmt(total)+'</text><text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-size="10" fill="'+AXIS+'" letter-spacing="1">'+(center||'TOTAL')+'</text>';
+    var leg=items.map(function(it){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid '+BORDER+';font-size:13px"><span style="display:flex;align-items:center;gap:8px;color:'+MUT+'"><i style="width:10px;height:10px;border-radius:3px;background:'+it.color+';display:inline-block"></i>'+it.name+'</span><b>'+fmt(it.value)+' &middot; '+Math.round((it.value||0)/total*100)+'%</b></div>';}).join('');
+    e2.innerHTML='<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap"><svg viewBox="0 0 220 220" width="200" style="flex:none">'+svg+'</svg><div style="flex:1;min-width:200px">'+leg+'</div></div>';
+  }
+  function hBar(e2,items){ if(!e2)return; e2.innerHTML=items.map(function(it){return '<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:'+MUT+'">'+it.name+'</span><b style="font-size:15px">'+pctd(it.value)+'%</b></div><div style="height:14px;border-radius:999px;background:'+GLASS+';overflow:hidden"><div style="width:'+pctd(it.value)+'%;height:100%;border-radius:999px;background:'+it.color+'"></div></div></div>';}).join(''); }
+  function groupedBar(e2,labels,series){
+    if(!e2)return; var W=620,H=260,padL=40,padR=10,padT=14,padB=30,iw=W-padL-padR,ih=H-padT-padB;
+    var all=[]; series.forEach(function(s){s.values.forEach(function(v){all.push(v==null?0:v);});}); var max=(Math.max.apply(null,[0].concat(all))*1.15)||1; var groupW=iw/(labels.length||1),barW=Math.min(26,groupW/(series.length+1)); var svg='';
+    for(var g=0;g<=4;g++){ var gv=max*g/4,gy=padT+ih-(gv/max)*ih; svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="'+AXIS+'">'+Math.round(gv)+'</text>'; }
+    labels.forEach(function(l,i){ var gx=padL+groupW*i+groupW/2; svg+='<text x="'+gx+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="'+AXIS+'">'+l+'</text>'; series.forEach(function(s,si){ var v=s.values[i]==null?0:s.values[i],bh=(v/max)*ih,bx=gx-(series.length*barW)/2+si*barW+1; svg+='<rect x="'+bx+'" y="'+(padT+ih-bh)+'" width="'+(barW-2)+'" height="'+Math.max(bh,2)+'" rx="5" fill="'+s.color+'"/><text x="'+(bx+(barW-2)/2)+'" y="'+(padT+ih-bh-5)+'" text-anchor="middle" font-size="9" fill="'+AXIS+'">'+v+'</text>'; }); });
+    e2.innerHTML=legend(series.map(function(s){return [s.name,s.color];}))+'<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block" preserveAspectRatio="xMidYMid meet">'+svg+'</svg>';
+  }
+
+  function kpi(l,v,sub){return '<div class="wha-kpi"><div class="l">'+l+'</div><div class="v">'+v+'</div>'+(sub?'<div class="wha-sub">'+sub+'</div>':'')+'</div>';}
+  function grid(arr){return '<div class="wha-kpis">'+arr.join('')+'</div>';}
+  function card(title,inner){return '<div class="g-card wha-card"><div class="plan-sec-title">'+title+'</div>'+inner+'</div>';}
+  function box(id){return '<div id="'+id+'" class="wha-chartbox"></div>';}
+  function dtxt(x){ if(x==null) return ''; var n=Number(x); if(!n) return 'no change'; return (n>0?'up +':'down ')+n; }
+  function slab(id){return 'Steward '+String(id).replace('SW-','');}
+
+  function whaRender(d){
+    var secs=[];
+    function S(fn){ try{ secs.push(fn()); }catch(e){} }
+    var m=d.members||{},mh=d.memberHealth||{},f=d.fasts||{},fx=d.fastsExtra||{},q=d.quiz||{},dm=d.demo||{},a=d.affiliates||{},e=d.engagement||{},r=d.record||{},b=d.bundles||{},bo=d.bundleOps||{},gr=d.growth||{labels:[]},tr=d.trends||{};
+
+    S(function(){return grid([
+      kpi('Free Members',fmt(m.free),dtxt(m.dFree)),
+      kpi('Paid Stewards',fmt(m.paid),dtxt(m.dPaid)),
+      kpi('Product Purchasers',fmt(m.purchasers),dtxt(m.dBuyers)),
+      kpi('Free to Paid',(m.conv==null?0:m.conv)+'%','conversion'),
+      kpi('MRR','$'+fmt(mh.mrr),'active price sum'),
+      kpi('Lapsed',fmt(mh.churned),'active_through passed')
+    ]);});
+    S(function(){return card('Growth Trend',box('whaTrend'));});
+    S(function(){return card('Nurture', grid([
+      kpi('Queued',fmt(gpath(mh,'nurture.queued',0))),
+      kpi('Sent',fmt(gpath(mh,'nurture.sent',0))),
+      kpi('Joined',fmt(gpath(mh,'nurture.joined',0)))
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaMemberStatus')+'</div>');});
+    S(function(){return card('Quiz &amp; Funnel', grid([
+      kpi('Page Views',fmt(q.pageViews)),
+      kpi('Quiz Opens',fmt(q.starts)),
+      kpi('Completions',fmt(q.completions)),
+      kpi('Completion Rate',(q.rate==null?0:q.rate)+'%'),
+      kpi('Drop-offs',fmt(q.dropoffs)),
+      kpi('CTA Clicks',fmt(q.ctaClicks))
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaArch')+box('whaSeason')+'</div>');});
+    S(function(){return card('Demographics','<div class="wha-grid">'+box('whaAge')+box('whaJob')+box('whaHours')+box('whaConsumption')+'</div>');});
+    S(function(){
+      var cards=Array.isArray(f.types)?'<div class="wha-fastcards">'+f.types.map(function(t){return '<div class="wha-fastcard"><span class="fig">'+(t.figure||'')+'</span><h4>'+(t.name||'')+'</h4><div class="wha-frow"><span>Started</span><b>'+fmt(t.started)+'</b></div><div class="wha-frow"><span>Completed</span><b>'+fmt(t.completed)+'</b></div><div class="wha-fbar"><i style="width:'+(t.rate||0)+'%"></i></div><div class="wha-fpct">'+(t.rate||0)+'% completion</div></div>';}).join('')+'</div>':'';
+      return card('The Fast', grid([
+        kpi('Started',fmt(f.started)),
+        kpi('Active Now',fmt(f.active)),
+        kpi('Completed',fmt(f.completed)),
+        kpi('Ended Early',fmt(f.endedEarly)),
+        kpi('Completion Rate',(f.completionRate==null?0:f.completionRate)+'%'),
+        kpi('Structure Only',(fx.structureOnlyPct==null?0:fx.structureOnlyPct)+'%')
+      ])+cards+'<div class="wha-grid" style="margin-top:16px">'+box('whaDropoff')+box('whaPeople')+'</div>');
+    });
+    S(function(){
+      var sug=(b.suggested||[]).reduce(function(x,y){return x+y;},0),pur=(b.purchased||[]).reduce(function(x,y){return x+y;},0),top=b.top||{};
+      return card('Bundles', grid([
+        kpi('Suggested',fmt(sug)),
+        kpi('Purchased',fmt(pur)),
+        kpi('Match Rate',(b.matchRate==null?0:b.matchRate)+'%'),
+        kpi('Claim Rate',(bo.claimRate==null?0:bo.claimRate)+'%'),
+        kpi('Shipped',fmt(bo.shipped)),
+        kpi('Active Subs',fmt(gpath(bo,'subs.active',0)))
+      ])+(top.name?'<div class="wha-spot">Top bundle &middot; <b>'+top.name+'</b> - '+(top.rate||0)+'% ('+fmt(top.purchased)+' of '+fmt(top.suggested)+')</div>':''));
+    });
+    S(function(){return card('Affiliates', grid([
+      kpi('Registered',fmt(a.registered)),
+      kpi('Active',fmt(a.active)),
+      kpi('Referred Joins',fmt(a.referred)),
+      kpi('Try Referrals',fmt(a.tryRefs))
+    ])+(Array.isArray(a.top)?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));});
+    S(function(){return card('Engagement', grid([
+      kpi('Active Journalers',fmt(e.journalers)),
+      kpi('Entries / Member',e.entriesPerMember==null?'0':e.entriesPerMember),
+      kpi('Avg Streak',(e.avgStreak==null?0:e.avgStreak)+' days'),
+      kpi('Scripture Engaged',(e.scriptureEngagedPct==null?0:e.scriptureEngagedPct)+'%')
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaComfort')+'</div>'+(Array.isArray(e.leaderboard)?'<div class="wha-mini" style="margin-top:12px">'+e.leaderboard.map(function(t,i){return '<div class="wha-mrow"><span><b style="color:'+LIME+';min-width:18px;display:inline-block">'+(i+1)+'</b> '+slab(t[0])+'</span><b>'+fmt(t[1])+' days</b></div>';}).join('')+'</div>':''));});
+    S(function(){
+      var tot=(r.heavy||0)+(r.win||0)+(r.mixed||0)||1;
+      return card('The Record', grid([
+        kpi('Entries Filed',fmt(r.entries)),
+        kpi('Heavy',(r.heavy==null?0:r.heavy)+'%'),
+        kpi('Win',(r.win==null?0:r.win)+'%'),
+        kpi('Mixed',(r.mixed==null?0:r.mixed)+'%'),
+        kpi('Burned',fmt(r.burned)),
+        kpi('Scribe Coverage',gpath(d,'recordExtra.scribePct',0)+'%')
+      ])+'<div class="wha-tonebar"><i style="width:'+((r.heavy||0)/tot*100)+'%;background:'+AMBER+'"></i><i style="width:'+((r.win||0)/tot*100)+'%;background:'+LIME+'"></i><i style="width:'+((r.mixed||0)/tot*100)+'%;background:rgba(240,241,243,0.3)"></i></div>');
+    });
+    S(function(){
+      var sl=d.stewardLog||[]; if(!sl.length) return '';
+      var rows=[]; sl.forEach(function(s){(s.log||[]).forEach(function(x){var o=Object.assign({},x); o.who=slab(s.id); rows.push(o);});});
+      rows.sort(function(a2,b2){return (b2.status==='active')-(a2.status==='active');});
+      return card('Steward Log', '<div class="wha-log">'+rows.map(function(x){ var prog=x.status==='completed'?('finished '+x.total+' of '+x.total):x.status==='active'?('day '+x.day+' of '+x.total):('stopped day '+x.day+' of '+x.total); var lab=x.status==='active'?'Active':x.status==='completed'?'Completed':'Stopped'; return '<div class="wha-logrow"><span class="wha-chip '+x.status+'">'+lab+'</span><div class="wha-fastname"><b>'+(x.fast||'')+'</b><span>'+(x.figure||'')+' &middot; '+x.who+'</span></div><span class="wha-prog">'+prog+'</span><span class="wha-when">'+(x.date||'')+'</span></div>'; }).join('')+'</div>');
+    });
+
+    el('whaBody').innerHTML=secs.join('');
+
+    var TC=[LIME,GREEN,AMBER,'rgba(240,241,243,0.45)'];
+    try{ lineChart(el('whaTrend'),gr.labels||[],[{name:'Fasts Started',color:LIME,fill:'rgba(204,255,0,0.08)',values:tr.fastsStarted||[]},{name:'Fasts Completed',color:GREEN,fill:'rgba(0,230,118,0.06)',values:tr.fastsCompleted||[]}]); }catch(e){}
+    try{ doughnut(el('whaMemberStatus'),[{name:'Free (lead)',value:m.free,color:LIME},{name:'Paid Steward',value:m.paid,color:GREEN},{name:'Lapsed',value:mh.churned,color:AMBER}],'MEMBERS'); }catch(e){}
+    try{ doughnut(el('whaArch'),(q.archetypes||[]).map(function(x,i){return {name:x[0],value:x[1],color:TC[i%TC.length]};}),'TAKEN'); }catch(e){}
+    try{ hBar(el('whaSeason'),(q.seasons||[]).map(function(x,i){return {name:x[0],value:x[1],color:[AMBER,LIME,GREEN][i%3]};})); }catch(e){}
+    try{ hBar(el('whaAge'),(dm.age||[]).map(function(x){return {name:x[0],value:x[1],color:LIME};})); }catch(e){}
+    try{ hBar(el('whaJob'),(dm.job||[]).map(function(x){return {name:x[0],value:x[1],color:GREEN};})); }catch(e){}
+    try{ hBar(el('whaHours'),(dm.hours||[]).map(function(x){return {name:x[0],value:x[1],color:'rgba(204,255,0,0.6)'};})); }catch(e){}
+    try{ hBar(el('whaConsumption'),(dm.consumption||[]).map(function(x){return {name:x[0],value:x[1],color:AMBER};})); }catch(e){}
+    try{ groupedBar(el('whaDropoff'),(fx.dropoff||[]).map(function(x){return x[0];}),[{name:'Ended early',color:AMBER,values:(fx.dropoff||[]).map(function(x){return x[1];})}]); }catch(e){}
+    try{ var p=fx.people||{}; doughnut(el('whaPeople'),[{name:'Completed',value:p.completed,color:LIME},{name:'Did not complete',value:p.endedEarly,color:AMBER},{name:'Still fasting',value:p.active,color:GREEN}],'PEOPLE'); }catch(e){}
+    try{ hBar(el('whaComfort'),(e.comfort||[]).map(function(v,i){return {name:'Level '+(i+1),value:v,color:'rgba(204,255,0,'+(0.25+i*0.19)+')'};})); }catch(e){}
+  }
+})();
+</script>
 </body>
 </html>
