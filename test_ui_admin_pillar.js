@@ -115,6 +115,12 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
     });
     await page.waitForTimeout(1000);
 
+    // Verify parentAdmin button is visible in sidebar and click it
+    console.log("Verifying parentAdmin sidebar group is visible...");
+    const parentAdmin = page.locator('#parentAdmin');
+    await parentAdmin.waitFor({ state: 'visible', timeout: 5000 });
+    await parentAdmin.click();
+
     // Verify Admin button is visible in sidebar
     console.log("Verifying Admin sidebar navigation tab is visible...");
     const adminBtn = page.locator('#navAdmin');
@@ -172,8 +178,8 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
     });
     await page.waitForTimeout(1000);
 
-    const isVisibleForRegular = await page.locator('#navAdmin').isVisible();
-    if (isVisibleForRegular) throw new Error("Admin button is visible for a non-admin member.");
+    const isVisibleForRegular = await page.locator('#parentAdmin').isVisible();
+    if (isVisibleForRegular) throw new Error("Admin group button is visible for a non-admin member.");
     console.log("✅ Verified: Admin sidebar nav button is hidden for regular members.");
 
     // 2. Load whealthy-admin-analytics.html and verify headers
