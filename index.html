@@ -2455,10 +2455,17 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <!-- SCREEN 3: Draft Review / Timeline Approval -->
           <div id="rhyScreenDraft" class="rhy-screen rhy-card">
             <h2 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:#fff;">Review Your Draft Rhythm</h2>
-            <p class="g-body" style="color:rgba(255,255,255,0.6); margin-bottom:16px;">The AI has drafted a 5-6 slot daily timeline built around your chronotype. Adjust times, stack cues, or toggle slots before activating.</p>
+            <p id="rhyDraftSubhead" class="g-body" style="color:rgba(255,255,255,0.6); margin-bottom:16px;">The AI has drafted a daily timeline built around your chronotype. Adjust anchors before activating.</p>
             
             <div id="rhyDraftSlotsContainer" class="rhy-timeline" style="margin-bottom:24px;">
               <!-- Populated via Javascript -->
+            </div>
+
+            <div id="rhyDraftSuggestionsArea" style="display:none; margin-bottom:24px;">
+              <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; color:#fff; margin-bottom:12px; letter-spacing:0.05em;">Add when you're ready</h3>
+              <div id="rhyDraftSuggestionsContainer" style="display:flex; flex-direction:column; gap:12px;">
+                <!-- Suggestions populated via JS -->
+              </div>
             </div>
 
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
@@ -2516,6 +2523,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <!-- Populated dynamically via Javascript: morning, midday, afternoon, evening windows -->
             </div>
 
+            <!-- Add Anchor Card -->
+            <div style="text-align:center;">
+              <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.openAddSlotModal()" style="width:100%; border:1px dashed rgba(255,255,255,0.15); color:var(--lime); padding:14px; border-radius:12px; font-weight:700; font-size:12px;">+ Add an anchor</button>
+            </div>
+
             <!-- Footer Utilities Card -->
             <div class="rhy-card" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:16px 20px;">
               <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.copyIcsLink()" style="width:auto; padding:8px 16px; font-size:11px; height:auto; min-height:auto;">
@@ -2524,6 +2536,77 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.restartAssessment()" style="width:auto; padding:8px 16px; font-size:11px; height:auto; min-height:auto; border-color:transparent; color:rgba(255,255,255,0.45);">
                 Retake Assessment &rarr;
               </button>
+            </div>
+          </div>
+
+          <!-- ═══ ADD / EDIT RHYTHM SLOT MODAL ═══ -->
+          <div class="claim-modal-overlay" id="rhySlotEditModal" style="z-index:10000;">
+            <div class="claim-modal" style="position:relative; max-width:480px; width:100%;">
+              <div class="claim-modal-glow"></div>
+              <button class="claim-modal-close" onclick="RHYTHM_BUILDER.closeEditSlotModal()">&times;</button>
+              <div class="claim-modal-body" style="text-align:left;">
+                <div id="rhyModalTitle" class="claim-modal-bundle" style="font-size:20px; line-height:1.2; margin-bottom:16px; color:#fff;">Edit Anchor</div>
+                
+                <input type="hidden" id="rhyEditSlotId" value="">
+                
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Title</label>
+                    <input type="text" id="rhyEditTitle" class="wa-input" style="width:100%; margin-top:4px;" placeholder="e.g. Morning walk">
+                  </div>
+                  
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Category (Domain)</label>
+                    <select id="rhyEditDomain" class="wa-input" style="width:100%; margin-top:4px; background:#0e1013;">
+                      <option value="custom">Custom</option>
+                      <option value="supplement">Supplement</option>
+                      <option value="scripture">Scripture</option>
+                      <option value="prayer">Prayer</option>
+                      <option value="family">Family</option>
+                      <option value="movement">Movement</option>
+                      <option value="rest">Rest</option>
+                      <option value="work">Work</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Cue Type</label>
+                    <div style="display:flex; gap:8px; margin-top:4px;">
+                      <button id="rhyCueTypeTime" onclick="RHYTHM_BUILDER.setEditCueType('time')" style="flex:1; padding:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; font-weight:700; cursor:pointer;">Clock Time</button>
+                      <button id="rhyCueTypeStack" onclick="RHYTHM_BUILDER.setEditCueType('stack')" style="flex:1; padding:10px; border:1px solid rgba(255,255,255,0.1); background:none; color:rgba(255,255,255,0.5); border-radius:8px; font-weight:700; cursor:pointer;">Routine Stack</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label id="rhyEditCueValueLabel" style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Cue Value</label>
+                    <input type="time" id="rhyEditCueValueTime" class="wa-input" style="width:100%; margin-top:4px;">
+                    <input type="text" id="rhyEditCueValueStack" class="wa-input" style="width:100%; margin-top:4px; display:none;" placeholder="e.g. after morning cup">
+                  </div>
+
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">If-Then Plan</label>
+                    <textarea id="rhyEditIfThen" class="wa-input" style="width:100%; margin-top:4px; min-height:60px; line-height:1.5;" placeholder="When [cue], then I will [action]..."></textarea>
+                  </div>
+
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700; display:block; margin-bottom:6px;">Active Days</label>
+                    <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center;">
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="1"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">M</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="2"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">T</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="4"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">W</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="8"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">T</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="16"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">F</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="32"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">S</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="64"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">S</div></label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;">
+                  <button id="rhyEditDeleteBtn" class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.deleteSlot()" style="border-color:#ff6b6b; color:#ff6b6b; padding:10px; font-size:12px; height:auto; min-height:auto; width:auto;">Remove</button>
+                  <button class="rhy-btn-lime" onclick="RHYTHM_BUILDER.saveSlot()" style="flex:1; padding:12px; font-size:12px; height:auto; min-height:auto;">Save Anchor</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -19753,6 +19836,12 @@ async function loadAndInit(){
         });
         const d = await res.json();
         
+        // Update subhead invite text
+        const subheadEl = document.getElementById('rhyDraftSubhead');
+        if (subheadEl) {
+          subheadEl.textContent = d.invite || "The AI has drafted a daily timeline built around your chronotype. Adjust anchors before activating.";
+        }
+
         const container = document.getElementById('rhyDraftSlotsContainer');
         container.innerHTML = '';
 
@@ -19763,21 +19852,90 @@ async function loadAndInit(){
           slots.forEach(s => {
             const timeStr = s.cue_type === 'time' ? s.cue_value : s.time_window || 'daily';
             const recLabel = s.product_key && !s.active ? ' <span style="font-size:10px; background:rgba(204,255,0,0.1); color:var(--lime); padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:700;">Suggested</span>' : '';
+            const whyHtml = s.why ? `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${s.why}</div>` : '';
             container.innerHTML += `
               <div class="rhy-slot">
                 <div class="rhy-slot-details">
                   <div class="rhy-slot-time">${timeStr}${recLabel}</div>
                   <div class="rhy-slot-title">${s.title}</div>
                   <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                  ${whyHtml}
                 </div>
               </div>
             `;
           });
         }
+
+        // Render suggestions area
+        const sugArea = document.getElementById('rhyDraftSuggestionsArea');
+        const sugContainer = document.getElementById('rhyDraftSuggestionsContainer');
+        if (sugArea && sugContainer) {
+          const suggestions = d.suggestions || [];
+          if (suggestions.length > 0) {
+            sugArea.style.display = 'block';
+            let sugHtml = '';
+            suggestions.forEach(sug => {
+              const sugEscaped = JSON.stringify(sug).replace(/"/g, '&quot;');
+              sugHtml += `
+                <div class="rhy-slot-suggestion" onclick="RHYTHM_BUILDER.addSuggestion(${sugEscaped}, '${d.pending_draft_id}')" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; cursor:pointer; transition:all 0.2s;">
+                  <div style="flex:1;">
+                    <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:2px; letter-spacing:0.04em;">${sug.time_window || 'Daily'} suggestion</div>
+                    <div style="font-size:14px; font-weight:700; color:#fff;">${sug.title}</div>
+                    ${sug.why ? `<div style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:4px;">${sug.why}</div>` : ''}
+                  </div>
+                  <div style="font-size:18px; color:var(--lime); margin-left:12px; font-weight:700;">+</div>
+                </div>
+              `;
+            });
+            sugContainer.innerHTML = sugHtml;
+          } else {
+            sugArea.style.display = 'none';
+          }
+        }
+
         this.showScreen('Draft');
       } catch (e) {
         console.error('[Rhythm] loadDraft failed:', e);
         this.showScreen('Threshold');
+      }
+    },
+
+    async addSuggestion(s, planId) {
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const payload = {
+          action: 'add',
+          plan_id: planId,
+          title: s.title,
+          domain: s.domain || 'custom',
+          cue_type: s.cue_type || 'time',
+          cue_value: s.cue_value || '',
+          if_then_text: s.if_then_text || '',
+          time_window: s.time_window || 'morning',
+          day_mask: s.day_mask || 127,
+          duration_min: s.duration_min || 10,
+          product_key: s.product_key || null,
+          why: s.why || null
+        };
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          if (res.status === 409) {
+            this.showToast(errData.message || 'Too many active slots (limit 14). Remove one first.');
+          } else {
+            throw new Error(errData.message || 'Add suggestion failed');
+          }
+          return;
+        }
+        await this.loadDraft();
+      } catch (e) {
+        console.error('[Rhythm] addSuggestion failed:', e);
+        alert(e.message || 'Failed to add suggested slot.');
       }
     },
 
@@ -19864,13 +20022,21 @@ async function loadAndInit(){
             </div>
           ` : '';
 
+          const whyHtml = s.why ? `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${s.why}${s.origin === 'steward' ? ' <span style="font-size:9px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); padding:1px 4px; border-radius:3px; margin-left:4px; vertical-align:middle; text-transform:uppercase;">yours</span>' : ''}</div>` : '';
+
           slotHtml += `
-            <div class="rhy-slot">
-              <div class="rhy-slot-details">
+            <div class="rhy-slot" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <div class="rhy-slot-details" style="flex:1;">
                 <div class="rhy-slot-time">${timeStr}</div>
                 <div class="rhy-slot-title">${s.title}</div>
                 <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                ${whyHtml}
                 ${suggestAction}
+              </div>
+              <button class="rhy-slot-edit-btn" onclick="event.stopPropagation(); RHYTHM_BUILDER.openEditSlotModal('${s.id}')" style="background:none; border:none; color:rgba(255,255,255,0.45); padding:8px; font-size:14px; cursor:pointer; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">✏️</button>
+              <div style="display:flex; flex-direction:column; gap:2px; align-items:center; justify-content:center; width:30px;">
+                <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'up')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:20px; width:24px; display:flex; align-items:center; justify-content:center;">▲</button>
+                <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'down')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:20px; width:24px; display:flex; align-items:center; justify-content:center;">▼</button>
               </div>
               <div class="rhy-slot-checkbox ${checkboxClass}" onclick="RHYTHM_BUILDER.toggleCheckin('${s.id}', '${s.today_status}')"></div>
             </div>
@@ -19937,6 +20103,219 @@ async function loadAndInit(){
           });
         }
       } catch (e) {}
+    },
+
+    openAddSlotModal() {
+      document.getElementById('rhyModalTitle').textContent = 'Add Anchor';
+      document.getElementById('rhyEditSlotId').value = '';
+      document.getElementById('rhyEditTitle').value = '';
+      document.getElementById('rhyEditDomain').value = 'custom';
+      this.setEditCueType('time');
+      document.getElementById('rhyEditCueValueTime').value = '08:00';
+      document.getElementById('rhyEditCueValueStack').value = '';
+      document.getElementById('rhyEditIfThen').value = '';
+      document.querySelectorAll('.rhy-day-checkbox').forEach(cb => cb.checked = true);
+      document.getElementById('rhyEditDeleteBtn').style.display = 'none';
+      document.getElementById('rhySlotEditModal').classList.add('open');
+    },
+
+    openEditSlotModal(slotId) {
+      const slot = this.state.slots.find(s => s.id === slotId);
+      if (!slot) return;
+      document.getElementById('rhyModalTitle').textContent = 'Edit Anchor';
+      document.getElementById('rhyEditSlotId').value = slotId;
+      document.getElementById('rhyEditTitle').value = slot.title || '';
+      document.getElementById('rhyEditDomain').value = slot.domain || 'custom';
+      this.setEditCueType(slot.cue_type || 'time');
+      if (slot.cue_type === 'time') {
+        document.getElementById('rhyEditCueValueTime').value = slot.cue_value || '';
+      } else {
+        document.getElementById('rhyEditCueValueStack').value = slot.cue_value || '';
+      }
+      document.getElementById('rhyEditIfThen').value = slot.if_then_text || '';
+      const dayMask = slot.day_mask !== undefined ? slot.day_mask : 127;
+      document.querySelectorAll('.rhy-day-checkbox').forEach(cb => {
+        const val = parseInt(cb.value);
+        cb.checked = (dayMask & val) === val;
+      });
+      document.getElementById('rhyEditDeleteBtn').style.display = 'block';
+      this._confirmDelete = false;
+      document.getElementById('rhyEditDeleteBtn').textContent = 'Remove';
+      document.getElementById('rhySlotEditModal').classList.add('open');
+    },
+
+    closeEditSlotModal() {
+      document.getElementById('rhySlotEditModal').classList.remove('open');
+    },
+
+    setEditCueType(type) {
+      this._editCueType = type;
+      const btnTime = document.getElementById('rhyCueTypeTime');
+      const btnStack = document.getElementById('rhyCueTypeStack');
+      const inputTime = document.getElementById('rhyEditCueValueTime');
+      const inputStack = document.getElementById('rhyEditCueValueStack');
+      if (type === 'time') {
+        btnTime.style.background = 'rgba(255,255,255,0.05)';
+        btnTime.style.color = '#fff';
+        btnStack.style.background = 'none';
+        btnStack.style.color = 'rgba(255,255,255,0.5)';
+        inputTime.style.display = 'block';
+        inputStack.style.display = 'none';
+      } else {
+        btnStack.style.background = 'rgba(255,255,255,0.05)';
+        btnStack.style.color = '#fff';
+        btnTime.style.background = 'none';
+        btnTime.style.color = 'rgba(255,255,255,0.5)';
+        inputTime.style.display = 'none';
+        inputStack.style.display = 'block';
+      }
+    },
+
+    async saveSlot() {
+      const slotId = document.getElementById('rhyEditSlotId').value;
+      const title = document.getElementById('rhyEditTitle').value.trim();
+      const domain = document.getElementById('rhyEditDomain').value;
+      const cueType = this._editCueType || 'time';
+      const cueValue = cueType === 'time' 
+        ? document.getElementById('rhyEditCueValueTime').value
+        : document.getElementById('rhyEditCueValueStack').value.trim();
+      const ifThen = document.getElementById('rhyEditIfThen').value.trim();
+      
+      let dayMask = 0;
+      document.querySelectorAll('.rhy-day-checkbox').forEach(cb => {
+        if (cb.checked) dayMask += parseInt(cb.value);
+      });
+
+      if (!title) {
+        alert('Please enter a title.');
+        return;
+      }
+      if (!cueValue) {
+        alert('Please specify a cue value.');
+        return;
+      }
+
+      const payload = {
+        title,
+        domain,
+        cue_type: cueType,
+        cue_value: cueValue,
+        if_then_text: ifThen,
+        day_mask: dayMask
+      };
+
+      const token = await this.getToken();
+      const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+      try {
+        if (slotId) {
+          payload.action = 'update';
+          payload.slot_id = slotId;
+        } else {
+          payload.action = 'add';
+          if (this.state.pendingDraftId && !this.state.activePlan) {
+            payload.plan_id = this.state.pendingDraftId;
+          }
+        }
+
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          if (res.status === 409) {
+            this.showToast(errData.message || 'Limit of 14 anchors reached. Remove one first.');
+          } else {
+            throw new Error(errData.message || 'Failed to save slot');
+          }
+          return;
+        }
+
+        this.closeEditSlotModal();
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] saveSlot failed:', e);
+        alert(e.message || 'Failed to save slot.');
+      }
+    },
+
+    async deleteSlot() {
+      const slotId = document.getElementById('rhyEditSlotId').value;
+      if (!slotId) return;
+
+      if (!this._confirmDelete) {
+        this._confirmDelete = true;
+        document.getElementById('rhyEditDeleteBtn').textContent = 'Confirm Remove?';
+        return;
+      }
+
+      const token = await this.getToken();
+      const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+      try {
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({
+            action: 'delete',
+            slot_id: slotId
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Failed to delete slot');
+        }
+
+        this.closeEditSlotModal();
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] deleteSlot failed:', e);
+        alert(e.message || 'Failed to remove slot.');
+      }
+    },
+
+    async moveSlot(slotId, direction) {
+      const slots = this.state.slots;
+      const idx = slots.findIndex(s => s.id === slotId);
+      if (idx === -1) return;
+
+      const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (targetIdx < 0 || targetIdx >= slots.length) return;
+
+      const temp = slots[idx];
+      slots[idx] = slots[targetIdx];
+      slots[targetIdx] = temp;
+
+      const newOrder = slots.map(s => s.id);
+
+      const token = await this.getToken();
+      const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+      try {
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({
+            action: 'reorder',
+            plan_id: slots[0].plan_id,
+            order: newOrder
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Failed to reorder slots');
+        }
+
+        this.renderTimeline();
+      } catch (e) {
+        console.error('[Rhythm] reorder failed:', e);
+        await this.fetchStatus();
+      }
     },
 
     showToast(msg) {
