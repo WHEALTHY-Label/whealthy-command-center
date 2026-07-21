@@ -1979,6 +1979,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <!-- Section 1 — General -->
       <div class="nav-section-title">General</div>
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
+      <button class="sidebar-item" id="navRhythm" onclick="go('rhythm',this)"><span class="si-dot"></span> My Rhythm</button>
       <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
 
@@ -2055,6 +2056,435 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     </header>
 
     <div class="content-body">
+
+      <!-- ============ RHYTHM BUILDER ============ -->
+      <div id="rhythmView" style="display:none">
+        <style>
+          .rhy-wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+          }
+          .rhy-card {
+            background: #0e1013;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+          .rhy-btn-lime {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #0a0a0a;
+            background: var(--lime);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+          }
+          .rhy-btn-lime:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(204,255,0,0.2);
+          }
+          .rhy-btn-ghost {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.6);
+            background: none;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+          }
+          .rhy-btn-ghost:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+          }
+          .rhy-screen {
+            display: none;
+          }
+          .rhy-screen.active {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+          }
+          /* Option Selector Styles */
+          .rhy-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+          }
+          .rhy-option {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+          }
+          .rhy-option:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.15);
+          }
+          .rhy-option.active {
+            background: rgba(204,255,0,0.06);
+            border-color: var(--lime);
+            color: #fff;
+          }
+          /* Timeline Slots */
+          .rhy-window-title {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--lime);
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 4px;
+          }
+          .rhy-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+          }
+          .rhy-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+          .rhy-slot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            transition: all 0.2s;
+          }
+          .rhy-slot:hover {
+            border-color: rgba(255,255,255,0.12);
+          }
+          .rhy-slot-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            flex: 1;
+          }
+          .rhy-slot-time {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+          }
+          .rhy-slot-title {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+          }
+          .rhy-slot-ifthen {
+            font-size: 13px;
+            color: rgba(240,241,243,0.5);
+            font-style: italic;
+          }
+          .rhy-slot-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+          }
+          .rhy-slot-checkbox:hover {
+            border-color: var(--lime);
+          }
+          .rhy-slot-checkbox.done {
+            background: var(--lime);
+            border-color: var(--lime);
+          }
+          .rhy-slot-checkbox.done::after {
+            content: "✓";
+            color: #0a0a0a;
+            font-size: 14px;
+            font-weight: 700;
+          }
+          .rhy-slot-checkbox.grace {
+            border-style: dashed;
+            border-color: var(--lime);
+            background: rgba(204,255,0,0.05);
+          }
+          .rhy-slot-checkbox.grace::after {
+            content: "G";
+            color: var(--lime);
+            font-size: 11px;
+            font-weight: 700;
+          }
+          /* SVG Drum Loader Animation */
+          .rhy-drum-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 48px 24px;
+          }
+          .rhy-drum-svg {
+            width: 80px;
+            height: 80px;
+          }
+          .rhy-drum-shell {
+            fill: #16181d;
+            stroke: rgba(255,255,255,0.12);
+            stroke-width: 3;
+          }
+          .rhy-drum-head {
+            fill: rgba(255,255,255,0.04);
+            stroke: var(--lime);
+            stroke-width: 3;
+            animation: rhyBeatPulse 1.2s infinite ease-in-out;
+          }
+          .rhy-drumstick-left {
+            transform-origin: 20px 20px;
+            stroke: var(--lime);
+            stroke-width: 3.5;
+            animation: rhyStickLeft 1.2s infinite ease-in-out;
+          }
+          .rhy-drumstick-right {
+            transform-origin: 60px 20px;
+            stroke: var(--lime);
+            stroke-width: 3.5;
+            animation: rhyStickRight 1.2s infinite ease-in-out;
+          }
+          @keyframes rhyBeatPulse {
+            0%, 100% { transform: scale(1); }
+            45% { transform: scale(1.05); }
+            50% { transform: scale(0.95); }
+          }
+          @keyframes rhyStickLeft {
+            0%, 100% { transform: rotate(0deg); }
+            45% { transform: rotate(-35deg); }
+            50% { transform: rotate(5deg); }
+          }
+          @keyframes rhyStickRight {
+            0%, 100% { transform: rotate(0deg); }
+            45% { transform: rotate(35deg); }
+            50% { transform: rotate(-5deg); }
+          }
+          .rhy-progress-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 14px;
+          }
+          .rhy-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+          }
+          .rhy-dot.active {
+            background: var(--lime);
+            box-shadow: 0 0 8px var(--lime);
+          }
+          .rhy-dot.done {
+            background: var(--lime);
+          }
+          .rhy-dot.graced {
+            border: 1.5px dashed var(--lime);
+            background: none;
+          }
+          .rhy-dot.missed {
+            background: rgba(255,255,255,0.04);
+          }
+          .rhy-form-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 12px;
+            align-items: center;
+          }
+          .rhy-form-label {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+          }
+          .rhy-input-time {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            color: #fff;
+            padding: 8px 12px;
+            font-size: 14px;
+            outline: none;
+          }
+        </style>
+
+        <div class="rhy-wrap">
+          
+          <!-- SCREEN 1: Threshold -->
+          <div id="rhyScreenThreshold" class="rhy-screen rhy-card" style="text-align:center; padding:48px 24px;">
+            <div style="font-size:48px; margin-bottom:16px;">⏳</div>
+            <h2 style="font-family:var(--font-display); font-size:22px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#f0f1f3; margin-bottom:12px;">First, your season</h2>
+            <p class="g-body" style="max-width:480px; margin:0 auto 24px; color:rgba(255,255,255,0.6); line-height:1.6;">A rhythm that fits you has to be built on you. Take the 3-minute Genius Quiz so we know your season, then we build it together.</p>
+            <div style="max-width:320px; margin:0 auto; width:100%;">
+              <button class="rhy-btn-lime" onclick="go('tryall')">Begin Assessment</button>
+            </div>
+            <div style="margin-top:32px; font-size:12px; color:rgba(255,255,255,0.25); font-style:italic; font-family:var(--font-display);">
+              "Let all things be done decently and in order." &mdash; 1 Corinthians 14:40
+            </div>
+          </div>
+
+          <!-- SCREEN 2: Assessment Stepper -->
+          <div id="rhyScreenAssess" class="rhy-screen rhy-card">
+            <!-- Progress Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:12px;">
+              <span id="rhyStepTitle" style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em;">Step 1 of 8</span>
+              <span id="rhyStepIndicator" style="font-size:12px; color:rgba(255,255,255,0.4);">Chronotype Setup</span>
+            </div>
+
+            <!-- Steps Content Containers -->
+            <div id="rhyStepContent">
+              <!-- Rendered Dynamically via Javascript -->
+            </div>
+
+            <!-- Stepper Actions -->
+            <div style="display:flex; gap:12px; justify-content:space-between; margin-top:20px;">
+              <button id="btnRhyPrev" class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.prevStep()" style="display:none; max-width:120px;">Back</button>
+              <button id="btnRhyNext" class="rhy-btn-lime" onclick="RHYTHM_BUILDER.nextStep()">Continue</button>
+            </div>
+          </div>
+
+          <!-- SCREEN 3: Draft Review / Timeline Approval -->
+          <div id="rhyScreenDraft" class="rhy-screen rhy-card">
+            <h2 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:#fff;">Review Your Draft Rhythm</h2>
+            <p class="g-body" style="color:rgba(255,255,255,0.6); margin-bottom:16px;">The AI has drafted a 5-6 slot daily timeline built around your chronotype. Adjust times, stack cues, or toggle slots before activating.</p>
+            
+            <div id="rhyDraftSlotsContainer" class="rhy-timeline" style="margin-bottom:24px;">
+              <!-- Populated via Javascript -->
+            </div>
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button class="rhy-btn-lime" onclick="RHYTHM_BUILDER.activatePlan()" style="flex:1;">Activate My Rhythm</button>
+              <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.restartAssessment()" style="max-width:180px;">Retake Quiz</button>
+            </div>
+          </div>
+
+          <!-- SCREEN 4: Active Daily timeline -->
+          <div id="rhyScreenTimeline" class="rhy-screen" style="display:none; flex-direction:column; gap:20px;">
+            
+            <!-- Timeline Status Header Card -->
+            <div class="rhy-card" style="display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;">
+              <div>
+                <h2 style="font-family:var(--font-display); font-size:22px; font-weight:700; color:#fff; text-transform:uppercase; margin-bottom:6px;">My Daily Rhythm</h2>
+                <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+                  <span id="rhyConsistencyBadge" style="font-size:13px; color:rgba(255,255,255,0.7); display:flex; align-items:center; gap:6px;">
+                    🌱 <strong id="rhyConsistencyText" style="color:var(--lime);">0 days</strong> consistency
+                  </span>
+                  <span id="rhyAdherenceBadge" style="font-size:13px; color:rgba(255,255,255,0.7); display:flex; align-items:center; gap:6px;">
+                    📈 <strong id="rhyAdherenceText" style="color:var(--lime);">0%</strong> 30d adherence
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Circular Progress Rings -->
+              <div style="position:relative; width:64px; height:64px; display:flex; align-items:center; justify-content:center;">
+                <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg);">
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/>
+                  <circle id="rhyTimelineProgressRing" cx="32" cy="32" r="28" fill="none" stroke="var(--lime)" stroke-width="4" stroke-dasharray="175.9" stroke-dashoffset="175.9" style="transition:stroke-dashoffset 0.35s;"/>
+                </svg>
+                <div id="rhyTimelineProgressPct" style="position:absolute; font-family:var(--font-display); font-size:12px; font-weight:700; color:#fff;">0%</div>
+              </div>
+            </div>
+
+            <!-- Seven-Dot Week Row Card -->
+            <div class="rhy-card" style="padding:16px 20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.4); letter-spacing:0.05em;">Weekly Overview</span>
+                <span id="rhyTimelineLiturgicalMessage" style="font-size:12px; color:rgba(255,255,255,0.65);">The rhythm holds.</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:8px; text-align:center;">
+                <div><div class="rhy-dot" id="rhyDotMon"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">M</div></div>
+                <div><div class="rhy-dot" id="rhyDotTue"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">T</div></div>
+                <div><div class="rhy-dot" id="rhyDotWed"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">W</div></div>
+                <div><div class="rhy-dot" id="rhyDotThu"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">T</div></div>
+                <div><div class="rhy-dot" id="rhyDotFri"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">F</div></div>
+                <div><div class="rhy-dot" id="rhyDotSat"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">S</div></div>
+                <div><div class="rhy-dot" id="rhyDotSun"></div><div style="font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; font-weight:700;">S</div></div>
+              </div>
+            </div>
+
+            <!-- Slots Timeline Lists -->
+            <div id="rhyTimelineGroups" class="rhy-timeline">
+              <!-- Populated dynamically via Javascript: morning, midday, afternoon, evening windows -->
+            </div>
+
+            <!-- Footer Utilities Card -->
+            <div class="rhy-card" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:16px 20px;">
+              <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.copyIcsLink()" style="width:auto; padding:8px 16px; font-size:11px; height:auto; min-height:auto;">
+                📅 Subscribe to Calendar Feed
+              </button>
+              <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.restartAssessment()" style="width:auto; padding:8px 16px; font-size:11px; height:auto; min-height:auto; border-color:transparent; color:rgba(255,255,255,0.45);">
+                Retake Assessment &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- SCREEN 5: Loader -->
+          <div id="rhyScreenLoader" class="rhy-screen rhy-card" style="text-align:center;">
+            <div class="rhy-drum-loader">
+              <svg class="rhy-drum-svg" viewBox="0 0 80 80">
+                <!-- Drum sticks -->
+                <line class="rhy-drumstick-left" x1="20" y1="20" x2="38" y2="48" stroke-linecap="round"/>
+                <line class="rhy-drumstick-right" x1="60" y1="20" x2="42" y2="48" stroke-linecap="round"/>
+                <!-- Drum body -->
+                <ellipse class="rhy-drum-shell" cx="40" cy="54" rx="22" ry="12"/>
+                <ellipse class="rhy-drum-head" cx="40" cy="46" rx="22" ry="6"/>
+                <!-- Connecting shell lines -->
+                <line x1="18" y1="46" x2="18" y2="54" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+                <line x1="62" y1="46" x2="62" y2="54" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+              </svg>
+              <div id="rhyLoaderText" style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--lime);">Drafting your rhythm...</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       <!-- ============ DASHBOARD ============ -->
       <div id="dashView">
@@ -8961,6 +9391,9 @@ window.saveReflectionJournal = function() {
   const container = document.getElementById('bible_reflectionContainer');
   if (container) container.style.display = 'none';
   
+  if (typeof RHYTHM_BUILDER !== 'undefined' && RHYTHM_BUILDER.fetchStatus) {
+    RHYTHM_BUILDER.fetchStatus();
+  }
   window.triggerWordArrives('reflection');
 };
 
@@ -10747,6 +11180,9 @@ window.MEMBER_ID = MEMBER_ID;
         }
 
         await this.loadLedger();
+        if (typeof RHYTHM_BUILDER !== 'undefined' && RHYTHM_BUILDER.fetchStatus) {
+          RHYTHM_BUILDER.fetchStatus();
+        }
 
       } catch (e) {
         alert(e.message || "An error occurred during submission.");
@@ -12704,8 +13140,8 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   
   // Reset all active/expanded states first
@@ -12742,6 +13178,9 @@ function go(view,el,label){
   } else if(view==='adminAnalytics'){
     document.getElementById('headerLine').textContent='Control Panel';
     if(typeof initControlPanel==='function') initControlPanel();
+  } else if(view==='rhythm'){
+    document.getElementById('headerLine').textContent='My Rhythm';
+    if(typeof initRhythm==='function') initRhythm();
   } else if(view==='bible'){
     document.getElementById('headerLine').textContent='Bible 365';
     if(typeof initBible365==='function'&&!window._bibleInited){window._bibleInited=true;initBible365();}
@@ -17160,7 +17599,7 @@ async function loadAndInit(){
   const bootView = params.get('view');
   const bootPost = params.get('post');
   
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',rhythm:'rhythmView'};
   
   if (bootView === 'wall') {
     const el = document.getElementById('navWall');
@@ -17177,6 +17616,7 @@ async function loadAndInit(){
   } else if (hash && map[hash]) {
     const btnMap = {
       dash: 'navDash',
+      rhythm: 'navRhythm',
       record: 'navRecord',
       fast: 'navFast',
       bible: 'navBible',
@@ -18324,8 +18764,23 @@ async function loadAndInit(){
       var r=await fetch(WHA_URL,{method:'POST',headers:{'content-type':'application/json','Authorization':'Bearer '+token,'apikey':anon,'x-admin-email':email},body:JSON.stringify({range:range,bypass_cache:!!bypass,email:email})});
       if(r.status===401||r.status===403){ whaStatus('Admin access required.'); return null; }
       if(!r.ok) throw new Error('HTTP '+r.status);
+      var d = await r.json();
+      
+      try {
+        var rhyRes = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-rhythm-stats', {
+          method: 'POST',
+          headers: {'content-type':'application/json','Authorization':'Bearer '+token,'apikey':anon,'x-admin-email':email},
+          body: JSON.stringify({range:range,email:email})
+        });
+        if (rhyRes.ok) {
+          d.rhythm = await rhyRes.json();
+        }
+      } catch (e3) {
+        console.warn('Failed to load admin-rhythm-stats:', e3);
+      }
+      
       whaStatus('');
-      return await r.json();
+      return d;
     }catch(e){ whaStatus('Live data unavailable. Check connection, then Refresh.'); return null; }
   }
 
@@ -18500,6 +18955,30 @@ async function loadAndInit(){
       (Array.isArray(e.leaderboard)&&e.leaderboard.length?'<div class="wha-mini" style="margin-top:12px">'+e.leaderboard.map(function(t,i){return '<div class="wha-mrow"><span><b style="color:'+LIME+';min-width:18px;display:inline-block">'+(i+1)+'</b> '+slab(t[0])+'</span><b>'+fmt(t[1])+' days</b></div>';}).join('')+'</div>':''));
     });
 
+    /* ===== RHYTHM ===== */
+    S(function(){
+      var rhy = d.rhythm || {};
+      var morning = rhy.morning_chronotypes || 0;
+      var intermediate = rhy.intermediate_chronotypes || 0;
+      var evening = rhy.evening_chronotypes || 0;
+      var checked = rhy.total_checked_slots || 0;
+      var grace = rhy.total_grace_slots || 0;
+      var missed = rhy.total_missed_slots || 0;
+      var totalSlots = checked + grace + missed;
+      var adherence = totalSlots > 0 ? Math.round((checked + grace) / totalSlots * 100) : 0;
+      
+      return card('Disciplines: Steward Rhythms', grid([
+        kpi('Active Rhythms', fmt(rhy.active_plans || 0), 'activated schedules'),
+        kpi('Morning Type', fmt(morning), 'chronotype assessment'),
+        kpi('Intermediate Type', fmt(intermediate), 'chronotype assessment'),
+        kpi('Evening Type', fmt(evening), 'chronotype assessment'),
+        kpi('Avg Consistency', (rhy.average_consistency || 0) + ' days', 'active streaks'),
+        kpi('Adherence Rate', adherence + '%', 'checked + grace vs missed')
+      ]) + '<div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.45)">' +
+        'Checked: ' + fmt(checked) + ' &middot; Grace: ' + fmt(grace) + ' &middot; Missed: ' + fmt(missed) +
+      '</div>');
+    });
+
     /* ===== QUIZ & FUNNEL ===== */
     S(function(){
       var stages=gpath(d,'funnel.stages',[]);
@@ -18534,8 +19013,7 @@ async function loadAndInit(){
       kpi('Active',fmt(a.active),''),
       kpi('Referred Joins',fmt(a.referred),''),
       kpi('Try Referrals',fmt(a.tryRefs),'')
-    ])+(Array.isArray(a.top)&&a.top.length?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));});
-
+])+(Array.isArray(a.top)&&a.top.length?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));});
     /* ===== STEWARD LOG ===== */
     S(function(){
       var sl=d.stewardLog||[]; if(!sl.length) return '';
@@ -18569,6 +19047,527 @@ async function loadAndInit(){
     try{ hBar(el('whaConsumption'),(dm.consumption||[]).map(function(x){return {name:x[0],value:x[1],color:AMBER};})); }catch(e2){}
     try{ lineChart(el('whaSkoolTrend'),gr.labels||[],[{name:'Skool Posts',color:LIME,fill:'rgba(204,255,0,0.08)',values:cm.postTrend||[]}]); }catch(e2){}
   }
+})();
+
+/* ===== RHYTHM BUILDER JS CONTROLLER ===== */
+(function(){
+  var FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
+  var rmeqAnswers = [0, 0, 0, 0, 0]; // Q1-Q5 answers
+  var currentStep = 1;
+  var totalSteps = 8;
+  var isSubmitting = false;
+
+  window.RHYTHM_BUILDER = {
+    state: {
+      hasQuiz: false,
+      activePlan: null,
+      slots: [],
+      pendingDraftId: null,
+      consistencyDays: 0,
+      adherencePct: 0,
+      icsToken: null,
+      adherenceHistory: []
+    },
+
+    async init() {
+      this.showScreen('Loader');
+      document.getElementById('rhyLoaderText').textContent = 'Loading your rhythm status...';
+      await this.fetchStatus();
+    },
+
+    async fetchStatus() {
+      try {
+        const token = await RHYTHM_BUILDER.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-status`, {
+          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const d = await res.json();
+        
+        this.state.hasQuiz = d.has_quiz;
+        this.state.activePlan = d.active_plan;
+        this.state.slots = d.slots || [];
+        this.state.pendingDraftId = d.pending_draft_id;
+        this.state.consistencyDays = d.consistency_days || 0;
+        this.state.adherencePct = d.adherence_pct || 0;
+        this.state.icsToken = d.ics_token;
+        this.state.adherenceHistory = d.adherence_history || [];
+
+        // Check if there is any custom nudge
+        this.pollNudges();
+
+        if (!this.state.hasQuiz) {
+          this.showScreen('Threshold');
+        } else if (this.state.activePlan) {
+          this.renderTimeline();
+          this.showScreen('Timeline');
+        } else if (this.state.pendingDraftId) {
+          await this.loadDraft();
+        } else {
+          this.startAssessment();
+        }
+      } catch (e) {
+        console.error('[Rhythm] fetchStatus failed:', e);
+        this.showScreen('Threshold');
+      }
+    },
+
+    async getToken() {
+      try {
+        if (typeof sb !== 'undefined' && sb) {
+          var s = await sb.auth.getSession();
+          if (s && s.data && s.data.session) return s.data.session.access_token;
+        }
+      } catch(e){}
+      return '';
+    },
+
+    showScreen(name) {
+      document.querySelectorAll('#rhythmView .rhy-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('rhyScreen' + name);
+      if (target) target.classList.add('active');
+    },
+
+    startAssessment() {
+      currentStep = 1;
+      rmeqAnswers = [0, 0, 0, 0, 0];
+      this.renderStep();
+      this.showScreen('Assess');
+    },
+
+    restartAssessment() {
+      if (confirm('Are you sure you want to retake the assessment? This will archive your active rhythm.')) {
+        this.startAssessment();
+      }
+    },
+
+    renderStep() {
+      const content = document.getElementById('rhyStepContent');
+      const title = document.getElementById('rhyStepTitle');
+      const indicator = document.getElementById('rhyStepIndicator');
+      const btnPrev = document.getElementById('btnRhyPrev');
+      
+      btnPrev.style.display = currentStep > 1 ? 'inline-flex' : 'none';
+      title.textContent = `Step ${currentStep} of ${totalSteps}`;
+
+      let html = '';
+      if (currentStep === 1) {
+        indicator.textContent = 'Wake Time Preference';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q1. Approximately what time would you get up if you were entirely free to plan your day?</h3>
+          <div class="rhy-options">
+            <div class="rhy-option ${rmeqAnswers[0]===5?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 5, this)">5:00 - 6:30 am</div>
+            <div class="rhy-option ${rmeqAnswers[0]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 4, this)">6:30 - 7:45 am</div>
+            <div class="rhy-option ${rmeqAnswers[0]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 3, this)">7:45 - 9:45 am</div>
+            <div class="rhy-option ${rmeqAnswers[0]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 2, this)">9:45 - 11:00 am</div>
+            <div class="rhy-option ${rmeqAnswers[0]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 1, this)">11:00 am - 12:00 noon</div>
+          </div>
+        `;
+      } else if (currentStep === 2) {
+        indicator.textContent = 'Morning Fatigue';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q2. During the first half hour after you wake up in the morning, how tired do you feel?</h3>
+          <div class="rhy-options">
+            <div class="rhy-option ${rmeqAnswers[1]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 1, this)">Very tired</div>
+            <div class="rhy-option ${rmeqAnswers[1]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 2, this)">Fairly tired</div>
+            <div class="rhy-option ${rmeqAnswers[1]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 3, this)">Fairly refreshed</div>
+            <div class="rhy-option ${rmeqAnswers[1]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 4, this)">Very refreshed</div>
+          </div>
+        `;
+      } else if (currentStep === 3) {
+        indicator.textContent = 'Bedtime Preference';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q3. At what time in the evening do you feel tired and, as a result, in need of sleep?</h3>
+          <div class="rhy-options">
+            <div class="rhy-option ${rmeqAnswers[2]===5?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 5, this)">8:00 - 9:00 pm</div>
+            <div class="rhy-option ${rmeqAnswers[2]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 4, this)">9:00 - 10:15 pm</div>
+            <div class="rhy-option ${rmeqAnswers[2]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 3, this)">10:15 pm - 12:45 am</div>
+            <div class="rhy-option ${rmeqAnswers[2]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 2, this)">12:45 - 2:00 am</div>
+            <div class="rhy-option ${rmeqAnswers[2]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 1, this)">2:00 - 3:00 am</div>
+          </div>
+        `;
+      } else if (currentStep === 4) {
+        indicator.textContent = 'Peak Performance';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q4. At what time of day do you feel your best?</h3>
+          <div class="rhy-options">
+            <div class="rhy-option ${rmeqAnswers[3]===5?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 5, this)">5:00 - 8:00 am</div>
+            <div class="rhy-option ${rmeqAnswers[3]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 4, this)">8:00 - 10:00 am</div>
+            <div class="rhy-option ${rmeqAnswers[3]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 3, this)">10:00 am - 5:00 pm</div>
+            <div class="rhy-option ${rmeqAnswers[3]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 2, this)">5:00 - 10:00 pm</div>
+            <div class="rhy-option ${rmeqAnswers[3]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 1, this)">10:00 pm - 5:00 am</div>
+          </div>
+        `;
+      } else if (currentStep === 5) {
+        indicator.textContent = 'Self Assessment';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q5. One hears about "morning types" and "evening types." Which do you consider yourself to be?</h3>
+          <div class="rhy-options">
+            <div class="rhy-option ${rmeqAnswers[4]===6?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 6, this)">Definitely a morning type</div>
+            <div class="rhy-option ${rmeqAnswers[4]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 4, this)">Rather more a morning type than an evening type</div>
+            <div class="rhy-option ${rmeqAnswers[4]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 2, this)">Rather more an evening type than a morning type</div>
+            <div class="rhy-option ${rmeqAnswers[4]===0?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 0, this)">Definitely an evening type</div>
+          </div>
+        `;
+      } else if (currentStep === 6) {
+        indicator.textContent = 'Bedtime & Wake Bounds';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Clock Timing</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">We use these clock times to map your product suggestions and schedule safety windows.</p>
+          <div class="rhy-form-grid">
+            <div class="rhy-form-label">Typical Wake</div>
+            <input type="time" id="rhyWakeTime" class="rhy-input-time" value="06:30">
+            
+            <div class="rhy-form-label">Typical Sleep</div>
+            <input type="time" id="rhySleepTime" class="rhy-input-time" value="22:30">
+          </div>
+        `;
+      } else if (currentStep === 7) {
+        indicator.textContent = 'Work Blocks';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Steward Work Hours</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Protecting your work block allows the AI to avoid recommending tasks during deep focus.</p>
+          <div class="rhy-form-grid">
+            <div class="rhy-form-label">Work Start</div>
+            <input type="time" id="rhyWorkStart" class="rhy-input-time" value="09:00">
+            
+            <div class="rhy-form-label">Work End</div>
+            <input type="time" id="rhyWorkEnd" class="rhy-input-time" value="17:00">
+          </div>
+          <div style="margin-top:16px; display:flex; gap:10px; align-items:center;">
+            <input type="checkbox" id="rhyWorkRemote" style="width:18px; height:18px; cursor:pointer;" checked>
+            <span style="font-size:13px; color:rgba(255,255,255,0.85);">I primarily work remotely / from home</span>
+          </div>
+        `;
+      } else if (currentStep === 8) {
+        indicator.textContent = 'Preferences & Fasting';
+        html = `
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Fasting Preference</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Opting in places fasting slots on your schedule to track adherence automatically.</p>
+          <div style="display:flex; gap:10px; align-items:center; margin-bottom:20px;">
+            <input type="checkbox" id="rhyFastingOptIn" style="width:18px; height:18px; cursor:pointer;">
+            <span style="font-size:13px; color:rgba(255,255,255,0.85);">Opt in to Fasting blocks on my rhythm</span>
+          </div>
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Family Anchors</h3>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input type="checkbox" id="rhyFamilyAnchor" style="width:18px; height:18px; cursor:pointer;" checked>
+            <span style="font-size:13px; color:rgba(255,255,255,0.85);">Suggest family/kids focused anchors on my daily timeline</span>
+          </div>
+        `;
+      }
+      content.innerHTML = html;
+    },
+
+    setRmeq(index, val, el) {
+      rmeqAnswers[index] = val;
+      const opts = el.parentNode.querySelectorAll('.rhy-option');
+      opts.forEach(o => o.classList.remove('active'));
+      el.classList.add('active');
+    },
+
+    prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        this.renderStep();
+      }
+    },
+
+    async nextStep() {
+      // Validate step answer before proceeding
+      if (currentStep <= 5 && rmeqAnswers[currentStep-1] === 0) {
+        alert('Please select an option to continue.');
+        return;
+      }
+
+      if (currentStep < totalSteps) {
+        currentStep++;
+        this.renderStep();
+      } else {
+        await this.submitAssessment();
+      }
+    },
+
+    async submitAssessment() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      this.showScreen('Loader');
+      document.getElementById('rhyLoaderText').textContent = 'Analyzing your chronotype...';
+
+      const wake = document.getElementById('rhyWakeTime') ? document.getElementById('rhyWakeTime').value : '06:30';
+      const sleep = document.getElementById('rhySleepTime') ? document.getElementById('rhySleepTime').value : '22:30';
+      const workStart = document.getElementById('rhyWorkStart') ? document.getElementById('rhyWorkStart').value : '09:00';
+      const workEnd = document.getElementById('rhyWorkEnd') ? document.getElementById('rhyWorkEnd').value : '17:00';
+      const workRemote = document.getElementById('rhyWorkRemote') ? document.getElementById('rhyWorkRemote').checked : true;
+      const fastOpt = document.getElementById('rhyFastingOptIn') ? document.getElementById('rhyFastingOptIn').checked : false;
+      const familyAnchor = document.getElementById('rhyFamilyAnchor') ? document.getElementById('rhyFamilyAnchor').checked : true;
+
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+        // 1. Submit Assessment
+        const res = await fetch(`${FN_BASE}/rhythm-assess`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({
+            rmeq_items: rmeqAnswers,
+            wake_time: wake,
+            sleep_time: sleep,
+            work_shape: { start: workStart, end: workEnd, remote: workRemote },
+            fasting_pref: { opt_in: fastOpt },
+            family_anchors: familyAnchor ? [{ type: 'kids', when: 'evening', cadence: 'daily' }] : []
+          })
+        });
+        if (!res.ok) throw new Error('Assessment failed: ' + res.status);
+        const assessData = await res.json();
+
+        // 2. Trigger Build
+        document.getElementById('rhyLoaderText').textContent = 'Drafting your personalized rhythm...';
+        const buildRes = await fetch(`${FN_BASE}/rhythm-build`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ email: window.MEMBER_EMAIL })
+        });
+        if (!buildRes.ok) throw new Error('Build failed: ' + buildRes.status);
+        
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] submitAssessment failed:', e);
+        alert('An issue occurred building your rhythm: ' + e.message);
+        this.startAssessment();
+      } finally {
+        isSubmitting = false;
+      }
+    },
+
+    async loadDraft() {
+      this.showScreen('Loader');
+      document.getElementById('rhyLoaderText').textContent = 'Loading draft plan...';
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-status`, {
+          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
+        });
+        const d = await res.json();
+        
+        const container = document.getElementById('rhyDraftSlotsContainer');
+        container.innerHTML = '';
+
+        const slots = d.slots || [];
+        if (!slots.length) {
+          container.innerHTML = '<div style="color:rgba(255,255,255,0.4); text-align:center; padding:20px;">No draft slots found.</div>';
+        } else {
+          slots.forEach(s => {
+            const timeStr = s.cue_type === 'time' ? s.cue_value : s.time_window || 'daily';
+            const recLabel = s.product_key && !s.active ? ' <span style="font-size:10px; background:rgba(204,255,0,0.1); color:var(--lime); padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:700;">Suggested</span>' : '';
+            container.innerHTML += `
+              <div class="rhy-slot">
+                <div class="rhy-slot-details">
+                  <div class="rhy-slot-time">${timeStr}${recLabel}</div>
+                  <div class="rhy-slot-title">${s.title}</div>
+                  <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                </div>
+              </div>
+            `;
+          });
+        }
+        this.showScreen('Draft');
+      } catch (e) {
+        console.error('[Rhythm] loadDraft failed:', e);
+        this.showScreen('Threshold');
+      }
+    },
+
+    async activatePlan() {
+      this.showScreen('Loader');
+      document.getElementById('rhyLoaderText').textContent = 'Activating your daily rhythm...';
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-activate`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ plan_id: this.state.pendingDraftId })
+        });
+        if (!res.ok) throw new Error('Activation failed: ' + res.status);
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] activatePlan failed:', e);
+        alert('Failed to activate rhythm.');
+        this.showScreen('Draft');
+      }
+    },
+
+    renderTimeline() {
+      const container = document.getElementById('rhyTimelineGroups');
+      container.innerHTML = '';
+
+      // Update consistency counter and progress badge
+      document.getElementById('rhyConsistencyText').textContent = `${this.state.consistencyDays} day${this.state.consistencyDays === 1 ? '' : 's'}`;
+      document.getElementById('rhyAdherenceText').textContent = `${this.state.adherencePct}%`;
+      document.getElementById('rhyTimelineProgressPct').textContent = `${this.state.adherencePct}%`;
+
+      // Update progress rings
+      const circle = document.getElementById('rhyTimelineProgressRing');
+      if (circle) {
+        const pct = Math.min(100, Math.max(0, this.state.adherencePct));
+        const offset = 175.9 - (175.9 * pct) / 100;
+        circle.style.strokeDashoffset = offset;
+      }
+
+      // Render 7-dot overview
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      days.forEach((day, index) => {
+        const dot = document.getElementById('rhyDot' + day);
+        if (dot) {
+          dot.className = 'rhy-dot';
+          const h = this.state.adherenceHistory[index]; // object { status: 'done'|'grace'|'missed'|'none' }
+          if (h) {
+            if (h.status === 'done') dot.classList.add('done');
+            else if (h.status === 'grace') dot.classList.add('graced');
+            else if (h.status === 'missed') dot.classList.add('missed');
+          }
+        }
+      });
+
+      // Group slots by window
+      const windows = {
+        morning: [],
+        midday: [],
+        afternoon: [],
+        evening: []
+      };
+
+      this.state.slots.forEach(s => {
+        const win = s.time_window || 'morning';
+        if (windows[win]) windows[win].push(s);
+      });
+
+      Object.keys(windows).forEach(winKey => {
+        const arr = windows[winKey];
+        if (!arr.length) return;
+
+        let slotHtml = '';
+        arr.forEach(s => {
+          const isDone = s.today_status === 'done';
+          const isGrace = s.today_status === 'grace';
+          const checkboxClass = isDone ? 'done' : isGrace ? 'grace' : '';
+          const timeStr = s.cue_type === 'time' ? s.cue_value : s.time_window || 'daily';
+
+          // Suggestion alert for unclaimed products
+          const suggestAction = (s.product_key && s.today_status === 'none') ? `
+            <div style="font-size:12px; margin-top:8px; color:rgba(255,255,255,0.45);">
+              Your slot is open. <a href="#" onclick="go('claim'); return false;" style="color:var(--lime); font-weight:700;">Claim product supply &rarr;</a>
+            </div>
+          ` : '';
+
+          slotHtml += `
+            <div class="rhy-slot">
+              <div class="rhy-slot-details">
+                <div class="rhy-slot-time">${timeStr}</div>
+                <div class="rhy-slot-title">${s.title}</div>
+                <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                ${suggestAction}
+              </div>
+              <div class="rhy-slot-checkbox ${checkboxClass}" onclick="RHYTHM_BUILDER.toggleCheckin('${s.id}', '${s.today_status}')"></div>
+            </div>
+          `;
+        });
+
+        container.innerHTML += `
+          <div>
+            <div class="rhy-window-title">${winKey}</div>
+            <div class="rhy-slots">${slotHtml}</div>
+          </div>
+        `;
+      });
+    },
+
+    async toggleCheckin(slotId, curStatus) {
+      const nextStatus = curStatus === 'done' ? 'skipped' : 'done';
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const today = new Date().toISOString().split('T')[0];
+
+        const res = await fetch(`${FN_BASE}/rhythm-checkin`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({
+            slot_id: slotId,
+            date: today,
+            status: nextStatus,
+            source: 'manual'
+          })
+        });
+        if (!res.ok) throw new Error('Checkin failed: ' + res.status);
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] toggleCheckin failed:', e);
+      }
+    },
+
+    copyIcsLink() {
+      if (!this.state.icsToken) return;
+      const link = `${FN_BASE}/rhythm-feed?token=${this.state.icsToken}`;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('Calendar feed link copied to clipboard! Paste it into your calendar application settings.');
+      }).catch(e => {
+        alert('Link: ' + link);
+      });
+    },
+
+    async pollNudges() {
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-nudge-check`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ email: window.MEMBER_EMAIL })
+        });
+        if (!res.ok) return;
+        const d = await res.json();
+        if (d && d.nudges && d.nudges.length > 0) {
+          d.nudges.forEach(n => {
+            this.showToast(n.message || 'Time for your scheduled discipline.');
+          });
+        }
+      } catch (e) {}
+    },
+
+    showToast(msg) {
+      const toast = document.createElement('div');
+      toast.style.position = 'fixed';
+      toast.style.bottom = '24px';
+      toast.style.right = '24px';
+      toast.style.background = '#0e1013';
+      toast.style.border = '1px solid var(--lime)';
+      toast.style.borderRadius = '12px';
+      toast.style.padding = '16px 20px';
+      toast.style.color = '#fff';
+      toast.style.fontSize = '13.5px';
+      toast.style.zIndex = '9999';
+      toast.style.boxShadow = '0 8px 24px rgba(0,0,0,0.5)';
+      toast.style.maxWidth = '320px';
+      toast.style.lineHeight = '1.5';
+      toast.textContent = msg;
+
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.5s';
+        setTimeout(() => toast.remove(), 500);
+      }, 5000);
+    }
+  };
+
+  window.initRhythm = function() {
+    RHYTHM_BUILDER.init();
+  };
 })();
 </script>
 </body>
