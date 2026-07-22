@@ -1643,6 +1643,60 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     transform: translateY(0);
   }
 }
+/* ============ ORDER CARDS (Product Portal) ============ */
+.orders-section{max-width:680px;margin:0 auto;padding:0 16px}
+.orders-section__title{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.orders-section__title span{font-size:22px}
+.order-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;transition:border-color var(--transition)}
+.order-card:hover{border-color:var(--border-mid)}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.order-number{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.04em;color:var(--text)}
+.order-pill{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;line-height:1}
+.order-pill--preparing{background:rgba(255,255,255,0.08);color:var(--text-dim)}
+.order-pill--shipped{background:var(--lime);color:#080809}
+.order-pill--financial{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.04em;padding:3px 8px;border-radius:12px;background:rgba(255,179,0,0.12);color:var(--amber);margin-left:6px}
+.order-items{border-top:1px solid var(--border);padding-top:12px;margin-bottom:12px}
+.order-item-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:6px 0;font-family:var(--font-body);font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5}
+.order-item-row .order-item-title{flex:1;min-width:0}
+.order-item-row .order-item-qty{color:var(--text-dim);white-space:nowrap}
+.order-item-row .order-item-price{color:var(--text-muted);white-space:nowrap;text-align:right;min-width:60px}
+.order-total-row{display:flex;justify-content:space-between;padding:10px 0 0;border-top:1px solid var(--border);font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--text)}
+.order-total-row .order-total-amount{color:var(--lime)}
+.order-meta{font-family:var(--font-body);font-size:12px;color:var(--text-dim);margin-top:10px}
+.order-tracking{margin-top:14px;padding:14px 16px;background:rgba(204,255,0,0.04);border:1px solid rgba(204,255,0,0.15);border-radius:12px}
+.order-tracking__carrier{font-family:var(--font-body);font-size:12px;color:var(--text-muted);margin-bottom:4px}
+.order-tracking__number{font-family:var(--font-body);font-size:13px;color:var(--text);word-break:break-all;margin-bottom:10px}
+.order-tracking__date{font-family:var(--font-body);font-size:11px;color:var(--text-dim);margin-top:8px}
+.order-track-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--lime);color:#080809;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:8px;border:none;cursor:pointer;transition:transform var(--transition),box-shadow var(--transition)}
+.order-track-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(204,255,0,0.3)}
+.orders-loading{text-align:center;padding:40px 0}
+.orders-loading__dots{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+.orders-loading__dot{width:8px;height:8px;border-radius:50%;background:var(--lime);opacity:0.3;animation:orderPulse 1.2s ease-in-out infinite}
+.orders-loading__dot:nth-child(2){animation-delay:0.2s}
+.orders-loading__dot:nth-child(3){animation-delay:0.4s}
+@keyframes orderPulse{0%,80%,100%{opacity:0.3;transform:scale(1)}40%{opacity:1;transform:scale(1.2)}}
+.orders-loading__text{font-family:var(--font-body);font-size:13px;color:var(--text-dim)}
+.orders-empty{text-align:center;padding:48px 24px}
+.orders-empty__icon{font-size:40px;margin-bottom:12px;opacity:0.6}
+.orders-empty__text{font-family:var(--font-body);font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:400px;margin:0 auto}
+.orders-empty__link{color:var(--lime);text-decoration:none;font-weight:600}
+.orders-empty__link:hover{text-decoration:underline}
+.orders-error{text-align:center;padding:40px 24px}
+.orders-error__text{font-family:var(--font-body);font-size:14px;color:rgba(255,255,255,0.45);line-height:1.6}
+.order-billing-link{display:block;text-align:center;margin-top:24px;padding:20px;background:var(--glass);border:1px solid var(--border);border-radius:14px;transition:border-color var(--transition)}
+.order-billing-link:hover{border-color:var(--border-mid)}
+.order-billing-link__text{font-family:var(--font-body);font-size:13px;color:var(--text-muted);margin-bottom:10px}
+.order-billing-link__btn{color:var(--lime);font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+.order-billing-link__btn:hover{text-decoration:underline}
+@media(max-width:600px){
+  .orders-section{padding:0 12px}
+  .order-card{padding:16px}
+  .order-header{flex-direction:column;align-items:flex-start;gap:6px}
+  .order-item-row{flex-wrap:wrap}
+  .order-item-row .order-item-price{width:100%;text-align:left;padding-left:0;margin-top:2px}
+  .order-track-btn{width:100%;justify-content:center;padding:14px 20px;font-size:14px}
+  .order-tracking{padding:12px}
+}
 </style>
 </head>
 <body>
@@ -1974,7 +2028,27 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         The Steward's Rhythm is built for members of the WHEALTHY Stewards community. Step inside and it all opens up &mdash; your rhythm, the Word, the prayer wall, and your <span id="joinDiscountPct">10</span>% member code.
       </div>
       <button class="claim-modal-btn" onclick="joinStewardsSkool()" style="width:100%; margin-bottom:12px;">JOIN THE STEWARDS</button>
+      <div style="font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:16px; text-align:center;">
+        Already joined Skool?
+        <a href="#" onclick="requestAccessFromJoinPopup(); return false;" style="color:var(--lime); font-weight:700; text-decoration:none;">Request your access &rarr;</a>
+      </div>
       <button class="claim-modal-dismiss" onclick="closeJoinPopup()">Already a member? Use the email tied to your community account.</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PENDING REGISTRATION POPUP MODAL ═══ -->
+<div class="claim-modal-overlay" id="pendingModal">
+  <div class="claim-modal" style="position:relative">
+    <div class="claim-modal-glow"></div>
+    <div class="claim-modal-body">
+      <div class="claim-modal-icon">⌛</div>
+      <div class="claim-modal-title" style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--lime); margin-bottom:8px;">WHEALTHY / STEWARDS</div>
+      <div class="claim-modal-bundle" style="font-size:22px; line-height:1.2; margin-bottom:12px; color:#fff;">You're on the list.</div>
+      <div class="claim-modal-text" id="pendingModalText" style="font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.7); margin-bottom:24px;">
+        Your request is in. We review new stewards within 24 hours, and you'll get access once you're approved.
+      </div>
+      <button class="claim-modal-btn" onclick="closePendingModal()" style="width:100%;">CLOSE</button>
     </div>
   </div>
 </div>
@@ -2435,10 +2509,17 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <!-- SCREEN 3: Draft Review / Timeline Approval -->
           <div id="rhyScreenDraft" class="rhy-screen rhy-card">
             <h2 style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:#fff;">Review Your Draft Rhythm</h2>
-            <p class="g-body" style="color:rgba(255,255,255,0.6); margin-bottom:16px;">The AI has drafted a 5-6 slot daily timeline built around your chronotype. Adjust times, stack cues, or toggle slots before activating.</p>
+            <p id="rhyDraftSubhead" class="g-body" style="color:rgba(255,255,255,0.6); margin-bottom:16px;">The AI has drafted a daily timeline built around your chronotype. Adjust anchors before activating.</p>
             
             <div id="rhyDraftSlotsContainer" class="rhy-timeline" style="margin-bottom:24px;">
               <!-- Populated via Javascript -->
+            </div>
+
+            <div id="rhyDraftSuggestionsArea" style="display:none; margin-bottom:24px;">
+              <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; color:#fff; margin-bottom:12px; letter-spacing:0.05em;">Add when you're ready</h3>
+              <div id="rhyDraftSuggestionsContainer" style="display:flex; flex-direction:column; gap:12px;">
+                <!-- Suggestions populated via JS -->
+              </div>
             </div>
 
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
@@ -2448,7 +2529,47 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           </div>
 
           <!-- SCREEN 4: Active Daily timeline -->
-          <div id="rhyScreenTimeline" class="rhy-screen" style="display:none; flex-direction:column; gap:20px;">
+          <div id="rhyScreenTimeline" class="rhy-screen" style="flex-direction:column; gap:20px;">
+
+            <!-- Fresh-Start Moment Card (Sun/Mon only) -->
+            <div id="rhyFreshStartCard" style="display:none; background:linear-gradient(135deg, rgba(204,255,0,0.06) 0%, rgba(204,255,0,0.02) 100%); border:1px solid rgba(204,255,0,0.15); border-radius:14px; padding:16px 20px; position:relative;">
+              <button onclick="RHYTHM_BUILDER.dismissFreshStart()" style="position:absolute; top:10px; right:12px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:16px; cursor:pointer; padding:4px;">&times;</button>
+              <div style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:6px;">New Week</div>
+              <div id="rhyFreshStartLine" style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; margin-bottom:4px;"></div>
+              <div id="rhyFreshStartReflection" style="font-size:12px; color:rgba(255,255,255,0.45);"></div>
+            </div>
+
+            <!-- Season Strip -->
+            <div id="rhySeasonStrip" style="display:none;">
+              <!-- Active season: progress bar -->
+              <div id="rhySeasonActive" style="display:none; background:#0e1013; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-family:var(--font-display); font-size:13px; font-weight:700; color:#fff;"><span id="rhySeasonDayLabel">Day 1 of 40</span></span>
+                    <span id="rhySeasonCohortNote" style="font-size:10px; color:rgba(255,255,255,0.4); display:none;">with your cohort</span>
+                  </div>
+                  <span id="rhySeasonDaysLeft" style="font-size:11px; color:rgba(255,255,255,0.45);"></span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+                  <div id="rhySeasonProgressBar" style="height:100%; background:var(--lime); border-radius:3px; transition:width 0.4s;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                  <span id="rhySeasonLabel" style="font-size:12px; color:rgba(255,255,255,0.5);"></span>
+                  <button id="rhySeasonEndBtn" onclick="RHYTHM_BUILDER.endSeason()" style="display:none; background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; text-decoration:underline;">End season</button>
+                </div>
+              </div>
+              <!-- Completed season: celebration -->
+              <div id="rhySeasonCompleted" style="display:none; background:linear-gradient(135deg, rgba(204,255,0,0.08) 0%, rgba(204,255,0,0.02) 100%); border:1px solid rgba(204,255,0,0.2); border-radius:14px; padding:16px 20px; text-align:center;">
+                <div style="font-size:20px; margin-bottom:6px;">🏆</div>
+                <div id="rhySeasonCompletedText" style="font-size:14px; font-weight:700; color:#fff;"></div>
+              </div>
+              <!-- No season: commit prompt -->
+              <div id="rhySeasonPrompt" style="display:none; background:#0e1013; border:1px dashed rgba(255,255,255,0.1); border-radius:14px; padding:16px 20px; text-align:center;">
+                <div style="font-size:14px; color:rgba(255,255,255,0.7); margin-bottom:12px;">Hold your rhythm for a season</div>
+                <div id="rhySeasonOptions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;"></div>
+              </div>
+            </div>
+
             
             <!-- Timeline Status Header Card -->
             <div class="rhy-card" style="display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;">
@@ -2496,6 +2617,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <!-- Populated dynamically via Javascript: morning, midday, afternoon, evening windows -->
             </div>
 
+            <!-- Add Anchor Card -->
+            <div style="text-align:center;">
+              <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.openAddSlotModal()" style="width:100%; border:1px dashed rgba(255,255,255,0.15); color:var(--lime); padding:14px; border-radius:12px; font-weight:700; font-size:12px;">+ Add an anchor</button>
+            </div>
+
             <!-- Footer Utilities Card -->
             <div class="rhy-card" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:16px 20px;">
               <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.copyIcsLink()" style="width:auto; padding:8px 16px; font-size:11px; height:auto; min-height:auto;">
@@ -2504,6 +2630,77 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <button class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.restartAssessment()" style="width:auto; padding:8px 16px; font-size:11px; height:auto; min-height:auto; border-color:transparent; color:rgba(255,255,255,0.45);">
                 Retake Assessment &rarr;
               </button>
+            </div>
+          </div>
+
+          <!-- ═══ ADD / EDIT RHYTHM SLOT MODAL ═══ -->
+          <div class="claim-modal-overlay" id="rhySlotEditModal" style="z-index:10000;">
+            <div class="claim-modal" style="position:relative; max-width:480px; width:100%;">
+              <div class="claim-modal-glow"></div>
+              <button class="claim-modal-close" onclick="RHYTHM_BUILDER.closeEditSlotModal()">&times;</button>
+              <div class="claim-modal-body" style="text-align:left;">
+                <div id="rhyModalTitle" class="claim-modal-bundle" style="font-size:20px; line-height:1.2; margin-bottom:16px; color:#fff;">Edit Anchor</div>
+                
+                <input type="hidden" id="rhyEditSlotId" value="">
+                
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Title</label>
+                    <input type="text" id="rhyEditTitle" class="wa-input" style="width:100%; margin-top:4px;" placeholder="e.g. Morning walk">
+                  </div>
+                  
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Category (Domain)</label>
+                    <select id="rhyEditDomain" class="wa-input" style="width:100%; margin-top:4px; background:#0e1013;">
+                      <option value="custom">Custom</option>
+                      <option value="supplement">Supplement</option>
+                      <option value="scripture">Scripture</option>
+                      <option value="prayer">Prayer</option>
+                      <option value="family">Family</option>
+                      <option value="movement">Movement</option>
+                      <option value="rest">Rest</option>
+                      <option value="work">Work</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Cue Type</label>
+                    <div style="display:flex; gap:8px; margin-top:4px;">
+                      <button id="rhyCueTypeTime" onclick="RHYTHM_BUILDER.setEditCueType('time')" style="flex:1; padding:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; font-weight:700; cursor:pointer;">Clock Time</button>
+                      <button id="rhyCueTypeStack" onclick="RHYTHM_BUILDER.setEditCueType('stack')" style="flex:1; padding:10px; border:1px solid rgba(255,255,255,0.1); background:none; color:rgba(255,255,255,0.5); border-radius:8px; font-weight:700; cursor:pointer;">Routine Stack</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label id="rhyEditCueValueLabel" style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Cue Value</label>
+                    <input type="time" id="rhyEditCueValueTime" class="wa-input" style="width:100%; margin-top:4px;">
+                    <input type="text" id="rhyEditCueValueStack" class="wa-input" style="width:100%; margin-top:4px; display:none;" placeholder="e.g. after morning cup">
+                  </div>
+
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">If-Then Plan</label>
+                    <textarea id="rhyEditIfThen" class="wa-input" style="width:100%; margin-top:4px; min-height:60px; line-height:1.5;" placeholder="When [cue], then I will [action]..."></textarea>
+                  </div>
+
+                  <div>
+                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700; display:block; margin-bottom:6px;">Active Days</label>
+                    <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center;">
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="1"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">M</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="2"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">T</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="4"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">W</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="8"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">T</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="16"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">F</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="32"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">S</div></label>
+                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="64"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">S</div></label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;">
+                  <button id="rhyEditDeleteBtn" class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.deleteSlot()" style="border-color:#ff6b6b; color:#ff6b6b; padding:10px; font-size:12px; height:auto; min-height:auto; width:auto;">Remove</button>
+                  <button class="rhy-btn-lime" onclick="RHYTHM_BUILDER.saveSlot()" style="flex:1; padding:12px; font-size:12px; height:auto; min-height:auto;">Save Anchor</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -8168,14 +8365,49 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <div class="view-header-icon-box">&#128230;</div>
           <div>
             <h1 class="view-header-title" id="portalTitle">Product Portal</h1>
-            <p class="view-header-subtitle" id="portalSubtitle">Manage subscriptions, billing, and orders.</p>
+            <p class="view-header-subtitle" id="portalSubtitle">Your orders, tracking, and billing in one place.</p>
           </div>
         </div>
-        <div class="g-card" style="text-align:center;padding:48px 24px">
-          <div style="font-size:48px;margin-bottom:16px">&#128230;</div>
-          <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#f0f1f3;margin-bottom:8px">Billing &amp; Subscriptions</h2>
-          <p class="g-body" style="max-width:420px;margin:0 auto 24px;color:rgba(255,255,255,0.5);line-height:1.6;">Access your secure billing portal to view active subscriptions, download invoices, update payment methods, and manage delivery schedules.</p>
-          <a href="https://whealthylabel.com/member" target="_blank" class="btn-lime" style="display:inline-flex;text-decoration:none;align-items:center;gap:8px;">Launch Product Portal &rarr;</a>
+
+        <!-- Your Orders Section -->
+        <div class="orders-section" id="ordersSection">
+          <div class="orders-section__title"><span>&#128666;</span> Your Orders</div>
+
+          <!-- Loading state -->
+          <div id="ordersLoading" class="g-card" style="display:none">
+            <div class="orders-loading">
+              <div class="orders-loading__dots">
+                <div class="orders-loading__dot"></div>
+                <div class="orders-loading__dot"></div>
+                <div class="orders-loading__dot"></div>
+              </div>
+              <div class="orders-loading__text">Loading your orders&hellip;</div>
+            </div>
+          </div>
+
+          <!-- Error state -->
+          <div id="ordersError" class="g-card" style="display:none">
+            <div class="orders-error">
+              <div class="orders-error__text">We couldn&rsquo;t load your orders right now. Check back in a moment.</div>
+            </div>
+          </div>
+
+          <!-- Empty state -->
+          <div id="ordersEmpty" class="g-card" style="display:none">
+            <div class="orders-empty">
+              <div class="orders-empty__icon">&#128230;</div>
+              <div class="orders-empty__text">No orders yet. When you order from the label, it shows up here with live tracking. <a href="#tryall" onclick="go('tryall')" class="orders-empty__link">Browse products &rarr;</a></div>
+            </div>
+          </div>
+
+          <!-- Order cards render here -->
+          <div id="ordersList"></div>
+
+          <!-- Billing portal link -->
+          <div class="order-billing-link" id="orderBillingLink" style="display:none">
+            <div class="order-billing-link__text">Manage subscriptions, payment methods, and delivery schedules</div>
+            <a href="https://whealthylabel.com/member" target="_blank" rel="noopener" class="order-billing-link__btn">Launch Billing Portal &rarr;</a>
+          </div>
         </div>
       </div>
 
@@ -8582,6 +8814,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <!-- Tabs Navigation -->
           <div class="admin-nav-bar">
             <button class="admin-nav-btn active" onclick="switchAdminTab('challenge')">Challenge</button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('registrations')" style="position:relative;">
+              Registrations
+              <span id="adminPendingCountBadge" style="display:none; background:var(--lime); color:#000; font-size:10px; font-weight:900; padding:2px 6px; border-radius:10px; margin-left:6px; vertical-align:middle;">0</span>
+            </button>
             <button class="admin-nav-btn" onclick="switchAdminTab('members')">Members</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('moderation')">Moderation</button>
             <button class="admin-nav-btn" onclick="switchAdminTab('settings')">Settings</button>
@@ -8612,6 +8848,30 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 </div>
                 <button class="btn-lime" onclick="submitCreateCohort()" style="margin-top: 8px;">Create Cohort</button>
                 <div id="adminCohortMessage" style="font-size: 13px; margin-top: 8px; text-align: center; display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: REGISTRATIONS -->
+          <div id="adminTabRegistrations" class="admin-tab-content">
+            <div class="g-card" style="margin-bottom: 20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:16px; flex-wrap:wrap;">
+                <h3 class="plan-sec-title" style="margin:0;">Pending Registrations</h3>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Name / Email</th>
+                      <th>Skool Handle</th>
+                      <th>Requested Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminRegistrationsTableBody">
+                    <tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading requests...</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -12184,6 +12444,13 @@ async function waRunGate(emailArg){
     console.warn('[gate] onboarding-state call failed:', e);
   }
 
+  if (onboard && onboard.gate === 'pending') {
+    try { if (sb) await sb.auth.signOut(); } catch(e){}
+    waResetAll();
+    openPendingModal(onboard.message);
+    return;
+  }
+
   if (onboard && (onboard.gate === 'join' || onboard.verified !== true)) {
     try { if (sb) await sb.auth.signOut(); } catch(e){}
     waResetAll();
@@ -12235,6 +12502,7 @@ async function waRunGate(emailArg){
           if (adminBtn) {
             if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
               adminBtn.style.display = 'flex';
+              try { loadAdminRegistrationsCountSilently(); } catch(e){}
             } else {
               adminBtn.style.display = 'none';
             }
@@ -13219,6 +13487,149 @@ window.applyProductExclusions = function() {
   if (chg) chg.style.display = ex.has('Charge') ? 'none' : '';
 };
 
+/* ============ ORDER HISTORY (Product Portal) ============ */
+async function loadMemberOrders() {
+  var loading = document.getElementById('ordersLoading');
+  var error = document.getElementById('ordersError');
+  var empty = document.getElementById('ordersEmpty');
+  var list = document.getElementById('ordersList');
+  var billing = document.getElementById('orderBillingLink');
+  if (!loading || !list) return;
+
+  // Reset states
+  loading.style.display = 'none';
+  error.style.display = 'none';
+  empty.style.display = 'none';
+  list.innerHTML = '';
+  if (billing) billing.style.display = 'none';
+
+  var email = MEMBER_EMAIL || '';
+  if (!email) {
+    empty.style.display = 'block';
+    return;
+  }
+
+  loading.style.display = 'block';
+
+  try {
+    var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email));
+    var data = await res.json();
+    loading.style.display = 'none';
+
+    if (!res.ok || !data.ok) {
+      error.style.display = 'block';
+      return;
+    }
+
+    if (!data.orders || data.count === 0) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    // Render order cards
+    var html = '';
+    data.orders.forEach(function(order) {
+      // Fulfillment pill
+      var fStatus = order.fulfillment_status;
+      var pillClass = (fStatus === 'fulfilled') ? 'order-pill--shipped' : 'order-pill--preparing';
+      var pillLabel = (fStatus === 'fulfilled') ? 'Shipped' : 'Preparing';
+
+      // Financial badge (only show if not "paid")
+      var finBadge = '';
+      if (order.financial_status && order.financial_status !== 'paid') {
+        var finLabel = order.financial_status.replace(/_/g, ' ');
+        finLabel = finLabel.charAt(0).toUpperCase() + finLabel.slice(1);
+        finBadge = '<span class="order-pill--financial">' + finLabel + '</span>';
+      }
+
+      // Line items
+      var itemsHtml = '';
+      if (order.line_items && order.line_items.length) {
+        order.line_items.forEach(function(item) {
+          var title = item.title || 'Item';
+          var variant = item.variant ? ' — ' + item.variant : '';
+          var qty = item.quantity || 1;
+          var price = item.price ? formatOrderCurrency(parseFloat(item.price), order.currency) : '';
+          itemsHtml += '<div class="order-item-row">' +
+            '<div class="order-item-title">' + escOrderHtml(title + variant) + '</div>' +
+            (qty > 1 ? '<div class="order-item-qty">&times;' + qty + '</div>' : '') +
+            '<div class="order-item-price">' + price + '</div>' +
+            '</div>';
+        });
+      }
+
+      // Total
+      var totalFormatted = formatOrderCurrency(order.total_price, order.currency);
+
+      // Ordered date
+      var orderedDate = order.ordered_at ? formatOrderDate(order.ordered_at) : '';
+
+      // Tracking block
+      var trackingHtml = '';
+      if (order.tracking_url) {
+        var carrier = order.tracking_company || 'Carrier';
+        var trackNum = order.tracking_number || '';
+        var shippedDate = order.fulfilled_at ? formatOrderDate(order.fulfilled_at) : '';
+        trackingHtml = '<div class="order-tracking">' +
+          '<div class="order-tracking__carrier">' + escOrderHtml(carrier) + '</div>' +
+          (trackNum ? '<div class="order-tracking__number">' + escOrderHtml(trackNum) + '</div>' : '') +
+          '<a href="' + escOrderAttr(order.tracking_url) + '" target="_blank" rel="noopener" class="order-track-btn">Track Shipment &rarr;</a>' +
+          (shippedDate ? '<div class="order-tracking__date">Shipped ' + shippedDate + '</div>' : '') +
+          '</div>';
+      }
+
+      html += '<div class="order-card">' +
+        '<div class="order-header">' +
+          '<div class="order-number">' + escOrderHtml(order.order_number || '') + '</div>' +
+          '<div><span class="order-pill ' + pillClass + '">' + pillLabel + '</span>' + finBadge + '</div>' +
+        '</div>' +
+        '<div class="order-items">' + itemsHtml + '</div>' +
+        '<div class="order-total-row">' +
+          '<span>Total</span>' +
+          '<span class="order-total-amount">' + totalFormatted + '</span>' +
+        '</div>' +
+        (orderedDate ? '<div class="order-meta">Ordered ' + orderedDate + '</div>' : '') +
+        trackingHtml +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+    if (billing) billing.style.display = 'block';
+
+  } catch (e) {
+    loading.style.display = 'none';
+    error.style.display = 'block';
+  }
+}
+
+function formatOrderCurrency(amount, currency) {
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency: currency || 'USD' }).format(amount);
+  } catch (e) {
+    return '$' + (typeof amount === 'number' ? amount.toFixed(2) : amount);
+  }
+}
+
+function formatOrderDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch (e) {
+    return iso;
+  }
+}
+
+function escOrderHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function escOrderAttr(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+window.loadMemberOrders = loadMemberOrders;
+
 /* ================== NAV ================== */
 function go(view,el,label){
   if ('speechSynthesis' in window) {
@@ -13272,6 +13683,9 @@ function go(view,el,label){
   } else if(['affiliate','community','portal','tryall'].indexOf(view)>=0){
     const labels={affiliate:'Affiliate Links',community:'Community',portal:'Product Portal',tryall:'Try All'};
     document.getElementById('headerLine').textContent=labels[view]||'Module';
+    if(view==='portal'){
+      if(typeof loadMemberOrders==='function') loadMemberOrders();
+    }
     if(view==='tryall'){
       try { loadMemberDiscount(MEMBER_EMAIL); } catch(e) {}
       applyProductExclusions();
@@ -13465,6 +13879,8 @@ async function switchAdminTab(tabName) {
 
   if (tabName === 'members') {
     await loadAdminMembers();
+  } else if (tabName === 'registrations') {
+    await loadAdminRegistrations();
   } else if (tabName === 'moderation') {
     await loadAdminModeration();
   } else if (tabName === 'settings') {
@@ -13473,6 +13889,148 @@ async function switchAdminTab(tabName) {
     await loadAdminAudit();
   }
 }
+
+async function loadAdminRegistrations() {
+  const tbody = document.getElementById('adminRegistrationsTableBody');
+  if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading requests...</td></tr>`;
+
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-registrations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'list'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const registrations = data.registrations || [];
+      renderAdminRegistrations(registrations);
+      updatePendingCountBadge(data.pending_count);
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">${data.error || 'Failed to load requests.'}</td></tr>`;
+    }
+  } catch (e) {
+    console.error(e);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff6b6b;">Network error.</td></tr>`;
+  }
+}
+window.loadAdminRegistrations = loadAdminRegistrations;
+
+function renderAdminRegistrations(registrations) {
+  const tbody = document.getElementById('adminRegistrationsTableBody');
+  if (!tbody) return;
+  if (!registrations || registrations.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">No pending registrations.</td></tr>`;
+    return;
+  }
+  let html = '';
+  registrations.forEach(r => {
+    const nameStr = r.name ? r.name : 'Unknown';
+    const emailStr = r.email || '';
+    const handleStr = r.skool_handle || 'N/A';
+    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString() : 'N/A';
+    html += `
+      <tr>
+        <td>
+          <div style="font-weight:700; color:#fff;">${nameStr}</div>
+          <div style="font-size:12px; color:rgba(255,255,255,0.5);">${emailStr}</div>
+        </td>
+        <td style="color:rgba(255,255,255,0.85);">${handleStr}</td>
+        <td style="color:rgba(255,255,255,0.6);">${dateStr}</td>
+        <td>
+          <div style="display:flex; gap:8px;">
+            <button class="admin-action-btn btn-lime-small" onclick="handleRegistrationAction('${r.id}', 'approve', this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:4px; cursor:pointer;">Approve</button>
+            <button class="admin-action-btn btn-danger-small" onclick="handleRegistrationAction('${r.id}', 'reject', this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:4px; cursor:pointer; background:#e74c3c; border:none; color:#fff;">Reject</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+window.renderAdminRegistrations = renderAdminRegistrations;
+
+async function handleRegistrationAction(id, action, btnEl) {
+  if (btnEl) btnEl.disabled = true;
+  const originalText = btnEl ? btnEl.textContent : '';
+  if (btnEl) btnEl.textContent = action === 'approve' ? 'Approving...' : 'Rejecting...';
+
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-registrations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: action,
+        id: id
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      await loadAdminRegistrations();
+    } else {
+      alert(data.error || `Failed to ${action} registration.`);
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = originalText;
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    alert(`Network error during ${action} registration.`);
+    if (btnEl) {
+      btnEl.disabled = false;
+      btnEl.textContent = originalText;
+    }
+  }
+}
+window.handleRegistrationAction = handleRegistrationAction;
+
+function updatePendingCountBadge(count) {
+  const badge = document.getElementById('adminPendingCountBadge');
+  if (!badge) return;
+  if (count && count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+window.updatePendingCountBadge = updatePendingCountBadge;
+
+async function loadAdminRegistrationsCountSilently() {
+  const token = await getAdminToken();
+  try {
+    const res = await fetch(FN_BASE + '/admin-registrations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        action: 'list'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      updatePendingCountBadge(data.pending_count);
+    }
+  } catch (e) {
+    console.warn('Failed to silently fetch registration count:', e);
+  }
+}
+window.loadAdminRegistrationsCountSilently = loadAdminRegistrationsCountSilently;
 
 async function loadAdminMembers() {
   const tbody = document.getElementById('adminMembersTableBody');
@@ -16699,6 +17257,8 @@ async function checkClaimModal(){
         openClaimModal();
       } else if (d.gate === 'join') {
         openJoinPopup(d.skool_url, d.discount_pct);
+      } else if (d.gate === 'pending') {
+        openPendingModal(d.message);
       }
     }, 1500);
   } catch (e) {
@@ -16706,6 +17266,56 @@ async function checkClaimModal(){
   }
 }
 window.checkClaimModal = checkClaimModal;
+
+window.openPendingModal = function(msg) {
+  const modal = document.getElementById('pendingModal');
+  const textEl = document.getElementById('pendingModalText');
+  if (textEl && msg) {
+    textEl.textContent = msg;
+  }
+  if (modal) modal.classList.add('open');
+};
+
+window.closePendingModal = function() {
+  const modal = document.getElementById('pendingModal');
+  if (modal) modal.classList.remove('open');
+};
+
+window.requestAccessFromJoinPopup = async function() {
+  const emailInput = document.getElementById('waEmail');
+  const email = (emailInput && emailInput.value || localStorage.getItem('wh_steward_email') || '').trim().toLowerCase();
+  
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    alert("Please enter a valid email address first.");
+    return;
+  }
+
+  const payload = { email };
+  if (typeof waState !== 'undefined' && waState.profile) {
+    if (waState.profile.name) payload.name = waState.profile.name;
+    if (waState.profile.handle) payload.skool_handle = waState.profile.handle;
+  } else if (typeof waState !== 'undefined' && waState.handle) {
+    payload.skool_handle = waState.handle;
+  }
+
+  try {
+    const res = await fetch(FN_BASE + '/request-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const d = await res.json();
+    if (res.ok && d.ok) {
+      closeJoinPopup();
+      openPendingModal(d.message);
+    } else {
+      alert(d.error || d.message || "Failed to request access. Please try again.");
+    }
+  } catch (e) {
+    console.error("Failed to request access:", e);
+    alert("Failed to request access. Check your connection.");
+  }
+};
 
 function renderClaimView(){
   var nameEl=document.getElementById('claimViewBundleName');
@@ -19218,8 +19828,9 @@ async function loadAndInit(){
 
     async init() {
       this.showScreen('Loader');
-      document.getElementById('rhyLoaderText').textContent = 'Loading your rhythm status...';
-      await this.fetchStatus();
+      var _lt = document.getElementById('rhyLoaderText'); if(_lt) _lt.textContent = 'Loading your rhythm status...';
+      try { await this.fetchStatus(); } catch(e){ console.warn('[Rhythm] init', e); }
+      if (!document.querySelector('#rhythmView .rhy-screen.active')) this.startAssessment();
     },
 
     async fetchStatus() {
@@ -19240,6 +19851,8 @@ async function loadAndInit(){
         this.state.adherencePct = d.adherence_pct || 0;
         this.state.icsToken = d.ics_token;
         this.state.adherenceHistory = d.adherence_history || [];
+        this.state.season = d.season || null;
+        this.state.freshStart = d.fresh_start || null;
 
         // Check if there is any custom nudge
         this.pollNudges();
@@ -19248,6 +19861,8 @@ async function loadAndInit(){
           this.showScreen('Threshold');
         } else if (this.state.activePlan) {
           this.renderTimeline();
+          this.renderSeason();
+          this.renderFreshStart();
           this.showScreen('Timeline');
         } else if (this.state.pendingDraftId) {
           await this.loadDraft();
@@ -19500,6 +20115,12 @@ async function loadAndInit(){
         });
         const d = await res.json();
         
+        // Update subhead invite text
+        const subheadEl = document.getElementById('rhyDraftSubhead');
+        if (subheadEl) {
+          subheadEl.textContent = d.invite || "The AI has drafted a daily timeline built around your chronotype. Adjust anchors before activating.";
+        }
+
         const container = document.getElementById('rhyDraftSlotsContainer');
         container.innerHTML = '';
 
@@ -19510,21 +20131,90 @@ async function loadAndInit(){
           slots.forEach(s => {
             const timeStr = s.cue_type === 'time' ? s.cue_value : s.time_window || 'daily';
             const recLabel = s.product_key && !s.active ? ' <span style="font-size:10px; background:rgba(204,255,0,0.1); color:var(--lime); padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:700;">Suggested</span>' : '';
+            const whyHtml = s.why ? `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${s.why}</div>` : '';
             container.innerHTML += `
               <div class="rhy-slot">
                 <div class="rhy-slot-details">
                   <div class="rhy-slot-time">${timeStr}${recLabel}</div>
                   <div class="rhy-slot-title">${s.title}</div>
                   <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                  ${whyHtml}
                 </div>
               </div>
             `;
           });
         }
+
+        // Render suggestions area
+        const sugArea = document.getElementById('rhyDraftSuggestionsArea');
+        const sugContainer = document.getElementById('rhyDraftSuggestionsContainer');
+        if (sugArea && sugContainer) {
+          const suggestions = d.suggestions || [];
+          if (suggestions.length > 0) {
+            sugArea.style.display = 'block';
+            let sugHtml = '';
+            suggestions.forEach(sug => {
+              const sugEscaped = JSON.stringify(sug).replace(/"/g, '&quot;');
+              sugHtml += `
+                <div class="rhy-slot-suggestion" onclick="RHYTHM_BUILDER.addSuggestion(${sugEscaped}, '${d.pending_draft_id}')" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; cursor:pointer; transition:all 0.2s;">
+                  <div style="flex:1;">
+                    <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:2px; letter-spacing:0.04em;">${sug.time_window || 'Daily'} suggestion</div>
+                    <div style="font-size:14px; font-weight:700; color:#fff;">${sug.title}</div>
+                    ${sug.why ? `<div style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:4px;">${sug.why}</div>` : ''}
+                  </div>
+                  <div style="font-size:18px; color:var(--lime); margin-left:12px; font-weight:700;">+</div>
+                </div>
+              `;
+            });
+            sugContainer.innerHTML = sugHtml;
+          } else {
+            sugArea.style.display = 'none';
+          }
+        }
+
         this.showScreen('Draft');
       } catch (e) {
         console.error('[Rhythm] loadDraft failed:', e);
         this.showScreen('Threshold');
+      }
+    },
+
+    async addSuggestion(s, planId) {
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const payload = {
+          action: 'add',
+          plan_id: planId,
+          title: s.title,
+          domain: s.domain || 'custom',
+          cue_type: s.cue_type || 'time',
+          cue_value: s.cue_value || '',
+          if_then_text: s.if_then_text || '',
+          time_window: s.time_window || 'morning',
+          day_mask: s.day_mask || 127,
+          duration_min: s.duration_min || 10,
+          product_key: s.product_key || null,
+          why: s.why || null
+        };
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          if (res.status === 409) {
+            this.showToast(errData.message || 'Too many active slots (limit 14). Remove one first.');
+          } else {
+            throw new Error(errData.message || 'Add suggestion failed');
+          }
+          return;
+        }
+        await this.loadDraft();
+      } catch (e) {
+        console.error('[Rhythm] addSuggestion failed:', e);
+        alert(e.message || 'Failed to add suggested slot.');
       }
     },
 
@@ -19611,13 +20301,21 @@ async function loadAndInit(){
             </div>
           ` : '';
 
+          const whyHtml = s.why ? `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${s.why}${s.origin === 'steward' ? ' <span style="font-size:9px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); padding:1px 4px; border-radius:3px; margin-left:4px; vertical-align:middle; text-transform:uppercase;">yours</span>' : ''}</div>` : '';
+
           slotHtml += `
-            <div class="rhy-slot">
-              <div class="rhy-slot-details">
+            <div class="rhy-slot" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <div class="rhy-slot-details" style="flex:1;">
                 <div class="rhy-slot-time">${timeStr}</div>
                 <div class="rhy-slot-title">${s.title}</div>
                 <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                ${whyHtml}
                 ${suggestAction}
+              </div>
+              <button class="rhy-slot-edit-btn" onclick="event.stopPropagation(); RHYTHM_BUILDER.openEditSlotModal('${s.id}')" style="background:none; border:none; color:rgba(255,255,255,0.45); padding:8px; font-size:14px; cursor:pointer; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">✏️</button>
+              <div style="display:flex; flex-direction:column; gap:2px; align-items:center; justify-content:center; width:30px;">
+                <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'up')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:20px; width:24px; display:flex; align-items:center; justify-content:center;">▲</button>
+                <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'down')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:20px; width:24px; display:flex; align-items:center; justify-content:center;">▼</button>
               </div>
               <div class="rhy-slot-checkbox ${checkboxClass}" onclick="RHYTHM_BUILDER.toggleCheckin('${s.id}', '${s.today_status}')"></div>
             </div>
@@ -19680,10 +20378,335 @@ async function loadAndInit(){
         const d = await res.json();
         if (d && d.nudges && d.nudges.length > 0) {
           d.nudges.forEach(n => {
+            // Suppress fresh_start toast when the card is visible
+            if (n.type === 'fresh_start' && !this.state._freshStartDismissed && this.state.freshStart && this.state.freshStart.show) return;
             this.showToast(n.message || 'Time for your scheduled discipline.');
           });
         }
       } catch (e) {}
+    },
+
+    renderSeason() {
+      const strip = document.getElementById('rhySeasonStrip');
+      const activeEl = document.getElementById('rhySeasonActive');
+      const completedEl = document.getElementById('rhySeasonCompleted');
+      const promptEl = document.getElementById('rhySeasonPrompt');
+      if (!strip) return;
+
+      const s = this.state.season;
+      activeEl.style.display = 'none';
+      completedEl.style.display = 'none';
+      promptEl.style.display = 'none';
+
+      if (!s) { strip.style.display = 'none'; return; }
+      strip.style.display = 'block';
+
+      if (s.source && s.completed) {
+        completedEl.style.display = 'block';
+        document.getElementById('rhySeasonCompletedText').textContent = `You finished your ${s.total}-day season. Well carried.`;
+      } else if (s.source) {
+        activeEl.style.display = 'block';
+        document.getElementById('rhySeasonDayLabel').textContent = `Day ${s.day} of ${s.total}`;
+        document.getElementById('rhySeasonDaysLeft').textContent = `${s.days_left} day${s.days_left === 1 ? '' : 's'} left`;
+        const pct = Math.min(100, Math.round((s.day / s.total) * 100));
+        document.getElementById('rhySeasonProgressBar').style.width = pct + '%';
+        document.getElementById('rhySeasonLabel').textContent = s.label || '';
+        const cohortNote = document.getElementById('rhySeasonCohortNote');
+        cohortNote.style.display = s.cohort_id ? 'inline' : 'none';
+        const endBtn = document.getElementById('rhySeasonEndBtn');
+        endBtn.style.display = s.source === 'rhythm' ? 'inline' : 'none';
+      } else if (s.can_commit) {
+        promptEl.style.display = 'block';
+        const optContainer = document.getElementById('rhySeasonOptions');
+        optContainer.innerHTML = '';
+        (s.options || [21, 40, 90]).forEach(len => {
+          optContainer.innerHTML += `<button onclick="RHYTHM_BUILDER.commitSeason(${len})" class="rhy-btn-ghost" style="padding:10px 20px; font-size:12px; height:auto; min-height:auto; border-color:rgba(204,255,0,0.3); color:var(--lime);">${len} days</button>`;
+        });
+      } else {
+        strip.style.display = 'none';
+      }
+    },
+
+    renderFreshStart() {
+      const card = document.getElementById('rhyFreshStartCard');
+      if (!card) return;
+      const fs = this.state.freshStart;
+      if (!fs || !fs.show || this.state._freshStartDismissed) {
+        card.style.display = 'none';
+        return;
+      }
+      card.style.display = 'block';
+      document.getElementById('rhyFreshStartLine').textContent = fs.line || 'A new week, a clean page. Carry it well.';
+      const reflection = document.getElementById('rhyFreshStartReflection');
+      if (fs.last_week_done !== undefined) {
+        reflection.textContent = `Last week you held ${fs.last_week_done} anchor${fs.last_week_done === 1 ? '' : 's'} across the week.`;
+      } else if (fs.last_week_adherence !== undefined) {
+        reflection.textContent = `Last week: ${fs.last_week_adherence}% adherence.`;
+      } else {
+        reflection.textContent = '';
+      }
+    },
+
+    dismissFreshStart() {
+      this.state._freshStartDismissed = true;
+      const card = document.getElementById('rhyFreshStartCard');
+      if (card) card.style.display = 'none';
+    },
+
+    async commitSeason(lengthDays) {
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ action: 'commit', length_days: lengthDays })
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          this.showToast(errData.message || 'Could not start season.');
+          return;
+        }
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] commitSeason failed:', e);
+        this.showToast('Could not start season.');
+      }
+    },
+
+    async endSeason() {
+      if (!confirm('End your current rhythm season? Your anchors stay, only the season counter resets.')) return;
+      try {
+        const token = await this.getToken();
+        const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+        const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({ action: 'end' })
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          this.showToast(errData.message || 'Could not end season.');
+          return;
+        }
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] endSeason failed:', e);
+        this.showToast('Could not end season.');
+      }
+    },
+
+    openAddSlotModal() {
+      document.getElementById('rhyModalTitle').textContent = 'Add Anchor';
+      document.getElementById('rhyEditSlotId').value = '';
+      document.getElementById('rhyEditTitle').value = '';
+      document.getElementById('rhyEditDomain').value = 'custom';
+      this.setEditCueType('time');
+      document.getElementById('rhyEditCueValueTime').value = '08:00';
+      document.getElementById('rhyEditCueValueStack').value = '';
+      document.getElementById('rhyEditIfThen').value = '';
+      document.querySelectorAll('.rhy-day-checkbox').forEach(cb => cb.checked = true);
+      document.getElementById('rhyEditDeleteBtn').style.display = 'none';
+      document.getElementById('rhySlotEditModal').classList.add('open');
+    },
+
+    openEditSlotModal(slotId) {
+      const slot = this.state.slots.find(s => s.id === slotId);
+      if (!slot) return;
+      document.getElementById('rhyModalTitle').textContent = 'Edit Anchor';
+      document.getElementById('rhyEditSlotId').value = slotId;
+      document.getElementById('rhyEditTitle').value = slot.title || '';
+      document.getElementById('rhyEditDomain').value = slot.domain || 'custom';
+      this.setEditCueType(slot.cue_type || 'time');
+      if (slot.cue_type === 'time') {
+        document.getElementById('rhyEditCueValueTime').value = slot.cue_value || '';
+      } else {
+        document.getElementById('rhyEditCueValueStack').value = slot.cue_value || '';
+      }
+      document.getElementById('rhyEditIfThen').value = slot.if_then_text || '';
+      const dayMask = slot.day_mask !== undefined ? slot.day_mask : 127;
+      document.querySelectorAll('.rhy-day-checkbox').forEach(cb => {
+        const val = parseInt(cb.value);
+        cb.checked = (dayMask & val) === val;
+      });
+      document.getElementById('rhyEditDeleteBtn').style.display = 'block';
+      this._confirmDelete = false;
+      document.getElementById('rhyEditDeleteBtn').textContent = 'Remove';
+      document.getElementById('rhySlotEditModal').classList.add('open');
+    },
+
+    closeEditSlotModal() {
+      document.getElementById('rhySlotEditModal').classList.remove('open');
+    },
+
+    setEditCueType(type) {
+      this._editCueType = type;
+      const btnTime = document.getElementById('rhyCueTypeTime');
+      const btnStack = document.getElementById('rhyCueTypeStack');
+      const inputTime = document.getElementById('rhyEditCueValueTime');
+      const inputStack = document.getElementById('rhyEditCueValueStack');
+      if (type === 'time') {
+        btnTime.style.background = 'rgba(255,255,255,0.05)';
+        btnTime.style.color = '#fff';
+        btnStack.style.background = 'none';
+        btnStack.style.color = 'rgba(255,255,255,0.5)';
+        inputTime.style.display = 'block';
+        inputStack.style.display = 'none';
+      } else {
+        btnStack.style.background = 'rgba(255,255,255,0.05)';
+        btnStack.style.color = '#fff';
+        btnTime.style.background = 'none';
+        btnTime.style.color = 'rgba(255,255,255,0.5)';
+        inputTime.style.display = 'none';
+        inputStack.style.display = 'block';
+      }
+    },
+
+    async saveSlot() {
+      const slotId = document.getElementById('rhyEditSlotId').value;
+      const title = document.getElementById('rhyEditTitle').value.trim();
+      const domain = document.getElementById('rhyEditDomain').value;
+      const cueType = this._editCueType || 'time';
+      const cueValue = cueType === 'time' 
+        ? document.getElementById('rhyEditCueValueTime').value
+        : document.getElementById('rhyEditCueValueStack').value.trim();
+      const ifThen = document.getElementById('rhyEditIfThen').value.trim();
+      
+      let dayMask = 0;
+      document.querySelectorAll('.rhy-day-checkbox').forEach(cb => {
+        if (cb.checked) dayMask += parseInt(cb.value);
+      });
+
+      if (!title) {
+        alert('Please enter a title.');
+        return;
+      }
+      if (!cueValue) {
+        alert('Please specify a cue value.');
+        return;
+      }
+
+      const payload = {
+        title,
+        domain,
+        cue_type: cueType,
+        cue_value: cueValue,
+        if_then_text: ifThen,
+        day_mask: dayMask
+      };
+
+      const token = await this.getToken();
+      const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+      try {
+        if (slotId) {
+          payload.action = 'update';
+          payload.slot_id = slotId;
+        } else {
+          payload.action = 'add';
+          if (this.state.pendingDraftId && !this.state.activePlan) {
+            payload.plan_id = this.state.pendingDraftId;
+          }
+        }
+
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          if (res.status === 409) {
+            this.showToast(errData.message || 'Limit of 14 anchors reached. Remove one first.');
+          } else {
+            throw new Error(errData.message || 'Failed to save slot');
+          }
+          return;
+        }
+
+        this.closeEditSlotModal();
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] saveSlot failed:', e);
+        alert(e.message || 'Failed to save slot.');
+      }
+    },
+
+    async deleteSlot() {
+      const slotId = document.getElementById('rhyEditSlotId').value;
+      if (!slotId) return;
+
+      if (!this._confirmDelete) {
+        this._confirmDelete = true;
+        document.getElementById('rhyEditDeleteBtn').textContent = 'Confirm Remove?';
+        return;
+      }
+
+      const token = await this.getToken();
+      const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+      try {
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({
+            action: 'delete',
+            slot_id: slotId
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Failed to delete slot');
+        }
+
+        this.closeEditSlotModal();
+        await this.fetchStatus();
+      } catch (e) {
+        console.error('[Rhythm] deleteSlot failed:', e);
+        alert(e.message || 'Failed to remove slot.');
+      }
+    },
+
+    async moveSlot(slotId, direction) {
+      const slots = this.state.slots;
+      const idx = slots.findIndex(s => s.id === slotId);
+      if (idx === -1) return;
+
+      const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (targetIdx < 0 || targetIdx >= slots.length) return;
+
+      const temp = slots[idx];
+      slots[idx] = slots[targetIdx];
+      slots[targetIdx] = temp;
+
+      const newOrder = slots.map(s => s.id);
+
+      const token = await this.getToken();
+      const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
+
+      try {
+        const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          body: JSON.stringify({
+            action: 'reorder',
+            plan_id: slots[0].plan_id,
+            order: newOrder
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Failed to reorder slots');
+        }
+
+        this.renderTimeline();
+      } catch (e) {
+        console.error('[Rhythm] reorder failed:', e);
+        await this.fetchStatus();
+      }
     },
 
     showToast(msg) {
@@ -19715,7 +20738,10 @@ async function loadAndInit(){
   window.initRhythm = function() {
     RHYTHM_BUILDER.init();
   };
+  // Direct load onto #rhythm: the initial route can fire before initRhythm is defined; mount now.
+  if ((location.hash || '').replace('#','') === 'rhythm') { try { RHYTHM_BUILDER.init(); } catch(e){} }
 })();
+
 </script>
 <!-- ===== PAGE HELP + DESCRIPTIONS (Claude) ===== -->
 <style>
@@ -19737,8 +20763,8 @@ async function loadAndInit(){
 <script>
 (function(){
   var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
-  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',portalView:'Manage your orders, subscriptions, and deliveries.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
-  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',portalView:'Update payment, delivery timing, or pause a subscription any time from here.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
+  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',portalView:'Your order history with live tracking and billing.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
+  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',portalView:'Your orders from the label show up here automatically with live tracking. When something ships, you will see the carrier, tracking number, and a link to follow it. Billing and subscription management is at the bottom.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
   window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
   function enhance(){
