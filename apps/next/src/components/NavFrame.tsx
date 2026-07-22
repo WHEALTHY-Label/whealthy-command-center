@@ -1,11 +1,11 @@
 import styles from './NavFrame.module.css';
 
 /**
- * Top-level navigation frame placeholder.
+ * Top-level navigation frame for authenticated members.
  *
  * Mirrors the recovered app's primary sections as labels only. Real routing
- * targets and gating arrive in later slices (auth in Slice 2, the sections
- * themselves in Slices 3-8). Nothing here navigates yet.
+ * targets arrive in later slices (the sections themselves in Slices 3-8).
+ * The sign-out control is live.
  */
 const SECTIONS = ['Dashboard', 'Rhythm', 'Bible', 'Prayer', 'Wall', 'Portal', 'Admin'] as const;
 
@@ -21,9 +21,14 @@ export function NavFrame({ children }: { children: React.ReactNode }) {
             </span>
           ))}
         </nav>
+        <form action="/auth/signout" method="post" className={styles.signout}>
+          <button type="submit" className={styles.signoutButton}>
+            Sign out
+          </button>
+        </form>
       </header>
       <main className={styles.main}>{children}</main>
-      <footer className={styles.footer}>The Steward&rsquo;s Rhythm — migration preview</footer>
+      <footer className={styles.footer}>The Steward&rsquo;s Rhythm, migration preview</footer>
     </div>
   );
 }

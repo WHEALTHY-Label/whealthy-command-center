@@ -38,6 +38,27 @@
   padding: var(--wa-space-1) 0;
 }
 
+.signout {
+  margin-left: auto;
+}
+
+.signoutButton {
+  background: transparent;
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  font-family: var(--wa-font-body);
+  padding: var(--wa-space-1) var(--wa-space-3);
+  cursor: pointer;
+  transition: border-color var(--wa-transition);
+}
+
+.signoutButton:hover {
+  border-color: var(--wa-lime);
+  color: var(--wa-text);
+}
+
 .main {
   flex: 1;
   width: 100%;
