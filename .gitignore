@@ -5,3 +5,7 @@ node_modules/
 .env.*
 .vercel
 .env*
+tools/recovery/node_modules/
+tools/recovery/test-results/
+tools/recovery/playwright-report/
+.recovery-tmp/
