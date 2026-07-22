@@ -8,6 +8,8 @@
 
 **Tech Stack:** Node.js 24, Node built-in test runner, Playwright 1.61.1, static HTML, Git, Vercel project metadata, Supabase MCP/CLI, Deno Edge Functions
 
+**Execution order:** Run tasks by task number (`1` through `8`). Task 2 is intentionally documented after Task 3 so the capture contract remains readable, but its secret scanner must be implemented first.
+
 ## Global Constraints
 
 - Do not change or redeploy the production Vercel project during Slice 0.
@@ -194,7 +196,7 @@ git commit -m "chore(recovery): add production capture tooling"
 
 ---
 
-### Task 2: Capture and Validate the Live Root Application
+### Task 3: Capture and Validate the Live Root Application
 
 **Files:**
 - Create: `tools/recovery/lib/html.mjs`
@@ -332,7 +334,7 @@ Expected: both digests are identical; `git diff --stat` reports the recovered pr
 
 - [ ] **Step 7: Scan and commit the recovered HTML**
 
-Do not stage if the scan finds service-role keys, Stripe secret keys, private keys, or non-publishable API credentials. The scanner is implemented in Task 3 and must pass first.
+Do not stage if the scan finds service-role keys, Stripe secret keys, private keys, or non-publishable API credentials. The scanner is implemented in Task 2 and must pass first.
 
 ```bash
 node tools/recovery/scan-secrets.mjs index.html
@@ -342,7 +344,7 @@ git commit -m "chore(recovery): capture live production HTML"
 
 ---
 
-### Task 3: Add a Blocking Secret Scanner
+### Task 2: Add a Blocking Secret Scanner
 
 **Files:**
 - Create: `tools/recovery/lib/secrets.mjs`
@@ -597,7 +599,6 @@ Run:
 ```bash
 npx supabase --help
 npx supabase db --help
-npx supabase db pull --help
 npx supabase db dump --help
 ```
 
@@ -633,17 +634,13 @@ rg -n "INSERT INTO|COPY auth\.|COPY public\.|service_role_key|sk_live_|sk-ant-" 
 
 Expected: secret scan exits `0`; `rg` prints no rows. Copy the validated file to `supabase/baseline/2026-07-21-public-schema.sql`.
 
-- [ ] **Step 5: Pull the remote schema delta into a named migration**
+- [ ] **Step 5: Preserve known migration source without mutating remote history**
 
-Run:
+Do not run `supabase db pull`, `supabase db push`, `apply_migration`, or any command that writes Supabase migration bookkeeping during recovery.
 
-```bash
-npx supabase db pull recovered_production_schema --linked --yes
-```
+Create `supabase/migrations/20260722001453_harden_public_schema_rls_and_privileges.sql` using the exact SQL recorded in the applied migration review. Confirm its statements match the live policies and grants before staging.
 
-Review the generated SQL before accepting it. It must not drop live objects, insert production data, or recreate managed `auth`/`storage` internals. If the installed CLI rejects a listed flag, stop and reconcile the command against the `--help` output rather than substituting a guessed command.
-
-For the already-applied hardening migration, create `supabase/migrations/20260722001453_harden_public_schema_rls_and_privileges.sql` using the exact SQL recorded in the applied migration review. Confirm its statements match the live policies and grants before staging.
+For every earlier remote migration without a matching local file, keep `status: "missing"` in `migrations.json`. Do not invent historical SQL. The schema-only dump is the authoritative recovered representation of current state; the ledger preserves which historical sources remain unavailable.
 
 - [ ] **Step 6: Verify the reconciled schema against live metadata**
 
