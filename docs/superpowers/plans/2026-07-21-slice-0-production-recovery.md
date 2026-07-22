@@ -961,11 +961,12 @@ git commit -m "docs(recovery): record verified production baseline"
 npm test --prefix tools/recovery
 npm run smoke --prefix tools/recovery
 node tools/recovery/scan-secrets.mjs index.html supabase/functions/*/index.ts supabase/baseline/2026-07-21-public-schema.sql
-git diff slice-0-plan-approved --check
+node tools/recovery/scan-history-secrets.mjs
+node tools/recovery/verify-diff-hygiene.mjs
 git status --short
 ```
 
-Expected: all tests pass, the secret scan exits `0`, diff check exits `0`, and the working tree is clean.
+Expected: all tests pass, both secret scans exit `0` after the clean branch-history rebuild, the hash-aware diff-hygiene verifier exits `0`, and the working tree is clean. The verifier accepts whitespace findings only in manifest-hash-verified `index.html` and byte-exact (`status: "captured"`) Edge Function files; it rejects findings in redacted, generated, tool, and documentation files.
 
 - [ ] **Step 2: Confirm no production mutation occurred**
 

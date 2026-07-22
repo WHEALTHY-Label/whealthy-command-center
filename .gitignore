@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+test-results/
 *.log
 .env
 .env.*
@@ -9,3 +10,4 @@ tools/recovery/node_modules/
 tools/recovery/test-results/
 tools/recovery/playwright-report/
 .recovery-tmp/
+supabase/.temp/

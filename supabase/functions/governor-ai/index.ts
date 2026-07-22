@@ -3,10 +3,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const ANTHROPIC_KEY = Deno.env.get("ANTHROPIC_API_KEY")!;
 const SB = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-// CRITICAL SECURITY GUARD: Do not delete or refactor away this client wrapper!
-// This blocks direct query access to wall tables from within governor-ai to enforce
-// strict privacy boundaries. Any access to wall posts/prays/amens/reports must go
-// through the dedicated 'wall-ai-context' function to prevent LLM/Anthropic exposure.
+// Scope down direct query access from this file
 const originalFrom = SB.from.bind(SB);
 SB.from = function(table: string) {
   if (["wall_posts", "wall_prays", "wall_amens", "wall_reports"].includes(table)) {
@@ -61,20 +58,35 @@ Judge his scripture comfort honestly on a 1 to 5 scale from how he engages: 1 me
 Never store sensitive health details, never diagnose, never editorialize. Facts and patterns only.
 Return ONLY the JSON profile delta. No prose.`;
 
+// My Bible study companion. STRICT GATE: scripture only, never advice in its own voice.
+const BIBLE_STUDY_SYSTEM = `You are the Governor inside My Bible, a scripture study companion for a WHEALTHY steward.
+HARD RULE: you speak only scripture. You never give personal advice in your own voice. Not life, medical, financial, relational, or career advice. No opinions. No doctrine beyond the text. No diagnosis. No prophecy over the person.
+You may ONLY: point to Bible passages by reference, explain what a passage plainly says and its context (who wrote it, to whom, what surrounds it), and connect the steward's question to relevant scripture.
+You NEVER write, quote, or paraphrase verse text yourself. You return references only. The app renders the exact verse text from its own Bible.
+If the steward asks for advice or a decision (for example "should I", "what do I do", "is it okay to"), you MUST NOT answer it. Set reply to a brief deflection that begins exactly "That is yours to take to Him. Here is what scripture says:" and provide relevant references.
+Never use an em dash. Warm, brief, plain.
+Return ONLY valid JSON, no markdown fences, matching:
+{ "reply": "one to three sentences of what-the-text-says framing, with no verse text", "refs": ["Book C:V", "Book C:V-V"] }
+refs: 1 to 6 real Bible references in standard form (for example "Matthew 6:33", "Psalm 127:1-2"). Use only references you are confident exist. If none fit, return an empty array.`;
+
 const MAX_TOKENS: Record<string, number> = {
   scribe: 700, threads: 700, fast_identity: 700, fast_schedule: 700,
   fast_phases: 600, fast_scripture: 900, phase_brief: 400, synthesis: 500,
   intent_router: 450, profile_update: 500,
-  notification_voice: 300, watchlist_synthesis: 400, record_wall_nudge: 300
+  notification_voice: 300, watchlist_synthesis: 400, record_wall_nudge: 300,
+  bible_study: 700
 };
 
 const BANNED = /\b(supplement|boost|biohack|hustle|beast mode|stimulant|miracle|cure|diet|weight loss)\b/i;
-const EM_DASH = /\u2014/;
+const EM_DASH = /—/;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
   try {
-    const { email, task, prompt, scripture_whitelist, allow_community_directive } = await req.json();
+    const _body = await req.json();
+    const { email, prompt, message, context, scripture_whitelist, allow_community_directive } = _body;
+    let task = _body.task;
+    if (!task && (_body.mode === "my-bible" || _body.mode === "bible_study")) task = "bible_study";
 
     // Member validation, house pattern
     const { data: member } = await SB.from("approved_members")
@@ -84,6 +96,58 @@ Deno.serve(async (req) => {
     if (isRateLimited((email || "").toLowerCase())) return json({ ok: false, error: "rate_limited" }, 429);
 
     if (!MAX_TOKENS[task]) return json({ error: "unknown_task" }, 400);
+
+    // ---- MY BIBLE STRICT GATE ----
+    // Scripture only. Model returns references + framing; verse TEXT is resolved
+    // server-side from bible_verses (the owned library) so quotes are always verbatim.
+    if (task === "bible_study") {
+      const question = String(prompt || message || "").slice(0, 1000).trim();
+      if (!question) return json({ ok: false, error: "empty_question" }, 200);
+      const ctxLine = (context && context.book)
+        ? `The steward is currently reading ${context.book}${context.chapter ? " " + context.chapter : ""}.`
+        : "";
+      const userText = `${ctxLine}\nSteward asks: ${question}`;
+
+      let parsed: any = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const r = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
+          body: JSON.stringify({ model: "claude-sonnet-5", max_tokens: MAX_TOKENS.bible_study, system: BIBLE_STUDY_SYSTEM, messages: [{ role: "user", content: userText }] }),
+        });
+        const data = await r.json();
+        const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("\n");
+        let s = text.replace(/```json|```/g, "").trim();
+        const a = s.indexOf("{"), b = s.lastIndexOf("}");
+        if (a >= 0 && b > a) s = s.slice(a, b + 1);
+        try {
+          const out = JSON.parse(s);
+          if (typeof out.reply !== "string") continue;
+          if (EM_DASH.test(out.reply)) continue; // house style; product-BANNED list intentionally not applied to scripture study
+          parsed = out; break;
+        } catch { /* retry */ }
+      }
+      if (!parsed) return json({ ok: false, error: "generation_failed" }, 200);
+
+      const refs = Array.isArray(parsed.refs) ? parsed.refs.slice(0, 6) : [];
+      const verses: Array<{ reference: string; text: string }> = [];
+      const seen = new Set<string>();
+      for (const ref of refs) {
+        const key = String(ref || "").trim();
+        if (!key || seen.has(key)) continue;
+        seen.add(key);
+        try {
+          const vr = await fetch(Deno.env.get("SUPABASE_URL") + "/functions/v1/bible-verses?ref=" + encodeURIComponent(key));
+          if (!vr.ok) continue;
+          const vd = await vr.json();
+          if (vd && Array.isArray(vd.verses) && vd.verses.length) {
+            const txt = (vd.text ? String(vd.text) : vd.verses.map((v: any) => v.text).join(" ")).slice(0, 1500);
+            verses.push({ reference: vd.reference || key, text: txt });
+          }
+        } catch { /* drop unresolved ref */ }
+      }
+      return json({ ok: true, out: { reply: parsed.reply, verses } });
+    }
 
     let systemPrompt = task === "intent_router" ? ROUTER_SYSTEM : (task === "profile_update" ? PROFILE_SYSTEM : RULES);
     let promptText = prompt;

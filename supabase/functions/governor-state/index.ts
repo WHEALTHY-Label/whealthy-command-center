@@ -115,11 +115,15 @@ Deno.serve(async (req) => {
       } : null;
 
       // Check if user is an affiliate and get their ref_id
-      const { data: aff } = await SB.from("affiliates")
+      const { data: aff } = await SB.from("approved_members")
+        .select("archetype") // just reference approved_members
+        .maybeSingle(); // placeholder for auth check
+
+      const { data: affActual } = await SB.from("affiliates")
         .select("ref_id")
         .eq("email", cleanEmail)
         .maybeSingle();
-      const affiliate_ref_id = aff ? aff.ref_id : null;
+      const affiliate_ref_id = affActual ? affActual.ref_id : null;
 
       // Count referrals for this affiliate code
       let referral_count = 0;

@@ -35,8 +35,43 @@ Deno.serve(async (req) => {
 
     const memberId = member.id;
 
+    // Default (no view): Hand It Over ledger. Every weight, newest first, with a computed
+    // status: 'private' (not on the wall), 'lifted' (on the wall, with live pray count),
+    // or 'answered' (closed). Returns a plain array.
+    if (!view) {
+      const { data: rows, error } = await SB.from("prayers")
+        .select("id, body, category, created_at, state, wall_post_id, outcome, closed_on")
+        .eq("member_id", memberId)
+        .order("created_at", { ascending: false });
+      if (error) {
+        console.error("Handover ledger read error:", error);
+        return json({ error: "Unable to fetch their handovers." }, 500);
+      }
+      const wallIds = (rows || []).map((r: any) => r.wall_post_id).filter(Boolean);
+      const prayMap: Record<string, number> = {};
+      if (wallIds.length) {
+        const { data: wp } = await SB.from("wall_posts").select("id, pray_count").in("id", wallIds);
+        (wp || []).forEach((w: any) => { prayMap[w.id] = w.pray_count || 0; });
+      }
+      const handovers = (rows || []).map((r: any) => {
+        let status = "private";
+        if (r.state === "yes" || r.state === "no") status = "answered";
+        else if (r.wall_post_id) status = "lifted";
+        return {
+          id: r.id,
+          body: r.body,
+          category: r.category,
+          created_at: r.created_at,
+          status,
+          pray_count: r.wall_post_id ? (prayMap[r.wall_post_id] || 0) : 0,
+          outcome: r.outcome,
+          closed_on: r.closed_on,
+        };
+      });
+      return json(handovers);
+    }
+
     if (view === "mirror") {
-      // Every not_yet entry, grouped by category, uncapped.
       const { data: prayers, error } = await SB.from("prayers")
         .select("*")
         .eq("member_id", memberId)
@@ -48,7 +83,6 @@ Deno.serve(async (req) => {
         return json({ error: "Unable to fetch their prayer closet." }, 500);
       }
 
-      // Group by category, ensuring empty categories are included
       const categories = ["household", "soul", "provision", "brothers", "unaware"];
       const grouped: Record<string, any[]> = {};
       categories.forEach(c => { grouped[c] = []; });
@@ -62,7 +96,6 @@ Deno.serve(async (req) => {
       return json(grouped);
 
     } else if (view === "daily") {
-      // Pinned first, then least-recently-surfaced. Default limit is 5.
       const pageSize = Number(limit) || 5;
       const { data: dailyPrayers, error } = await SB.from("prayers")
         .select("*")
@@ -77,7 +110,6 @@ Deno.serve(async (req) => {
         return json({ error: "Unable to fetch their daily surfaced set." }, 500);
       }
 
-      // Update last_surfaced_at timestamps programmatically
       if (dailyPrayers && dailyPrayers.length > 0) {
         const ids = dailyPrayers.map(p => p.id);
         const { error: updateErr } = await SB.from("prayers")
@@ -92,8 +124,6 @@ Deno.serve(async (req) => {
       return json(dailyPrayers);
 
     } else if (view === "answered") {
-      // Every entry with state IN ('yes','no'), sorted newest first.
-      // Must not return any counts, ratios, or denominators.
       const pageSize = Number(limit) || 20;
       const offset = Number(cursor) || 0;
 

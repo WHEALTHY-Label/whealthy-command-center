@@ -1,0 +1,282 @@
+{
+  "projectId": "yzaxzmuuvozonhgwhlim",
+  "capturedAt": "2026-07-22T04:49:14.799Z",
+  "migrations": [
+    {
+      "version": "20260318031413",
+      "name": "create_approved_members",
+      "localFile": "supabase/migrations/20260318031413_create_approved_members.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318031545",
+      "name": "tighten_insert_policy",
+      "localFile": "supabase/migrations/20260318031545_tighten_insert_policy.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318032742",
+      "name": "expand_approved_members_with_quiz_data",
+      "localFile": "supabase/migrations/20260318032742_expand_approved_members_with_quiz_data.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318042312",
+      "name": "create_referral_system",
+      "localFile": "supabase/migrations/20260318042312_create_referral_system.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318042524",
+      "name": "fix_function_search_path",
+      "localFile": "supabase/migrations/20260318042524_fix_function_search_path.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318044132",
+      "name": "create_page_events_analytics",
+      "localFile": "supabase/migrations/20260318044132_create_page_events_analytics.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318044407",
+      "name": "add_page_events_indexes",
+      "localFile": "supabase/migrations/20260318044407_add_page_events_indexes.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260318044423",
+      "name": "optimize_rls_policies",
+      "localFile": "supabase/migrations/20260318044423_optimize_rls_policies.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260326185220",
+      "name": "init_whealthy_schema",
+      "localFile": "supabase/migrations/20260326185220_init_whealthy_schema.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260326210346",
+      "name": "create_portal_orders_table",
+      "localFile": "supabase/migrations/20260326210346_create_portal_orders_table.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260616043455",
+      "name": "create_bundle_tables_and_add_active_columns",
+      "localFile": "supabase/migrations/20260616043455_create_bundle_tables_and_add_active_columns.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260616182709",
+      "name": "create_bible_progress_table",
+      "localFile": "supabase/migrations/20260616182709_create_bible_progress_table.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260616184549",
+      "name": "add_email_to_bible_progress",
+      "localFile": "supabase/migrations/20260616184549_add_email_to_bible_progress.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260710220105",
+      "name": "add_part1_fields",
+      "localFile": "supabase/migrations/20260710220105_add_part1_fields.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260713155111",
+      "name": "freemium_wo1_security_patch",
+      "localFile": "supabase/migrations/20260713155111_freemium_wo1_security_patch.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260713155125",
+      "name": "freemium_wo2_schema_additions",
+      "localFile": "supabase/migrations/20260713155125_freemium_wo2_schema_additions.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260714010026",
+      "name": "create_daily_logs",
+      "localFile": "supabase/migrations/20260714010026_create_daily_logs.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260715160124",
+      "name": "add_skool_identity_and_webhook_log",
+      "localFile": "supabase/migrations/20260715160124_add_skool_identity_and_webhook_log.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719040043",
+      "name": "create_bible_verses_library",
+      "localFile": "supabase/migrations/20260719040043_create_bible_verses_library.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719040111",
+      "name": "enable_http_extension",
+      "localFile": "supabase/migrations/20260719040111_enable_http_extension.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719145926",
+      "name": "create_challenge_cohorts",
+      "localFile": "supabase/migrations/20260719145926_create_challenge_cohorts.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719152442",
+      "name": "create_word_bank_and_deliveries",
+      "localFile": "supabase/migrations/20260719152442_create_word_bank_and_deliveries.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719160104",
+      "name": "create_steward_circles",
+      "localFile": "supabase/migrations/20260719160104_create_steward_circles.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719160647",
+      "name": "circle_prays_atomic_cap",
+      "localFile": "supabase/migrations/20260719160647_circle_prays_atomic_cap.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719171354",
+      "name": "create_skool_posts_cache",
+      "localFile": "supabase/migrations/20260719171354_create_skool_posts_cache.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719173135",
+      "name": "schedule_skool_sync_cron",
+      "localFile": "supabase/migrations/20260719173135_schedule_skool_sync_cron.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719201724",
+      "name": "add_admin_role_tiered",
+      "localFile": "supabase/migrations/20260719201724_add_admin_role_tiered.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260719202355",
+      "name": "cohort_created_by",
+      "localFile": "supabase/migrations/20260719202355_cohort_created_by.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720001501",
+      "name": "add_tour_state_to_approved_members",
+      "localFile": "supabase/migrations/20260720001501_add_tour_state_to_approved_members.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720001653",
+      "name": "tour_state_atomic_rpc",
+      "localFile": "supabase/migrations/20260720001653_tour_state_atomic_rpc.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720034009",
+      "name": "add_v2_quiz_fields_to_approved_members",
+      "localFile": "supabase/migrations/20260720034009_add_v2_quiz_fields_to_approved_members.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720041447",
+      "name": "app_config_service_role_only",
+      "localFile": "supabase/migrations/20260720041447_app_config_service_role_only.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720044208",
+      "name": "add_invited_at_to_approved_members",
+      "localFile": "supabase/migrations/20260720044208_add_invited_at_to_approved_members.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720161717",
+      "name": "add_admin_audit_log",
+      "localFile": "supabase/migrations/20260720161717_add_admin_audit_log.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720205346",
+      "name": "my_bible_tables",
+      "localFile": "supabase/migrations/20260720205346_my_bible_tables.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260720205854",
+      "name": "expand_prayers_category_check",
+      "localFile": "supabase/migrations/20260720205854_expand_prayers_category_check.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721005304",
+      "name": "add_membership_tier",
+      "localFile": "supabase/migrations/20260721005304_add_membership_tier.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721011120",
+      "name": "add_app_events",
+      "localFile": "supabase/migrations/20260721011120_add_app_events.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721044910",
+      "name": "rhythm_builder_schema",
+      "localFile": "supabase/migrations/20260721044910_rhythm_builder_schema.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721070132",
+      "name": "add_pending_registrations",
+      "localFile": "supabase/migrations/20260721070132_add_pending_registrations.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721080929",
+      "name": "add_rhythm_slot_why_and_updated",
+      "localFile": "supabase/migrations/20260721080929_add_rhythm_slot_why_and_updated.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721083831",
+      "name": "add_rhythm_plan_season",
+      "localFile": "supabase/migrations/20260721083831_add_rhythm_plan_season.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721125349",
+      "name": "create_email_log",
+      "localFile": "supabase/migrations/20260721125349_create_email_log.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721145849",
+      "name": "member_onboarding_queue",
+      "localFile": "supabase/migrations/20260721145849_member_onboarding_queue.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260721154554",
+      "name": "member_orders",
+      "localFile": "supabase/migrations/20260721154554_member_orders.sql",
+      "status": "missing"
+    },
+    {
+      "version": "20260722001453",
+      "name": "harden_public_schema_rls_and_privileges",
+      "localFile": "supabase/migrations/20260722001453_harden_public_schema_rls_and_privileges.sql",
+      "status": "missing"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-07-22T05:20:01.000Z",
+  "productionUrl": "https://thestewardsrhythm.com/",
+  "tests": [
+    {
+      "suite": "tools/recovery/tests/production-smoke.spec.mjs",
+      "title": "root application renders without uncaught errors",
+      "status": "passed",
+      "durationMs": 1230,
+      "error": null
+    },
+    {
+      "suite": "tools/recovery/tests/production-smoke.spec.mjs",
+      "title": "public application remains usable at mobile width",
+      "status": "passed",
+      "durationMs": 768,
+      "error": null
+    },
+    {
+      "suite": "tools/recovery/tests/production-smoke.spec.mjs",
+      "title": "page does not expose a service-role credential",
+      "status": "passed",
+      "durationMs": 674,
+      "error": null
+    }
+  ]
+}

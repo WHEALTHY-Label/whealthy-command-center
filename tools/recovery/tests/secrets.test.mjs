@@ -63,3 +63,50 @@ test('does not treat prefixed identifiers as credential assignment keys', () => 
   const findings = scanSecrets("NOT_BAKND_API_KEY='example-value'");
   assert.deepEqual(findings, []);
 });
+
+test('blocks generic camelCase credential literals but allows environment lookups and placeholders', () => {
+  const findings = scanSecrets([
+    "const nurtureSecret = 'not-a-real-secret';",
+    "const nurtureFromEnv = Deno.env.get('NURTURE_WEBHOOK_SECRET');",
+    "const webhookToken = '[REDACTED]';",
+    "const webhookKey = '<configure-in-environment>';",
+  ].join('\n'));
+  assert.deepEqual(findings.map(({ kind }) => kind), ['generic-credential-assignment']);
+});
+
+test('blocks uppercase credential assignments without flagging noncredential data keys', () => {
+  const findings = scanSecrets([
+    "const SECRET = 'shared-webhook-value';",
+    "const WEBHOOK_SECRET = 'another-shared-value';",
+    "const CONTENT_KEY = 'welcome_email';",
+  ].join('\n'));
+  assert.deepEqual(findings.map(({ kind }) => kind), [
+    'generic-credential-assignment',
+    'generic-credential-assignment',
+  ]);
+});
+
+test('blocks webhook header and comparison literals', () => {
+  const findings = scanSecrets([
+    "headers: { 'x-webhook-secret': 'shared-webhook-value' },",
+    "if (headerSecret !== 'shared-webhook-value') return unauthorized();",
+    "if (req.headers.get('x-webhook-secret') !== 'shared-webhook-value') return unauthorized();",
+  ].join('\n'));
+  assert.deepEqual(findings.map(({ kind }) => kind), [
+    'credential-header-literal',
+    'credential-comparison-literal',
+    'credential-comparison-literal',
+  ]);
+});
+
+test('blocks safely detectable encoded credential literals', () => {
+  const findings = scanSecrets([
+    "const webhookSecret = atob('c2hhcmVkLXdlYmhvb2stdmFsdWU=');",
+    "const API_TOKEN = Buffer.from('c2hhcmVkLXZhbHVl', 'base64');",
+    "const productKey = atob('cHJvZHVjdC1zbHVn');",
+  ].join('\n'));
+  assert.deepEqual(findings.map(({ kind }) => kind), [
+    'encoded-credential-literal',
+    'encoded-credential-literal',
+  ]);
+});

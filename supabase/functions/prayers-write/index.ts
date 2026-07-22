@@ -41,7 +41,8 @@ Deno.serve(async (req) => {
       if (cleanBody.length < 1 || cleanBody.length > 1000) {
         return json({ error: "Prayer body must contain between 1 and 1000 characters." }, 400);
       }
-      const allowedCategories = ["household", "soul", "provision", "brothers", "unaware"];
+      // Legacy closet categories + Hand It Over v2 chip vocabulary (Ignacio, Jul 20). Old kept for existing rows.
+      const allowedCategories = ["household", "soul", "provision", "brothers", "unaware", "family", "work", "money", "health", "head", "freeform"];
       if (!allowedCategories.includes(category)) {
         return json({ error: "Steward must select a valid category for their prayer." }, 400);
       }
@@ -75,7 +76,6 @@ Deno.serve(async (req) => {
         return json({ error: "Prayer body must contain between 1 and 1000 characters." }, 400);
       }
 
-      // Check if open and belongs to member
       const { data: existing, error: findErr } = await SB.from("prayers")
         .select("state")
         .eq("id", id)
@@ -112,7 +112,6 @@ Deno.serve(async (req) => {
         return json({ error: "Closure outcome must contain between 1 and 1000 characters." }, 400);
       }
 
-      // Find existing
       const { data: existing, error: findErr } = await SB.from("prayers")
         .select("wall_post_id")
         .eq("id", id)
@@ -123,7 +122,6 @@ Deno.serve(async (req) => {
         return json({ error: "Prayer entry not found in their closet." }, 404);
       }
 
-      // Update prayer
       const { data: updatedPrayer, error: closeErr } = await SB.from("prayers")
         .update({
           state,
@@ -139,7 +137,6 @@ Deno.serve(async (req) => {
         return json({ error: "Unable to close their prayer entry." }, 500);
       }
 
-      // If state = yes and wall_post_id is present, push to wall_posts
       if (state === "yes" && existing.wall_post_id) {
         const { error: wallErr } = await SB.from("wall_posts")
           .update({
@@ -228,7 +225,6 @@ Deno.serve(async (req) => {
         return json({ error: "Publishing requires a valid display mode." }, 400);
       }
 
-      // Fetch existing
       const { data: prayer, error: findErr } = await SB.from("prayers")
         .select("*")
         .eq("id", id)
@@ -245,7 +241,6 @@ Deno.serve(async (req) => {
         return json({ error: "This prayer has already been published to the assembly." }, 400);
       }
 
-      // Create wall_posts row as snapshot
       const { data: wallPost, error: wallErr } = await SB.from("wall_posts")
         .insert({
           member_id: memberId,
@@ -263,7 +258,6 @@ Deno.serve(async (req) => {
         return json({ error: "Unable to publish their prayer to the assembly." }, 500);
       }
 
-      // Link post id to prayer
       const { data: updatedPrayer, error: linkErr } = await SB.from("prayers")
         .update({ wall_post_id: wallPost.id })
         .eq("id", id)
@@ -277,11 +271,90 @@ Deno.serve(async (req) => {
 
       return json(updatedPrayer);
 
+    } else if (action === "lift") {
+      // Hand It Over: lift a private prayer to the Prayer Wall. Idempotent: if the wall
+      // post was already created + linked (by wall-post with prayer_id), just return success.
+      const { id, display_mode } = payload;
+      if (!id) return json({ error: "Prayer ID is required." }, 400);
+      const { data: prayer, error: findErr } = await SB.from("prayers")
+        .select("*")
+        .eq("id", id)
+        .eq("member_id", memberId)
+        .maybeSingle();
+      if (findErr || !prayer) {
+        return json({ error: "Prayer entry not found in their closet." }, 404);
+      }
+      if (prayer.wall_post_id) {
+        return json(prayer); // already lifted, idempotent success
+      }
+      if (prayer.category === "unaware") {
+        return json({ error: "Prayers for unaware individuals cannot be published." }, 400);
+      }
+      const mode = ["signed", "anonymous"].includes(display_mode) ? display_mode : "anonymous";
+      const { data: wallPost, error: wallErr } = await SB.from("wall_posts")
+        .insert({ member_id: memberId, body: prayer.body, source: "wall", display_mode: mode, status: "live", pray_count: 0 })
+        .select("id")
+        .single();
+      if (wallErr || !wallPost) {
+        console.error("Lift insert error:", wallErr);
+        return json({ error: "Unable to lift their prayer to the wall." }, 500);
+      }
+      const { data: updatedPrayer, error: linkErr } = await SB.from("prayers")
+        .update({ wall_post_id: wallPost.id })
+        .eq("id", id)
+        .select()
+        .single();
+      if (linkErr) {
+        return json({ error: "Unable to associate the lifted prayer." }, 500);
+      }
+      return json(updatedPrayer);
+
+    } else if (action === "answered") {
+      // Hand It Over: mark a handed-over weight answered. Closes as 'yes' with the note as
+      // outcome. If already on the wall, that post becomes an answered testimony. If not and
+      // lift_to_testimony is set, create an answered wall post (surfaces in testimony_river).
+      const { id, note, lift_to_testimony } = payload;
+      if (!id) return json({ error: "Prayer ID is required." }, 400);
+      const cleanNote = (note || "").trim();
+      if (cleanNote.length < 1 || cleanNote.length > 1000) {
+        return json({ error: "Answer note must contain between 1 and 1000 characters." }, 400);
+      }
+      const { data: prayer, error: findErr } = await SB.from("prayers")
+        .select("*")
+        .eq("id", id)
+        .eq("member_id", memberId)
+        .maybeSingle();
+      if (findErr || !prayer) {
+        return json({ error: "Prayer entry not found in their closet." }, 404);
+      }
+      const { data: updatedPrayer, error: closeErr } = await SB.from("prayers")
+        .update({ state: "yes", outcome: cleanNote, closed_on: new Date().toISOString().split("T")[0] })
+        .eq("id", id)
+        .select()
+        .single();
+      if (closeErr) {
+        console.error("Answered close error:", closeErr);
+        return json({ error: "Unable to mark the prayer answered." }, 500);
+      }
+      const nowIso = new Date().toISOString();
+      const lockIso = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      if (prayer.wall_post_id) {
+        await SB.from("wall_posts")
+          .update({ answered_note: cleanNote, status: "answered", answered_at: nowIso, answered_note_locked_at: lockIso })
+          .eq("id", prayer.wall_post_id);
+      } else if (lift_to_testimony && prayer.category !== "unaware") {
+        const { data: wp } = await SB.from("wall_posts")
+          .insert({ member_id: memberId, body: prayer.body, source: "wall", display_mode: "signed", status: "answered", answered_note: cleanNote, answered_at: nowIso, answered_note_locked_at: lockIso, pray_count: 0 })
+          .select("id")
+          .single();
+        if (wp) await SB.from("prayers").update({ wall_post_id: wp.id }).eq("id", id);
+      }
+      return json(updatedPrayer);
+
     } else if (action === "unpublish") {
       const { id } = payload;
       if (!id) return json({ error: "Prayer ID is required." }, 400);
 
-      // Fetch existing
       const { data: prayer, error: findErr } = await SB.from("prayers")
         .select("*")
         .eq("id", id)
@@ -295,7 +368,6 @@ Deno.serve(async (req) => {
         return json({ error: "This prayer is not published." }, 400);
       }
 
-      // Archive wall_posts row
       const { error: wallErr } = await SB.from("wall_posts")
         .update({ status: "archived" })
         .eq("id", prayer.wall_post_id)
@@ -306,7 +378,6 @@ Deno.serve(async (req) => {
         return json({ error: "Unable to archive the published wall post." }, 500);
       }
 
-      // Null wall_post_id in prayers
       const { data: updatedPrayer, error: unlinkErr } = await SB.from("prayers")
         .update({ wall_post_id: null })
         .eq("id", id)
@@ -345,7 +416,6 @@ Deno.serve(async (req) => {
       const { id } = payload;
       if (!id) return json({ error: "Prayer ID is required." }, 400);
 
-      // Fetch existing
       const { data: prayer, error: findErr } = await SB.from("prayers")
         .select("*")
         .eq("id", id)
@@ -356,7 +426,6 @@ Deno.serve(async (req) => {
         return json({ error: "Prayer entry not found in their closet." }, 404);
       }
 
-      // Guard: Delete is allowed only when the entry is not_yet and has never been published.
       if (prayer.state !== "not_yet") {
         return json({ error: "A closed prayer entry can never be deleted." }, 400);
       }

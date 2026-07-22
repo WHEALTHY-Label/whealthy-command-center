@@ -17,7 +17,7 @@ const json = (data: any, status = 200) =>
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
   try {
-    const { member_id, body, display_mode = 'anonymous', source } = await req.json();
+    const { member_id, body, display_mode = 'anonymous', source, prayer_id } = await req.json();
 
     // 1. Validate member exists in approved_members
     const { data: member, error: memberErr } = await SB.from("approved_members")
@@ -40,10 +40,11 @@ Deno.serve(async (req) => {
       return json({ error: "Invalid display_mode" }, 400);
     }
 
-    // 4. Validate source
-    if (!['bible365', 'wall'].includes(source)) {
+    // 4. Validate source. 'prayer_handover' (Hand It Over lift) is accepted and stored as 'wall'.
+    if (!['bible365', 'wall', 'prayer_handover'].includes(source)) {
       return json({ error: "Invalid source" }, 400);
     }
+    const storeSource = source === 'prayer_handover' ? 'wall' : source;
 
     // 5. Rate limit: count posts by this member_id where created_at > now() - interval '24 hours'
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
@@ -66,7 +67,7 @@ Deno.serve(async (req) => {
         member_id,
         body: cleanBody,
         display_mode,
-        source,
+        source: storeSource,
         status: "live",
         pray_count: 0,
         last_prayed_at: null
@@ -80,6 +81,17 @@ Deno.serve(async (req) => {
     if (insertErr || !post) {
       console.error("Insert error:", insertErr);
       return json({ error: "Failed to create post" }, 500);
+    }
+
+    // 6b. Hand It Over: link the wall post back to the private prayer so the ledger shows
+    // 'lifted' + pray count, unpublish works, and answered propagates. Scoped to the member.
+    if (prayer_id) {
+      const { error: linkErr } = await SB.from("prayers")
+        .update({ wall_post_id: post.id })
+        .eq("id", prayer_id)
+        .eq("member_id", member_id)
+        .is("wall_post_id", null);
+      if (linkErr) console.error("Prayer link error (non-fatal):", linkErr);
     }
 
     // 7. Serialize and return
