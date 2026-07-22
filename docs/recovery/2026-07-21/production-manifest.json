@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-07-22T06:13:29.733Z",
+  "capturedAt": "2026-07-22T06:15:48.278Z",
   "configuration": {
     "environmentVariableNames": [
       "ANTHROPIC_API_KEY",
@@ -24,7 +24,7 @@
   },
   "git": {
     "branch": "recovery/production-baseline-2026-07-21",
-    "manifestParentCommit": "a58bc2e7a801d078da7ce4f277c99e929ed3097e",
+    "manifestParentCommit": "6be8698f3ba0763357c03aa07d6eeb57c5c43484",
     "sourceCommit": "aa706bc62fb58e7ce25ccda75381049801bda886"
   },
   "html": {
@@ -1654,7 +1654,7 @@
   },
   "verification": {
     "edgeRecursiveDiff": "passed",
-    "historySecretScan": "pending-history-rebuild",
+    "historySecretScan": "passed",
     "secretScan": "passed",
     "smokeSuite": "passed"
   }

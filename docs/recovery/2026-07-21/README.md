@@ -15,7 +15,7 @@ The remote migration ledger has 46 historical migration sources unavailable in t
 - Read-only smoke tests: 3/3 passed.
 - Error-level Supabase security advisor findings: 0.
 - Secret scan: passed.
-- Branch-history secret scan: pending-history-rebuild. The current branch is expected to fail until the controller rebuilds it without the contaminated intermediate commit; it must pass before publication.
+- Branch-history secret scan: passed.
 - Edge capture recursive comparison: passed.
 - Diff hygiene: run `node tools/recovery/verify-diff-hygiene.mjs`. It permits whitespace findings only in hash-verified, byte-faithful `index.html` and exact-capture Edge Function files; redacted and generated files must remain clean.
 - Production deployment target: production; recovery branch: `recovery/production-baseline-2026-07-21`.
@@ -30,6 +30,6 @@ No Vercel or Supabase environment values were requested, queried, or recorded.
 
 ## Rollback and Review Gate
 
-Pre-recovery Git commit: `aa706bc62fb58e7ce25ccda75381049801bda886`. Captured production deployment: `dpl_AEjt6dY2YzmSWrxSnTofERBH7SWm`. Manifest parent commit: `a58bc2e7a801d078da7ce4f277c99e929ed3097e`.
+Pre-recovery Git commit: `aa706bc62fb58e7ce25ccda75381049801bda886`. Captured production deployment: `dpl_AEjt6dY2YzmSWrxSnTofERBH7SWm`. Manifest parent commit: `6be8698f3ba0763357c03aa07d6eeb57c5c43484`.
 
 Slice 1 planning may begin only after this report, the manifest integrity checks, and the recovery diff receive human approval.

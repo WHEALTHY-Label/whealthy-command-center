@@ -94,7 +94,7 @@ test('manifest records clean security verification, smoke coverage, and a name-o
 
   assert.equal(manifest.supabase.securityAdvisorErrors, 0);
   assert.equal(manifest.verification.secretScan, 'passed');
-  assert.equal(manifest.verification.historySecretScan, 'pending-history-rebuild');
+  assert.equal(manifest.verification.historySecretScan, 'passed');
   assert.equal(manifest.verification.edgeRecursiveDiff, 'passed');
   assert.equal(manifest.verification.smokeSuite, 'passed');
   assert.equal(manifest.smoke.tests.length, 3);
