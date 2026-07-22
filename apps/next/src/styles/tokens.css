@@ -1,0 +1,70 @@
+/*
+ * WHEALTHY design tokens.
+ *
+ * Extracted verbatim from the recovered production app (index.html at
+ * tag production-baseline-2026-07-21). Values only — no redesign in Slice 1.
+ * These are the single source of truth for color, type, spacing, and
+ * breakpoints as the UI is rebuilt slice by slice.
+ */
+:root {
+  /* Core surfaces */
+  --wa-black: #080809;
+  --wa-surface: #101012;
+  --wa-card: #1e2024;
+
+  /* Accent */
+  --wa-lime: #ccff00;
+  --wa-lime-hover: #d6ff1f;
+  --wa-lime-dim: rgba(204, 255, 0, 0.15);
+  --wa-lime-soft: rgba(204, 255, 0, 0.08);
+  --wa-border-lime: rgba(204, 255, 0, 0.2);
+
+  /* Status */
+  --wa-green: #00e676;
+  --wa-green-soft: rgba(0, 230, 118, 0.12);
+  --wa-amber: #ffb300;
+  --wa-amber-soft: rgba(255, 179, 0, 0.08);
+
+  /* Text */
+  --wa-text: #f0f1f3;
+  --wa-text-muted: #b5b7bc;
+  --wa-text-dim: #909296;
+
+  /* Lines and glass */
+  --wa-border: rgba(255, 255, 255, 0.07);
+  --wa-border-mid: rgba(255, 255, 255, 0.12);
+  --wa-glass: rgba(255, 255, 255, 0.04);
+  --wa-glass-hi: rgba(255, 255, 255, 0.1);
+
+  /* Type (loaded via stylesheet link in the root layout) */
+  --wa-font-display: 'Oswald', 'Helvetica Neue', Arial, sans-serif;
+  --wa-font-body: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Type scale (fluid, mobile-first) */
+  --wa-fs-hero: clamp(1.75rem, 6vw, 3rem);
+  --wa-fs-h1: clamp(1.5rem, 5vw, 2.25rem);
+  --wa-fs-h2: clamp(1.25rem, 4vw, 1.625rem);
+  --wa-fs-body: 1rem;
+  --wa-fs-small: 0.875rem;
+  --wa-fs-micro: 0.75rem;
+
+  /* Spacing */
+  --wa-space-1: 0.25rem;
+  --wa-space-2: 0.5rem;
+  --wa-space-3: 0.75rem;
+  --wa-space-4: 1rem;
+  --wa-space-6: 1.5rem;
+  --wa-space-8: 2rem;
+  --wa-space-12: 3rem;
+
+  /* Radius + motion */
+  --wa-radius: 12px;
+  --wa-radius-lg: 20px;
+  --wa-transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Breakpoints (documented for JS/media-query reuse) */
+  --wa-bp-sm: 480px;
+  --wa-bp-md: 640px;
+  --wa-bp-lg: 768px;
+  --wa-bp-xl: 1024px;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "whealthy-next",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Steward's Rhythm — Next.js App Router migration (preview only; not production until Slice 9 cutover).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "next": "16.2.11",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.3",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.18.0",
+    "eslint-config-next": "16.2.11",
+    "prettier": "3.4.2",
+    "typescript": "5.7.3",
+    "vitest": "3.0.5"
+  }
+}
