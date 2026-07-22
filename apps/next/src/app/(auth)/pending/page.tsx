@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getAuthedEmail } from '@/lib/auth/session';
 import { fetchOnboardingState } from '@/lib/onboarding';
 import styles from '../sign-in/sign-in.module.css';
@@ -23,9 +24,9 @@ export default async function PendingPage() {
         <p className={styles.eyebrow}>WHEALTHY / STEWARDS</p>
         <h1 className={styles.heading}>You&rsquo;re on the list.</h1>
         <p className={styles.help}>{message}</p>
-        <a href="/sign-in" className={styles.button}>
+        <Link href="/sign-in" className={styles.button}>
           Close
-        </a>
+        </Link>
       </div>
     </main>
   );

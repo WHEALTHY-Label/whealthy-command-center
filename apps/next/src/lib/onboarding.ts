@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getPublicEnv } from '@/lib/env';
 
 /**
@@ -20,6 +21,11 @@ export interface OnboardingState {
   exclusive?: boolean;
   discount_pct?: number;
   discount_code?: string;
+  archetype?: string;
+  archetype_name?: string;
+  bundle?: { key?: string; name?: string };
+  bundle_claimed?: boolean;
+  rhythm_active?: boolean;
 }
 
 const MEMBER_GATES: ReadonlySet<Gate> = new Set<Gate>(['quiz', 'bundle', 'ready']);
@@ -64,7 +70,7 @@ export function toGate(value: unknown): Gate {
  * Fetch the onboarding state for an email. The email MUST come from the
  * server-validated session, never from client input.
  */
-export async function fetchOnboardingState(email: string): Promise<OnboardingState> {
+export const fetchOnboardingState = cache(async (email: string): Promise<OnboardingState> => {
   const env = getPublicEnv();
   const url = `${env.NEXT_PUBLIC_FN_BASE}/onboarding-state?email=${encodeURIComponent(email)}`;
   const res = await fetch(url, {
@@ -80,6 +86,10 @@ export async function fetchOnboardingState(email: string): Promise<OnboardingSta
     throw new Error(`onboarding-state failed: HTTP ${res.status}`);
   }
   const data = (await res.json()) as Record<string, unknown>;
+  const bundle =
+    typeof data.bundle === 'object' && data.bundle !== null
+      ? (data.bundle as Record<string, unknown>)
+      : undefined;
   return {
     ok: data.ok === true,
     verified: data.verified === true,
@@ -89,5 +99,15 @@ export async function fetchOnboardingState(email: string): Promise<OnboardingSta
     exclusive: typeof data.exclusive === 'boolean' ? data.exclusive : undefined,
     discount_pct: typeof data.discount_pct === 'number' ? data.discount_pct : undefined,
     discount_code: typeof data.discount_code === 'string' ? data.discount_code : undefined,
+    archetype: typeof data.archetype === 'string' ? data.archetype : undefined,
+    archetype_name: typeof data.archetype_name === 'string' ? data.archetype_name : undefined,
+    bundle: bundle
+      ? {
+          key: typeof bundle.key === 'string' ? bundle.key : undefined,
+          name: typeof bundle.name === 'string' ? bundle.name : undefined,
+        }
+      : undefined,
+    bundle_claimed: typeof data.bundle_claimed === 'boolean' ? data.bundle_claimed : undefined,
+    rhythm_active: typeof data.rhythm_active === 'boolean' ? data.rhythm_active : undefined,
   };
-}
+});

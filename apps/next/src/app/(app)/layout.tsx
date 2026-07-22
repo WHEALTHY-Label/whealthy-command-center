@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation';
-import { NavFrame } from '@/components/NavFrame';
-import { getAuthedEmail } from '@/lib/auth/session';
+import { Sidebar } from '@/components/Sidebar';
+import { getAdminRole, getAuthedEmail } from '@/lib/auth/session';
 import {
   fetchOnboardingState,
   gateDestination,
   isMember,
   type OnboardingState,
 } from '@/lib/onboarding';
+import styles from './layout.module.css';
 
 /**
  * Protected shell. The middleware already guarantees a session here; this
@@ -19,15 +20,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     redirect('/sign-in');
   }
 
-  // Resolve the gate first, keeping the redirect calls OUT of the try/catch
-  // (redirect() throws a control-flow signal that must not be swallowed).
+  // Resolve the gate first, keeping redirect() calls OUT of the try/catch
+  // (redirect throws a control-flow signal that must not be swallowed).
   let state: OnboardingState | null = null;
   try {
     state = await fetchOnboardingState(email);
   } catch {
     state = null;
   }
-
   if (!state) {
     redirect('/sign-in');
   }
@@ -35,5 +35,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     redirect(gateDestination(state.gate));
   }
 
-  return <NavFrame>{children}</NavFrame>;
+  const role = await getAdminRole();
+
+  return (
+    <div className={styles.shell}>
+      <Sidebar isAdmin={role !== null} />
+      <div className={styles.content}>{children}</div>
+    </div>
+  );
 }
