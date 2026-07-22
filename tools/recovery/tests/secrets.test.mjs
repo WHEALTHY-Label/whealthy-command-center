@@ -35,3 +35,31 @@ test('blocks known provider credential assignments with values', () => {
 test('allows publishable Supabase anon material alongside provider names', () => {
   assert.deepEqual(scanSecrets("SUPABASE_ANON='eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYW5vbiJ9.signature'"), []);
 });
+
+test('blocks known credential keys when quoted in JSON-shaped objects', () => {
+  const findings = scanSecrets([
+    '{',
+    '  "SUPABASE_SERVICE_ROLE_KEY": "example-service-role",',
+    '  "STRIPE_SECRET_KEY": "sk_test_example",',
+    '  "BAKND_API_KEY": "example-baknd-key",',
+    '  "RESEND_API_KEY": "re_example_key",',
+    '  "ELEVENLABS_API_KEY": "example-elevenlabs-key",',
+    '  "SHOPIFY_ACCESS_TOKEN": "shpat_example_token",',
+    '  "OPENAI_API_KEY": "sk-example-legacy-key"',
+    '}',
+  ].join('\n'));
+  assert.deepEqual(findings.map(({ kind }) => kind), [
+    'supabase-service-role',
+    'stripe-secret',
+    'baknd-api-key',
+    'resend-api-key',
+    'elevenlabs-api-key',
+    'shopify-access-token',
+    'openai-api-key',
+  ]);
+});
+
+test('does not treat prefixed identifiers as credential assignment keys', () => {
+  const findings = scanSecrets("NOT_BAKND_API_KEY='example-value'");
+  assert.deepEqual(findings, []);
+});
