@@ -1,8 +1,8 @@
 # WHEALTHY Command Center — Claude Handoff
 
-Date: 2026-07-22  
-Repository: `WHEALTHY-Label/whealthy-command-center`  
-Recovery PR: <https://github.com/WHEALTHY-Label/whealthy-command-center/pull/1>  
+Date: 2026-07-22\
+Repository: `WHEALTHY-Label/whealthy-command-center`\
+Recovery PR: <https://github.com/WHEALTHY-Label/whealthy-command-center/pull/1>\
 Recovery branch: `recovery/production-baseline-2026-07-21`
 
 ## Mission
@@ -231,4 +231,3 @@ The migration is complete only when:
 - Payment, webhook, and administrative paths have explicit rollback procedures.
 - Primary-domain cutover receives written approval.
 - A rollback to the tagged static baseline has been rehearsed and documented.
-
