@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { extractRouteInventory, validateLiveHtml } from './lib/html.mjs';
+import { extractRouteInventory, validateFinalProductionUrl, validateLiveHtml } from './lib/html.mjs';
 import { sha256, writeJson } from './lib/manifest.mjs';
 
 const outputFlag = process.argv.indexOf('--output');
@@ -9,6 +9,7 @@ if (outputFlag < 0 || !process.argv[outputFlag + 1]) throw new Error('Usage: --o
 const target = resolve(process.argv[outputFlag + 1]);
 const response = await fetch('https://thestewardsrhythm.com/', { redirect: 'follow' });
 if (!response.ok) throw new Error(`Production returned HTTP ${response.status}`);
+validateFinalProductionUrl(response.url);
 const html = await response.text();
 const validation = validateLiveHtml(html);
 await mkdir(dirname(target), { recursive: true });
