@@ -25,6 +25,7 @@ const SECTIONS: NavSection[] = [
     title: 'General',
     items: [
       { label: 'Home', href: '/', live: true },
+      { label: 'My Rhythm', href: '/rhythm', live: true },
       { label: 'Claim Bundle', href: '/claim' },
       { label: 'Try All', href: '/tryall' },
       { label: 'The Record', href: '/record' },

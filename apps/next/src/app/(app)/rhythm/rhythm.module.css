@@ -1,0 +1,226 @@
+.page {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--wa-space-8) var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-4);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+}
+
+.eyebrow {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-lime);
+  margin: 0;
+}
+
+.title {
+  font-size: var(--wa-fs-h1);
+  margin: 0;
+}
+
+.sub {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.season {
+  align-self: flex-start;
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+  border: 1px solid var(--wa-border-lime);
+  border-radius: 999px;
+  padding: var(--wa-space-1) var(--wa-space-4);
+}
+
+.freshStart {
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3) var(--wa-space-4);
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+}
+
+.stats {
+  display: flex;
+  gap: var(--wa-space-3);
+}
+
+.stat {
+  flex: 1;
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.statValue {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  color: var(--wa-text);
+}
+
+.statLabel {
+  font-size: var(--wa-fs-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wa-text-dim);
+}
+
+.dayComplete {
+  color: var(--wa-green);
+  font-family: var(--wa-font-display);
+  margin: 0;
+}
+
+.error {
+  color: var(--wa-amber);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.groupTitle {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  margin: 0;
+}
+
+.slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.slot {
+  display: flex;
+  gap: var(--wa-space-3);
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3) var(--wa-space-4);
+}
+
+.check {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--wa-border-mid);
+  background: transparent;
+  cursor: pointer;
+  margin-top: 2px;
+  transition:
+    background var(--wa-transition),
+    border-color var(--wa-transition);
+}
+
+.checkDone {
+  background: var(--wa-lime);
+  border-color: var(--wa-lime);
+}
+
+.slotBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.slotHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+}
+
+.slotTitle {
+  color: var(--wa-text);
+  font-size: var(--wa-fs-body);
+}
+
+.slotTitleDone {
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-body);
+  text-decoration: line-through;
+}
+
+.slotCue {
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-micro);
+  white-space: nowrap;
+}
+
+.ifThen {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: var(--wa-space-1) 0 0;
+}
+
+.why {
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-small);
+  margin: var(--wa-space-1) 0 0;
+}
+
+.serviceLine {
+  display: inline-block;
+  margin-top: var(--wa-space-2);
+  font-size: var(--wa-fs-small);
+}
+
+.empty {
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius-lg);
+  padding: var(--wa-space-8) var(--wa-space-4);
+  text-align: center;
+  color: var(--wa-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.beginLink {
+  font-family: var(--wa-font-display);
+}
+
+.subscribe {
+  align-self: flex-start;
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text-muted);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-2) var(--wa-space-4);
+}
+
+.subscribe:hover {
+  border-color: var(--wa-lime);
+  color: var(--wa-text);
+}
