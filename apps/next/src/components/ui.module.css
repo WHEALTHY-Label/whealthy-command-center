@@ -1,0 +1,343 @@
+/* Shared screen scaffolding for the migrated feature pages. One column on a
+   phone, capped and centered on anything larger; every control is at least a
+   44px tap target. Route modules add only what is unique to their screen. */
+
+.page {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--wa-space-8) var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-4);
+}
+
+.pageWide {
+  composes: page;
+  max-width: 1000px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+}
+
+.eyebrow {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-lime);
+  margin: 0;
+}
+
+.title {
+  font-size: var(--wa-fs-h1);
+  margin: 0;
+}
+
+.sub {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.card {
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.cardLime {
+  composes: card;
+  border-color: var(--wa-border-lime);
+}
+
+.kicker {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  margin: 0;
+}
+
+.body {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.primary {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--wa-space-2) var(--wa-space-6);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wa-black);
+  background: var(--wa-lime);
+  border: none;
+  border-radius: var(--wa-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--wa-transition);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--wa-lime-hover);
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.quiet {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--wa-space-2) var(--wa-space-4);
+  background: transparent;
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    border-color var(--wa-transition),
+    color var(--wa-transition);
+}
+
+.quiet:hover:not(:disabled) {
+  border-color: var(--wa-border-lime);
+  color: var(--wa-text);
+}
+
+.quiet:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.danger {
+  composes: quiet;
+  border-color: rgba(255, 82, 82, 0.4);
+  color: #ff8a80;
+}
+
+.danger:hover:not(:disabled) {
+  border-color: #ff5252;
+  color: #ff8a80;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wa-space-2);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--wa-space-2) var(--wa-space-3);
+  background: var(--wa-black);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text);
+  font-size: var(--wa-fs-body);
+  font-family: var(--wa-font-body);
+}
+
+.textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--wa-border-lime);
+}
+
+.error {
+  color: var(--wa-amber);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.good {
+  color: var(--wa-green);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.empty {
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius-lg);
+  padding: var(--wa-space-8) var(--wa-space-4);
+  text-align: center;
+  color: var(--wa-text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wa-space-3);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: var(--wa-fs-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--wa-border-mid);
+  color: var(--wa-text-muted);
+  white-space: nowrap;
+}
+
+.pillLime {
+  composes: pill;
+  border-color: var(--wa-border-lime);
+  color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+}
+
+.pillGreen {
+  composes: pill;
+  border-color: rgba(0, 230, 118, 0.4);
+  color: var(--wa-green);
+  background: var(--wa-green-soft);
+}
+
+.pillAmber {
+  composes: pill;
+  border-color: rgba(255, 179, 0, 0.4);
+  color: var(--wa-amber);
+  background: var(--wa-amber-soft);
+}
+
+/* Stat tiles: wrap into a grid that collapses cleanly on a phone. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--wa-space-2);
+}
+
+.stat {
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statValue {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  color: var(--wa-text);
+}
+
+.statLabel {
+  font-size: var(--wa-fs-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wa-text-dim);
+}
+
+/* Data lists render as cards on phones instead of horizontally-scrolled
+   tables; each entry is a stacked row with labeled values. */
+.listRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+  padding: var(--wa-space-3) 0;
+  border-bottom: 1px solid var(--wa-border);
+}
+
+.listRow:last-child {
+  border-bottom: none;
+}
+
+.meterTrack {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--wa-glass);
+  overflow: hidden;
+}
+
+.meterFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--wa-lime);
+  transition: width var(--wa-transition);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--wa-border);
+  margin: 0;
+}
+
+.link {
+  color: var(--wa-lime);
+  font-size: var(--wa-fs-small);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.chip {
+  min-height: 44px;
+  padding: var(--wa-space-2) var(--wa-space-4);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+  border: 1px solid var(--wa-border-lime);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background var(--wa-transition),
+    color var(--wa-transition);
+}
+
+.chip:hover:not(:disabled) {
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}
+
+.chipActive {
+  composes: chip;
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}

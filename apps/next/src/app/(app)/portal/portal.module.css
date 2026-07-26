@@ -1,0 +1,29 @@
+.orderNumber {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-body);
+  color: var(--wa-text);
+}
+
+.lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+}
+
+.total {
+  font-family: var(--wa-font-display);
+  color: var(--wa-lime);
+  font-size: var(--wa-fs-body);
+}

@@ -1,0 +1,23 @@
+.code {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  letter-spacing: 0.15em;
+  color: var(--wa-lime);
+}
+
+.productTitle {
+  font-size: var(--wa-fs-h2);
+  margin: 0;
+}
+
+.price {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  color: var(--wa-text);
+}
+
+.retail {
+  color: var(--wa-text-dim);
+  text-decoration: line-through;
+  font-size: var(--wa-fs-small);
+}

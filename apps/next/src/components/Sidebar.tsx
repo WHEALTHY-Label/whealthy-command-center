@@ -18,17 +18,17 @@ interface NavSection {
 }
 
 // Structure and labels preserved from the live app's three-section sidebar.
-// Only Home is migrated; the rest route to a "coming soon" placeholder until
-// their slices land.
+// Every destination is migrated; the "soon" tag renders only for items
+// without the live flag.
 const SECTIONS: NavSection[] = [
   {
     title: 'General',
     items: [
       { label: 'Home', href: '/', live: true },
       { label: 'My Rhythm', href: '/rhythm', live: true },
-      { label: 'Claim Bundle', href: '/claim' },
-      { label: 'Try All', href: '/tryall' },
-      { label: 'The Record', href: '/record' },
+      { label: 'Claim Bundle', href: '/claim', live: true },
+      { label: 'Try All', href: '/tryall', live: true },
+      { label: 'The Record', href: '/record', live: true },
     ],
   },
   {
@@ -37,30 +37,32 @@ const SECTIONS: NavSection[] = [
       {
         label: 'Prayer',
         href: '/prayer',
+        live: true,
         children: [
           { label: 'Prayer Wall', href: '/wall' },
           { label: 'Testimony Wall', href: '/testimony' },
           { label: 'My Prayers', href: '/me' },
         ],
       },
-      { label: 'Scripture', href: '/bible' },
+      { label: 'Scripture', href: '/bible', live: true },
       {
         label: 'Fasting',
         href: '/fast',
+        live: true,
         children: [
           { label: 'The Fast', href: '/fast' },
           { label: 'Cohort Challenge', href: '/cohort' },
         ],
       },
-      { label: 'Circles', href: '/circle' },
+      { label: 'Circles', href: '/circle', live: true },
     ],
   },
   {
     title: 'Community and More',
     items: [
-      { label: 'Community', href: '/community' },
-      { label: 'Affiliate Center', href: '/affiliate' },
-      { label: 'Product Portal', href: '/portal' },
+      { label: 'Community', href: '/community', live: true },
+      { label: 'Affiliate Center', href: '/affiliate', live: true },
+      { label: 'Product Portal', href: '/portal', live: true },
     ],
   },
 ];
@@ -111,7 +113,7 @@ export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
               <div key={item.href + item.label}>
                 {renderLink(item)}
                 {item.children?.map((child) => (
-                  <div key={child.href}>{renderLink(child, true)}</div>
+                  <div key={child.href}>{renderLink({ ...child, live: true }, true)}</div>
                 ))}
               </div>
             ))}
@@ -121,7 +123,8 @@ export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
         {isAdmin ? (
           <div className={styles.section}>
             <p className={styles.sectionTitle}>Admin</p>
-            {renderLink({ label: 'Control Center', href: '/admin' })}
+            {renderLink({ label: 'Surface', href: '/admin', live: true })}
+            {renderLink({ label: 'Control Panel', href: '/admin/analytics', live: true })}
           </div>
         ) : null}
 

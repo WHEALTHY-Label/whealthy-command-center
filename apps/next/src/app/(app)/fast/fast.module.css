@@ -1,0 +1,16 @@
+.headline {
+  font-size: var(--wa-fs-h2);
+  margin: 0;
+}
+
+.headline em {
+  color: var(--wa-lime);
+  font-style: normal;
+}
+
+.dayHero {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-hero);
+  margin: 0;
+  line-height: 1;
+}

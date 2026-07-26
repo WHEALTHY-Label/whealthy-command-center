@@ -1,0 +1,116 @@
+/* Two rails when there is room, a single column on phones. */
+.rails {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--wa-space-4);
+}
+
+@media (min-width: 760px) {
+  .rails {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+  min-width: 0;
+}
+
+.railTitle {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.composerCta {
+  min-height: 44px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-body);
+  cursor: pointer;
+  padding: 0;
+}
+
+.composerCta:hover {
+  color: var(--wa-text);
+}
+
+.modeChoice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wa-space-1);
+  min-height: 44px;
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  cursor: pointer;
+}
+
+.pinned {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+  border: 1px solid var(--wa-border-lime);
+  border-radius: var(--wa-radius-lg);
+  padding: var(--wa-space-3);
+}
+
+.dismiss {
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-h2);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dismiss:hover {
+  color: var(--wa-text);
+}
+
+/* Full-screen dialog; the card stays thumb-reachable on phones. */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--wa-space-4);
+}
+
+@media (min-width: 560px) {
+  .modal {
+    align-items: center;
+  }
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 440px;
+  background: var(--wa-card);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius-lg);
+  padding: var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.modalTitle {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--wa-fs-body);
+  margin: 0;
+}

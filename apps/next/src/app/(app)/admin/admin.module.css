@@ -1,0 +1,114 @@
+.tabBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.tab,
+.tabActive {
+  min-height: 44px;
+  padding: var(--wa-space-2) var(--wa-space-3);
+  border-radius: var(--wa-radius);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wa-space-1);
+}
+
+.tab {
+  background: transparent;
+  border: 1px solid var(--wa-border-mid);
+  color: var(--wa-text-muted);
+}
+
+.tabActive {
+  background: var(--wa-lime-soft);
+  border: 1px solid var(--wa-border-lime);
+  color: var(--wa-lime);
+}
+
+.badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--wa-amber);
+  color: var(--wa-black);
+  font-size: var(--wa-fs-micro);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cellBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.cellName {
+  color: var(--wa-text);
+  font-size: var(--wa-fs-small);
+  overflow-wrap: anywhere;
+}
+
+.rowSelect {
+  width: auto;
+  min-width: 110px;
+}
+
+.chartList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.chartRow {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-2);
+}
+
+.chartLabel {
+  flex: 0 0 120px;
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-micro);
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chartTrack {
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--wa-glass);
+  overflow: hidden;
+}
+
+.chartFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--wa-lime);
+}
+
+.chartValue {
+  flex: 0 0 40px;
+  text-align: right;
+  color: var(--wa-text);
+  font-size: var(--wa-fs-micro);
+  font-family: var(--wa-font-display);
+}
+
+.rangeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}

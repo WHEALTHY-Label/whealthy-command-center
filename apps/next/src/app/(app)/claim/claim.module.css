@@ -1,0 +1,78 @@
+.bundleName {
+  font-size: var(--wa-fs-h2);
+  margin: 0;
+}
+
+/* One column on phones, two when there is room. */
+.bundles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--wa-space-2);
+}
+
+@media (min-width: 560px) {
+  .bundles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bundle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--wa-space-1);
+  padding: var(--wa-space-3);
+  min-height: 44px;
+  background: var(--wa-black);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--wa-transition);
+}
+
+.bundle:hover {
+  border-color: var(--wa-border-lime);
+}
+
+.bundleActive {
+  border-color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+}
+
+.bundleTitle {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bundlePrice {
+  font-family: var(--wa-font-display);
+  color: var(--wa-lime);
+  display: flex;
+  align-items: baseline;
+  gap: var(--wa-space-2);
+}
+
+.bundleRetail {
+  color: var(--wa-text-dim);
+  text-decoration: line-through;
+  font-size: var(--wa-fs-micro);
+}
+
+.valueRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+}
+
+.valueTotal {
+  border-top: 1px solid var(--wa-border);
+  padding-top: var(--wa-space-2);
+  color: var(--wa-amber);
+  font-family: var(--wa-font-display);
+}

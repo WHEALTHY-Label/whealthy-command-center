@@ -1,0 +1,152 @@
+import 'server-only';
+import { cache } from 'react';
+import { getAuthedEmail } from '@/lib/auth/session';
+import { getPublicEnv } from '@/lib/env';
+import { createClient } from '@/lib/supabase/server';
+
+export type FnResult =
+  | { ok: true; status: number; data: Record<string, unknown> }
+  | { ok: false; status: number; code: string; data: Record<string, unknown> };
+
+function anonHeaders() {
+  const env = getPublicEnv();
+  return {
+    'content-type': 'application/json',
+    apikey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+  };
+}
+
+/**
+ * Call an email-gated edge function as the signed-in member.
+ *
+ * The deployed functions read identity from either the `?email=` query string
+ * (rhythm family) or an `email` field in the body (prayer, circle, governor
+ * families), so both carry the validated session email. Client input never
+ * reaches either one.
+ */
+export async function memberFn(slug: string, body?: Record<string, unknown>): Promise<FnResult> {
+  const email = await getAuthedEmail();
+  if (!email) return { ok: false, status: 401, code: 'not_signed_in', data: {} };
+  const env = getPublicEnv();
+  try {
+    const res = await fetch(
+      `${env.NEXT_PUBLIC_FN_BASE}/${slug}?email=${encodeURIComponent(email)}`,
+      {
+        method: 'POST',
+        headers: anonHeaders(),
+        cache: 'no-store',
+        body: JSON.stringify({ ...(body ?? {}), email }),
+      },
+    );
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    if (!res.ok) {
+      return {
+        ok: false,
+        status: res.status,
+        code: typeof data.error === 'string' ? data.error : '',
+        data,
+      };
+    }
+    return { ok: true, status: res.status, data };
+  } catch {
+    return { ok: false, status: 0, code: '', data: {} };
+  }
+}
+
+/** GET variant for the read-only functions that accept query input. */
+export async function memberFnGet(slug: string, query: string): Promise<FnResult> {
+  const email = await getAuthedEmail();
+  if (!email) return { ok: false, status: 401, code: 'not_signed_in', data: {} };
+  const env = getPublicEnv();
+  try {
+    const res = await fetch(
+      `${env.NEXT_PUBLIC_FN_BASE}/${slug}?email=${encodeURIComponent(email)}${query ? `&${query}` : ''}`,
+      { headers: anonHeaders(), cache: 'no-store' },
+    );
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    if (!res.ok) {
+      return {
+        ok: false,
+        status: res.status,
+        code: typeof data.error === 'string' ? data.error : '',
+        data,
+      };
+    }
+    return { ok: true, status: res.status, data };
+  } catch {
+    return { ok: false, status: 0, code: '', data: {} };
+  }
+}
+
+export interface MemberContext {
+  email: string;
+  memberId: number;
+  name: string;
+}
+
+/**
+ * The wall family keys writes by numeric `member_id`, not email. Resolve it
+ * once per request from `approved_members` via the session-scoped client.
+ */
+export const getMemberContext = cache(async (): Promise<MemberContext | null> => {
+  const email = await getAuthedEmail();
+  if (!email) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('approved_members')
+    .select('id, name')
+    .eq('email', email)
+    .maybeSingle();
+  if (error || !data) return null;
+  const id = (data as { id?: unknown }).id;
+  if (typeof id !== 'number') return null;
+  return {
+    email,
+    memberId: id,
+    name: typeof (data as { name?: unknown }).name === 'string' ? (data as { name: string }).name : 'Steward',
+  };
+});
+
+/**
+ * Call an admin function. These validate the caller's Supabase JWT server-side
+ * (admin_role on approved_members), so the session access token is forwarded
+ * and the anon key is never enough.
+ */
+export async function adminFn(
+  slug: string,
+  body?: Record<string, unknown>,
+  method: 'POST' | 'GET' = 'POST',
+): Promise<FnResult> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const token = session?.access_token;
+  if (!token) return { ok: false, status: 401, code: 'no_token', data: {} };
+  const env = getPublicEnv();
+  try {
+    const res = await fetch(`${env.NEXT_PUBLIC_FN_BASE}/${slug}`, {
+      method,
+      headers: {
+        'content-type': 'application/json',
+        apikey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${token}`,
+      },
+      cache: 'no-store',
+      ...(method === 'POST' ? { body: JSON.stringify(body ?? {}) } : {}),
+    });
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    if (!res.ok) {
+      return {
+        ok: false,
+        status: res.status,
+        code: typeof data.error === 'string' ? data.error : '',
+        data,
+      };
+    }
+    return { ok: true, status: res.status, data };
+  } catch {
+    return { ok: false, status: 0, code: '', data: {} };
+  }
+}

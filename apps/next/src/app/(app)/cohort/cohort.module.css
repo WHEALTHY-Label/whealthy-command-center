@@ -1,0 +1,17 @@
+.board {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.boardName {
+  font-family: var(--wa-font-display);
+  color: var(--wa-text);
+  font-size: var(--wa-fs-small);
+}
+
+.modeSelect {
+  max-width: 180px;
+}
