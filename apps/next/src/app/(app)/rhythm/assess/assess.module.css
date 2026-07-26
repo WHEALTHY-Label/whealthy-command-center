@@ -1,0 +1,407 @@
+.page {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--wa-space-8) var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-6);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.eyebrow {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-lime);
+  margin: 0;
+}
+
+.progress {
+  height: 3px;
+  width: 100%;
+  background: var(--wa-glass);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  background: var(--wa-lime);
+  transition: width var(--wa-transition);
+}
+
+.progressLabel {
+  margin: 0;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-4);
+}
+
+.title {
+  font-size: var(--wa-fs-h2);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.sub {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.settled {
+  color: var(--wa-text);
+  font-size: var(--wa-fs-body);
+  line-height: 1.6;
+  margin: 0;
+  border-left: 2px solid var(--wa-lime);
+  padding-left: var(--wa-space-4);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.option,
+.optionOn {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-4);
+  color: var(--wa-text);
+  font-family: inherit;
+  font-size: var(--wa-fs-body);
+  cursor: pointer;
+  transition:
+    border-color var(--wa-transition),
+    background var(--wa-transition);
+  /* Comfortable tap target on phones. */
+  min-height: 52px;
+}
+
+.option:hover {
+  border-color: var(--wa-border-mid);
+}
+
+.optionOn {
+  border-color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+}
+
+.optionLabel {
+  font-size: var(--wa-fs-body);
+}
+
+.optionNote {
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text-dim);
+}
+
+.fieldRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-3);
+}
+
+.fieldRow > .field {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+}
+
+.label {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.labelQuiet {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text);
+  font-family: inherit;
+  /* 16px minimum stops iOS Safari from zooming the viewport on focus. */
+  font-size: 1rem;
+  padding: var(--wa-space-3);
+  min-height: 48px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--wa-lime);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.chip,
+.chipOn {
+  border-radius: 999px;
+  border: 1px solid var(--wa-border-mid);
+  background: transparent;
+  color: var(--wa-text-muted);
+  font-family: inherit;
+  font-size: var(--wa-fs-small);
+  padding: var(--wa-space-2) var(--wa-space-4);
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.chipOn {
+  border-color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+  color: var(--wa-text);
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-3);
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.toggleRow input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--wa-lime);
+}
+
+.anchorAdd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.anchorAdd > .input {
+  flex: 1 1 160px;
+}
+
+.add {
+  flex: 0 0 auto;
+  border-radius: var(--wa-radius);
+  border: 1px solid var(--wa-border-mid);
+  background: transparent;
+  color: var(--wa-text);
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--wa-fs-small);
+  padding: 0 var(--wa-space-6);
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.add:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.anchorList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.anchorItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wa-space-3);
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3) var(--wa-space-4);
+  font-size: var(--wa-fs-small);
+}
+
+.anchorWhen {
+  color: var(--wa-text-dim);
+}
+
+.remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--wa-text-dim);
+  font-family: inherit;
+  font-size: var(--wa-fs-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: var(--wa-space-2);
+}
+
+.remove:hover {
+  color: var(--wa-text);
+}
+
+.familyGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--wa-space-3);
+}
+
+@media (min-width: 480px) {
+  .familyGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.summary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.summary li {
+  color: var(--wa-text);
+  font-size: var(--wa-fs-body);
+  line-height: 1.6;
+  border-left: 2px solid var(--wa-border-lime);
+  padding-left: var(--wa-space-4);
+}
+
+.error {
+  color: var(--wa-amber);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.nav,
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-3);
+  flex-wrap: wrap;
+}
+
+.nav {
+  justify-content: space-between;
+}
+
+.primary {
+  flex: 1 1 auto;
+  text-align: center;
+  background: var(--wa-lime);
+  color: var(--wa-black);
+  border: none;
+  border-radius: var(--wa-radius);
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--wa-fs-small);
+  padding: var(--wa-space-4) var(--wa-space-8);
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background: var(--wa-lime-hover);
+}
+
+.primary:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.quiet {
+  background: none;
+  border: none;
+  color: var(--wa-text-dim);
+  font-family: inherit;
+  font-size: var(--wa-fs-small);
+  padding: var(--wa-space-3) var(--wa-space-2);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.quiet:hover {
+  color: var(--wa-text);
+}
+
+.quiet:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* --- Season threshold (shown before the quiz exists) --- */
+
+.threshold {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--wa-space-12) var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-4);
+  text-align: center;
+  align-items: center;
+}
+
+.thresholdTitle {
+  font-size: var(--wa-fs-h1);
+  margin: 0;
+}
+
+.verse {
+  margin: var(--wa-space-6) 0 0;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  font-style: italic;
+  line-height: 1.6;
+}
