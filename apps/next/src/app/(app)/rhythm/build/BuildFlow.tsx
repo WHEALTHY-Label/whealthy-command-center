@@ -34,6 +34,7 @@ import {
   updateSlot,
   type ActionResult,
 } from './actions';
+import { DrumLoader } from '@/components/DrumLoader';
 import styles from './build.module.css';
 
 export function BuildFlow({ status }: { status: RhythmStatus }) {
@@ -131,14 +132,13 @@ export function BuildFlow({ status }: { status: RhythmStatus }) {
           <Link href="/rhythm/assess" className={styles.primary}>
             Take the assessment
           </Link>
+        ) : pending ? (
+          /* The engine takes a few seconds. The drum keeps time so the wait
+             reads as work happening rather than a button that went dead. */
+          <DrumLoader label="Drafting your rhythm" />
         ) : (
-          <button
-            type="button"
-            className={styles.primary}
-            disabled={pending}
-            onClick={() => run(draftRhythm)}
-          >
-            {pending ? 'Drafting' : 'Draft my rhythm'}
+          <button type="button" className={styles.primary} onClick={() => run(draftRhythm)}>
+            Draft my rhythm
           </button>
         )}
       </div>

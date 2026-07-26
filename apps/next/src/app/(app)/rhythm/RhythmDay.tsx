@@ -11,6 +11,8 @@ import {
   type RhythmSlot,
 } from '@/lib/rhythm';
 import { checkInSlot } from './actions';
+import { NudgeToasts } from './NudgeToasts';
+import { SeasonStrip } from './SeasonStrip';
 import styles from './rhythm.module.css';
 
 export function RhythmDay({ status, icsUrl }: { status: RhythmStatus; icsUrl: string | null }) {
@@ -52,14 +54,11 @@ export function RhythmDay({ status, icsUrl }: { status: RhythmStatus; icsUrl: st
         </p>
       </header>
 
-      {status.season.source ? (
-        <div className={styles.season}>
-          {status.season.source === 'fast' ? 'Fast' : 'Season'}
-          {status.season.day && status.season.total
-            ? `, day ${status.season.day} of ${status.season.total}`
-            : ''}
-        </div>
-      ) : null}
+      <SeasonStrip season={status.season} />
+
+      {/* Only a live rhythm has nudges to spend, and asking without one costs a
+          call that answers with an empty list. */}
+      {status.active ? <NudgeToasts suppressFreshStart={status.freshStart} /> : null}
 
       {status.freshStart ? (
         <div className={styles.freshStart}>

@@ -34,15 +34,196 @@
   margin: 0;
 }
 
-.season {
-  align-self: flex-start;
+/* The season strip. One column on a phone, and every control here is a real
+   tap target rather than a pill you have to aim at. */
+.seasonStrip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border-lime);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3) var(--wa-space-4);
+}
+
+.seasonLine {
+  margin: 0;
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+}
+
+.seasonOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.seasonChip {
+  min-height: 44px;
+  padding: var(--wa-space-2) var(--wa-space-4);
   font-family: var(--wa-font-display);
   font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--wa-lime);
   background: var(--wa-lime-soft);
   border: 1px solid var(--wa-border-lime);
   border-radius: 999px;
-  padding: var(--wa-space-1) var(--wa-space-4);
+  cursor: pointer;
+  transition:
+    background var(--wa-transition),
+    color var(--wa-transition);
+}
+
+.seasonChip:hover:not(:disabled) {
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}
+
+.seasonChip:disabled,
+.seasonQuiet:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.seasonQuiet {
+  min-height: 44px;
+  padding: var(--wa-space-2) var(--wa-space-3);
+  background: transparent;
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-small);
+  cursor: pointer;
+  transition:
+    border-color var(--wa-transition),
+    color var(--wa-transition);
+}
+
+.seasonQuiet:hover:not(:disabled) {
+  border-color: var(--wa-border-lime);
+  color: var(--wa-text);
+}
+
+.seasonEnd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wa-space-2);
+}
+
+.seasonConfirm {
+  flex: 1 1 100%;
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+}
+
+.seasonHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+}
+
+.seasonLabel {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wa-lime);
+}
+
+.seasonLeft {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.seasonTrack {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--wa-glass);
+  overflow: hidden;
+}
+
+.seasonBar {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--wa-lime);
+  transition: width var(--wa-transition);
+}
+
+.seasonDay {
+  margin: 0;
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text-muted);
+}
+
+.cohortNote {
+  color: var(--wa-text-dim);
+}
+
+.seasonDone {
+  margin: 0;
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  color: var(--wa-green);
+}
+
+/* Nudges sit in the page flow rather than floating over the anchors: on a
+   phone a fixed overlay would cover the very row it is talking about. */
+.nudges {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.nudge {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--wa-space-2);
+  background: var(--wa-glass);
+  border: 1px solid var(--wa-border-mid);
+  border-left: 3px solid var(--wa-amber);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3) var(--wa-space-3) var(--wa-space-3) var(--wa-space-4);
+}
+
+.nudgeBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+}
+
+.nudgeCopy {
+  margin: 0;
+  color: var(--wa-text);
+  font-size: var(--wa-fs-small);
+}
+
+.nudgeLink {
+  align-self: flex-start;
+  font-size: var(--wa-fs-small);
+  color: var(--wa-lime);
+}
+
+.nudgeClose {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: calc(var(--wa-space-2) * -1) calc(var(--wa-space-1) * -1) 0 0;
+  background: transparent;
+  border: none;
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-h2);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nudgeClose:hover {
+  color: var(--wa-text);
 }
 
 .freshStart {

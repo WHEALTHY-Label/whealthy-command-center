@@ -49,9 +49,21 @@ export interface RhythmSuggestion {
 }
 
 export interface Season {
+  /** A running fast takes precedence over a standalone rhythm season. */
   source: 'fast' | 'rhythm' | null;
   day?: number;
   total?: number;
+  daysLeft?: number;
+  startDate?: string;
+  /** The count ran past its last day. The anchors keep going regardless. */
+  completed: boolean;
+  label?: string;
+  cohortId?: string;
+  /**
+   * Only meaningful while `source` is null: once a season is running the
+   * function stops sending `can_commit` at all, so `source` is what decides
+   * whether an offer is shown.
+   */
   canCommit: boolean;
   options?: number[];
 }
@@ -87,7 +99,7 @@ export const EMPTY_STATUS: RhythmStatus = {
   adherence7: 0,
   adherence30: 0,
   consistencyDays: 0,
-  season: { source: null, canCommit: true, options: [21, 40, 90] },
+  season: { source: null, completed: false, canCommit: true, options: [21, 40, 90] },
   freshStart: false,
   icsToken: null,
 };
@@ -162,12 +174,17 @@ function toOrigin(raw: unknown): RhythmSlot['origin'] {
 
 function parseSeason(raw: unknown): Season {
   const s = obj(raw);
-  if (!s) return { source: null, canCommit: true, options: [21, 40, 90] };
+  if (!s) return { source: null, completed: false, canCommit: true, options: [21, 40, 90] };
   const source = s.source === 'fast' || s.source === 'rhythm' ? s.source : null;
   return {
     source,
     day: typeof s.day === 'number' ? s.day : undefined,
     total: typeof s.total === 'number' ? s.total : undefined,
+    daysLeft: typeof s.days_left === 'number' ? s.days_left : undefined,
+    startDate: str(s.start_date),
+    completed: s.completed === true,
+    label: str(s.label),
+    cohortId: str(s.cohort_id),
     canCommit: s.can_commit !== false,
     options: Array.isArray(s.options)
       ? s.options.filter((n): n is number => typeof n === 'number')

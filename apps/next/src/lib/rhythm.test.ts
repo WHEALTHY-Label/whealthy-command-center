@@ -144,6 +144,83 @@ describe('parseRhythmStatus', () => {
     expect(status.season.canCommit).toBe(false);
   });
 
+  it('carries every field a running season sends, not just its source', () => {
+    const status = parseRhythmStatus({
+      has_plan: true,
+      plan_id: 'p',
+      slots: [],
+      season: {
+        source: 'rhythm',
+        day: 4,
+        total: 21,
+        days_left: 17,
+        start_date: '2026-07-19',
+        completed: false,
+        label: 'Your 21-day rhythm',
+      },
+    });
+
+    expect(status.season).toEqual({
+      source: 'rhythm',
+      day: 4,
+      total: 21,
+      daysLeft: 17,
+      startDate: '2026-07-19',
+      completed: false,
+      label: 'Your 21-day rhythm',
+      // The function stops sending `can_commit` once a season is running, so the
+      // parsed default is true and `source` is what decides the offer.
+      canCommit: true,
+      options: [21, 40, 90],
+    });
+  });
+
+  it('keeps a fast on its own source and cohort', () => {
+    const status = parseRhythmStatus({
+      has_plan: true,
+      plan_id: 'p',
+      slots: [],
+      season: {
+        source: 'fast',
+        day: 3,
+        total: 3,
+        days_left: 0,
+        cohort_id: 'c-7',
+        completed: false,
+        label: 'Running with your Fast',
+      },
+    });
+
+    expect(status.season.source).toBe('fast');
+    expect(status.season.cohortId).toBe('c-7');
+    expect(status.season.daysLeft).toBe(0);
+  });
+
+  it('reads an idle season as an offer with the lengths the function allows', () => {
+    const status = parseRhythmStatus({
+      has_plan: true,
+      plan_id: 'p',
+      slots: [],
+      season: { source: null, can_commit: true, options: [21, 40, 90] },
+    });
+
+    expect(status.season.source).toBeNull();
+    expect(status.season.canCommit).toBe(true);
+    expect(status.season.options).toEqual([21, 40, 90]);
+    expect(status.season.completed).toBe(false);
+  });
+
+  it('marks a season that ran past its last day complete', () => {
+    const status = parseRhythmStatus({
+      has_plan: true,
+      plan_id: 'p',
+      slots: [],
+      season: { source: 'rhythm', day: 21, total: 21, days_left: 0, completed: true },
+    });
+
+    expect(status.season.completed).toBe(true);
+  });
+
   it('shows the fresh-start moment only when the function raises it', () => {
     const status = parseRhythmStatus({
       has_plan: true,

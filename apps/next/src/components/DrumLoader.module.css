@@ -1,0 +1,109 @@
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wa-space-4);
+  padding: var(--wa-space-8) var(--wa-space-4);
+}
+
+.drum {
+  width: 80px;
+  height: 80px;
+}
+
+.shell {
+  fill: var(--wa-card);
+  stroke: var(--wa-border-mid);
+  stroke-width: 3;
+}
+
+.head {
+  fill: var(--wa-glass);
+  stroke: var(--wa-lime);
+  stroke-width: 3;
+  /* The ellipse scales about its own centre, not the top-left of the viewBox. */
+  transform-origin: 40px 46px;
+  transform-box: fill-box;
+  animation: beat 1.2s infinite ease-in-out;
+}
+
+.rim {
+  stroke: var(--wa-border-mid);
+  stroke-width: 3;
+}
+
+.stickLeft,
+.stickRight {
+  stroke: var(--wa-lime);
+  stroke-width: 3.5;
+}
+
+.stickLeft {
+  transform-origin: 20px 20px;
+  animation: stickLeft 1.2s infinite ease-in-out;
+}
+
+.stickRight {
+  transform-origin: 60px 20px;
+  animation: stickRight 1.2s infinite ease-in-out;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wa-lime);
+  text-align: center;
+}
+
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes stickLeft {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  45% {
+    transform: rotate(-35deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes stickRight {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  45% {
+    transform: rotate(35deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+/* A steward who has asked their phone to stop moving things still gets the drum,
+   just held still, with the label doing the work. */
+@media (prefers-reduced-motion: reduce) {
+  .head,
+  .stickLeft,
+  .stickRight {
+    animation: none;
+  }
+}
