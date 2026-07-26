@@ -1,0 +1,352 @@
+.page {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--wa-space-8) var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-6);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.eyebrow {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-lime);
+  margin: 0;
+}
+
+.title {
+  font-size: var(--wa-fs-h2);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.sub {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.count {
+  margin: 0;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.error {
+  color: var(--wa-amber);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.full {
+  margin: 0;
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-small);
+  line-height: 1.6;
+}
+
+/* --- Grouped timeline --- */
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.groupTitle {
+  margin: 0;
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.slots,
+.suggestions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.slot,
+.suggestion {
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+/* Suggestions sit beside their Add button once there is room for it. */
+@media (min-width: 480px) {
+  .suggestion {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--wa-space-4);
+  }
+}
+
+.slotBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+  min-width: 0;
+}
+
+.slotHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--wa-space-2);
+}
+
+.slotTitle {
+  font-size: var(--wa-fs-body);
+  color: var(--wa-text);
+  /* Long anchor names wrap instead of pushing the tools off a phone screen. */
+  overflow-wrap: anywhere;
+}
+
+.slotCue {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-lime);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ifThen {
+  margin: 0;
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text-muted);
+  line-height: 1.6;
+}
+
+.why {
+  margin: 0;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  line-height: 1.6;
+}
+
+.slotTools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wa-space-2);
+}
+
+.tool,
+.toolQuiet {
+  border-radius: var(--wa-radius);
+  border: 1px solid var(--wa-border-mid);
+  background: transparent;
+  color: var(--wa-text);
+  font-family: inherit;
+  font-size: var(--wa-fs-small);
+  padding: 0 var(--wa-space-4);
+  /* 44px keeps every control a comfortable thumb target. */
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.toolQuiet {
+  border-color: transparent;
+  color: var(--wa-text-dim);
+}
+
+.tool:hover {
+  border-color: var(--wa-lime);
+}
+
+.toolQuiet:hover {
+  color: var(--wa-text);
+}
+
+.tool:disabled,
+.toolQuiet:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* --- Editor --- */
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+}
+
+.label {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  /* Darker than the card it sits in, so a field reads as a field. */
+  background: var(--wa-black);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text);
+  font-family: inherit;
+  /* 16px minimum stops iOS Safari from zooming the viewport on focus. */
+  font-size: 1rem;
+  padding: var(--wa-space-3);
+  min-height: 48px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--wa-lime);
+}
+
+.cueRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.chip,
+.chipOn {
+  border-radius: 999px;
+  border: 1px solid var(--wa-border-mid);
+  background: transparent;
+  color: var(--wa-text-muted);
+  font-family: inherit;
+  font-size: var(--wa-fs-small);
+  padding: var(--wa-space-2) var(--wa-space-4);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.chipOn {
+  border-color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+  color: var(--wa-text);
+}
+
+.preview {
+  margin: 0;
+  color: var(--wa-text);
+  font-size: var(--wa-fs-small);
+  line-height: 1.6;
+  border-left: 2px solid var(--wa-lime);
+  padding-left: var(--wa-space-4);
+}
+
+.editorActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wa-space-3);
+}
+
+/* --- Approval gate --- */
+
+.approve {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-4);
+  border-top: 1px solid var(--wa-border);
+  padding-top: var(--wa-space-6);
+}
+
+.approveLine {
+  margin: 0;
+  color: var(--wa-text);
+  font-size: var(--wa-fs-body);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wa-space-3);
+}
+
+.primary {
+  flex: 1 1 auto;
+  text-align: center;
+  background: var(--wa-lime);
+  color: var(--wa-black);
+  border: none;
+  border-radius: var(--wa-radius);
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--wa-fs-small);
+  padding: var(--wa-space-4) var(--wa-space-8);
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background: var(--wa-lime-hover);
+}
+
+.primary:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.quiet {
+  background: none;
+  border: none;
+  color: var(--wa-text-dim);
+  font-family: inherit;
+  font-size: var(--wa-fs-small);
+  padding: var(--wa-space-3) var(--wa-space-2);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.quiet:hover {
+  color: var(--wa-text);
+}
+
+.quiet:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
