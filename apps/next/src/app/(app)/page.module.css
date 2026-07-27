@@ -209,10 +209,176 @@
   margin: 0;
 }
 
+/* ── The discipline ledger ─────────────────────────────────────────────
+   Ported from the .chain-* rules at index.html:1284 and the inline styles
+   drawDisciplineCard wrote at index.html:13128. Sizes that were fixed
+   pixels there are tokens here so the card scales with the rest of the app,
+   and the grid is fluid so four cards never crush a 390px screen. */
+
+.keptLine {
+  font-size: var(--wa-fs-small);
+  line-height: 1.45;
+  color: var(--wa-text-muted);
+  margin: 0;
+}
+
+.chainChip {
+  background: var(--wa-glass);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3) var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+}
+
+.chainHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-3);
+}
+
+.chainCount {
+  font-family: var(--wa-font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--wa-lime);
+  flex-shrink: 0;
+}
+
+.chainMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+  min-width: 0;
+}
+
+.chainState {
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text);
+}
+
+.chainVerse {
+  font-size: var(--wa-fs-micro);
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--wa-text-dim);
+}
+
+.chainRef {
+  font-style: normal;
+  color: var(--wa-lime-dim);
+}
+
+.chainDots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+}
+
+.chainDot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dotFilled {
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}
+
+.dotGraced {
+  border: 1px dashed var(--wa-border-mid);
+  color: var(--wa-text-dim);
+}
+
+.dotMissed {
+  background: var(--wa-glass-hi);
+  color: transparent;
+}
+
+.dotDim {
+  background: var(--wa-glass);
+  border: 1px solid var(--wa-border);
+  color: transparent;
+}
+
+.disciplineGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--wa-space-3);
+  margin-top: var(--wa-space-2);
+}
+
+.disciplineCard {
+  background: var(--wa-glass);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-1);
+  text-align: left;
+  transition:
+    opacity var(--wa-transition),
+    background var(--wa-transition);
+}
+
+.disciplineCard:hover {
+  background: var(--wa-glass-hi);
+  /* A resting card brightens on hover so it is clearly still a way in. */
+  opacity: 1 !important;
+}
+
+.disciplineCardTitle {
+  font-family: var(--wa-font-display);
+  font-weight: 700;
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--wa-text);
+}
+
+.disciplineCardMeta {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.disciplineCardLine {
+  border-left: 2px solid var(--wa-lime);
+  padding-left: var(--wa-space-2);
+  margin-top: var(--wa-space-2);
+  font-size: var(--wa-fs-micro);
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--wa-text-dim);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .wallCard {
   border-color: var(--wa-border-lime);
-  background:
-    radial-gradient(circle at top right, var(--wa-lime-soft), transparent 60%), var(--wa-surface);
+  background: radial-gradient(circle at top right, var(--wa-lime-soft), transparent 60%),
+    var(--wa-surface);
 }
 
 .wallGarnish {

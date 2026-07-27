@@ -10,9 +10,11 @@ import {
   selectDirective,
   wallGarnish,
 } from '@/lib/dashboard';
+import { fetchLedger } from '@/lib/ledgerFetch';
 import { fetchMemberProfile } from '@/lib/tour';
 import { RetakeTourLink } from '@/components/tour/RetakeTourLink';
 import { DirectiveCard } from './DirectiveCard';
+import { DisciplineLedger } from './DisciplineLedger';
 import styles from './page.module.css';
 
 export default async function DashboardPage() {
@@ -20,12 +22,13 @@ export default async function DashboardPage() {
   // The layout guarantees an authenticated member; satisfy the type.
   if (!email) return null;
 
-  const [onboarding, rhythm, governor, profile, wall] = await Promise.all([
+  const [onboarding, rhythm, governor, profile, wall, ledgerView] = await Promise.all([
     fetchOnboardingState(email),
     fetchRhythmStatus(email),
     fetchGovernorState(email),
     fetchMemberProfile(email),
     fetchWallCommunity(email),
+    fetchLedger(),
   ]);
 
   const archetype = onboarding.archetype_name ?? onboarding.archetype ?? 'Steward';
@@ -91,8 +94,23 @@ export default async function DashboardPage() {
         </p>
       </section>
 
+      {/* The live app's "Today's disciplines" card: the spelled-out count, the
+          rhythm chain chip, and the four discipline cards (index.html:15824). */}
       <section className={styles.card}>
         <p className={styles.cardKicker}>Today&rsquo;s disciplines</p>
+        <DisciplineLedger
+          ledger={ledgerView.ledger}
+          today={ledgerView.today}
+          fastRunning={governor.fast !== null}
+          mercyVerse={ledgerView.mercyVerse}
+        />
+      </section>
+
+      {/* The rhythm slots are a separate feature from the four disciplines
+          above: they come from `rhythm-status` and describe the anchors the
+          steward built, not what was kept today. */}
+      <section className={styles.card}>
+        <p className={styles.cardKicker}>Your rhythm</p>
         {rhythm.slots.length > 0 ? (
           <ul className={styles.disciplines}>
             {rhythm.slots.map((slot, i) => (
