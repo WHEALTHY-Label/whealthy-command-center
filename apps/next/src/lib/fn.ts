@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { getAuthedEmail } from '@/lib/auth/session';
 import { getPublicEnv } from '@/lib/env';
 import { createClient } from '@/lib/supabase/server';
+import { fetchMemberProfile } from '@/lib/tour';
 
 export type FnResult =
   | { ok: true; status: number; data: Record<string, unknown> }
@@ -87,25 +88,21 @@ export interface MemberContext {
 
 /**
  * The wall family keys writes by numeric `member_id`, not email. Resolve it
- * once per request from `approved_members` via the session-scoped client.
+ * once per request through `verify-member`.
+ *
+ * Not from the table: `approved_members` has row level security on with no
+ * SELECT policy and no grant to `authenticated`, so the session-scoped select
+ * this used to do raised `42501 permission denied` for every signed-in member.
+ * The error branch was taken every single time, which is why affiliate link
+ * generation reported "Not signed in." to a signed-in steward and every
+ * member-id-keyed wall write refused.
  */
 export const getMemberContext = cache(async (): Promise<MemberContext | null> => {
   const email = await getAuthedEmail();
   if (!email) return null;
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('approved_members')
-    .select('id, name')
-    .eq('email', email)
-    .maybeSingle();
-  if (error || !data) return null;
-  const id = (data as { id?: unknown }).id;
-  if (typeof id !== 'number') return null;
-  return {
-    email,
-    memberId: id,
-    name: typeof (data as { name?: unknown }).name === 'string' ? (data as { name: string }).name : 'Steward',
-  };
+  const profile = await fetchMemberProfile(email);
+  if (profile.memberId === null) return null;
+  return { email, memberId: profile.memberId, name: profile.name };
 });
 
 /**

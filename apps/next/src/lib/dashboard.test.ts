@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  activeFastDay,
   bundleState,
   firstStepsProgress,
+  parseGovernorFast,
   parseWallCommunity,
   selectDirective,
   wallGarnish,
@@ -12,7 +14,7 @@ import {
 describe('selectDirective', () => {
   it('uses the fast-phase line during an active fast', () => {
     expect(selectDirective({ fast: { day: 3, duration: 40, phase: 'deep work' } })).toBe(
-      'Day 3 of 40, deep work',
+      'Day 3 of 40 · deep work',
     );
   });
 
@@ -151,5 +153,110 @@ describe('wallGarnish', () => {
     expect(wallGarnish(c({ topPostPrayCount: 99 }))).toBe(
       'The wall is quiet. Yours can be the first.',
     );
+  });
+});
+
+describe('activeFastDay', () => {
+  it('counts the start date as day 1', () => {
+    expect(
+      activeFastDay({ status: 'active', start_date: '2026-07-22', duration: 40 }, '2026-07-22'),
+    ).toBe(1);
+    expect(
+      activeFastDay({ status: 'active', start_date: '2026-07-22', duration: 40 }, '2026-07-24'),
+    ).toBe(3);
+  });
+
+  it('accepts a full timestamp for start_date', () => {
+    expect(
+      activeFastDay(
+        { status: 'active', start_date: '2026-07-22T00:00:00+00:00', duration: 40 },
+        '2026-07-23',
+      ),
+    ).toBe(2);
+  });
+
+  it('ignores a fast that is not active', () => {
+    expect(
+      activeFastDay({ status: 'complete', start_date: '2026-07-22', duration: 40 }, '2026-07-23'),
+    ).toBeNull();
+  });
+
+  it('returns null before the start and after the duration runs out', () => {
+    const fast = { status: 'active', start_date: '2026-07-22', duration: 3 };
+    expect(activeFastDay(fast, '2026-07-21')).toBeNull();
+    expect(activeFastDay(fast, '2026-07-26')).toBeNull();
+  });
+
+  it('keeps counting when duration is missing', () => {
+    expect(activeFastDay({ status: 'active', start_date: '2026-07-01' }, '2026-07-22')).toBe(22);
+  });
+
+  it('rejects a malformed date on either side', () => {
+    expect(
+      activeFastDay({ status: 'active', start_date: 'soon', duration: 40 }, '2026-07-22'),
+    ).toBeNull();
+    expect(
+      activeFastDay({ status: 'active', start_date: '2026-07-22', duration: 40 }, 'today'),
+    ).toBeNull();
+  });
+});
+
+describe('parseGovernorFast', () => {
+  // Shaped like the raw `fasts` row governor-state returns, verbatim.
+  const row = {
+    status: 'active',
+    start_date: '2026-07-20',
+    duration: 40,
+    plan: {
+      phases: [
+        { name: 'Break In', from: 1, to: 7 },
+        { name: 'Deep Work', from: 8, to: 40 },
+      ],
+      focus: {
+        'Break In': ['Hold the morning.', 'Water first.'],
+        'Deep Work': ['One block, no phone.'],
+      },
+    },
+  };
+
+  it('computes the day and picks the phase line for it', () => {
+    expect(parseGovernorFast(row, '2026-07-20')).toEqual({
+      day: 1,
+      duration: 40,
+      phase: 'Hold the morning.',
+    });
+  });
+
+  it('cycles the focus list by day inside a phase', () => {
+    expect(parseGovernorFast(row, '2026-07-21')?.phase).toBe('Water first.');
+    expect(parseGovernorFast(row, '2026-07-22')?.phase).toBe('Hold the morning.');
+  });
+
+  it('reads the second phase once the day crosses into it', () => {
+    expect(parseGovernorFast(row, '2026-07-27')).toEqual({
+      day: 8,
+      duration: 40,
+      phase: 'One block, no phone.',
+    });
+  });
+
+  it('falls back to the steady line when the phase has no focus copy', () => {
+    const noFocus = { ...row, plan: { phases: row.plan.phases, focus: {} } };
+    expect(parseGovernorFast(noFocus, '2026-07-20')?.phase).toBe('Full routine. No exceptions.');
+  });
+
+  it('returns null for a fast with no plan, matching the live gate', () => {
+    expect(
+      parseGovernorFast({ status: 'active', start_date: '2026-07-20', duration: 40 }, '2026-07-20'),
+    ).toBeNull();
+  });
+
+  it('returns null for a missing or zero duration', () => {
+    expect(parseGovernorFast({ ...row, duration: 0 }, '2026-07-20')).toBeNull();
+  });
+
+  it('returns null for anything that is not a row', () => {
+    expect(parseGovernorFast(null, '2026-07-20')).toBeNull();
+    expect(parseGovernorFast('active', '2026-07-20')).toBeNull();
   });
 });

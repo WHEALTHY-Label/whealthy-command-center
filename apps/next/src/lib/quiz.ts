@@ -289,7 +289,8 @@ export function runQuizScoring(a: QuizAnswers): QuizScore {
   } else if (peakBlock) {
     // Gate 3, the spend: there is a peak, so the question is where it goes.
     pattern = 'energy-without-aim';
-    bundleKey = peakBlock === 'early-morning' || peakBlock === 'late-morning' ? 'boss' : 'genius-guice';
+    bundleKey =
+      peakBlock === 'early-morning' || peakBlock === 'late-morning' ? 'boss' : 'genius-guice';
   } else {
     pattern = 'holding-it-together';
     bundleKey = 'boss';
@@ -317,7 +318,13 @@ export function runQuizScoring(a: QuizAnswers): QuizScore {
     govern.includes(3) ||
     govern.includes(4);
   const pathway: Pathway =
-    looking === 1 ? 'steward' : looking === 0 ? 'customer' : hasStewardSignal ? 'steward' : 'customer';
+    looking === 1
+      ? 'steward'
+      : looking === 0
+        ? 'customer'
+        : hasStewardSignal
+          ? 'steward'
+          : 'customer';
 
   const identityProfile: IdentityProfile =
     leaning === 3
@@ -358,6 +365,17 @@ export function runQuizScoring(a: QuizAnswers): QuizScore {
  * The demographic block the live quiz infers rather than asks. It is guesswork
  * by design, but downstream copy and the CRM both read these fields, so the
  * inference is reproduced exactly.
+ *
+ * `sex` and `age_band` are constants here on purpose. The live quiz hardcodes
+ * the same two values (whealthy-quiz.html:3398-3399, and again in the two
+ * reset paths at :3685 and :4763) and posts them to `add-member` at :4115.
+ * Because `add-member` merges `incoming || existing`, a retake overwrites
+ * whatever a real value the CRM held for those two columns. That is a live
+ * data-quality issue, not a port mismatch, and correcting it means either
+ * asking the two questions or changing the merge inside a deployed function.
+ * Both are out of scope while the mandate is to make the port behave like the
+ * page that works. Do not "fix" this side only: dropping the fields here would
+ * make the port and the live quiz write different rows for the same steward.
  */
 export function derivedProfile(a: QuizAnswers): {
   sex: string;

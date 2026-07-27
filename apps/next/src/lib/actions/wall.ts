@@ -159,8 +159,13 @@ export async function answerPost(postId: string, rawNote: string): Promise<WallW
 
 export async function editAnswerNote(postId: string, rawNote: string): Promise<WallWriteResult> {
   const note = rawNote.trim();
-  if (note.length < 1 || note.length > 1000) {
-    return { ok: false, error: 'Keep the note between 1 and 1000 characters.' };
+  // No lower bound. The note is optional (MeClient.tsx labels the field
+  // "(optional)") and the deployed `wall-answer-edit` writes null when it
+  // receives an empty string, which is how a steward clears a note they no
+  // longer want on an answered prayer. The old `< 1` guard made clearing
+  // impossible: the only way out was to leave the old wording in place.
+  if (note.length > 1000) {
+    return { ok: false, error: 'Keep the note under 1000 characters.' };
   }
   const call = await wallFn('wall-answer-edit', { post_id: postId, note });
   if (!call.ok) {

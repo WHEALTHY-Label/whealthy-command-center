@@ -27,11 +27,40 @@ function failure(status: number, code: string): AdminActionResult {
   return { ok: false, error: code || GENERIC };
 }
 
+/**
+ * Why a read came back empty, or null when it came back empty honestly.
+ *
+ * Every loader below used to answer a failed call with `[]`, which the Control
+ * Panel renders identically to a healthy empty table: "Nothing waiting.",
+ * "No members." An expired admin session, a 403, or an unreachable function
+ * all looked like a quiet, well-run system. This turns each of those into a
+ * sentence, and the panel shows it above the (still empty) table.
+ */
+function readFailure(status: number, code: string): string {
+  if (status === 403) return 'Admin access required to read this.';
+  if (status === 401) return 'Your admin session expired. Sign in again.';
+  if (status === 0) return 'Could not reach the server. Check your connection and retry.';
+  return code ? `Could not load this: ${code}` : 'Could not load this. Please retry.';
+}
+
+/** A read that reports why it is empty. */
+export interface Loaded<T> {
+  data: T;
+  error: string | null;
+}
+
 // ---- Registrations ----
 
-export async function loadRegistrations(): Promise<{ rows: Registration[]; pending: number }> {
+export async function loadRegistrations(): Promise<{
+  rows: Registration[];
+  pending: number;
+  error: string | null;
+}> {
   const call = await adminFn('admin-registrations', { action: 'list' });
-  return call.ok ? parseRegistrations(call.data) : { rows: [], pending: 0 };
+  if (!call.ok) {
+    return { rows: [], pending: 0, error: readFailure(call.status, call.code) };
+  }
+  return { ...parseRegistrations(call.data), error: null };
 }
 
 export async function actOnRegistration(
@@ -48,9 +77,10 @@ export async function actOnRegistration(
 
 // ---- Members ----
 
-export async function loadRoster(): Promise<RosterMember[]> {
+export async function loadRoster(): Promise<Loaded<RosterMember[]>> {
   const call = await adminFn('admin-members', { action: 'list' });
-  return call.ok ? parseRoster(call.data) : [];
+  if (!call.ok) return { data: [], error: readFailure(call.status, call.code) };
+  return { data: parseRoster(call.data), error: null };
 }
 
 /**
@@ -105,9 +135,10 @@ export async function banMember(targetEmail: string, ban: boolean): Promise<Admi
 
 // ---- Settings ----
 
-export async function loadSettings(): Promise<Setting[]> {
+export async function loadSettings(): Promise<Loaded<Setting[]>> {
   const call = await adminFn('admin-settings', { action: 'list' });
-  return call.ok ? parseSettings(call.data) : [];
+  if (!call.ok) return { data: [], error: readFailure(call.status, call.code) };
+  return { data: parseSettings(call.data), error: null };
 }
 
 export async function saveSetting(key: string, value: string): Promise<AdminActionResult> {
@@ -124,17 +155,19 @@ export async function deleteSetting(key: string): Promise<AdminActionResult> {
 
 // ---- Audit ----
 
-export async function loadAudit(): Promise<AuditRow[]> {
+export async function loadAudit(): Promise<Loaded<AuditRow[]>> {
   const call = await adminFn('admin-members', { action: 'audit' });
-  return call.ok ? parseAudit(call.data) : [];
+  if (!call.ok) return { data: [], error: readFailure(call.status, call.code) };
+  return { data: parseAudit(call.data), error: null };
 }
 
 // ---- Moderation ----
 
 /** GET wall-moderate has no ok field; a parsed queue IS success. */
-export async function loadModerationQueue(): Promise<ModerationItem[]> {
+export async function loadModerationQueue(): Promise<Loaded<ModerationItem[]>> {
   const call = await adminFn('wall-moderate', undefined, 'GET');
-  return call.ok ? parseModerationQueue(call.data) : [];
+  if (!call.ok) return { data: [], error: readFailure(call.status, call.code) };
+  return { data: parseModerationQueue(call.data), error: null };
 }
 
 export async function moderatePost(

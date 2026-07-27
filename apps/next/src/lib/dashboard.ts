@@ -54,7 +54,8 @@ export function selectDirective(input: {
 }): string {
   const fast = input.fast;
   if (fast && Number.isFinite(fast.day) && Number.isFinite(fast.duration) && fast.duration > 0) {
-    return `Day ${fast.day} of ${fast.duration}${fast.phase ? `, ${fast.phase}` : ''}`;
+    // `·` is the live app's separator at index.html:15900.
+    return `Day ${fast.day} of ${fast.duration}${fast.phase ? ` · ${fast.phase}` : ''}`;
   }
   const ai = input.aiDirective?.trim();
   return ai && ai.length > 0 ? ai : 'Govern the day.';
@@ -218,33 +219,104 @@ export interface GovernorState {
   fast: FastState | null;
 }
 
-/** Daily directive + active-fast info from governor-state. Tolerant. */
+function rec(v: unknown): Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v)
+    ? (v as Record<string, unknown>)
+    : {};
+}
+
+/**
+ * Day N of an active fast, or null when there is no fast running today.
+ *
+ * Same arithmetic the Governor dock uses. Both dates are plain `YYYY-MM-DD`,
+ * so the subtraction is done at UTC midnight and cannot drift by a day.
+ */
+export function activeFastDay(fast: Record<string, unknown>, todayIso: string): number | null {
+  if (fast.status !== 'active') return null;
+  const start = typeof fast.start_date === 'string' ? fast.start_date.slice(0, 10) : '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || !/^\d{4}-\d{2}-\d{2}$/.test(todayIso)) return null;
+  const ms = Date.parse(`${todayIso}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`);
+  const day = Math.floor(ms / 86400000) + 1;
+  const duration = typeof fast.duration === 'number' ? fast.duration : 0;
+  if (day < 1 || (duration > 0 && day > duration)) return null;
+  return day;
+}
+
+/**
+ * Turn the raw `fasts` row `governor-state` returns into the directive's view
+ * of it. Pure and tested.
+ *
+ * `governor-state` returns the row verbatim: `status`, `start_date`,
+ * `duration`, `plan`. It has never returned `day` or `phase`, so the port's
+ * old shape check (`typeof rawFast.day === 'number'`) could not match any real
+ * payload and the fast line never once rendered. The day is computed here and
+ * the phase focus is read out of `plan`, exactly as the live app did at
+ * index.html:15894 (`Day d of D · focus`).
+ */
+export function parseGovernorFast(raw: unknown, todayIso: string): FastState | null {
+  const fast = rec(raw);
+  const day = activeFastDay(fast, todayIso);
+  if (day === null) return null;
+  const duration = typeof fast.duration === 'number' ? fast.duration : 0;
+  if (duration <= 0) return null;
+
+  // The live app gated the whole fast line on `d && S.fast.plan`, so a fast
+  // with no plan attached falls through to the AI directive rather than
+  // printing a bare day count.
+  const plan = rec(fast.plan);
+  if (Object.keys(plan).length === 0) return null;
+  const phases = Array.isArray(plan.phases) ? plan.phases.map(rec) : [];
+  const phase = phases.find(
+    (p) =>
+      typeof p.from === 'number' && typeof p.to === 'number' && day >= p.from && day <= p.to,
+  );
+  const phaseName = phase && typeof phase.name === 'string' ? phase.name : '';
+
+  // `focus` is a map of phase name to a list of daily lines; the live app
+  // cycled through it with `(day - 1) % length`.
+  const focusMap = rec(plan.focus);
+  const lines = phaseName && Array.isArray(focusMap[phaseName]) ? focusMap[phaseName] : [];
+  const picked = lines.length > 0 ? lines[(day - 1) % lines.length] : undefined;
+  const focus =
+    typeof picked === 'string' && picked.trim().length > 0
+      ? picked.trim()
+      : 'Full routine. No exceptions.';
+
+  return { day, duration, phase: focus };
+}
+
+/** Today at UTC midnight as `YYYY-MM-DD`. */
+function utcToday(): string {
+  return new Date(Date.now()).toISOString().slice(0, 10);
+}
+
+/**
+ * Daily directive + active-fast info from governor-state.
+ *
+ * The body matters. `governor-state` reads `{ action, email }` out of the JSON
+ * body and never looks at the query string, and its outer catch answers a
+ * parse failure with HTTP **200** `{ok:false}`. The port used to POST with no
+ * body at all, so `req.json()` threw, `res.ok` was true, every field was
+ * absent, and the Daily Directive was pinned to its fallback forever. Both the
+ * action and the email now ride in the body, matching index.html:13222.
+ */
 export const fetchGovernorState = cache(async (email: string): Promise<GovernorState> => {
   const env = getPublicEnv();
   try {
-    const res = await fetch(
-      `${env.NEXT_PUBLIC_FN_BASE}/governor-state?email=${encodeURIComponent(email)}`,
-      { method: 'POST', headers: authedHeaders(), cache: 'no-store' },
-    );
+    const res = await fetch(`${env.NEXT_PUBLIC_FN_BASE}/governor-state`, {
+      method: 'POST',
+      headers: authedHeaders(),
+      cache: 'no-store',
+      body: JSON.stringify({ action: 'load', email }),
+    });
     if (!res.ok) return { aiDirective: null, fast: null };
     const data = (await res.json()) as Record<string, unknown>;
+    if (data.ok !== true) return { aiDirective: null, fast: null };
     const directive =
       (typeof data.directive === 'string' && data.directive) ||
       (typeof data.daily_directive === 'string' && data.daily_directive) ||
       null;
-    const rawFast =
-      typeof data.fast === 'object' && data.fast !== null
-        ? (data.fast as Record<string, unknown>)
-        : null;
-    const fast: FastState | null =
-      rawFast && typeof rawFast.day === 'number' && typeof rawFast.duration === 'number'
-        ? {
-            day: rawFast.day,
-            duration: rawFast.duration,
-            phase: typeof rawFast.phase === 'string' ? rawFast.phase : undefined,
-          }
-        : null;
-    return { aiDirective: directive, fast };
+    return { aiDirective: directive, fast: parseGovernorFast(data.fast, utcToday()) };
   } catch {
     return { aiDirective: null, fast: null };
   }

@@ -1,5 +1,5 @@
 /**
- * Turn a Supabase auth failure into something a steward (or Jake, testing)
+ * Turn a Supabase auth failure into something a steward (or Ignacio, testing)
  * can act on.
  *
  * The generic "please try again" the sign-in action used to return hid the two

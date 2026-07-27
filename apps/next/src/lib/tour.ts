@@ -36,6 +36,13 @@ export function stepForPath(pathname: string): FsKey | null {
 
 export interface MemberProfile {
   email: string;
+  /** True only when `verify-member` found the row. */
+  verified: boolean;
+  /**
+   * `approved_members.id`, the numeric key the wall family writes against.
+   * Null when the row was not found, so callers can refuse rather than guess.
+   */
+  memberId: number | null;
   name: string;
   firstName: string;
   archetype: string | null;
@@ -62,13 +69,33 @@ export function prettyArchetype(raw: string | null): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+/** Coerce whatever `verify-member` reports as `id` into a usable numeric key. */
+function memberIdOf(v: unknown): number | null {
+  if (typeof v === 'number' && Number.isInteger(v) && v > 0) return v;
+  if (typeof v === 'string' && /^\d+$/.test(v.trim())) {
+    const n = Number(v.trim());
+    return Number.isSafeInteger(n) && n > 0 ? n : null;
+  }
+  return null;
+}
+
 /**
  * Read the `verify-member` payload. Pure, so the mapping is pinned by
  * fixtures taken from the deployed function.
  *
- * Two fields matter beyond identity: `first_steps`, the jsonb map that is the
- * only real source of checklist progress, and `tour_done_at`, which decides
- * whether the guided tour offers itself.
+ * This is the app's ONLY authoritative read of the member row, and it has to
+ * be: `approved_members` has row level security on with no SELECT policy and
+ * no grant to the `authenticated` role, so a session-scoped
+ * `.from('approved_members').select(...)` raises "permission denied" for every
+ * signed-in user, Ignacio included. `verify-member` runs on the service role
+ * and is the same door the legacy app used (index.html:12491), so everything
+ * that needs the row, the admin role and the numeric member id included, comes
+ * through here.
+ *
+ * Three fields matter beyond identity: `id`, the key the wall family writes
+ * against, `first_steps`, the jsonb map that is the only real source of
+ * checklist progress, and `tour_done_at`, which decides whether the guided
+ * tour offers itself.
  */
 export function parseMemberProfile(raw: unknown, fallbackEmail: string): MemberProfile {
   const d = (raw ?? {}) as Record<string, unknown>;
@@ -83,6 +110,8 @@ export function parseMemberProfile(raw: unknown, fallbackEmail: string): MemberP
   const first = name.split(/\s+/)[0] ?? 'Steward';
   return {
     email: str(d.email) ?? fallbackEmail,
+    verified: d.verified === true,
+    memberId: memberIdOf(d.id),
     name,
     firstName: first.charAt(0).toUpperCase() + first.slice(1),
     archetype: str(d.archetype),

@@ -5,6 +5,7 @@ import {
   chronotypeOf,
   emptyAnswers,
   formatClock,
+  nonNegotiableDomain,
   RMEQ_COUNT,
   RMEQ_QUESTIONS,
   rmeqScore,
@@ -137,8 +138,10 @@ describe('buildAssessPayload', () => {
     expect(payload.wake_time).toBe('06:00');
     expect(payload.work_shape.days).toEqual([1, 3, 5]);
     expect(payload.work_shape.remote).toBe(true);
+    // `scripture`, not `custom`: rhythm-build looks the "Open the Word" cue up
+    // by domain, so a mislabelled anchor loses the steward's own wording.
     expect(payload.non_negotiables).toEqual([
-      { label: 'The Word', when: 'before coffee', domain: 'custom' },
+      { label: 'The Word', when: 'before coffee', domain: 'scripture' },
     ]);
     expect(payload.family_anchors).toHaveLength(1);
     expect(payload.accountability_pref).toBe('group');
@@ -149,5 +152,45 @@ describe('buildAssessPayload', () => {
     const payload = buildAssessPayload(emptyAnswers());
     expect(payload.wake_time).toBeNull();
     expect(payload.sleep_time).toBeNull();
+  });
+});
+
+describe('nonNegotiableDomain', () => {
+  it('classifies a scripture anchor so rhythm-build finds it', () => {
+    // rhythm-build looks its "Open the Word" cue up with
+    // `.find(n => n.domain === "scripture")`. Miss, and the steward's own
+    // wording is thrown away for the generic "after the morning cup".
+    for (const label of [
+      'The Word',
+      'Bible',
+      'Scripture reading',
+      'Morning devotional',
+      'A Psalm',
+      'Quiet time',
+      'Gospel',
+    ]) {
+      expect(nonNegotiableDomain(label)).toBe('scripture');
+    }
+  });
+
+  it('classifies a prayer anchor so the evening check-in finds it', () => {
+    for (const label of ['Prayer', 'Praying with my wife', 'Intercession', 'Evening prayers']) {
+      expect(nonNegotiableDomain(label)).toBe('prayer');
+    }
+  });
+
+  it('is case and spacing insensitive', () => {
+    expect(nonNegotiableDomain('  THE WORD  ')).toBe('scripture');
+    expect(nonNegotiableDomain('PRAYER')).toBe('prayer');
+  });
+
+  it('prefers prayer when a label mentions both', () => {
+    expect(nonNegotiableDomain('Prayer and the Word')).toBe('prayer');
+  });
+
+  it('leaves anything else custom, which is the editor default', () => {
+    for (const label of ['Gym', 'Cold plunge', 'Walk the dog', '', 'Wordle']) {
+      expect(nonNegotiableDomain(label)).toBe('custom');
+    }
   });
 });

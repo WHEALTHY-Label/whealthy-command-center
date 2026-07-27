@@ -2,6 +2,10 @@
 
 import { memberFn } from '@/lib/fn';
 import { askGovernor } from '@/lib/actions/governor';
+// One definition of the fast-day arithmetic, shared with the Daily Directive.
+// It used to be copied here verbatim, which meant the Governor and the
+// dashboard could drift on the same question of what day of the fast it is.
+import { activeFastDay } from '@/lib/dashboard';
 import {
   buildRouterPrompt,
   coerceForSurface,
@@ -52,18 +56,6 @@ function rec(v: unknown): Record<string, unknown> {
 
 function s(v: unknown): string {
   return typeof v === 'string' ? v : '';
-}
-
-/** Day N of an active fast, or null. Both dates are plain `YYYY-MM-DD`. */
-function activeFastDay(fast: Record<string, unknown>, todayIso: string): number | null {
-  if (s(fast.status) !== 'active') return null;
-  const start = s(fast.start_date).slice(0, 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || !/^\d{4}-\d{2}-\d{2}$/.test(todayIso)) return null;
-  const ms = Date.parse(`${todayIso}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`);
-  const day = Math.floor(ms / 86400000) + 1;
-  const duration = typeof fast.duration === 'number' ? fast.duration : 0;
-  if (day < 1 || (duration > 0 && day > duration)) return null;
-  return day;
 }
 
 /**

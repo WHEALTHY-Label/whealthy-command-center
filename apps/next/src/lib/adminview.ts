@@ -123,7 +123,13 @@ export function parseAdminStats(data: unknown): StatKpis {
     skoolMembers: num(community.skoolMembers),
     skoolPosts: num(community.skoolPosts),
     circles: num(groups.circles),
-    cohorts: num(groups.cohorts),
+    // `admin-stats` sends `groups.cohorts` as a table, not a count:
+    // `cohortsT.map(c => [c.name, c.status, c.start_date, c.end_date])`
+    // (admin-stats/index.ts:427). The numeric field beside it is
+    // `activeCohorts` (line 428), the count of status `active` or `open`.
+    // Running num() over the array yielded 0, so the Cohorts tile read zero
+    // no matter how many cohorts existed.
+    cohorts: Array.isArray(groups.cohorts) ? groups.cohorts.length : num(groups.activeCohorts),
     tourDone: num(onboarding.tourDone),
     recordEntries: num(record.entries),
   };

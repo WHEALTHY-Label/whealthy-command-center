@@ -272,6 +272,37 @@ export function summaryLines(answers: AssessmentAnswers): string[] {
   return lines;
 }
 
+/**
+ * Which domain a free-text non-negotiable belongs to.
+ *
+ * This is load bearing, not decoration. `rhythm-build` looks its two core
+ * slots up by domain: `non_negotiables.find(n => n.domain === "scripture")`
+ * supplies the cue for "Open the Word" and `=== "prayer"` supplies the cue for
+ * the evening prayer check-in (rhythm-build/index.ts:43 and :46). Sending
+ * `domain: 'custom'` for everything, which this used to do, meant neither
+ * lookup ever matched, so a steward who typed "The Word / before coffee" got
+ * the generic "after the morning cup" back and his own wording was thrown
+ * away.
+ *
+ * The assessment asks for the label in free text (the field's placeholder is
+ * "The Word"), so the classification is by keyword. Anything unrecognised
+ * stays `custom`, which is what the rhythm editor's own domain select defaults
+ * to at index.html:20519.
+ */
+export function nonNegotiableDomain(label: string): string {
+  const t = label.toLowerCase();
+  if (/\b(pray|prayer|prayers|praying|intercession|intercede|rosary)\b/.test(t)) return 'prayer';
+  if (
+    /\b(word|bible|scripture|scriptures|devotion|devotional|devotions|psalm|psalms|gospel|reading|verse|verses)\b/.test(
+      t,
+    ) ||
+    t.includes('quiet time')
+  ) {
+    return 'scripture';
+  }
+  return 'custom';
+}
+
 /** The `rhythm-assess` request body. Field names match the edge function. */
 export interface AssessPayload {
   rmeq_items: number[];
@@ -298,7 +329,10 @@ export function buildAssessPayload(answers: AssessmentAnswers): AssessPayload {
     },
     non_negotiables: answers.nonNegotiables
       .filter((item) => item.label.trim().length > 0)
-      .map((item) => ({ label: item.label.trim(), when: item.when.trim(), domain: 'custom' })),
+      .map((item) => {
+        const label = item.label.trim();
+        return { label, when: item.when.trim(), domain: nonNegotiableDomain(label) };
+      }),
     family_anchors: answers.familyAnchors
       .filter((anchor) => anchor.when.trim().length > 0)
       .map((anchor) => ({ type: anchor.type, when: anchor.when.trim(), cadence: 'weekly' })),

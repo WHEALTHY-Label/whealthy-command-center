@@ -41,10 +41,13 @@ export function AdminClient({
   initialRegistrations,
   initialPending,
   initialRoster,
+  initialError = null,
 }: {
   initialRegistrations: Registration[];
   initialPending: number;
   initialRoster: RosterMember[];
+  /** Why the server-rendered reads came back empty, if they did. */
+  initialError?: string | null;
 }) {
   const [tab, setTab] = useState<Tab>('registrations');
   const [registrations, setRegistrations] = useState(initialRegistrations);
@@ -60,7 +63,7 @@ export function AdminClient({
   const [cohortStart, setCohortStart] = useState('');
   const [cohortEnd, setCohortEnd] = useState('');
   const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(initialError);
   const [pending, startTransition] = useTransition();
 
   const openTab = (next: Tab) => {
@@ -68,9 +71,23 @@ export function AdminClient({
     setMessage(null);
     setError(null);
     startTransition(async () => {
-      if (next === 'settings' && settings === null) setSettings(await loadSettings());
-      if (next === 'audit' && audit === null) setAudit(await loadAudit());
-      if (next === 'moderation' && queue === null) setQueue(await loadModerationQueue());
+      // Each lazy tab reports its own reason for being empty, so a 403 or an
+      // expired session shows as a sentence instead of a blank table.
+      if (next === 'settings' && settings === null) {
+        const r = await loadSettings();
+        setSettings(r.data);
+        if (r.error) setError(r.error);
+      }
+      if (next === 'audit' && audit === null) {
+        const r = await loadAudit();
+        setAudit(r.data);
+        if (r.error) setError(r.error);
+      }
+      if (next === 'moderation' && queue === null) {
+        const r = await loadModerationQueue();
+        setQueue(r.data);
+        if (r.error) setError(r.error);
+      }
     });
   };
 
@@ -88,9 +105,10 @@ export function AdminClient({
   };
 
   const refreshRegistrations = async () => {
-    const { rows, pending: count } = await loadRegistrations();
+    const { rows, pending: count, error: readError } = await loadRegistrations();
     setRegistrations(rows);
     setPendingCount(count);
+    if (readError) setError(readError);
   };
 
   const filteredRoster = roster.filter((m) => {
@@ -391,7 +409,11 @@ export function AdminClient({
                 act(
                   () => saveSetting(settingKey.trim(), settingVal),
                   () => {
-                    startTransition(async () => setSettings(await loadSettings()));
+                    startTransition(async () => {
+                      const r = await loadSettings();
+                      setSettings(r.data);
+                      if (r.error) setError(r.error);
+                    });
                     setMessage('Setting saved.');
                   },
                 )

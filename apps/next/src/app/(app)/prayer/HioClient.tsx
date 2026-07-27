@@ -20,6 +20,8 @@ export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: 
   const [leave, setLeave] = useState<'private' | 'shared'>('private');
   const [postMode, setPostMode] = useState<'signed' | 'anonymous'>('signed');
   const [error, setError] = useState<string | null>(null);
+  const [shared, setShared] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const [reader, setReader] = useState<Passage | null>(null);
   const [readerOpen, setReaderOpen] = useState(false);
   const [answerFor, setAnswerFor] = useState<LedgerItem | null>(null);
@@ -57,6 +59,11 @@ export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: 
         setError(result.error ?? 'That did not save.');
         return;
       }
+      // A shared handover that the wall refused is still saved, so the flow
+      // completes, but the confirmation has to say what actually happened
+      // rather than promise a wall post that is not there.
+      setShared(result.shared === true);
+      setNotice(result.notice ?? null);
       setStep('confirm');
       router.refresh();
     });
@@ -92,6 +99,8 @@ export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: 
     setReader(null);
     setReaderOpen(false);
     setError(null);
+    setShared(false);
+    setNotice(null);
   };
 
   const anchorVerse = Number(cat.scriptureRef.split(':')[1] ?? '0');
@@ -264,13 +273,13 @@ export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: 
           <p className={styles.dove} aria-hidden="true">
             🕊️
           </p>
-          <h2 className={styles.headline}>
-            {leave === 'private' ? 'Saved Privately' : 'Lifted to the Wall'}
-          </h2>
+          <h2 className={styles.headline}>{shared ? 'Lifted to the Wall' : 'Saved Privately'}</h2>
           <p className={ui.body}>
-            {leave === 'private'
-              ? 'Saved privately to My Prayers. No one else will ever see it. Just you and Him.'
-              : 'Your prayer is now on the Prayer Wall where other stewards can see it and pray for you. A copy lives in My Prayers.'}
+            {notice
+              ? notice
+              : shared
+                ? 'Your prayer is now on the Prayer Wall where other stewards can see it and pray for you. A copy lives in My Prayers.'
+                : 'Saved privately to My Prayers. No one else will ever see it. Just you and Him.'}
           </p>
           <div className={ui.row}>
             <button type="button" className={ui.primary} onClick={resetFlow}>

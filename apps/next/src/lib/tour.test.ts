@@ -92,6 +92,8 @@ describe('parseMemberProfile', () => {
   it('reads a full verify-member payload', () => {
     const got = parseMemberProfile(
       {
+        id: 17,
+        verified: true,
         email: 'jake@example.com',
         name: 'Jake Jacobs',
         archetype: 'low-floor',
@@ -106,6 +108,8 @@ describe('parseMemberProfile', () => {
     );
     expect(got).toEqual({
       email: 'jake@example.com',
+      verified: true,
+      memberId: 17,
       name: 'Jake Jacobs',
       firstName: 'Jake',
       archetype: 'low-floor',
@@ -258,9 +262,9 @@ describe('buildTourSteps', () => {
 
   it('names the day when a fast is running', () => {
     const idle = buildTourSteps(ctx()).find((s) => s.target === '/fast');
-    const running = buildTourSteps(
-      ctx({ fastActive: true, fastDay: 4, fastDuration: 21 }),
-    ).find((s) => s.target === '/fast');
+    const running = buildTourSteps(ctx({ fastActive: true, fastDay: 4, fastDuration: 21 })).find(
+      (s) => s.target === '/fast',
+    );
     expect(idle?.body).not.toContain('Day');
     expect(running?.body).toContain('Day 4 of 21');
   });
@@ -297,5 +301,38 @@ describe('buildTourSteps', () => {
 
   it('includes My Rhythm, which the live tour predates', () => {
     expect(buildTourSteps(ctx()).some((s) => s.target === '/rhythm')).toBe(true);
+  });
+});
+
+describe('parseMemberProfile: verified and memberId', () => {
+  it('reads the numeric member id the wall family writes against', () => {
+    expect(parseMemberProfile({ id: 42 }, '').memberId).toBe(42);
+  });
+
+  it('accepts a numeric id sent as a string', () => {
+    // `verify-member` selects the row with the service role and JSON-encodes
+    // it; a bigint column can arrive as a string.
+    expect(parseMemberProfile({ id: '42' }, '').memberId).toBe(42);
+    expect(parseMemberProfile({ id: ' 42 ' }, '').memberId).toBe(42);
+  });
+
+  it('refuses an id that could not be a real key', () => {
+    for (const bad of [0, -1, 1.5, '', 'abc', '4a', null, undefined, {}]) {
+      expect(parseMemberProfile({ id: bad }, '').memberId).toBeNull();
+    }
+  });
+
+  it('treats verified as true only when it is literally true', () => {
+    expect(parseMemberProfile({ verified: true }, '').verified).toBe(true);
+    for (const bad of ['true', 1, 'yes', null, undefined]) {
+      expect(parseMemberProfile({ verified: bad }, '').verified).toBe(false);
+    }
+  });
+
+  it('reports both as absent for an empty payload', () => {
+    const p = parseMemberProfile({}, 'ignacio@thebizcofirm.com');
+    expect(p.memberId).toBeNull();
+    expect(p.verified).toBe(false);
+    expect(p.email).toBe('ignacio@thebizcofirm.com');
   });
 });
