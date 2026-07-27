@@ -12860,7 +12860,7 @@ async function reloadLedger() {
     const rLedger = await fetch(FN_BASE + '/discipline-day', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: MEMBER_EMAIL, from: fromDate, to: toDate })
+      body: JSON.stringify({ email: MEMBER_EMAIL, wall_key: window.WALL_KEY, from: fromDate, to: toDate })
     });
     if (rLedger.ok) {
       window.CHIPS_DATA = await rLedger.json();
@@ -13201,7 +13201,7 @@ window.triggerWordArrives = async function(triggerSource) {
     const res = await fetch(FN_BASE + '/word-arrives', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: MEMBER_EMAIL })
+      body: JSON.stringify({ email: MEMBER_EMAIL, wall_key: window.WALL_KEY })
     });
     const d = await res.json();
     if (d.arrived) {
