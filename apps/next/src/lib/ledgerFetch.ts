@@ -4,7 +4,14 @@ import { addDaysIso, chicagoDate } from '@/lib/day';
 import { getPublicEnv } from '@/lib/env';
 import { memberFn } from '@/lib/fn';
 import { parsePassage } from '@/lib/bible';
-import { EMPTY_LEDGER, MERCY_REF, chainChip, parseLedger, type Ledger } from '@/lib/ledger';
+import {
+  EMPTY_LEDGER,
+  MERCY_REF,
+  chainChip,
+  parseLedger,
+  type ChainKey,
+  type Ledger,
+} from '@/lib/ledger';
 
 export interface LedgerView {
   ledger: Ledger;
@@ -35,18 +42,38 @@ export interface LedgerView {
  * bars a `Date.now()` call during render, and because "today" belongs with the
  * request that asked for it.
  */
-export const fetchLedger = cache(async (): Promise<LedgerView> => {
+const fetchLedgerDays = cache(async (): Promise<{ ledger: Ledger; today: string }> => {
   const today = chicagoDate(Date.now());
   const from = addDaysIso(today, -14);
-  if (today === '' || from === '') {
-    return { ledger: EMPTY_LEDGER, today, mercyVerse: null };
-  }
+  if (today === '' || from === '') return { ledger: EMPTY_LEDGER, today };
   const res = await memberFn('discipline-day', { from, to: today });
-  const ledger = res.ok ? parseLedger(res.data) : EMPTY_LEDGER;
+  return { ledger: res.ok ? parseLedger(res.data) : EMPTY_LEDGER, today };
+});
+
+/**
+ * The ledger, with the mercy verse resolved for one particular chain.
+ *
+ * `chainKey` is the chip the caller is about to draw, and `null` when it is
+ * drawing no chip at all. It matters because the live app called
+ * `fetchVerseForNudge(containerId)` from inside `renderChainChip`, once per
+ * chip, so the Word surface fetched the verse when the *word* chain was broken
+ * even if the rhythm chain was holding. Deciding it from the rhythm chain alone
+ * would leave the Word surface printing a bare reference with no verse under it.
+ *
+ * `fetchLedgerDays` is cached separately so two chips in one request still cost
+ * one `discipline-day` call.
+ */
+export const fetchLedgerFor = cache(async (chainKey: ChainKey | null): Promise<LedgerView> => {
+  const { ledger, today } = await fetchLedgerDays();
   // The live app only fetched the verse when the nudge was actually showing.
-  const broken = chainChip(ledger, 'rhythm', today)?.showVerse === true;
+  const broken = chainKey !== null && chainChip(ledger, chainKey, today)?.showVerse === true;
   return { ledger, today, mercyVerse: broken ? await fetchMercyVerse() : null };
 });
+
+/** The Command Center's own ledger: the rhythm chain. */
+export function fetchLedger(): Promise<LedgerView> {
+  return fetchLedgerFor('rhythm');
+}
 
 /**
  * The mercy verse under a broken chain.

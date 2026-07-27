@@ -319,6 +319,16 @@
   margin-top: var(--wa-space-2);
 }
 
+/* The chip and card a discipline surface carries above its own content. The
+   live app spaced both containers with `margin-bottom: 20px`. A single column
+   at every width, because it is one column of two things. */
+.surfaceLedger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+  margin-bottom: var(--wa-space-6);
+}
+
 .disciplineCard {
   background: var(--wa-glass);
   border: 1px solid var(--wa-border);

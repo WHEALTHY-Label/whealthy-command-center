@@ -2,6 +2,7 @@ import { memberFn } from '@/lib/fn';
 import { deriveFastView } from '@/lib/fastview';
 import { parseReveal } from '@/lib/fastreveal';
 import { chicagoToday } from '@/lib/today';
+import { SurfaceLedger } from '../SurfaceLedger';
 import { FastClient } from './FastClient';
 import ui from '@/components/ui.module.css';
 
@@ -22,6 +23,10 @@ export default async function FastPage() {
         <h1 className={ui.title}>Scripture chooses the pattern</h1>
         <p className={ui.sub}>You carry it.</p>
       </header>
+      {/* The fast chain and the fast card, above `fastRoot` as at
+          index.html:8653. `fastRunning` decides whether the resting card asks
+          for tonight's report, which it should only do mid-fast. */}
+      <SurfaceLedger discipline="fast" showChain fastRunning={fast.kind === 'active'} />
       <FastClient fast={fast} reveal={reveal} />
     </div>
   );

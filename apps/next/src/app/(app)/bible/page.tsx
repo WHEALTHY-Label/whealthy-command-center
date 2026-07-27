@@ -3,6 +3,7 @@ import { memberFn } from '@/lib/fn';
 import { broughtPrayerToday, parseMarks, parseProgressRow } from '@/lib/bible';
 import { fetchWallView } from '@/lib/actions/wall';
 import { chicagoToday } from '@/lib/today';
+import { SurfaceLedger } from '../SurfaceLedger';
 import { BibleClient } from './BibleClient';
 import ui from '@/components/ui.module.css';
 
@@ -61,6 +62,9 @@ export default async function BiblePage() {
           your own marks.
         </p>
       </header>
+      {/* The word chain and the word card, where index.html:3008 put them:
+          above the reading, below the header. */}
+      <SurfaceLedger discipline="word" showChain />
       <BibleClient
         progress={progress}
         spot={spot}

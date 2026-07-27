@@ -1,6 +1,7 @@
 import { memberFn } from '@/lib/fn';
 import { deriveFastView } from '@/lib/fastview';
 import { chicagoToday } from '@/lib/today';
+import { SurfaceLedger } from '../SurfaceLedger';
 import { RecordClient, type RecordEntry } from './RecordClient';
 import ui from '@/components/ui.module.css';
 
@@ -36,6 +37,9 @@ export default async function RecordPage() {
         <h1 className={ui.title}>Your words, kept</h1>
         <p className={ui.sub}>Tonight&apos;s entry, the threads, and the wall of stones.</p>
       </header>
+      {/* The Journal card sits directly under the header, as at
+          index.html:8590. The live app drew no chain chip on this surface. */}
+      <SurfaceLedger discipline="record" showChain={false} />
       <RecordClient
         entries={entries}
         fastChip={
