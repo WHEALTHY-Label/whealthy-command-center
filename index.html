@@ -7788,7 +7788,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-day', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: window.MEMBER_EMAIL })
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, wall_key: window.WALL_KEY })
             });
             const data = await res.json();
             
@@ -7939,7 +7939,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-join', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: window.MEMBER_EMAIL, invite_code: code })
+                body: JSON.stringify({ email: window.MEMBER_EMAIL, invite_code: code, wall_key: window.WALL_KEY })
               });
               const d = await res.json();
               
@@ -8000,7 +8000,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-create', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: window.MEMBER_EMAIL, name })
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, name, wall_key: window.WALL_KEY })
             });
             const d = await res.json();
             
@@ -8055,7 +8055,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-leave', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: window.MEMBER_EMAIL, circle_id: circleId })
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, circle_id: circleId, wall_key: window.WALL_KEY })
             });
             const d = await res.json();
             
@@ -12912,6 +12912,7 @@ window.handleJoinCohortTap = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL,
+        wall_key: window.WALL_KEY,
         cohort_id: cohortId
       })
     });
@@ -13845,6 +13846,7 @@ async function submitCreateCohort() {
       },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        wall_key: window.WALL_KEY,
         name,
         start_date,
         end_date
@@ -15964,7 +15966,7 @@ window.loadDashboardCircle = async function() {
     const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-day', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: window.MEMBER_EMAIL })
+      body: JSON.stringify({ email: window.MEMBER_EMAIL, wall_key: window.WALL_KEY })
     });
     const data = await res.json();
     if (!data || data.error) {
@@ -16068,6 +16070,7 @@ window.nudgeSteward = async function(circleId, forMemberId, btn) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL,
+        wall_key: window.WALL_KEY,
         circle_id: circleId,
         for_member: forMemberId
       })
@@ -16145,7 +16148,7 @@ window.loadCommunityViewFeed = async function() {
     const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/skool-feed', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: window.MEMBER_EMAIL })
+      body: JSON.stringify({ email: window.MEMBER_EMAIL, wall_key: window.WALL_KEY })
     });
     
     if (!res.ok) {
