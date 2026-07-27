@@ -27,6 +27,14 @@ const TASKS = new Set([
   // ROUTER_SYSTEM for intent_router, PROFILE_SYSTEM for profile_update.
   'intent_router',
   'profile_update',
+  // The dashboard personalization and Daily Directive. Deployed governor-ai
+  // budgets it at MAX_TOKENS.synthesis = 500 and it is the only task whose
+  // `allow_community_directive` branch does anything: on synthesis the
+  // function reads wall-ai-context twice and appends a wall awareness
+  // instruction when the wall is busy and the steward has nothing live on it.
+  // Leaving this out of the allowlist meant the call was refused here before
+  // it ever left the app, which is why the directive never changed.
+  'synthesis',
 ]);
 
 export interface GovernorResult {

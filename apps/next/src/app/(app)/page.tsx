@@ -12,6 +12,7 @@ import {
 } from '@/lib/dashboard';
 import { fetchMemberProfile } from '@/lib/tour';
 import { RetakeTourLink } from '@/components/tour/RetakeTourLink';
+import { DirectiveCard } from './DirectiveCard';
 import styles from './page.module.css';
 
 export default async function DashboardPage() {
@@ -40,12 +41,14 @@ export default async function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      <section className={`${styles.card} ${styles.directiveCard}`}>
-        <p className={styles.eyebrow}>Command Center</p>
-        <h1 className={styles.name}>{archetype}</h1>
-        <p className={styles.directiveLabel}>Daily Directive</p>
-        <p className={styles.directive}>{directive}</p>
-      </section>
+      {/* The live app's dashboard heading was a greeting, not the archetype
+          (index.html:18595 wrote "Good evening, Name" into #dashTitle). The
+          archetype still reads on this screen, on the First Steps count below. */}
+      <DirectiveCard
+        firstName={profile.firstName.length > 0 ? profile.firstName : archetype}
+        directive={directive}
+        fastActive={governor.fast !== null}
+      />
 
       <section className={`${styles.card} ${styles.bundleCard}`}>
         <div>
@@ -84,8 +87,7 @@ export default async function DashboardPage() {
           ))}
         </ul>
         <p className={styles.stepsFooter}>
-          Walk the house once. Each step checks itself off as you live it.{' '}
-          <RetakeTourLink />
+          Walk the house once. Each step checks itself off as you live it. <RetakeTourLink />
         </p>
       </section>
 
