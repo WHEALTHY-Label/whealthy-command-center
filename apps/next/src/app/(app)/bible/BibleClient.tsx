@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { BibleMark, BibleProgress } from '@/lib/bible';
+import type { WallPost } from '@/lib/wall';
 import { Bible365Panel } from './Bible365Panel';
 import { MyBiblePanel } from './MyBiblePanel';
 import styles from './bible.module.css';
@@ -18,11 +19,15 @@ export function BibleClient({
   spot,
   initialMarks,
   today,
+  prayerFeed,
+  broughtPrayerToday,
 }: {
   progress: BibleProgress | null;
   spot: Spot | null;
   initialMarks: BibleMark[];
   today: string;
+  prayerFeed: WallPost[];
+  broughtPrayerToday: boolean;
 }) {
   // The saved reader state remembers which mode the steward was in.
   const [mode, setMode] = useState<'365' | 'my'>(spot?.mode === 'my_bible' ? 'my' : '365');
@@ -51,7 +56,12 @@ export function BibleClient({
       </div>
 
       {mode === '365' ? (
-        <Bible365Panel progress={progress} today={today} />
+        <Bible365Panel
+          progress={progress}
+          today={today}
+          prayerFeed={prayerFeed}
+          broughtPrayerToday={broughtPrayerToday}
+        />
       ) : (
         <MyBiblePanel spot={spot} initialMarks={initialMarks} />
       )}

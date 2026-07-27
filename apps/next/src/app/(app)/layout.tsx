@@ -1,5 +1,8 @@
 import { redirect } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
+import { GovernorDock } from '@/components/governor/GovernorDock';
+import { FirstStepReporter } from '@/components/tour/FirstStepReporter';
+import { TourOverlay } from '@/components/tour/TourOverlay';
 import { getAdminRole, getAuthedEmail } from '@/lib/auth/session';
 import {
   fetchOnboardingState,
@@ -7,6 +10,7 @@ import {
   isMember,
   type OnboardingState,
 } from '@/lib/onboarding';
+import { fetchMemberProfile, firstUncheckedLabel, prettyArchetype } from '@/lib/tour';
 import styles from './layout.module.css';
 
 /**
@@ -35,12 +39,36 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     redirect(gateDestination(state.gate));
   }
 
-  const role = await getAdminRole();
+  const [role, profile] = await Promise.all([getAdminRole(), fetchMemberProfile(email)]);
+
+  // `verify-member` is the richer row, but a member scored through the
+  // onboarding path can carry the name on the gate state alone. Key off
+  // whether the profile is actually scored rather than off the display string,
+  // so a scored steward is never greeted as "Steward".
+  const archetypeName = profile.archetype
+    ? profile.archetypeName
+    : prettyArchetype(state.archetype_name ?? state.archetype ?? null);
 
   return (
     <div className={styles.shell}>
       <Sidebar isAdmin={role !== null} />
       <div className={styles.content}>{children}</div>
+      <FirstStepReporter done={profile.firstSteps} />
+      <GovernorDock />
+      <TourOverlay
+        tourDoneAt={profile.tourDoneAt}
+        context={{
+          firstName: profile.firstName,
+          archetypeName,
+          bundleClaimed: state.bundle_claimed === true,
+          fastActive: false,
+          fastDay: 0,
+          fastDuration: 0,
+          isAdmin: role !== null,
+          wordDay: '',
+          firstUnchecked: firstUncheckedLabel(profile.firstSteps),
+        }}
+      />
     </div>
   );
 }

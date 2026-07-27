@@ -77,6 +77,8 @@ export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
       <Link
         href={item.href}
         onClick={() => setOpen(false)}
+        // The guided tour finds its spotlight targets by destination.
+        data-tour={item.href}
         className={`${styles.link} ${nested ? styles.nested : ''} ${active ? styles.active : ''}`}
         aria-current={active ? 'page' : undefined}
       >

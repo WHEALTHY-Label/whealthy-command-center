@@ -96,6 +96,30 @@ export async function discardFast(): Promise<FastActionResult> {
 }
 
 /**
+ * "Not During This Fast" on the equip card. The answer belongs to the plan,
+ * not to the browser tab it was given in, so it is stamped alongside
+ * `report_filed` and rides through `save_fast` with every other plan field
+ * untouched. The legacy app ignores the key, which is the intent: it only ever
+ * suppresses a card this app draws.
+ */
+export async function dismissEquipCard(): Promise<FastActionResult> {
+  const fast = await loadRawFast();
+  if (!fast) return { ok: false, error: GENERIC };
+  const plan =
+    typeof fast.plan === 'object' && fast.plan !== null
+      ? (fast.plan as Record<string, unknown>)
+      : {};
+  if (plan.equip_dismissed === true) return { ok: true };
+  const call = await memberFn('governor-state', {
+    action: 'save_fast',
+    fast: { ...fast, plan: { ...plan, equip_dismissed: true } },
+  });
+  if (!call.ok || call.data.ok === false) return { ok: false, error: GENERIC };
+  revalidatePath('/fast');
+  return { ok: true };
+}
+
+/**
  * File the closing report: the words go to the Record (no evening gate,
  * since the fast is closed) and the plan is stamped report_filed.
  */

@@ -108,3 +108,29 @@ export function parseProgressRow(row: unknown): BibleProgress | null {
     streak: typeof r.streak === 'number' ? r.streak : 0,
   };
 }
+
+/**
+ * Did the steward bring a prayer to the wall today?
+ *
+ * This is the Community Prayer sanctuary task. The live app answered it from
+ * `localStorage.wh_bible_prayers_completed`, which meant the check cleared
+ * itself on a second device and came back on a cleared cache. The prayers
+ * themselves have always been rows in `wall_posts`, so the honest answer is
+ * whether one of the member's own posts carries today's date. Nothing new is
+ * stored and the answer follows the member wherever they sign in.
+ *
+ * `todayIso` and `createdAt` are compared as UTC calendar days, the same basis
+ * Day N of 365 is counted on, so the task and the reading turn over together.
+ */
+export function broughtPrayerToday(
+  posts: { createdAt: string | null }[],
+  todayIso: string,
+): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(todayIso)) return false;
+  return posts.some((p) => {
+    if (!p.createdAt) return false;
+    const t = Date.parse(p.createdAt);
+    if (Number.isNaN(t)) return false;
+    return new Date(t).toISOString().slice(0, 10) === todayIso;
+  });
+}

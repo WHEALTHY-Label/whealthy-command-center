@@ -1,0 +1,334 @@
+/*
+ * The Governor is a corner panel, not a takeover. The page stays fully
+ * visible and usable while it listens. Geometry matches the live app's
+ * `governorCornerMode` stylesheet: 16px from the right, 96px from the bottom,
+ * 360px wide capped to the viewport, dropping to 10px/88px under 520px.
+ */
+
+.launcher {
+  position: fixed;
+  right: 16px;
+  bottom: 24px;
+  z-index: 2147483400;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid var(--wa-border-lime);
+  border-radius: 50%;
+  background: var(--wa-black);
+  color: var(--wa-lime);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 22px rgba(204, 255, 0, 0.14);
+  cursor: pointer;
+  transition: var(--wa-transition);
+}
+
+.launcher:hover {
+  background: var(--wa-lime-soft);
+  transform: translateY(-1px);
+}
+
+.launcher:focus-visible {
+  outline: 2px solid var(--wa-lime);
+  outline-offset: 3px;
+}
+
+.launcherLive {
+  border-color: var(--wa-lime);
+  animation: govPulse 1.6s ease-in-out infinite;
+}
+
+.panel {
+  position: fixed;
+  right: 16px;
+  bottom: 96px;
+  z-index: 2147483500;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  padding: 14px 18px 18px;
+  border: 1px solid var(--wa-border-lime);
+  border-radius: 20px;
+  background: #0e1013;
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(204, 255, 0, 0.08);
+  animation: govRise 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.prompt {
+  margin: 0 0 8px;
+  font-family: var(--wa-font-display);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wa-text-dim);
+}
+
+.recorder {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 10px;
+  padding: 0;
+  border: 1px solid var(--wa-border-mid);
+  border-radius: 50%;
+  background: var(--wa-glass-hi);
+  color: var(--wa-text);
+  cursor: pointer;
+  transition: var(--wa-transition);
+}
+
+.recorder:hover:not(:disabled) {
+  border-color: var(--wa-lime);
+  color: var(--wa-lime);
+}
+
+.recorder:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.recorderLive {
+  border-color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+  color: var(--wa-lime);
+  animation: govPulse 1.4s ease-in-out infinite;
+}
+
+.state {
+  margin: 0 0 10px;
+  font-size: var(--wa-fs-small);
+  line-height: 1.45;
+  text-align: center;
+  color: var(--wa-text-muted);
+  min-height: 1.45em;
+}
+
+.transcript {
+  width: 100%;
+  min-height: 44px;
+  max-height: 96px;
+  padding: 10px 12px;
+  border: 1px solid var(--wa-border);
+  border-radius: 10px;
+  background: var(--wa-glass);
+  color: var(--wa-text);
+  font-family: var(--wa-font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.transcript:focus {
+  outline: none;
+  border-color: var(--wa-lime);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.primary,
+.ghost,
+.danger {
+  flex: 1 1 auto;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-family: var(--wa-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--wa-transition);
+}
+
+.primary {
+  border: none;
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--wa-lime-hover);
+}
+
+.primary:disabled,
+.danger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ghost {
+  border: 1px solid var(--wa-border-mid);
+  background: transparent;
+  color: var(--wa-text-muted);
+}
+
+.ghost:hover {
+  border-color: var(--wa-lime);
+  color: var(--wa-lime);
+}
+
+.danger {
+  border: none;
+  background: #ff4d4d;
+  color: #fff;
+}
+
+.danger:hover:not(:disabled) {
+  background: #ff6a6a;
+}
+
+/* The proposal card for a guarded intent. Nothing here executes until the
+   steward presses the affirmative button. */
+.confirm {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 77, 77, 0.35);
+  border-radius: 12px;
+  background: rgba(255, 77, 77, 0.05);
+}
+
+.confirmSafe {
+  border-color: var(--wa-border-lime);
+  background: var(--wa-lime-soft);
+}
+
+.confirmText {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--wa-text);
+}
+
+.scribe {
+  margin: 10px 0 0;
+  padding-left: 10px;
+  border-left: 2px solid var(--wa-border-lime);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--wa-text-muted);
+}
+
+.offer {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--wa-text-dim);
+}
+
+.offerLink {
+  color: var(--wa-lime);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--wa-border);
+}
+
+.mute {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 11px;
+  color: var(--wa-text-dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.mute:hover {
+  color: var(--wa-lime);
+}
+
+.close {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 11px;
+  color: var(--wa-text-dim);
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--wa-text);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .launcher {
+    right: 10px;
+    bottom: 16px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .panel {
+    right: 10px;
+    left: 10px;
+    bottom: 80px;
+    width: auto;
+    max-width: none;
+    max-height: min(74vh, 520px);
+    padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .primary,
+  .ghost,
+  .danger {
+    width: 100%;
+  }
+}
+
+@keyframes govRise {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@keyframes govPulse {
+  50% {
+    box-shadow: 0 0 0 8px rgba(204, 255, 0, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .launcher,
+  .launcherLive,
+  .recorderLive {
+    animation: none;
+  }
+}

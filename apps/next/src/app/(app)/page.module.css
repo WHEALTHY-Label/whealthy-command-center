@@ -114,6 +114,13 @@
   transition: width var(--wa-transition);
 }
 
+.stepsFooter {
+  margin: var(--wa-space-4) 0 0;
+  font-size: var(--wa-fs-small);
+  line-height: 1.5;
+  color: var(--wa-text-dim);
+}
+
 .steps {
   list-style: none;
   margin: var(--wa-space-2) 0 0;
@@ -202,6 +209,18 @@
   margin: 0;
 }
 
+.wallCard {
+  border-color: var(--wa-border-lime);
+  background:
+    radial-gradient(circle at top right, var(--wa-lime-soft), transparent 60%), var(--wa-surface);
+}
+
+.wallGarnish {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
 .fellowship {
   background: var(--wa-lime-soft);
   border-color: var(--wa-border-lime);
@@ -211,4 +230,19 @@
   color: var(--wa-text-muted);
   font-size: var(--wa-fs-small);
   margin: 0;
+}
+
+/* These two cards stack, so their button hugs its own text instead of
+   stretching the full width of the card. On a narrow phone it goes full
+   width, where a wide tap target is the friendlier thing. */
+.wallCard .cta,
+.fellowship .cta {
+  text-align: center;
+}
+
+@media (min-width: 560px) {
+  .wallCard .cta,
+  .fellowship .cta {
+    align-self: flex-start;
+  }
 }

@@ -36,9 +36,12 @@
   --wa-glass: rgba(255, 255, 255, 0.04);
   --wa-glass-hi: rgba(255, 255, 255, 0.1);
 
-  /* Type (loaded via stylesheet link in the root layout) */
-  --wa-font-display: 'Oswald', 'Helvetica Neue', Arial, sans-serif;
-  --wa-font-body: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  /* Type. Self-hosted in src/fonts and declared in src/lib/fonts.ts, which
+     sets --font-oswald and --font-dm-sans on <html>. The literal names stay
+     behind them so the type still resolves if a page renders outside the root
+     layout, and the system stack remains the last resort. */
+  --wa-font-display: var(--font-oswald), 'Oswald', 'Helvetica Neue', Arial, sans-serif;
+  --wa-font-body: var(--font-dm-sans), 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
 
   /* Type scale (fluid, mobile-first) */
   --wa-fs-hero: clamp(1.75rem, 6vw, 3rem);

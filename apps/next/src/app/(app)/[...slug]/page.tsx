@@ -1,28 +1,15 @@
 import { ComingSoon } from '@/components/ComingSoon';
 
-// Friendly titles for the not-yet-migrated routes reachable from the sidebar.
-const TITLES: Record<string, string> = {
-  claim: 'Claim Bundle',
-  tryall: 'Try All',
-  record: 'The Record',
-  prayer: 'Prayer',
-  wall: 'Prayer Wall',
-  testimony: 'Testimony Wall',
-  me: 'My Prayers',
-  bible: 'Scripture',
-  fast: 'Fasting',
-  cohort: 'Cohort Challenge',
-  circle: 'Circles',
-  community: 'Community',
-  affiliate: 'Affiliate Center',
-  portal: 'Product Portal',
-  admin: 'Control Center',
-};
-
+/**
+ * The catch-all under the protected shell.
+ *
+ * This used to hold a title map for the sidebar rooms that had not been
+ * migrated yet. Every one of them is a real route now, so the map is gone and
+ * only the humanising fallback remains: this page is reached solely by a URL
+ * that matches nothing, typically an old deep link.
+ */
 function titleFor(slug: string[]): string {
-  const first = slug[0] ?? '';
-  if (TITLES[first]) return TITLES[first];
-  return first
+  return (slug[0] ?? '')
     .split('-')
     .map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w))
     .join(' ');

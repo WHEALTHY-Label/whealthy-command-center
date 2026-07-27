@@ -31,6 +31,12 @@ export interface RevealData {
   after: { keep: string; return: string };
   oz: number;
   productState: string;
+  /**
+   * The steward answered "Not During This Fast" on the equip card. Stamped on
+   * the plan so the card stays down across reloads and devices, the same way
+   * `report_filed` is stamped when the closing report is filed.
+   */
+  equipDismissed: boolean;
 }
 
 function obj(v: unknown): Record<string, unknown> {
@@ -136,6 +142,7 @@ export function parseReveal(rawFast: unknown): RevealData | null {
     after: { keep: str(after.keep), return: str(after.return) },
     oz: typeof anchors.oz === 'number' ? anchors.oz : 0,
     productState: str(f.product_state, 'unequipped'),
+    equipDismissed: plan.equip_dismissed === true,
   };
 }
 

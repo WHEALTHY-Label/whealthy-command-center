@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
 import type { WallPost } from '@/lib/wall';
 import { editHoursLeft } from '@/lib/wall';
@@ -13,10 +13,36 @@ import {
   signPost,
 } from '@/lib/actions/wall';
 import { WallCard } from '@/components/wall/WallCard';
+import { useSeenOnDwell } from '@/components/wall/useSeenOnDwell';
 import ui from '@/components/ui.module.css';
 import styles from './me.module.css';
 
 type Tab = 'mine' | 'watching';
+
+/**
+ * A prayer the member is carrying. It stamps itself seen once the card has
+ * actually been on screen for a moment, rather than the whole list clearing
+ * the instant the tab is opened. A prayer answered is worth reading before it
+ * stops being marked new.
+ */
+function WatchedCard({
+  post,
+  active,
+  onSeen,
+  children,
+}: {
+  post: WallPost;
+  active: boolean;
+  onSeen: () => void;
+  children?: React.ReactNode;
+}) {
+  const ref = useSeenOnDwell(active && post.hasUnseenAnswer, onSeen);
+  return (
+    <WallCard post={post} showTrack highlight={post.hasUnseenAnswer} innerRef={ref}>
+      {children}
+    </WallCard>
+  );
+}
 type Modal =
   | { kind: 'answer'; post: WallPost }
   | { kind: 'edit'; post: WallPost }
@@ -41,24 +67,6 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
     const id = setTimeout(() => setNow(Date.now()), 0);
     return () => clearTimeout(id);
   }, []);
-
-  // Answered prayers the member carried get stamped seen after a short dwell
-  // on the Praying For tab; the badge then settles down.
-  const seenTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    if (tab !== 'watching') return;
-    const unseenIds = watchPosts.filter((p) => p.hasUnseenAnswer).map((p) => p.id);
-    if (unseenIds.length === 0) return;
-    seenTimer.current = setTimeout(() => {
-      for (const id of unseenIds) void markSeen(id);
-      setWatchPosts((posts) =>
-        posts.map((p) => (p.hasUnseenAnswer ? { ...p, hasUnseenAnswer: false } : p)),
-      );
-    }, 1500);
-    return () => {
-      if (seenTimer.current) clearTimeout(seenTimer.current);
-    };
-  }, [tab, watchPosts]);
 
   const patchMine = (id: string, patch: Partial<WallPost>) =>
     setMinePosts((posts) => posts.map((p) => (p.id === id ? { ...p, ...patch } : p)));
@@ -199,7 +207,15 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
         </div>
       ) : (
         watchPosts.map((post) => (
-          <WallCard key={post.id} post={post} showTrack highlight={post.hasUnseenAnswer}>
+          <WatchedCard
+            key={post.id}
+            post={post}
+            active={tab === 'watching'}
+            onSeen={() => {
+              patchWatch(post.id, { hasUnseenAnswer: false });
+              void markSeen(post.id);
+            }}
+          >
             {post.status === 'answered' ? (
               <button
                 type="button"
@@ -243,7 +259,7 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
                   : '✓ Carried'}
               </button>
             ) : null}
-          </WallCard>
+          </WatchedCard>
         ))
       )}
 

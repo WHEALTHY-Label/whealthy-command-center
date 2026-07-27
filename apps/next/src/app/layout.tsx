@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { dmSans, oswald } from '@/lib/fonts';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -17,28 +18,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        {/*
-          Fonts loaded exactly as the recovered production app does (Oswald
-          display + DM Sans body). Kept as a stylesheet link rather than
-          next/font so the build has no dependency on fetching Google Fonts.
-        */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/*
-          next/font is the idiomatic choice but fetches from Google Fonts at
-          build time, which the migration build environment blocks. This
-          stylesheet link matches production exactly and needs no build-time
-          fetch. Follow-up: self-host the woff2 files via next/font/local to
-          drop the runtime Google dependency and this suppression.
-        */}
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    // Oswald for display and DM Sans for body, the same pairing production
+    // uses, now served from this origin. `src/lib/fonts.ts` explains why they
+    // arrive as variables rather than family names.
+    <html lang="en" className={`${oswald.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   );

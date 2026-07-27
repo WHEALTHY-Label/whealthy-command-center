@@ -3,8 +3,10 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { day365, type BibleProgress, type Passage } from '@/lib/bible';
+import type { WallPost } from '@/lib/wall';
 import { READINGS } from '@/lib/data/readings365';
 import { fetchPassage } from '@/lib/actions/scripture';
+import { SanctuaryPrayer } from './SanctuaryPrayer';
 import {
   begin365,
   checkWordArrives,
@@ -18,9 +20,13 @@ import styles from './bible.module.css';
 export function Bible365Panel({
   progress,
   today,
+  prayerFeed,
+  broughtPrayerToday,
 }: {
   progress: BibleProgress | null;
   today: string;
+  prayerFeed: WallPost[];
+  broughtPrayerToday: boolean;
 }) {
   const router = useRouter();
   const currentDay = progress ? day365(progress.startDate, today) : 1;
@@ -270,6 +276,8 @@ export function Bible365Panel({
           )}
         </section>
       ) : null}
+
+      <SanctuaryPrayer broughtToday={broughtPrayerToday} initialFeed={prayerFeed} />
     </>
   );
 }

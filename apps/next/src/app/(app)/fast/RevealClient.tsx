@@ -7,7 +7,7 @@ import type { RevealData } from '@/lib/fastreveal';
 import { splitPlanName } from '@/lib/fastreveal';
 import { HoldButton } from './build/HoldButton';
 import { ScriptureRefs } from './build/ScriptureRefs';
-import { beginRevealedFast, discardFast } from './actions';
+import { beginRevealedFast, discardFast, dismissEquipCard } from './actions';
 import ui from '@/components/ui.module.css';
 import styles from './build/wizard.module.css';
 
@@ -23,7 +23,9 @@ import styles from './build/wizard.module.css';
 export function RevealClient({ reveal }: { reveal: RevealData }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [equipDismissed, setEquipDismissed] = useState(false);
+  // Seeded from the plan, not from `false`, so an answer already given does not
+  // come back on the next reload.
+  const [equipDismissed, setEquipDismissed] = useState(reveal.equipDismissed);
   const [pending, startTransition] = useTransition();
 
   const run = (fn: () => Promise<{ ok: boolean; error?: string }>) => {
@@ -32,6 +34,25 @@ export function RevealClient({ reveal }: { reveal: RevealData }) {
       const result = await fn();
       if (!result.ok) setError(result.error ?? 'That did not save.');
       else router.refresh();
+    });
+  };
+
+  /**
+   * The card goes down at once, because a steward declining an offer should not
+   * wait on a round trip. If the write fails the card comes back rather than
+   * lying about having been remembered.
+   */
+  const dismissEquip = () => {
+    setError(null);
+    setEquipDismissed(true);
+    startTransition(async () => {
+      const result = await dismissEquipCard();
+      if (!result.ok) {
+        setEquipDismissed(false);
+        setError(result.error ?? 'That did not save.');
+      } else {
+        router.refresh();
+      }
     });
   };
 
@@ -163,7 +184,7 @@ export function RevealClient({ reveal }: { reveal: RevealData }) {
             <Link href="/portal" className={ui.primary}>
               Find What Fits
             </Link>
-            <button type="button" className={ui.quiet} onClick={() => setEquipDismissed(true)}>
+            <button type="button" className={ui.quiet} disabled={pending} onClick={dismissEquip}>
               Not During This Fast
             </button>
           </div>

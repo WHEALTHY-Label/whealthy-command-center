@@ -1,14 +1,11 @@
-import styles from '../page.module.css';
+import { redirect } from 'next/navigation';
 
+/**
+ * `gateDestination('bundle')` sends an un-bundled member here, but the bundle
+ * flow itself is `/claim`, which is a full port of the live claim page. Rather
+ * than keep two copies of the same screen, this route forwards and the gate
+ * contract stays intact.
+ */
 export default function BundlePage() {
-  return (
-    <section className={styles.hero}>
-      <p className={styles.kicker}>Next step</p>
-      <h1 className={styles.title}>Your monthly bundle</h1>
-      <p className={styles.lede}>
-        Your assessment is done. Setting up your bundle is the next step. The bundle flow migrates
-        in a later slice; this placeholder confirms the membership gate routed you here.
-      </p>
-    </section>
-  );
+  redirect('/claim');
 }

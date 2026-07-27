@@ -1,0 +1,198 @@
+/*
+ * Guided tour. The z-index ladder is load bearing and matches the live app:
+ * dim 10000001 < spotlit nav item 10000002 < card 10000003. The spotlight is
+ * achieved by lifting the existing nav button above the dim layer, not by
+ * cutting a hole in it.
+ */
+
+.dim {
+  position: fixed;
+  inset: 0;
+  z-index: 10000001;
+  background: rgba(8, 8, 9, 0.82);
+  backdrop-filter: blur(2px);
+  animation: tourFade 0.2s ease-out;
+}
+
+.spotlight {
+  position: relative;
+  z-index: 10000002;
+  border-radius: 10px;
+  background: var(--wa-lime-soft) !important;
+  box-shadow:
+    0 0 0 2px var(--wa-lime),
+    0 0 28px rgba(204, 255, 0, 0.35);
+}
+
+.card {
+  position: fixed;
+  z-index: 10000003;
+  width: 380px;
+  max-width: calc(100vw - 2rem);
+  padding: var(--wa-space-6);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius-lg);
+  background: #121316;
+  color: var(--wa-text);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  animation: tourRise 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Centered variant: the welcome and finish cards, and any step whose target
+   is not on screen. */
+.cardCentered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.count {
+  margin: 0 0 var(--wa-space-2);
+  font-family: var(--wa-font-body);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wa-text-dim);
+}
+
+.title {
+  margin: 0 0 var(--wa-space-3);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--wa-lime);
+}
+
+.body {
+  margin: 0 0 var(--wa-space-6);
+  font-family: var(--wa-font-body);
+  font-size: var(--wa-fs-body);
+  line-height: 1.55;
+  color: var(--wa-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wa-space-3);
+}
+
+.right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wa-space-2);
+  margin-left: auto;
+}
+
+.primary,
+.ghost {
+  min-height: 44px;
+  padding: 0 var(--wa-space-6);
+  border-radius: 999px;
+  font-family: var(--wa-font-body);
+  font-size: var(--wa-fs-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--wa-transition);
+}
+
+.primary {
+  border: none;
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}
+
+.primary:hover {
+  background: var(--wa-lime-hover);
+}
+
+.ghost {
+  border: 1px solid var(--wa-border-mid);
+  background: transparent;
+  color: var(--wa-text-muted);
+}
+
+.ghost:hover {
+  border-color: var(--wa-lime);
+  color: var(--wa-lime);
+}
+
+/* Under the breakpoint the sidebar is behind a hamburger, so there is nothing
+   to spotlight. The card becomes a full-width bottom sheet instead. */
+@media (max-width: 768px) {
+  .card,
+  .cardCentered {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-width: none;
+    transform: none;
+    border-width: 1px 0 0;
+    border-radius: var(--wa-radius-lg) var(--wa-radius-lg) 0 0;
+    padding: var(--wa-space-6) var(--wa-space-4)
+      calc(var(--wa-space-6) + env(safe-area-inset-bottom, 0px));
+    animation: tourSheet 0.24s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .right {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    margin-left: 0;
+  }
+
+  .primary,
+  .ghost {
+    width: 100%;
+    padding: 0 var(--wa-space-4);
+  }
+}
+
+/* Inline entry point rendered inside the First Steps footer sentence. */
+.retake {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--wa-lime);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@keyframes tourFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes tourRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes tourSheet {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dim,
+  .card {
+    animation: none;
+  }
+}

@@ -17,11 +17,18 @@ export function WallCard({
   post,
   showTrack = false,
   highlight = false,
+  innerRef,
   children,
 }: {
   post: WallPost;
   showTrack?: boolean;
   highlight?: boolean;
+  /**
+   * A handle on the card element itself, for screens that need to know when a
+   * card is genuinely on screen. Passed straight through rather than wrapping
+   * the card in another box, so the list layout is untouched.
+   */
+  innerRef?: React.Ref<HTMLElement>;
   children?: React.ReactNode;
 }) {
   // Relative timestamps drift; render them client-side after mount so the
@@ -38,6 +45,7 @@ export function WallCard({
 
   return (
     <article
+      ref={innerRef}
       className={`${post.status === 'held' ? styles.cardHeld : styles.card} ${highlight ? styles.unseen : ''}`}
     >
       <div className={styles.head}>

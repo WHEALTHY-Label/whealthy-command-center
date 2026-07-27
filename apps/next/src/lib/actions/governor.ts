@@ -22,6 +22,11 @@ const TASKS = new Set([
   'fast_phases',
   'fast_scripture',
   'phase_brief',
+  // The two the Governor dock needs. Both are in the deployed function's
+  // MAX_TOKENS map and each swaps in its own system prompt server side:
+  // ROUTER_SYSTEM for intent_router, PROFILE_SYSTEM for profile_update.
+  'intent_router',
+  'profile_update',
 ]);
 
 export interface GovernorResult {

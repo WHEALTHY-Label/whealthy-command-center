@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { bundleState, firstStepsProgress, selectDirective, FIRST_STEPS } from './dashboard';
+import {
+  bundleState,
+  firstStepsProgress,
+  parseWallCommunity,
+  selectDirective,
+  wallGarnish,
+  EMPTY_WALL_COMMUNITY,
+  FIRST_STEPS,
+} from './dashboard';
 
 describe('selectDirective', () => {
   it('uses the fast-phase line during an active fast', () => {
@@ -63,5 +71,85 @@ describe('bundleState', () => {
 
   it('defaults to unclaimed with no name', () => {
     expect(bundleState({})).toEqual({ name: null, claimed: false });
+  });
+});
+
+describe('parseWallCommunity', () => {
+  it('reads the four counts the community scope returns', () => {
+    expect(
+      parseWallCommunity({
+        scope: 'community',
+        live_post_count: 12,
+        prays_last_24h: 47,
+        answered_last_7d: 3,
+        top_post_pray_count: 19,
+      }),
+    ).toEqual({ livePosts: 12, praysLast24h: 47, answeredLast7d: 3, topPostPrayCount: 19 });
+  });
+
+  it('reads a payload with nothing on it as all zeros', () => {
+    expect(parseWallCommunity({})).toEqual(EMPTY_WALL_COMMUNITY);
+  });
+
+  it('survives a payload that is not an object', () => {
+    // The function is the last line of defence between an edge function having
+    // a bad day and a blank dashboard.
+    for (const bad of [null, undefined, 'community', 0, []]) {
+      expect(parseWallCommunity(bad)).toEqual(EMPTY_WALL_COMMUNITY);
+    }
+  });
+
+  it('refuses negative, non-finite, and non-numeric counts', () => {
+    expect(
+      parseWallCommunity({
+        live_post_count: -4,
+        prays_last_24h: Number.NaN,
+        answered_last_7d: Number.POSITIVE_INFINITY,
+        top_post_pray_count: '19',
+      }),
+    ).toEqual(EMPTY_WALL_COMMUNITY);
+  });
+
+  it('floors a fractional count rather than printing a decimal prayer', () => {
+    expect(parseWallCommunity({ live_post_count: 2.9 }).livePosts).toBe(2);
+  });
+});
+
+describe('wallGarnish', () => {
+  const c = (over: Partial<typeof EMPTY_WALL_COMMUNITY> = {}) => ({
+    ...EMPTY_WALL_COMMUNITY,
+    ...over,
+  });
+
+  it('invites rather than reporting when every count is zero', () => {
+    expect(wallGarnish(EMPTY_WALL_COMMUNITY)).toBe('The wall is quiet. Yours can be the first.');
+  });
+
+  it('joins all three clauses when all three have something to say', () => {
+    expect(wallGarnish(c({ livePosts: 12, praysLast24h: 47, answeredLast7d: 3 }))).toBe(
+      '12 prayers on the wall · 47 carries today · 3 answers this week.',
+    );
+  });
+
+  it('says one of a thing in the singular', () => {
+    expect(wallGarnish(c({ livePosts: 1, praysLast24h: 1, answeredLast7d: 1 }))).toBe(
+      '1 prayer on the wall · 1 carry today · 1 answer this week.',
+    );
+  });
+
+  it('drops a clause entirely rather than printing a zero', () => {
+    expect(wallGarnish(c({ livePosts: 5 }))).toBe('5 prayers on the wall.');
+    expect(wallGarnish(c({ answeredLast7d: 2 }))).toBe('2 answers this week.');
+    expect(wallGarnish(c({ livePosts: 5, answeredLast7d: 2 }))).toBe(
+      '5 prayers on the wall · 2 answers this week.',
+    );
+  });
+
+  it('ignores the top-post count, which this line never speaks', () => {
+    // It comes back on the payload and is parsed, but naming the most-prayed-for
+    // prayer on a dashboard would point at someone. The card stays aggregate.
+    expect(wallGarnish(c({ topPostPrayCount: 99 }))).toBe(
+      'The wall is quiet. Yours can be the first.',
+    );
   });
 });

@@ -5,9 +5,13 @@ import {
   bundleState,
   fetchGovernorState,
   fetchRhythmStatus,
+  fetchWallCommunity,
   firstStepsProgress,
   selectDirective,
+  wallGarnish,
 } from '@/lib/dashboard';
+import { fetchMemberProfile } from '@/lib/tour';
+import { RetakeTourLink } from '@/components/tour/RetakeTourLink';
 import styles from './page.module.css';
 
 export default async function DashboardPage() {
@@ -15,19 +19,24 @@ export default async function DashboardPage() {
   // The layout guarantees an authenticated member; satisfy the type.
   if (!email) return null;
 
-  const [onboarding, rhythm, governor] = await Promise.all([
+  const [onboarding, rhythm, governor, profile, wall] = await Promise.all([
     fetchOnboardingState(email),
     fetchRhythmStatus(email),
     fetchGovernorState(email),
+    fetchMemberProfile(email),
+    fetchWallCommunity(email),
   ]);
 
   const archetype = onboarding.archetype_name ?? onboarding.archetype ?? 'Steward';
   const directive = selectDirective({ fast: governor.fast, aiDirective: governor.aiDirective });
   const bundle = bundleState(onboarding);
-  // First Steps flags are only available via a write-bearing endpoint; per the
-  // Slice 3 scope, render read-only progress from what we can read now (the
-  // bundle claim), with full server-flag sync arriving with the write slices.
-  const steps = firstStepsProgress({ bundle: bundle.claimed });
+  // The real flags live in approved_members.first_steps and come back from
+  // verify-member. A claimed bundle also counts, because a member can buy
+  // through a link that never routes them through /claim.
+  const steps = firstStepsProgress({
+    ...profile.firstSteps,
+    ...(bundle.claimed ? { bundle: true } : {}),
+  });
 
   return (
     <div className={styles.page}>
@@ -74,6 +83,10 @@ export default async function DashboardPage() {
             </li>
           ))}
         </ul>
+        <p className={styles.stepsFooter}>
+          Walk the house once. Each step checks itself off as you live it.{' '}
+          <RetakeTourLink />
+        </p>
       </section>
 
       <section className={styles.card}>
@@ -100,11 +113,25 @@ export default async function DashboardPage() {
         )}
       </section>
 
+      {/* The live app hid this card whenever the wall was empty. It shows
+          either way now, because an empty wall is exactly when a steward
+          should be invited to bring something to it. */}
+      <section className={`${styles.card} ${styles.wallCard}`}>
+        <p className={styles.cardKicker}>The Wall</p>
+        <p className={styles.wallGarnish}>{wallGarnish(wall)}</p>
+        <Link href="/wall" className={styles.cta}>
+          {wall.livePosts > 0 ? 'Go to the Wall' : 'Bring yours here'}
+        </Link>
+      </section>
+
       <section className={`${styles.card} ${styles.fellowship}`}>
         <p className={styles.cardKicker}>Steward Fellowship</p>
         <p className={styles.fellowshipBody}>
           You carry this with others. The community is walking the same rhythm.
         </p>
+        <Link href="/community" className={styles.cta}>
+          Open Community
+        </Link>
       </section>
     </div>
   );

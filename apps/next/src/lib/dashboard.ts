@@ -139,6 +139,80 @@ export const fetchRhythmStatus = cache(async (email: string): Promise<RhythmStat
   }
 });
 
+/**
+ * What the wall looks like right now, in counts only.
+ *
+ * `wall-ai-context` refuses to return prayer text on the community scope by
+ * design: the anonymity mask is display-only, so anything that could read
+ * across anonymous prayers could correlate them. Counts are all this card
+ * ever gets, and all it needs.
+ */
+export interface WallCommunity {
+  livePosts: number;
+  praysLast24h: number;
+  answeredLast7d: number;
+  topPostPrayCount: number;
+}
+
+export const EMPTY_WALL_COMMUNITY: WallCommunity = {
+  livePosts: 0,
+  praysLast24h: 0,
+  answeredLast7d: 0,
+  topPostPrayCount: 0,
+};
+
+function count(v: unknown): number {
+  return typeof v === 'number' && Number.isFinite(v) && v > 0 ? Math.floor(v) : 0;
+}
+
+/** Reads the community scope payload. Pure and tested. */
+export function parseWallCommunity(raw: unknown): WallCommunity {
+  if (typeof raw !== 'object' || raw === null) return EMPTY_WALL_COMMUNITY;
+  const d = raw as Record<string, unknown>;
+  return {
+    livePosts: count(d.live_post_count),
+    praysLast24h: count(d.prays_last_24h),
+    answeredLast7d: count(d.answered_last_7d),
+    topPostPrayCount: count(d.top_post_pray_count),
+  };
+}
+
+function plural(n: number, one: string, many: string): string {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+/**
+ * The line under the dashboard wall card. The live app said "Stewards are
+ * carrying things right now" whatever the numbers were; this says what is
+ * actually true, and says nothing rather than inventing a number it does not
+ * have. Pure and tested.
+ */
+export function wallGarnish(c: WallCommunity): string {
+  const parts: string[] = [];
+  if (c.livePosts > 0) parts.push(`${plural(c.livePosts, 'prayer', 'prayers')} on the wall`);
+  if (c.praysLast24h > 0) parts.push(`${plural(c.praysLast24h, 'carry', 'carries')} today`);
+  if (c.answeredLast7d > 0) parts.push(`${plural(c.answeredLast7d, 'answer', 'answers')} this week`);
+  if (parts.length === 0) return 'The wall is quiet. Yours can be the first.';
+  return `${parts.join(' · ')}.`;
+}
+
+/** Community counts for the dashboard wall card. Never throws. */
+export const fetchWallCommunity = cache(async (email: string): Promise<WallCommunity> => {
+  const env = getPublicEnv();
+  try {
+    const res = await fetch(`${env.NEXT_PUBLIC_FN_BASE}/wall-ai-context`, {
+      method: 'POST',
+      headers: authedHeaders(),
+      body: JSON.stringify({ email, scope: 'community' }),
+      cache: 'no-store',
+    });
+    if (!res.ok) return EMPTY_WALL_COMMUNITY;
+    return parseWallCommunity(await res.json());
+  } catch {
+    return EMPTY_WALL_COMMUNITY;
+  }
+});
+
 export interface GovernorState {
   aiDirective: string | null;
   fast: FastState | null;

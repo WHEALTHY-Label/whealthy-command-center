@@ -95,6 +95,18 @@ describe('parseReveal', () => {
     expect(parseReveal(row({ product_state: undefined }))!.productState).toBe('unequipped');
   });
 
+  it('remembers a dismissed equip card and trusts only a literal true', () => {
+    // The default matters: a plan written before this key existed, or by the
+    // legacy builder, must read as "not yet answered" rather than dismissed.
+    expect(parseReveal(row())!.equipDismissed).toBe(false);
+    expect(
+      parseReveal(row({ plan: { equip_dismissed: true } }))!.equipDismissed,
+    ).toBe(true);
+    for (const bad of ['true', 1, {}, null]) {
+      expect(parseReveal(row({ plan: { equip_dismissed: bad } }))!.equipDismissed).toBe(false);
+    }
+  });
+
   it('degrades the range when the row has no usable dates', () => {
     expect(parseReveal(row({ start_date: '', duration: 0 }))!.range).toBe('');
     expect(parseReveal(row({ duration: 0 }))!.range).not.toContain('days');

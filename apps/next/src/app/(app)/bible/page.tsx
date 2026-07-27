@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { memberFn } from '@/lib/fn';
-import { parseMarks, parseProgressRow } from '@/lib/bible';
+import { broughtPrayerToday, parseMarks, parseProgressRow } from '@/lib/bible';
+import { fetchWallView } from '@/lib/actions/wall';
 import { BibleClient } from './BibleClient';
 import ui from '@/components/ui.module.css';
 
@@ -11,13 +12,18 @@ export default async function BiblePage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const today = new Date().toISOString().slice(0, 10);
 
-  const [progressRow, stateCall, marksCall] = await Promise.all([
+  const [progressRow, stateCall, marksCall, feedCall, mineCall] = await Promise.all([
     user
       ? supabase.from('bible_progress').select('start_date, completed_days, streak').eq('user_id', user.id).maybeSingle()
       : Promise.resolve({ data: null }),
     memberFn('my-bible-state', { action: 'get' }),
     memberFn('my-bible-marks', { action: 'list' }),
+    // The sanctuary prayer drawer, rendered from the wall rather than from a
+    // second store of the same prayers.
+    fetchWallView('bible365', 0, 10),
+    fetchWallView('my_prayers', 0, 20),
   ]);
 
   const progress = parseProgressRow(progressRow.data);
@@ -49,7 +55,9 @@ export default async function BiblePage() {
         progress={progress}
         spot={spot}
         initialMarks={marks}
-        today={new Date().toISOString().slice(0, 10)}
+        today={today}
+        prayerFeed={feedCall.posts}
+        broughtPrayerToday={broughtPrayerToday(mineCall.posts, today)}
       />
     </div>
   );

@@ -109,11 +109,15 @@ export const getMemberContext = cache(async (): Promise<MemberContext | null> =>
 });
 
 /**
- * Call an admin function. These validate the caller's Supabase JWT server-side
- * (admin_role on approved_members), so the session access token is forwarded
- * and the anon key is never enough.
+ * Call a function that takes its identity from the caller's Supabase JWT
+ * rather than from an email in the payload. Two families need this: the
+ * admin-* functions, which check `approved_members.admin_role`, and
+ * `tour-state`, which resolves the member from `auth.getUser(token)`.
+ *
+ * The anon key is never enough for either, so a missing session short-circuits
+ * to a 401 instead of firing an anonymous request.
  */
-export async function adminFn(
+export async function sessionFn(
   slug: string,
   body?: Record<string, unknown>,
   method: 'POST' | 'GET' = 'POST',
@@ -135,6 +139,40 @@ export async function adminFn(
       },
       cache: 'no-store',
       ...(method === 'POST' ? { body: JSON.stringify(body ?? {}) } : {}),
+    });
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    if (!res.ok) {
+      return {
+        ok: false,
+        status: res.status,
+        code: typeof data.error === 'string' ? data.error : '',
+        data,
+      };
+    }
+    return { ok: true, status: res.status, data };
+  } catch {
+    return { ok: false, status: 0, code: '', data: {} };
+  }
+}
+
+/** Admin functions authenticate exactly the same way. Kept as a named alias so
+ * admin call sites still read as admin-scoped. */
+export const adminFn = sessionFn;
+
+/**
+ * Call a function that is deliberately unauthenticated. Two qualify:
+ * `verify-member`, the profile read, and `add-member`, the quiz submission.
+ * Both take a plain body and are only ever called from the server, so any
+ * email in that body is the validated session email, never client input.
+ */
+export async function publicFn(slug: string, body: Record<string, unknown>): Promise<FnResult> {
+  const env = getPublicEnv();
+  try {
+    const res = await fetch(`${env.NEXT_PUBLIC_FN_BASE}/${slug}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify(body),
     });
     const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     if (!res.ok) {

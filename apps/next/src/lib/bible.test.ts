@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { day365, parseMarks, parsePassage, parseProgressRow, streak365 } from './bible';
+import {
+  broughtPrayerToday,
+  day365,
+  parseMarks,
+  parsePassage,
+  parseProgressRow,
+  streak365,
+} from './bible';
 import { READINGS } from './data/readings365';
 import { BIBLE_BOOKS } from './data/bibleBooks';
 
@@ -63,6 +70,37 @@ describe('parseProgressRow', () => {
   it('is null before the study begins', () => {
     expect(parseProgressRow(null)).toBeNull();
     expect(parseProgressRow({})).toBeNull();
+  });
+});
+
+describe('broughtPrayerToday', () => {
+  const at = (createdAt: string | null) => ({ createdAt });
+
+  it('is true when one of the member\'s own posts carries today', () => {
+    expect(
+      broughtPrayerToday(
+        [at('2026-07-20T09:00:00Z'), at('2026-07-22T02:14:00Z')],
+        '2026-07-22',
+      ),
+    ).toBe(true);
+  });
+
+  it('is false when the most recent prayer was yesterday', () => {
+    // The task resets with the calendar day, the same way Day N of 365 does.
+    expect(broughtPrayerToday([at('2026-07-21T23:59:00Z')], '2026-07-22')).toBe(false);
+  });
+
+  it('is false with no prayers at all', () => {
+    expect(broughtPrayerToday([], '2026-07-22')).toBe(false);
+  });
+
+  it('ignores posts with a missing or unparseable timestamp', () => {
+    expect(broughtPrayerToday([at(null), at('not a date')], '2026-07-22')).toBe(false);
+  });
+
+  it('refuses a malformed today rather than guessing at it', () => {
+    expect(broughtPrayerToday([at('2026-07-22T02:14:00Z')], 'today')).toBe(false);
+    expect(broughtPrayerToday([at('2026-07-22T02:14:00Z')], '')).toBe(false);
   });
 });
 
