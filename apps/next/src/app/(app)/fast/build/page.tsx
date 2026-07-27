@@ -72,7 +72,7 @@ export default async function FastBuildPage() {
 
   const opening = recommendAnchors(false, lastFast, equipped);
 
-  const prayers = ledger
+  const prayers = ledger.items
     .filter((p) => p.status !== 'answered' && p.body.trim().length > 0)
     .slice(0, 12)
     .map((p) => ({ id: p.id, body: p.body, category: p.category }));
@@ -86,6 +86,7 @@ export default async function FastBuildPage() {
       </header>
       <WizardClient
         prayers={prayers}
+        prayersError={ledger.error}
         lastFast={lastFast}
         historyCount={historyCount}
         equipped={equipped}

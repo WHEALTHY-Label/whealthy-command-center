@@ -2,6 +2,7 @@
 
 import { memberFn, getMemberContext } from '@/lib/fn';
 import { getPublicEnv } from '@/lib/env';
+import { readReason } from '@/lib/readError';
 import { parseLedger, type LedgerItem } from '@/lib/prayers';
 
 const GENERIC = 'That did not save. Please try again.';
@@ -132,12 +133,27 @@ export async function handOver(
   return { ok: true, prayerId, shared: true };
 }
 
-export async function fetchLedger(): Promise<LedgerItem[]> {
+/** The ledger, and why it is empty when it is empty for a bad reason. */
+export interface LedgerResult {
+  items: LedgerItem[];
+  error: string | null;
+}
+
+/**
+ * My Prayers.
+ *
+ * This used to return `[]` on a failed call, which the ledger renders as
+ * "Nothing handed over yet." A steward with a year of prayers in the table
+ * would have been shown that sentence about his own record if his session had
+ * expired or the function was unreachable. Now the reason travels with the
+ * (still empty) list and the screen says it.
+ */
+export async function fetchLedger(): Promise<LedgerResult> {
   const call = await memberFn('prayers-read', {});
-  if (!call.ok) return [];
+  if (!call.ok) return { items: [], error: readReason(call.status, call.code) };
   // The default view answers a bare array; memberFn returns parsed JSON
   // which for arrays still lands in data as an object-like value.
-  return parseLedger(call.data);
+  return { items: parseLedger(call.data), error: null };
 }
 
 export interface AnswerResult {

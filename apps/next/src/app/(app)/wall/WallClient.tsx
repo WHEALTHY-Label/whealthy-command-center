@@ -13,26 +13,42 @@ interface RailState {
   posts: WallPost[];
   page: number;
   done: boolean;
+  /**
+   * Why this rail is short or empty. An empty rail and a rail that failed to
+   * load look identical to a steward unless one of them says so, and the
+   * sentences underneath ("Every prayer on the wall is being carried.") read
+   * as reassurance, which is the worst possible thing to show over a 403.
+   */
+  error: string | null;
 }
 
 export function WallClient({
   initialNeeds,
+  needsError,
   initialMost,
+  mostError,
   pinned,
+  pinnedError,
 }: {
   initialNeeds: WallPost[];
+  needsError: string | null;
   initialMost: WallPost[];
+  mostError: string | null;
   pinned: WallPost | null;
+  /** Why a shared link is not showing its prayer. Null for a plain 404. */
+  pinnedError: string | null;
 }) {
   const [needs, setNeeds] = useState<RailState>({
     posts: initialNeeds,
     page: 0,
     done: initialNeeds.length < PAGE,
+    error: needsError,
   });
   const [most, setMost] = useState<RailState>({
     posts: initialMost,
     page: 0,
     done: initialMost.length < PAGE,
+    error: mostError,
   });
   const [pinnedPost, setPinnedPost] = useState(pinned);
   const [composerOpen, setComposerOpen] = useState(false);
@@ -141,11 +157,18 @@ export function WallClient({
     const setRail = view === 'needs_prayer' ? setNeeds : setMost;
     startTransition(async () => {
       const result = await fetchWallView(view, (rail.page + 1) * PAGE, PAGE);
-      if (!result.ok) return;
+      if (!result.ok) {
+        // "Show more" used to do nothing at all when the call failed, which
+        // reads as "there is nothing more". Say why instead, and leave the
+        // button in place so the steward can try again.
+        setRail((r) => ({ ...r, error: result.error ?? 'Could not load more. Please retry.' }));
+        return;
+      }
       setRail((r) => ({
         posts: [...r.posts, ...result.posts.filter((p) => !r.posts.some((q) => q.id === p.id))],
         page: r.page + 1,
         done: result.posts.length < PAGE,
+        error: null,
       }));
     });
   };
@@ -178,6 +201,7 @@ export function WallClient({
 
   return (
     <>
+      {pinnedError ? <p className={ui.error}>{pinnedError}</p> : null}
       {pinnedPost ? (
         <section className={styles.pinned}>
           <div className={ui.row}>
@@ -254,7 +278,11 @@ export function WallClient({
             </div>
           </>
         ) : (
-          <button type="button" className={styles.composerCta} onClick={() => setComposerOpen(true)}>
+          <button
+            type="button"
+            className={styles.composerCta}
+            onClick={() => setComposerOpen(true)}
+          >
             Bring something to the wall.
           </button>
         )}
@@ -266,7 +294,8 @@ export function WallClient({
         <section className={styles.rail}>
           <h2 className={styles.railTitle}>Needs Prayer</h2>
           <p className={ui.sub}>Nobody prays alone.</p>
-          {needs.posts.length === 0 ? (
+          {needs.error ? <p className={ui.error}>{needs.error}</p> : null}
+          {needs.posts.length === 0 && !needs.error ? (
             <p className={ui.sub}>Every prayer on the wall is being carried.</p>
           ) : (
             needs.posts.map((post) => (
@@ -290,7 +319,8 @@ export function WallClient({
         <section className={styles.rail}>
           <h2 className={styles.railTitle}>Most Prayed</h2>
           <p className={ui.sub}>What the community is carrying right now.</p>
-          {most.posts.length === 0 ? (
+          {most.error ? <p className={ui.error}>{most.error}</p> : null}
+          {most.posts.length === 0 && !most.error ? (
             <p className={ui.sub}>Nothing has been prayed for yet.</p>
           ) : (
             most.posts.map((post) => (

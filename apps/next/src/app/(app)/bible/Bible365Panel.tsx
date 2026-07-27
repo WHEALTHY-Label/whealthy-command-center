@@ -21,11 +21,14 @@ export function Bible365Panel({
   progress,
   today,
   prayerFeed,
+  prayerFeedError,
   broughtPrayerToday,
 }: {
   progress: BibleProgress | null;
   today: string;
   prayerFeed: WallPost[];
+  /** Why the sanctuary prayer feed is empty. Forwarded from the server read. */
+  prayerFeedError: string | null;
   broughtPrayerToday: boolean;
 }) {
   const router = useRouter();
@@ -207,8 +210,7 @@ export function Bible365Panel({
         <div className={ui.row}>
           <span className={ui.statValue}>{streak}</span>
           <span className={ui.sub}>
-            day{streak === 1 ? '' : 's'} in a row · {progress.completed.length} of 365 readings
-            kept
+            day{streak === 1 ? '' : 's'} in a row · {progress.completed.length} of 365 readings kept
           </span>
         </div>
         <div className={ui.meterTrack} aria-hidden="true">
@@ -277,7 +279,11 @@ export function Bible365Panel({
         </section>
       ) : null}
 
-      <SanctuaryPrayer broughtToday={broughtPrayerToday} initialFeed={prayerFeed} />
+      <SanctuaryPrayer
+        broughtToday={broughtPrayerToday}
+        initialFeed={prayerFeed}
+        initialFeedError={prayerFeedError}
+      />
     </>
   );
 }

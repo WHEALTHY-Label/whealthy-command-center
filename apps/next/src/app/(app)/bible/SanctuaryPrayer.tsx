@@ -25,9 +25,16 @@ import styles from './bible.module.css';
 export function SanctuaryPrayer({
   broughtToday,
   initialFeed,
+  initialFeedError,
 }: {
   broughtToday: boolean;
   initialFeed: WallPost[];
+  /**
+   * Why the feed is empty when the read failed. "No active prayers on the wall"
+   * is a fact about the community, and it must not be printed over a session
+   * that has expired or a function that could not be reached.
+   */
+  initialFeedError: string | null;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -36,11 +43,22 @@ export function SanctuaryPrayer({
   const [text, setText] = useState('');
   const [mode, setMode] = useState<'anonymous' | 'signed'>('anonymous');
   const [error, setError] = useState<string | null>(null);
+  const [feedError, setFeedError] = useState<string | null>(initialFeedError);
   const [pending, startTransition] = useTransition();
 
+  /**
+   * A failed reload used to leave the previous feed in place and say nothing,
+   * so opening the drawer after a session expired showed a stale list, and
+   * opening it on a fresh page showed the "yours can be the first" line.
+   */
   const refreshFeed = async () => {
     const result = await fetchWallView('bible365', 0, 10);
-    if (result.ok) setFeed(result.posts);
+    if (!result.ok) {
+      setFeedError(result.error ?? 'Could not load the wall just now. Please retry.');
+      return;
+    }
+    setFeedError(null);
+    setFeed(result.posts);
   };
 
   const submit = () => {
@@ -158,7 +176,8 @@ export function SanctuaryPrayer({
           <div className={ui.divider} />
 
           <p className={ui.kicker}>Pray over fellow stewards</p>
-          {feed.length === 0 ? (
+          {feedError ? <p className={ui.error}>{feedError}</p> : null}
+          {feed.length === 0 && !feedError ? (
             <p className={ui.sub}>No active prayers on the wall. Yours can be the first.</p>
           ) : (
             <ul className={styles.feed}>

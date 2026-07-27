@@ -13,16 +13,27 @@ const PAGE = 12;
 export function TestimonyClient({
   top,
   initialRiver,
+  riverError,
   pinned,
+  pinnedError,
 }: {
   top: WallPost[];
   initialRiver: WallPost[];
+  /**
+   * Why the river is empty when it is empty for a bad reason. "The first answer
+   * will be here." is a promise, and printing it over a failed read tells a
+   * steward the community has never had a prayer answered.
+   */
+  riverError: string | null;
   pinned: WallPost | null;
+  /** Why a shared link is not showing its testimony. Null for a plain 404. */
+  pinnedError: string | null;
 }) {
   const [topPosts, setTopPosts] = useState(top);
   const [river, setRiver] = useState(initialRiver);
   const [page, setPage] = useState(0);
   const [done, setDone] = useState(initialRiver.length < PAGE);
+  const [loadError, setLoadError] = useState<string | null>(riverError);
   const [pinnedPost, setPinnedPost] = useState(pinned);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [reportArmed, setReportArmed] = useState<string | null>(null);
@@ -101,7 +112,11 @@ export function TestimonyClient({
   const loadMore = () => {
     startTransition(async () => {
       const result = await fetchWallView('testimony_river', (page + 1) * PAGE, PAGE);
-      if (!result.ok) return;
+      if (!result.ok) {
+        setLoadError(result.error ?? 'Could not load more. Please retry.');
+        return;
+      }
+      setLoadError(null);
       setRiver((r) => [...r, ...result.posts.filter((p) => !r.some((q) => q.id === p.id))]);
       setPage((p) => p + 1);
       if (result.posts.length < PAGE) setDone(true);
@@ -110,6 +125,7 @@ export function TestimonyClient({
 
   return (
     <>
+      {pinnedError ? <p className={ui.error}>{pinnedError}</p> : null}
       {pinnedPost ? (
         <section className={styles.pinned}>
           <div className={ui.row}>
@@ -155,7 +171,8 @@ export function TestimonyClient({
       <section className={styles.river}>
         <h2 className={styles.sectionTitle}>Every Answer</h2>
         <p className={ui.sub}>Newest first. Nothing ever leaves.</p>
-        {river.length === 0 ? (
+        {loadError ? <p className={ui.error}>{loadError}</p> : null}
+        {river.length === 0 && !loadError ? (
           <p className={ui.sub}>The first answer will be here.</p>
         ) : (
           river.map((post) => (

@@ -20,6 +20,7 @@ export function BibleClient({
   initialMarks,
   today,
   prayerFeed,
+  prayerFeedError,
   broughtPrayerToday,
 }: {
   progress: BibleProgress | null;
@@ -27,6 +28,8 @@ export function BibleClient({
   initialMarks: BibleMark[];
   today: string;
   prayerFeed: WallPost[];
+  /** Why the sanctuary prayer feed is empty. Forwarded from the server read. */
+  prayerFeedError: string | null;
   broughtPrayerToday: boolean;
 }) {
   // The saved reader state remembers which mode the steward was in.
@@ -60,6 +63,7 @@ export function BibleClient({
           progress={progress}
           today={today}
           prayerFeed={prayerFeed}
+          prayerFeedError={prayerFeedError}
           broughtPrayerToday={broughtPrayerToday}
         />
       ) : (

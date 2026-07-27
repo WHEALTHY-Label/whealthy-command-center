@@ -49,7 +49,23 @@ type Modal =
   | { kind: 'sign'; post: WallPost }
   | null;
 
-export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallPost[] }) {
+export function MeClient({
+  mine,
+  mineError,
+  watching,
+  watchingError,
+}: {
+  mine: WallPost[];
+  /**
+   * Why "What you brought" is empty when it is empty for a bad reason. The
+   * empty state invites the steward to bring his first prayer, which is the
+   * wrong thing to say to someone whose own posts simply did not load.
+   */
+  mineError: string | null;
+  watching: WallPost[];
+  /** The same, for "Praying For". */
+  watchingError: string | null;
+}) {
   const [tab, setTab] = useState<Tab>('mine');
   const [minePosts, setMinePosts] = useState(mine);
   const [watchPosts, setWatchPosts] = useState(watching);
@@ -129,12 +145,15 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
           className={tab === 'watching' ? styles.tabActive : styles.tab}
           onClick={() => setTab('watching')}
         >
-          Praying For{unseen > 0 ? <span className={styles.dot} aria-label={`${unseen} new answers`} /> : null}
+          Praying For
+          {unseen > 0 ? <span className={styles.dot} aria-label={`${unseen} new answers`} /> : null}
         </button>
       </div>
 
       {tab === 'mine' ? (
-        minePosts.length === 0 ? (
+        mineError && minePosts.length === 0 ? (
+          <p className={ui.error}>{mineError}</p>
+        ) : minePosts.length === 0 ? (
           <div className={ui.empty}>
             <p>You have not brought anything to the wall.</p>
             <Link href="/wall" className={ui.quiet}>
@@ -160,7 +179,8 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
                         {post.answeredNote ? 'Edit note' : 'Add note'}
                       </button>
                       <span className={ui.sub}>
-                        You can edit this note for {hoursLeft} more hour{hoursLeft === 1 ? '' : 's'}.
+                        You can edit this note for {hoursLeft} more hour{hoursLeft === 1 ? '' : 's'}
+                        .
                       </span>
                     </>
                   ) : null
@@ -198,6 +218,8 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
             );
           })
         )
+      ) : watchingError && watchPosts.length === 0 ? (
+        <p className={ui.error}>{watchingError}</p>
       ) : watchPosts.length === 0 ? (
         <div className={ui.empty}>
           <p>You have not prayed for anything yet.</p>
@@ -293,7 +315,11 @@ export function MeClient({ mine, watching }: { mine: WallPost[]; watching: WallP
             {error ? <p className={ui.error}>{error}</p> : null}
             <div className={ui.row}>
               <button type="button" className={ui.primary} disabled={pending} onClick={submitModal}>
-                {modal.kind === 'sign' ? 'Sign It' : modal.kind === 'edit' ? 'Save Note' : 'Mark Answered'}
+                {modal.kind === 'sign'
+                  ? 'Sign It'
+                  : modal.kind === 'edit'
+                    ? 'Save Note'
+                    : 'Mark Answered'}
               </button>
               <button
                 type="button"

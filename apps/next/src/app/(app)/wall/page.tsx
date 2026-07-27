@@ -10,10 +10,12 @@ export default async function WallPage({
   searchParams: Promise<{ post?: string }>;
 }) {
   const { post } = await searchParams;
+  // `fetchWallPost('')` short-circuits to an empty result, so the no-deep-link
+  // case and the deep-linked case have the same shape.
   const [needs, most, pinned] = await Promise.all([
     fetchWallView('needs_prayer', 0, 12),
     fetchWallView('most_prayed', 0, 12),
-    post ? fetchWallPost(post) : Promise.resolve(null),
+    fetchWallPost(post ?? ''),
   ]);
 
   return (
@@ -25,8 +27,11 @@ export default async function WallPage({
       </header>
       <WallClient
         initialNeeds={needs.posts}
+        needsError={needs.error ?? null}
         initialMost={most.posts}
-        pinned={pinned}
+        mostError={most.error ?? null}
+        pinned={pinned.post}
+        pinnedError={pinned.error}
       />
     </div>
   );

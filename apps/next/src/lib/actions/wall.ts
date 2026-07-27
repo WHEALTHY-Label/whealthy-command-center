@@ -2,6 +2,7 @@
 
 import { getMemberContext } from '@/lib/fn';
 import { getPublicEnv } from '@/lib/env';
+import { readReason } from '@/lib/readError';
 import { parseWallList, parseWallPost, type WallPost } from '@/lib/wall';
 
 const GENERIC = 'That did not save. Please try again.';
@@ -46,6 +47,11 @@ async function wallFn(slug: string, body: Record<string, unknown>): Promise<Wall
 export interface WallListResult {
   ok: boolean;
   posts: WallPost[];
+  /**
+   * Set whenever `posts` is empty for a reason other than there being nothing
+   * to show. The screens render it above the rail, so "the wall is quiet" is
+   * never printed over a failure.
+   */
   error?: string;
 }
 
@@ -59,27 +65,40 @@ const LIST_VIEWS = new Set([
   'praying_for',
 ]);
 
-export async function fetchWallView(
-  view: string,
-  cursor = 0,
-  limit = 12,
-): Promise<WallListResult> {
+export async function fetchWallView(view: string, cursor = 0, limit = 12): Promise<WallListResult> {
   if (!LIST_VIEWS.has(view)) return { ok: false, posts: [], error: 'Unknown view.' };
   const call = await wallFn('wall-read', {
     view,
     cursor: Math.max(0, Math.floor(cursor)),
     limit: Math.min(100, Math.max(1, Math.floor(limit))),
   });
-  if (!call.ok) return { ok: false, posts: [], error: 'The wall did not load. Try again.' };
+  if (!call.ok) return { ok: false, posts: [], error: readReason(call.status, call.message) };
   return { ok: true, posts: parseWallList(call.data) };
 }
 
-/** The `single` view answers the bare post object, not {posts}. */
-export async function fetchWallPost(postId: string): Promise<WallPost | null> {
-  if (!postId) return null;
+/** A deep-linked post, and why it is not showing when it is not. */
+export interface PinnedResult {
+  post: WallPost | null;
+  error: string | null;
+}
+
+/**
+ * The `single` view answers the bare post object, not {posts}.
+ *
+ * A 404 is not an error worth a banner: a shared link can point at a prayer
+ * that has since been answered, held or deleted, and the wall behind the link
+ * still loads. Anything else is a failure the steward should see, because
+ * otherwise following a link a brother sent shows the wall with no explanation
+ * of where the prayer went.
+ */
+export async function fetchWallPost(postId: string): Promise<PinnedResult> {
+  if (!postId) return { post: null, error: null };
   const call = await wallFn('wall-read', { view: 'single', post_id: postId });
-  if (!call.ok) return null;
-  return parseWallPost(call.data);
+  if (!call.ok) {
+    if (call.status === 404) return { post: null, error: null };
+    return { post: null, error: readReason(call.status, call.message) };
+  }
+  return { post: parseWallPost(call.data), error: null };
 }
 
 export interface WallWriteResult {

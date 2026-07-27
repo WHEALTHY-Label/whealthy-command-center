@@ -16,7 +16,11 @@ export default async function BiblePage() {
 
   const [progressRow, stateCall, marksCall, feedCall, mineCall] = await Promise.all([
     user
-      ? supabase.from('bible_progress').select('start_date, completed_days, streak').eq('user_id', user.id).maybeSingle()
+      ? supabase
+          .from('bible_progress')
+          .select('start_date, completed_days, streak')
+          .eq('user_id', user.id)
+          .maybeSingle()
       : Promise.resolve({ data: null }),
     memberFn('my-bible-state', { action: 'get' }),
     memberFn('my-bible-marks', { action: 'list' }),
@@ -57,6 +61,7 @@ export default async function BiblePage() {
         initialMarks={marks}
         today={today}
         prayerFeed={feedCall.posts}
+        prayerFeedError={feedCall.error ?? null}
         broughtPrayerToday={broughtPrayerToday(mineCall.posts, today)}
       />
     </div>

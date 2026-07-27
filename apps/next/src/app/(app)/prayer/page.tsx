@@ -18,7 +18,7 @@ export default async function PrayerPage() {
         <h1 className={ui.title}>Hand It Over</h1>
         <p className={ui.sub}>The Prayer Rhythm. Name the weight, hand it over, leave it here.</p>
       </header>
-      <HioClient ledger={ledger} morning={morning} />
+      <HioClient ledger={ledger.items} ledgerError={ledger.error} morning={morning} />
     </div>
   );
 }

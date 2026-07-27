@@ -23,7 +23,12 @@ export default async function MePage() {
         <h1 className={ui.title}>What you brought. What you carried.</h1>
         <p className={ui.sub}>Your prayers on the wall, and the ones you are praying for.</p>
       </header>
-      <MeClient mine={mine.posts} watching={watchPosts} />
+      <MeClient
+        mine={mine.posts}
+        mineError={mine.error ?? null}
+        watching={watchPosts}
+        watchingError={watching.error ?? null}
+      />
     </div>
   );
 }

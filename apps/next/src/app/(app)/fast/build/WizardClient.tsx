@@ -49,6 +49,7 @@ type Screen = 'threshold' | 'gate' | 'steps' | 'forging';
 
 export function WizardClient({
   prayers,
+  prayersError,
   lastFast,
   historyCount,
   equipped,
@@ -58,6 +59,12 @@ export function WizardClient({
   todayIso,
 }: {
   prayers: PrayerOption[];
+  /**
+   * Why the prayer list is empty when the ledger read failed. Step 5 otherwise
+   * says "No active prayer requests found", which sends a steward to build a
+   * fast with nothing attached when in fact his ledger simply did not load.
+   */
+  prayersError: string | null;
   lastFast: FastHistoryRow | null;
   historyCount: number;
   equipped: boolean;
@@ -138,7 +145,8 @@ export function WizardClient({
   const anySafety = state.safetyDiabetic || state.safetyBP || state.safetyEating;
 
   const canAdvance = (): boolean => {
-    if (step === 1) return state.laid.length > 0 && (!state.laid.includes('Coffee') || !!state.caffScope);
+    if (step === 1)
+      return state.laid.length > 0 && (!state.laid.includes('Coffee') || !!state.caffScope);
     if (step === 2) return state.whys.length > 0;
     if (step === 3) return !!state.exp;
     if (step === 5) {
@@ -259,12 +267,12 @@ export function WizardClient({
       <section className={ui.card}>
         <h3 className={styles.headline}>Before we build.</h3>
         <p className={ui.body}>
-          This tool gives no health or medical advice. It takes commitments you choose and
-          organizes them into a structure with scripture and rhythm.
+          This tool gives no health or medical advice. It takes commitments you choose and organizes
+          them into a structure with scripture and rhythm.
         </p>
         <p className={ui.body}>
-          We recommend talking with a healthcare professional before beginning any fast that
-          changes how you eat or drink.
+          We recommend talking with a healthcare professional before beginning any fast that changes
+          how you eat or drink.
         </p>
         <p className={ui.body}>
           You can end your fast at any time. Nothing here will shame you for it.
@@ -342,7 +350,8 @@ export function WizardClient({
                       ? 'Fasting in secret is honored here. So is not carrying it alone.'
                       : 'Review the two lists. Either list may be empty. We will never ask you to justify one against the other.';
 
-  const nextLabel = step === 6 ? 'Accept This Fast' : step === TOTAL_STEPS ? 'Structure My Fast' : 'Next';
+  const nextLabel =
+    step === 6 ? 'Accept This Fast' : step === TOTAL_STEPS ? 'Structure My Fast' : 'Next';
 
   const takes = defaultTakes(state.anchors);
 
@@ -533,7 +542,9 @@ export function WizardClient({
       {step === 5 ? (
         <>
           <p className={styles.groupLabel}>Choose an active prayer request</p>
-          {prayers.length === 0 ? (
+          {prayersError && prayers.length === 0 ? (
+            <p className={ui.error}>{prayersError}</p>
+          ) : prayers.length === 0 ? (
             <p className={ui.empty}>
               <i>No active prayer requests found in your Closet Mirror.</i>
             </p>
@@ -798,8 +809,8 @@ export function WizardClient({
           </div>
 
           <p className={ui.sub}>
-            Miss a rule, note it in your journal, own it, and get back on track the next morning.
-            Do not quit the fast over one bad day.
+            Miss a rule, note it in your journal, own it, and get back on track the next morning. Do
+            not quit the fast over one bad day.
           </p>
         </>
       ) : null}

@@ -12,7 +12,20 @@ import styles from './prayer.module.css';
 
 type Step = 'door' | 'name' | 'hand' | 'leave' | 'confirm';
 
-export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: boolean }) {
+export function HioClient({
+  ledger,
+  ledgerError,
+  morning,
+}: {
+  ledger: LedgerItem[];
+  /**
+   * Why the ledger is empty when it is empty for a bad reason. Without this the
+   * section prints "No weights handed over yet" over an expired session, which
+   * tells a steward with a year of prayers that his record is blank.
+   */
+  ledgerError: string | null;
+  morning: boolean;
+}) {
   const router = useRouter();
   const [step, setStep] = useState<Step>('door');
   const [category, setCategory] = useState('freeform');
@@ -230,8 +243,8 @@ export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: 
             <span className={ui.pillLime}>Shared</span>
             <span className={styles.choiceTitle}>Lift it to the Prayer Wall</span>
             <span className={ui.sub}>
-              Posts this prayer to the community Prayer Wall. Other stewards will see it and can
-              tap &quot;I prayed&quot; for you. You can take it down anytime.
+              Posts this prayer to the community Prayer Wall. Other stewards will see it and can tap
+              &quot;I prayed&quot; for you. You can take it down anytime.
             </span>
           </button>
           {leave === 'shared' ? (
@@ -294,7 +307,9 @@ export function HioClient({ ledger, morning }: { ledger: LedgerItem[]; morning: 
 
       <section className={ui.card}>
         <p className={ui.kicker}>The weights you&apos;ve handed over</p>
-        {items.length === 0 ? (
+        {ledgerError && items.length === 0 ? (
+          <p className={ui.error}>{ledgerError}</p>
+        ) : items.length === 0 ? (
           <p className={ui.sub}>No weights handed over yet. Let Him carry the weight.</p>
         ) : (
           <ul className={styles.ledger}>
