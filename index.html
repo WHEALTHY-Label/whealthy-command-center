@@ -9697,6 +9697,7 @@ window.saveReflectionJournal = function() {
         body: JSON.stringify({
           action: 'save_reflection',
           email: MEMBER_EMAIL,
+          wall_key: window.WALL_KEY,
           day_number: currentDay,
           scripture_ref: scriptureRef,
           said: said,
@@ -13255,7 +13256,7 @@ async function load(){
   try{
     const r=await fetch(FN_BASE+'/governor-state',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'load',email:MEMBER_EMAIL})});
+      body:JSON.stringify({action:'load',email:MEMBER_EMAIL,wall_key:window.WALL_KEY})});
     const d=await r.json();
     if(d.ok){
       S.entries = d.entries || [];
@@ -13310,6 +13311,7 @@ async function saveEntry(entry_date, text, tone, fast_id, fast_day, scribe_line,
     const payload = {
       action: 'save_entry',
       email: MEMBER_EMAIL,
+      wall_key: window.WALL_KEY,
       entry_date,
       text,
       tone,
@@ -13343,7 +13345,7 @@ async function burnEntryState(entry_date) {
     const r = await fetch(FN_BASE + '/governor-state', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'burn_entry', email: MEMBER_EMAIL, entry_date })
+      body: JSON.stringify({ action: 'burn_entry', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, entry_date })
     });
     const res = await r.json();
     if (res.ok) {
@@ -13359,7 +13361,7 @@ async function saveFast() {
     const r = await fetch(FN_BASE + '/governor-state', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'save_fast', email: MEMBER_EMAIL, fast: S.fast })
+      body: JSON.stringify({ action: 'save_fast', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, fast: S.fast })
     });
     return await r.json();
   } catch(e) {
@@ -13372,7 +13374,7 @@ async function endFast(status, ended_day, history_row) {
     const r = await fetch(FN_BASE + '/governor-state', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'end_fast', email: MEMBER_EMAIL, fast_id: S.fast.id, status, ended_day, history_row })
+      body: JSON.stringify({ action: 'end_fast', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, fast_id: S.fast.id, status, ended_day, history_row })
     });
     return await r.json();
   } catch(e) {
@@ -13387,6 +13389,7 @@ async function savePrefs() {
       body: JSON.stringify({
         action: 'save_prefs',
         email: MEMBER_EMAIL,
+        wall_key: window.WALL_KEY,
         scribe_style: S.prefs.scribeStyle || 'full',
         landed: S.prefs.landed || 0,
         missed: S.prefs.missed || 0,
@@ -15020,7 +15023,7 @@ Return ONLY the JSON profile delta.`;
       const res = await fetch(FN_BASE + '/governor-state', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'save_profile', email: MEMBER_EMAIL, delta })
+        body: JSON.stringify({ action: 'save_profile', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, delta })
       });
       const data = await res.json();
       if (data.ok) {
@@ -16890,7 +16893,7 @@ window.discardFast=async function(){
   await fetch(FN_BASE+'/governor-state',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'discard_fast',email:MEMBER_EMAIL})
+    body:JSON.stringify({action:'discard_fast',email:MEMBER_EMAIL,wall_key:window.WALL_KEY})
   });
   W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,
     anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false,
