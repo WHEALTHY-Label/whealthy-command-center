@@ -33,8 +33,24 @@ describe('parseMarks', () => {
     const marks = parseMarks({
       ok: true,
       marks: [
-        { id: 1, book: 'John', chapter: 3, verse: 16, kind: 'highlight', body: null, created_at: 'x' },
-        { id: 2, book: 'John', chapter: 3, verse: 17, kind: 'note', body: 'Hold this.', created_at: 'x' },
+        {
+          id: 1,
+          book: 'John',
+          chapter: 3,
+          verse: 16,
+          kind: 'highlight',
+          body: null,
+          created_at: 'x',
+        },
+        {
+          id: 2,
+          book: 'John',
+          chapter: 3,
+          verse: 17,
+          kind: 'note',
+          body: 'Hold this.',
+          created_at: 'x',
+        },
         { id: 3, book: 'John', chapter: 3, verse: 18, kind: 'weird', body: null, created_at: 'x' },
       ],
     });
@@ -76,18 +92,25 @@ describe('parseProgressRow', () => {
 describe('broughtPrayerToday', () => {
   const at = (createdAt: string | null) => ({ createdAt });
 
-  it('is true when one of the member\'s own posts carries today', () => {
+  it("is true when one of the member's own posts carries today", () => {
     expect(
-      broughtPrayerToday(
-        [at('2026-07-20T09:00:00Z'), at('2026-07-22T02:14:00Z')],
-        '2026-07-22',
-      ),
+      broughtPrayerToday([at('2026-07-20T09:00:00Z'), at('2026-07-22T14:00:00Z')], '2026-07-22'),
     ).toBe(true);
   });
 
+  it('still counts a prayer brought in the evening', () => {
+    // 8pm Chicago is already tomorrow in UTC. Comparing the raw UTC date is
+    // what made a steward's own prayer fail to check its task off after 7pm,
+    // every evening.
+    expect(broughtPrayerToday([at('2026-07-23T01:00:00Z')], '2026-07-22')).toBe(true);
+  });
+
   it('is false when the most recent prayer was yesterday', () => {
-    // The task resets with the calendar day, the same way Day N of 365 does.
+    // The task resets with the Chicago calendar day, the same boundary Day N of
+    // 365 turns over on. 23:59Z is still 6:59pm the previous evening here.
     expect(broughtPrayerToday([at('2026-07-21T23:59:00Z')], '2026-07-22')).toBe(false);
+    expect(broughtPrayerToday([at('2026-07-22T02:14:00Z')], '2026-07-22')).toBe(false);
+    expect(broughtPrayerToday([at('2026-07-22T02:14:00Z')], '2026-07-21')).toBe(true);
   });
 
   it('is false with no prayers at all', () => {

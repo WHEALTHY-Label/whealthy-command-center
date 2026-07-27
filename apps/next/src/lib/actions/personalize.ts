@@ -16,6 +16,7 @@ import {
   type Personalization,
 } from '@/lib/personalize';
 import { createClient } from '@/lib/supabase/server';
+import { chicagoToday } from '@/lib/today';
 import { fetchMemberProfile } from '@/lib/tour';
 
 export interface PersonalizationResult {
@@ -49,7 +50,9 @@ export async function fetchDashPersonalization(
   if (!email) return NOTHING;
 
   const hour = Number.isFinite(localHour) ? Math.min(23, Math.max(0, Math.floor(localHour))) : 0;
-  const today = new Date().toISOString().slice(0, 10);
+  // The calendar day is Chicago, matching `realToday()`; only the hour above is
+  // the steward's own, because the greeting is about his time of day.
+  const today = chicagoToday();
 
   const supabase = await createClient();
   const [{ data: userData }, profile, rhythm, state] = await Promise.all([

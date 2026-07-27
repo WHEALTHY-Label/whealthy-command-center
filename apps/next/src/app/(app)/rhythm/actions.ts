@@ -66,7 +66,12 @@ export async function checkInSlot(slotId: string, done: boolean): Promise<Checki
   if (!email) return { ok: false, error: 'Not signed in.' };
   if (!slotId) return { ok: false, error: 'Missing slot.' };
 
-  // Backend day boundaries are UTC (v1); match that for the check date.
+  // UTC on purpose, and the one date in this app that is not Chicago. The live
+  // app's `Rhythm.toggleCheckin` sends `new Date().toISOString().split('T')[0]`
+  // (index.html:20339) and `rhythm-checkin` stores it verbatim, so a Chicago
+  // date here would file the same evening's check-in under a different day than
+  // the legacy app files it under and the two would disagree in the table.
+  // Whenever the rhythm backend moves to Chicago, this moves with it.
   const date = new Date().toISOString().slice(0, 10);
 
   const call = await callFn('rhythm-checkin', {

@@ -6,6 +6,7 @@ import { getAuthedEmail } from '@/lib/auth/session';
 import { memberFn } from '@/lib/fn';
 import { askGovernor } from '@/lib/actions/governor';
 import { parseMarks, streak365, type BibleMark } from '@/lib/bible';
+import { chicagoToday } from '@/lib/today';
 
 const GENERIC = 'That did not save. Please try again.';
 
@@ -19,9 +20,11 @@ export interface SimpleResult {
  * session client writes the member's own row and nothing else.
  */
 export async function begin365(rawStart: string): Promise<SimpleResult> {
-  const start = /^\d{4}-\d{2}-\d{2}$/.test(rawStart)
-    ? rawStart
-    : new Date().toISOString().slice(0, 10);
+  // A missing or malformed start date falls back to today in Chicago. The live
+  // app had no fallback at all: `beginStudy()` at index.html:10289 refused with
+  // "Please choose a start date." Refusing a study over a bad hidden field is
+  // not worth doing, and Day 1 is today either way.
+  const start = /^\d{4}-\d{2}-\d{2}$/.test(rawStart) ? rawStart : chicagoToday();
   const email = await getAuthedEmail();
   if (!email) return { ok: false, error: 'Not signed in.' };
   const supabase = await createClient();

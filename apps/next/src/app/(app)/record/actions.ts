@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { memberFn } from '@/lib/fn';
 import { askGovernor } from '@/lib/actions/governor';
+import { chicagoToday } from '@/lib/today';
 
 const GENERIC = 'That did not save. Please try again.';
 
@@ -42,9 +43,13 @@ export async function fileJournalEntry(
   if (text.length > 8000) return { ok: false, error: 'Keep tonight under 8000 characters.' };
 
   const offset = Number.isFinite(tzOffsetMin) ? Math.max(-840, Math.min(840, tzOffsetMin)) : 0;
-  // Entry date is the member's local date, derived from the same offset the
-  // gate uses.
-  const entryDate = new Date(Date.now() - offset * 60000).toISOString().slice(0, 10);
+  // Two different clocks, on purpose, and this is how the live app had it. The
+  // row is dated in America/Chicago because index.html:15464 files it as
+  // `saveEntry(realToday(), ...)`, so the Record reads in one calendar
+  // regardless of where the steward opens it. `tz_offset_min` still rides from
+  // the browser, matching index.html:13287, because the 8:45 PM gate inside
+  // governor-state judges by the clock on the steward's own wall.
+  const entryDate = chicagoToday();
 
   // Ask the scribe to structure the entry. If the scribe is unreachable the
   // words are still kept; that is the legacy offline promise.
@@ -84,11 +89,7 @@ export async function fileJournalEntry(
     tz_offset_min: offset,
   });
   if (!save.ok || save.data.ok === false) {
-    const code = !save.ok
-      ? save.code
-      : typeof save.data.error === 'string'
-        ? save.data.error
-        : '';
+    const code = !save.ok ? save.code : typeof save.data.error === 'string' ? save.data.error : '';
     if (code === 'report_not_open') {
       return {
         ok: false,

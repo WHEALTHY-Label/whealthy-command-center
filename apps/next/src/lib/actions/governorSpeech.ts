@@ -6,6 +6,7 @@ import { askGovernor } from '@/lib/actions/governor';
 // It used to be copied here verbatim, which meant the Governor and the
 // dashboard could drift on the same question of what day of the fast it is.
 import { activeFastDay } from '@/lib/dashboard';
+import { chicagoToday } from '@/lib/today';
 import {
   buildRouterPrompt,
   coerceForSurface,
@@ -136,14 +137,22 @@ async function snapshot(
   };
 }
 
-/** Minutes past local midnight from a browser `getTimezoneOffset()` value. */
-function localClock(tzOffsetMin: number): { todayIso: string; localMinutes: number } {
+/**
+ * Minutes past local midnight from a browser `getTimezoneOffset()` value.
+ *
+ * This is the one thing the Governor keeps on the steward's own clock, and
+ * deliberately so: the 8:45 PM reporting gate at index.html:15359 is
+ * `new Date().getHours()`, the hour on the wall in front of him. The calendar
+ * day is a different question with a different answer, so it is no longer
+ * derived from this offset. It used to be, which meant the Governor compared a
+ * device-local date against `entry_date` and `start_date` rows that were written
+ * in Chicago, and a steward outside Central time was told he had not filed
+ * tonight when he had.
+ */
+function localMinutesOf(tzOffsetMin: number): number {
   const offset = Number.isFinite(tzOffsetMin) ? Math.max(-840, Math.min(840, tzOffsetMin)) : 0;
   const shifted = new Date(Date.now() - offset * 60000);
-  return {
-    todayIso: shifted.toISOString().slice(0, 10),
-    localMinutes: shifted.getUTCHours() * 60 + shifted.getUTCMinutes(),
-  };
+  return shifted.getUTCHours() * 60 + shifted.getUTCMinutes();
 }
 
 const FALLBACK: Dispatch = {
@@ -164,7 +173,11 @@ export async function governSpeech(
   tzOffsetMin: number,
 ): Promise<GovernorTurn> {
   const text = transcript.trim().slice(0, 4000);
-  const { todayIso, localMinutes } = localClock(tzOffsetMin);
+  // Two clocks, two questions. What day is it: Chicago, the calendar every row
+  // in this app is dated in. What time is it: the steward's own, which is what
+  // the evening gate has always judged by.
+  const todayIso = chicagoToday();
+  const localMinutes = localMinutesOf(tzOffsetMin);
 
   if (!text) {
     return {

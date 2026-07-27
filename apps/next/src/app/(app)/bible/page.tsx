@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { memberFn } from '@/lib/fn';
 import { broughtPrayerToday, parseMarks, parseProgressRow } from '@/lib/bible';
 import { fetchWallView } from '@/lib/actions/wall';
+import { chicagoToday } from '@/lib/today';
 import { BibleClient } from './BibleClient';
 import ui from '@/components/ui.module.css';
 
@@ -12,7 +13,12 @@ export default async function BiblePage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const today = new Date().toISOString().slice(0, 10);
+  // Day N of 365 is counted in Chicago. The live app counted it on the device
+  // clock (`getTodayDayNumber()` at index.html:9553), which a server cannot
+  // know; Chicago is closer than UTC for every steward here, it is the calendar
+  // the rest of the app is dated in, and the only stored value it moves is
+  // `bible_progress.streak`, which is a recomputable cache rather than a ledger.
+  const today = chicagoToday();
 
   const [progressRow, stateCall, marksCall, feedCall, mineCall] = await Promise.all([
     user

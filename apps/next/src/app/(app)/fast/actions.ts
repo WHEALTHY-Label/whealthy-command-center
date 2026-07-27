@@ -3,6 +3,12 @@
 import { revalidatePath } from 'next/cache';
 import { memberFn } from '@/lib/fn';
 import { deriveFastView } from '@/lib/fastview';
+// Every date this file reads or writes is the steward's America/Chicago
+// calendar day, because that is the day the fast is counted on: the live app's
+// `activeFastDay()` is `realToday()` arithmetic (index.html:15351), the
+// start-date pull-back is `realToday()` (index.html:16848), and the history row
+// is sized the same way (index.html:16938).
+import { chicagoToday } from '@/lib/today';
 
 const GENERIC = 'That did not save. Please try again.';
 
@@ -30,7 +36,7 @@ async function loadRawFast(): Promise<Record<string, unknown> | null> {
  * an object and would stringify to nothing useful.
  */
 function historyRow(fast: Record<string, unknown>, endedDay: number, finished: boolean) {
-  const view = deriveFastView(fast, new Date().toISOString().slice(0, 10));
+  const view = deriveFastView(fast, chicagoToday());
   return {
     model: view.name === 'Your Fast' ? 'Fast' : view.name,
     duration: typeof fast.duration === 'number' ? fast.duration : null,
@@ -43,9 +49,8 @@ function historyRow(fast: Record<string, unknown>, endedDay: number, finished: b
 async function endFast(status: 'completed' | 'ended_early'): Promise<FastActionResult> {
   const fast = await loadRawFast();
   if (!fast || fast.id === undefined) return { ok: false, error: GENERIC };
-  const view = deriveFastView(fast, new Date().toISOString().slice(0, 10));
-  const endedDay =
-    status === 'completed' ? (view.duration ?? view.day) : Math.max(1, view.day);
+  const view = deriveFastView(fast, chicagoToday());
+  const endedDay = status === 'completed' ? (view.duration ?? view.day) : Math.max(1, view.day);
   const call = await memberFn('governor-state', {
     action: 'end_fast',
     fast_id: fast.id,
@@ -75,7 +80,7 @@ export async function endFastEarly(): Promise<FastActionResult> {
 export async function beginRevealedFast(): Promise<FastActionResult> {
   const fast = await loadRawFast();
   if (!fast || fast.status !== 'revealed') return { ok: false, error: GENERIC };
-  const today = new Date().toISOString().slice(0, 10);
+  const today = chicagoToday();
   const chosen = typeof fast.start_date === 'string' ? fast.start_date : '';
   const startDate = !chosen || chosen > today ? today : chosen;
   const call = await memberFn('governor-state', {
@@ -132,7 +137,7 @@ export async function fileFastReport(rawText: string): Promise<FastActionResult>
 
   const save = await memberFn('governor-state', {
     action: 'save_entry',
-    entry_date: new Date().toISOString().slice(0, 10),
+    entry_date: chicagoToday(),
     text,
     tone: 'mixed',
     fast_id: fast.id ?? null,

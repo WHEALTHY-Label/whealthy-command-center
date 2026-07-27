@@ -1,5 +1,6 @@
 import { memberFn } from '@/lib/fn';
 import { deriveFastView } from '@/lib/fastview';
+import { chicagoToday } from '@/lib/today';
 import { RecordClient, type RecordEntry } from './RecordClient';
 import ui from '@/components/ui.module.css';
 
@@ -25,10 +26,7 @@ function parseEntries(data: unknown): RecordEntry[] {
 export default async function RecordPage() {
   const state = await memberFn('governor-state', { action: 'load' });
   const entries = state.ok ? parseEntries(state.data) : [];
-  const fast = deriveFastView(
-    state.ok ? state.data.fast : null,
-    new Date().toISOString().slice(0, 10),
-  );
+  const fast = deriveFastView(state.ok ? state.data.fast : null, chicagoToday());
   const inFast = fast.kind === 'active';
 
   return (

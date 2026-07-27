@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import { getPublicEnv } from '@/lib/env';
+import { chicagoToday } from '@/lib/today';
 
 /** A single anchor in today's rhythm (read-only render in Slice 3). */
 export interface DisciplineSlot {
@@ -192,7 +193,8 @@ export function wallGarnish(c: WallCommunity): string {
   const parts: string[] = [];
   if (c.livePosts > 0) parts.push(`${plural(c.livePosts, 'prayer', 'prayers')} on the wall`);
   if (c.praysLast24h > 0) parts.push(`${plural(c.praysLast24h, 'carry', 'carries')} today`);
-  if (c.answeredLast7d > 0) parts.push(`${plural(c.answeredLast7d, 'answer', 'answers')} this week`);
+  if (c.answeredLast7d > 0)
+    parts.push(`${plural(c.answeredLast7d, 'answer', 'answers')} this week`);
   if (parts.length === 0) return 'The wall is quiet. Yours can be the first.';
   return `${parts.join(' · ')}.`;
 }
@@ -267,8 +269,7 @@ export function parseGovernorFast(raw: unknown, todayIso: string): FastState | n
   if (Object.keys(plan).length === 0) return null;
   const phases = Array.isArray(plan.phases) ? plan.phases.map(rec) : [];
   const phase = phases.find(
-    (p) =>
-      typeof p.from === 'number' && typeof p.to === 'number' && day >= p.from && day <= p.to,
+    (p) => typeof p.from === 'number' && typeof p.to === 'number' && day >= p.from && day <= p.to,
   );
   const phaseName = phase && typeof phase.name === 'string' ? phase.name : '';
 
@@ -283,11 +284,6 @@ export function parseGovernorFast(raw: unknown, todayIso: string): FastState | n
       : 'Full routine. No exceptions.';
 
   return { day, duration, phase: focus };
-}
-
-/** Today at UTC midnight as `YYYY-MM-DD`. */
-function utcToday(): string {
-  return new Date(Date.now()).toISOString().slice(0, 10);
 }
 
 /**
@@ -316,7 +312,11 @@ export const fetchGovernorState = cache(async (email: string): Promise<GovernorS
       (typeof data.directive === 'string' && data.directive) ||
       (typeof data.daily_directive === 'string' && data.daily_directive) ||
       null;
-    return { aiDirective: directive, fast: parseGovernorFast(data.fast, utcToday()) };
+    // The day of the fast is counted in Chicago, the way `activeFastDay()` at
+    // index.html:15351 counted it off `realToday()`. On UTC the Daily Directive
+    // read a day ahead of the fast the steward was actually living, every
+    // evening after 7pm.
+    return { aiDirective: directive, fast: parseGovernorFast(data.fast, chicagoToday()) };
   } catch {
     return { aiDirective: null, fast: null };
   }

@@ -7,6 +7,7 @@ import {
   type FastHistoryRow,
   type RecordEntryLite,
 } from '@/lib/fastbuild';
+import { chicagoToday, chicagoTomorrow } from '@/lib/today';
 import { WizardClient } from './WizardClient';
 import ui from '@/components/ui.module.css';
 
@@ -93,7 +94,8 @@ export default async function FastBuildPage() {
         openingAnchors={opening.anchors}
         openingReasons={opening.reasons}
         readiness={readinessRead(entries)}
-        todayIso={new Date().toISOString().slice(0, 10)}
+        todayIso={chicagoToday()}
+        tomorrowIso={chicagoTomorrow()}
       />
     </div>
   );

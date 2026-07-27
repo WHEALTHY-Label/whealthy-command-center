@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { askGovernor } from '@/lib/actions/governor';
 import { getMemberContext, memberFn } from '@/lib/fn';
+import { chicagoToday, chicagoTomorrow } from '@/lib/today';
 import {
   ATTACH_CATEGORIES,
   DEFAULT_ANCHORS,
@@ -111,9 +112,8 @@ function cleanState(raw: WizardState): WizardState | null {
   const exp = EXPERIENCES.has(raw.exp as Experience) ? (raw.exp as Experience) : null;
   const pattern = findPattern(raw.matchedId);
   if (laid.length === 0 || whys.length === 0 || !exp || !pattern) return null;
-  const start = typeof raw.start === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.start)
-    ? raw.start
-    : null;
+  const start =
+    typeof raw.start === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.start) ? raw.start : null;
   return {
     laid,
     caffScope: raw.caffScope === 'all' || raw.caffScope === 'coffee' ? raw.caffScope : null,
@@ -216,9 +216,14 @@ export async function forgeFast(rawState: WizardState): Promise<ForgeResult> {
   if (!load.ok) return { ok: false, error: GENERIC };
   const data = load.data;
 
-  const todayIso = new Date().toISOString().slice(0, 10);
+  const todayIso = chicagoToday();
   const duration = state.dur ?? pattern.days;
-  const startDate = state.start ?? todayIso;
+  // An unanswered start date defaults to tomorrow in Chicago, which is what the
+  // live app wrote: `start_date: W.start||dayKey(1)` at index.html:16733. The
+  // wizard always sends one, so this is the guard rather than the usual path,
+  // but it must not quietly begin the fast a day earlier than the legacy app
+  // would have.
+  const startDate = state.start ?? chicagoTomorrow();
   const exclusions = computeExclusions(state.laid, state.caffScope);
   const phases = phaseRanges(duration);
   const weeks = Math.ceil(duration / 7);
@@ -372,7 +377,8 @@ Return JSON:
     daily_schedule: aiSchedule.length > 0 ? aiSchedule : fallback.daily_schedule,
     phases: mergedPhases,
     prayer_plan: prayerPlan,
-    journal_prompts: Object.keys(journalPrompts).length > 0 ? journalPrompts : fallback.journal_prompts,
+    journal_prompts:
+      Object.keys(journalPrompts).length > 0 ? journalPrompts : fallback.journal_prompts,
     focus: Object.keys(focus).length > 0 ? focus : fallback.focus,
     after: {
       keep: str(after.keep) || fallback.after.keep,

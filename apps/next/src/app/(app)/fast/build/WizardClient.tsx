@@ -57,6 +57,7 @@ export function WizardClient({
   openingReasons,
   readiness,
   todayIso,
+  tomorrowIso,
 }: {
   prayers: PrayerOption[];
   /**
@@ -71,7 +72,15 @@ export function WizardClient({
   openingAnchors: FastAnchors;
   openingReasons: AnchorReasons;
   readiness: string | null;
+  /** Today in America/Chicago. The earliest date the input will accept. */
   todayIso: string;
+  /**
+   * Tomorrow in America/Chicago, and the default start date. The live app
+   * defaulted to `dayKey(1)` in all three places it named the date
+   * (index.html:16452, 16649, 16733): a fast is committed to the night before,
+   * not begun mid-afternoon on the day it is built.
+   */
+  tomorrowIso: string;
 }) {
   const router = useRouter();
   const [screen, setScreen] = useState<Screen>('threshold');
@@ -79,7 +88,7 @@ export function WizardClient({
   const [state, setState] = useState<WizardState>(() => ({
     ...initialWizardState(),
     anchors: { ...openingAnchors },
-    start: todayIso,
+    start: tomorrowIso,
   }));
   const [reasons, setReasons] = useState<AnchorReasons>(openingReasons);
   const [freeLay, setFreeLay] = useState('');
@@ -644,9 +653,11 @@ export function WizardClient({
             <input
               type="date"
               className={`${ui.input} ${styles.timeInput}`}
-              value={state.start ?? todayIso}
+              value={state.start ?? tomorrowIso}
+              // The live app set no `min` at all, so a steward could date a fast
+              // into the past and watch it open on Day 12. Today is the floor.
               min={todayIso}
-              onChange={(e) => patch({ start: e.target.value || todayIso })}
+              onChange={(e) => patch({ start: e.target.value || tomorrowIso })}
             />
           </div>
         </>
@@ -951,7 +962,7 @@ export function WizardClient({
 
       {step === TOTAL_STEPS && pattern ? (
         <p className={ui.sub}>
-          {pattern.title} · {duration} days from {state.start ?? todayIso}.
+          {pattern.title} · {duration} days from {state.start ?? tomorrowIso}.
         </p>
       ) : null}
 

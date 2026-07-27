@@ -7,6 +7,8 @@
  * kind: "highlight"|"note", body, created_at}] }.
  */
 
+import { chicagoDate } from '@/lib/day';
+
 export interface Verse {
   book: string;
   chapter: number;
@@ -119,8 +121,13 @@ export function parseProgressRow(row: unknown): BibleProgress | null {
  * whether one of the member's own posts carries today's date. Nothing new is
  * stored and the answer follows the member wherever they sign in.
  *
- * `todayIso` and `createdAt` are compared as UTC calendar days, the same basis
- * Day N of 365 is counted on, so the task and the reading turn over together.
+ * `createdAt` is a UTC timestamp off the `wall_posts` row and `todayIso` is the
+ * America/Chicago calendar day, so the timestamp is converted into that same
+ * calendar before the two are compared. Comparing a UTC date against a Chicago
+ * one would drop every prayer brought after 7pm: 8pm Chicago is already the
+ * next day in UTC, and the steward would watch his own prayer fail to check the
+ * task off. Day N of 365 turns over on the same Chicago boundary, so the task
+ * and the reading still turn over together.
  */
 export function broughtPrayerToday(
   posts: { createdAt: string | null }[],
@@ -131,6 +138,6 @@ export function broughtPrayerToday(
     if (!p.createdAt) return false;
     const t = Date.parse(p.createdAt);
     if (Number.isNaN(t)) return false;
-    return new Date(t).toISOString().slice(0, 10) === todayIso;
+    return chicagoDate(t) === todayIso;
   });
 }
