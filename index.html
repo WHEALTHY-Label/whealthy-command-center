@@ -20113,7 +20113,7 @@ async function loadAndInit(){
         // 1. Submit Assessment
         const res = await fetch(`${FN_BASE}/rhythm-assess?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             rmeq_items: rmeqAnswers,
             wake_time: wake,
@@ -20130,7 +20130,7 @@ async function loadAndInit(){
         document.getElementById('rhyLoaderText').textContent = 'Drafting your personalized rhythm...';
         const buildRes = await fetch(`${FN_BASE}/rhythm-build?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ email: window.MEMBER_EMAIL })
         });
         if (!buildRes.ok) throw new Error('Build failed: ' + buildRes.status);
@@ -20240,7 +20240,7 @@ async function loadAndInit(){
         };
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify(payload)
         });
         if (!res.ok) {
@@ -20381,7 +20381,7 @@ async function loadAndInit(){
 
         const res = await fetch(`${FN_BASE}/rhythm-checkin?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             slot_id: slotId,
             date: today,
@@ -20412,7 +20412,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-nudge-check?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ email: window.MEMBER_EMAIL })
         });
         if (!res.ok) return;
@@ -20500,7 +20500,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'commit', length_days: lengthDays })
         });
         if (!res.ok) {
@@ -20522,7 +20522,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'end' })
         });
         if (!res.ok) {
@@ -20652,7 +20652,7 @@ async function loadAndInit(){
 
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify(payload)
         });
 
@@ -20690,7 +20690,7 @@ async function loadAndInit(){
       try {
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'delete',
             slot_id: slotId
@@ -20730,7 +20730,7 @@ async function loadAndInit(){
       try {
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'reorder',
             plan_id: slots[0].plan_id,
