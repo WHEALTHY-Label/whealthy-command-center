@@ -12521,7 +12521,7 @@ async function waRunGate(emailArg){
         const vr = await fetch(FN_BASE + '/verify-member', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, member_id: MEMBER_ID, wall_key: WALL_KEY })
         });
         if (vr.ok) {
           const vd = await vr.json();
@@ -19870,7 +19870,7 @@ async function loadAndInit(){
         const token = await RHYTHM_BUILDER.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
-          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
+          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' }
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const d = await res.json();
@@ -20143,7 +20143,7 @@ async function loadAndInit(){
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
-          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
+          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' }
         });
         const d = await res.json();
         
@@ -20258,7 +20258,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-activate?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ plan_id: this.state.pendingDraftId })
         });
         if (!res.ok) throw new Error('Activation failed: ' + res.status);
