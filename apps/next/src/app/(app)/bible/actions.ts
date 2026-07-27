@@ -192,7 +192,7 @@ export async function askBibleBuddy(
 ): Promise<BuddyResult> {
   const q = question.trim().slice(0, 1000);
   if (!q) return { reply: null, verses: [] };
-  const result = await askGovernor('bible_study', q, { book, chapter });
+  const result = await askGovernor('bible_study', q, { context: { book, chapter } });
   if (!result.ok || typeof result.out !== 'object' || result.out === null) {
     return { reply: null, verses: [] };
   }

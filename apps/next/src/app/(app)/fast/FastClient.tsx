@@ -4,6 +4,8 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { FastView } from '@/lib/fastview';
+import type { RevealData } from '@/lib/fastreveal';
+import { RevealClient } from './RevealClient';
 import {
   beginRevealedFast,
   completeFast,
@@ -14,7 +16,7 @@ import {
 import ui from '@/components/ui.module.css';
 import styles from './fast.module.css';
 
-export function FastClient({ fast }: { fast: FastView }) {
+export function FastClient({ fast, reveal }: { fast: FastView; reveal: RevealData | null }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [stopArmed, setStopArmed] = useState(false);
@@ -39,10 +41,9 @@ export function FastClient({ fast }: { fast: FastView }) {
         <p className={ui.body}>
           Scripture chooses the pattern. You bring the commitment. Built in four minutes.
         </p>
-        <p className={ui.body}>
-          The guided build arrives in this new Command Center with cutover. Until then, begin your
-          fast in the current app and it will show up here to carry.
-        </p>
+        <Link href="/fast/build" className={ui.primary}>
+          Build My Fast
+        </Link>
         <p className={ui.sub}>
           This tool gives no health or medical advice. We recommend talking with a healthcare
           professional before beginning any fast that changes how you eat or drink. You can end
@@ -53,6 +54,9 @@ export function FastClient({ fast }: { fast: FastView }) {
   }
 
   if (fast.kind === 'revealed') {
+    if (reveal) return <RevealClient reveal={reveal} />;
+    // A row with no readable plan still has to be startable, so the member is
+    // never stranded on a fast they cannot begin or clear.
     return (
       <section className={ui.cardLime}>
         <p className={ui.kicker}>{fast.name}</p>
@@ -67,6 +71,9 @@ export function FastClient({ fast }: { fast: FastView }) {
           onClick={() => run(beginRevealedFast)}
         >
           Begin Day 1
+        </button>
+        <button type="button" className={ui.quiet} disabled={pending} onClick={() => run(discardFast)}>
+          Start Over
         </button>
         {error ? <p className={ui.error}>{error}</p> : null}
       </section>

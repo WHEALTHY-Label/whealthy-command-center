@@ -5,6 +5,8 @@
  * do not manage pass through untouched and get sent back verbatim on save.
  */
 
+import { fmtTime } from './fastbuild';
+
 export interface FastView {
   kind: 'none' | 'active' | 'overrun' | 'revealed' | 'closed';
   name: string;
@@ -23,6 +25,29 @@ export interface FastView {
 
 function strArray(v: unknown): string[] {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
+}
+
+/**
+ * `anchors` is stored as an object, not a list, so it has to be read into
+ * display lines. An array is still accepted in case an older row carries one.
+ */
+export function anchorLines(v: unknown): string[] {
+  if (Array.isArray(v)) return strArray(v);
+  if (typeof v !== 'object' || v === null) return [];
+  const a = v as Record<string, unknown>;
+  const lines: string[] = [];
+  if (typeof a.wake === 'string') lines.push(`Up by ${fmtTime(a.wake)}`);
+  if (typeof a.lights === 'string') lines.push(`Lights out by ${fmtTime(a.lights)}`);
+  if (typeof a.oz === 'number' && a.oz > 0) lines.push(`${a.oz} oz of hydration`);
+  if (a.movement === true) lines.push('Morning movement');
+  if (typeof a.laps === 'number' && a.laps > 0) {
+    lines.push(`Daily walk, ${a.laps} lap${a.laps === 1 ? '' : 's'}`);
+  }
+  if (typeof a.journal === 'number' && a.journal > 0) {
+    lines.push(`Journal ${a.journal} minutes`);
+  }
+  if (a.prayer === true) lines.push('Prayer, morning and night');
+  return lines;
 }
 
 export function deriveFastView(rawFast: unknown, todayIso: string): FastView {
@@ -48,7 +73,16 @@ export function deriveFastView(rawFast: unknown, todayIso: string): FastView {
 
   const plan =
     typeof f.plan === 'object' && f.plan !== null ? (f.plan as Record<string, unknown>) : {};
+  // The builder writes the display name to `plan.fast_name` and stores
+  // `fast_model` as an object, {id, title, figure, refs}. Older rows carry a
+  // bare string in `fast_model`, so that shape is still read.
+  const model =
+    typeof f.fast_model === 'object' && f.fast_model !== null
+      ? (f.fast_model as Record<string, unknown>)
+      : {};
   const name =
+    (typeof plan.fast_name === 'string' && plan.fast_name) ||
+    (typeof model.title === 'string' && model.title) ||
     (typeof f.fast_model === 'string' && f.fast_model) ||
     (typeof f.fast_name === 'string' && f.fast_name) ||
     'Your Fast';
@@ -74,7 +108,7 @@ export function deriveFastView(rawFast: unknown, todayIso: string): FastView {
     reportFiled: plan.report_filed === true,
     laid: strArray(f.laid),
     whys: strArray(f.whys),
-    anchors: strArray(f.anchors),
+    anchors: anchorLines(f.anchors),
     cohortId: f.cohort_id === undefined || f.cohort_id === null ? null : String(f.cohort_id),
     fastId: f.id === undefined || f.id === null ? null : String(f.id),
     prayerId: f.prayer_id === undefined || f.prayer_id === null ? null : String(f.prayer_id),

@@ -1,0 +1,688 @@
+/*
+ * The fast builder. Mobile first: one column, 44px minimum tap targets,
+ * nothing that needs a hover to be discoverable. Grids only widen at the
+ * md breakpoint, so a 320px phone never gets a squeezed two-up row.
+ */
+
+.headline {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.headline em {
+  color: var(--wa-lime);
+  font-style: normal;
+}
+
+/* Progress strip: ten dots that fill as the steps are cleared. */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dot {
+  flex: 1 1 0;
+  min-width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--wa-border-mid);
+  transition: background var(--wa-transition);
+}
+
+.dotOn {
+  background: var(--wa-lime);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-2);
+  flex-wrap: wrap;
+}
+
+.navSpacer {
+  flex: 1 1 auto;
+}
+
+.groupLabel {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wa-text-dim);
+  margin: var(--wa-space-2) 0 0;
+}
+
+.groupLabelLime {
+  composes: groupLabel;
+  color: var(--wa-lime);
+}
+
+/* Tile grid: single column on a phone, two up from md. */
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--wa-space-2);
+}
+
+@media (min-width: 640px) {
+  .tiles {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+  width: 100%;
+  padding: var(--wa-space-3);
+  text-align: left;
+  background: var(--wa-card);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  color: var(--wa-text);
+  font-family: var(--wa-font-body);
+  font-size: var(--wa-fs-body);
+  cursor: pointer;
+  transition: var(--wa-transition);
+}
+
+.tileActive {
+  composes: tile;
+  border-color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+}
+
+.tileTitle {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tileSmall {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-muted);
+}
+
+.tileCat {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wa-lime);
+}
+
+/* Guard and notice cards. */
+.guard {
+  border: 1px solid var(--wa-amber);
+  background: var(--wa-amber-soft);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3);
+  font-size: var(--wa-fs-small);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.notice {
+  border: 1px solid var(--wa-border-lime);
+  background: var(--wa-lime-soft);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-3);
+  font-size: var(--wa-fs-small);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Safety gate checkboxes: the whole row is the target. */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--wa-space-2);
+  min-height: 44px;
+  padding: var(--wa-space-2);
+  border: 1px solid var(--wa-border);
+  border-radius: var(--wa-radius);
+  background: var(--wa-card);
+  font-size: var(--wa-fs-small);
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.check input {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  margin-top: 1px;
+  accent-color: var(--wa-lime);
+}
+
+/* Anchor rows: label and control stack on a phone. */
+.anchorRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+  padding: var(--wa-space-3) 0;
+  border-bottom: 1px solid var(--wa-border);
+}
+
+.anchorRow:last-of-type {
+  border-bottom: none;
+}
+
+.anchorHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+}
+
+.anchorLabel {
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.anchorReason {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-lime);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.anchorSmall {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-muted);
+  margin: 0;
+}
+
+.timeInput {
+  width: 100%;
+  max-width: 180px;
+  min-height: 44px;
+}
+
+/* Stepper: two 44px buttons around a value. */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-2);
+}
+
+.stepBtn {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  background: transparent;
+  color: var(--wa-text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stepBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.stepValue {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-body);
+  min-width: 5ch;
+  text-align: center;
+}
+
+.fixedChip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--wa-space-3);
+  border-radius: 999px;
+  background: var(--wa-lime);
+  color: var(--wa-black);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Commitments review: two columns from md, stacked below. */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--wa-space-3);
+}
+
+@media (min-width: 640px) {
+  .columns {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+.commitRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wa-space-2);
+  min-height: 44px;
+  padding: var(--wa-space-2) 0;
+  border-bottom: 1px solid var(--wa-border);
+  font-size: var(--wa-fs-small);
+}
+
+.commitRow:last-of-type {
+  border-bottom: none;
+}
+
+.commitTag {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wa-text-dim);
+  flex: 0 0 auto;
+}
+
+.removeBtn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--wa-space-2);
+  background: transparent;
+  border: none;
+  color: var(--wa-amber);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--wa-font-display);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.addRow {
+  display: flex;
+  gap: var(--wa-space-2);
+  flex-wrap: wrap;
+}
+
+.addRow input {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.addBtn {
+  min-height: 44px;
+  padding: 0 var(--wa-space-3);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  background: transparent;
+  color: var(--wa-text);
+  font-family: var(--wa-font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: var(--wa-fs-micro);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* Hold to commit: the fill bar rides behind the label. */
+.hold {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--wa-space-3);
+  border: 1px solid var(--wa-lime);
+  border-radius: var(--wa-radius);
+  background: transparent;
+  color: var(--wa-text);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.holdFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--wa-lime);
+  pointer-events: none;
+}
+
+.holdLabel {
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: difference;
+  color: #fff;
+}
+
+.holdDone {
+  background: var(--wa-lime);
+  color: var(--wa-black);
+}
+
+/* The forge animation and the reveal cascade. */
+.forge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wa-space-3);
+  padding: var(--wa-space-8) var(--wa-space-3);
+  text-align: center;
+}
+
+.forgeLine {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  line-height: 1.2;
+  margin: 0;
+  min-height: 2.4em;
+}
+
+.caret {
+  color: var(--wa-lime);
+}
+
+.reveal {
+  animation: rise 0.5s ease both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+}
+
+.planName {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h1);
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+}
+
+.planName em {
+  color: var(--wa-lime);
+  font-style: normal;
+}
+
+.planRange {
+  text-align: center;
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text-muted);
+  margin: 0;
+}
+
+.planLine {
+  text-align: center;
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.refRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+  justify-content: center;
+}
+
+.ref {
+  min-height: 40px;
+  padding: 0 var(--wa-space-3);
+  border: 1px solid var(--wa-border-lime);
+  border-radius: 999px;
+  background: var(--wa-lime-soft);
+  color: var(--wa-lime);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.rules {
+  margin: 0;
+  padding-left: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-2);
+  line-height: 1.5;
+}
+
+/* Schedule: time and action stay readable at 320px. */
+.schedRow {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: var(--wa-space-2);
+  padding: var(--wa-space-2) 0;
+  border-bottom: 1px solid var(--wa-border);
+  font-size: var(--wa-fs-small);
+  line-height: 1.45;
+}
+
+.schedRow:last-of-type {
+  border-bottom: none;
+}
+
+.schedTime {
+  font-family: var(--wa-font-display);
+  color: var(--wa-lime);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.04em;
+  padding-top: 2px;
+}
+
+.phase {
+  padding: var(--wa-space-3) 0;
+  border-bottom: 1px solid var(--wa-border);
+}
+
+.phase:last-of-type {
+  border-bottom: none;
+}
+
+.phaseMeta {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wa-text-dim);
+  margin: 0;
+}
+
+.phaseName {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-body);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 4px 0;
+}
+
+.milestone {
+  font-style: italic;
+  font-size: var(--wa-fs-small);
+  color: var(--wa-text-muted);
+  margin: var(--wa-space-2) 0 0;
+  line-height: 1.45;
+}
+
+/* Prayer plan: the week label sits above the two refs on a phone. */
+.prayerWeek {
+  padding: var(--wa-space-3) 0;
+  border-bottom: 1px solid var(--wa-border);
+}
+
+.prayerWeek:last-of-type {
+  border-bottom: none;
+}
+
+.prayerRefs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-2);
+  margin-top: var(--wa-space-2);
+}
+
+.focusList {
+  margin: var(--wa-space-2) 0 0;
+  padding-left: 1.2em;
+  font-size: var(--wa-fs-small);
+  line-height: 1.5;
+  color: var(--wa-text-muted);
+}
+
+/*
+ * Scripture reader. A bottom sheet on a phone so the passage opens under the
+ * thumb, a centred dialog once there is room for one.
+ */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+@media (min-width: 640px) {
+  .sheet {
+    align-items: center;
+    padding: var(--wa-space-4);
+  }
+}
+
+.sheetCard {
+  width: 100%;
+  max-width: 560px;
+  max-height: 82vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--wa-space-4);
+  background: var(--wa-surface);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius-lg) var(--wa-radius-lg) 0 0;
+}
+
+@media (min-width: 640px) {
+  .sheetCard {
+    border-radius: var(--wa-radius-lg);
+  }
+}
+
+.sheetTitle {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-h2);
+  color: var(--wa-lime);
+  margin: 0 0 var(--wa-space-3);
+}
+
+.verse {
+  font-size: var(--wa-fs-small);
+  line-height: 1.6;
+  margin: 0 0 var(--wa-space-2);
+}
+
+.verseNum {
+  color: var(--wa-lime);
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  margin-right: 6px;
+}
+
+/* Reveal head: everything centred in one column, buttons stacked on a phone. */
+.revealTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wa-space-3);
+}
+
+.revealActions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--wa-space-2);
+  width: 100%;
+  max-width: 340px;
+}
+
+@media (min-width: 640px) {
+  .revealActions {
+    flex-direction: row;
+    justify-content: center;
+    max-width: none;
+  }
+}
+
+.secTitle {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wa-lime);
+  margin: 0 0 var(--wa-space-3);
+}
+
+.grace {
+  margin: var(--wa-space-3) 0 0;
+  padding-top: var(--wa-space-3);
+  border-top: 1px solid var(--wa-border);
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  line-height: 1.5;
+}
+
+.prayerWeekLabel {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.prayerTheme {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  margin: 2px 0 0;
+}
+
+/* The reveal footer disclaimer, quiet and always last. */
+.footNote {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+  line-height: 1.5;
+  text-align: center;
+  margin: var(--wa-space-4) 0 0;
+}

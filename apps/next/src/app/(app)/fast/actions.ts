@@ -24,9 +24,15 @@ async function loadRawFast(): Promise<Record<string, unknown> | null> {
   return typeof fast === 'object' && fast !== null ? (fast as Record<string, unknown>) : null;
 }
 
+/**
+ * The history row the next build reads back to size a fast. `model` is the
+ * plan name, exactly as the legacy app records it; `fast_model` on the row is
+ * an object and would stringify to nothing useful.
+ */
 function historyRow(fast: Record<string, unknown>, endedDay: number, finished: boolean) {
+  const view = deriveFastView(fast, new Date().toISOString().slice(0, 10));
   return {
-    model: typeof fast.fast_model === 'string' ? fast.fast_model : 'Fast',
+    model: view.name === 'Your Fast' ? 'Fast' : view.name,
     duration: typeof fast.duration === 'number' ? fast.duration : null,
     ended_day: endedDay,
     finished,
@@ -61,17 +67,20 @@ export async function endFastEarly(): Promise<FastActionResult> {
   return endFast('ended_early');
 }
 
-/** A revealed plan begins today; everything the wizard built rides along. */
+/**
+ * A revealed plan begins now; everything the wizard built rides along. A start
+ * date set in the future is pulled back to today, matching the live app. A
+ * past date is preserved, so the day count is not silently reset.
+ */
 export async function beginRevealedFast(): Promise<FastActionResult> {
   const fast = await loadRawFast();
   if (!fast || fast.status !== 'revealed') return { ok: false, error: GENERIC };
+  const today = new Date().toISOString().slice(0, 10);
+  const chosen = typeof fast.start_date === 'string' ? fast.start_date : '';
+  const startDate = !chosen || chosen > today ? today : chosen;
   const call = await memberFn('governor-state', {
     action: 'save_fast',
-    fast: {
-      ...fast,
-      status: 'active',
-      start_date: new Date().toISOString().slice(0, 10),
-    },
+    fast: { ...fast, status: 'active', start_date: startDate },
   });
   if (!call.ok || call.data.ok === false) return { ok: false, error: GENERIC };
   revalidatePath('/fast');
