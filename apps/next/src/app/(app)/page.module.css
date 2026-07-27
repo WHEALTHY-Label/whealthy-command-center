@@ -18,22 +18,110 @@
   gap: var(--wa-space-3);
 }
 
-.eyebrow {
+.name {
+  font-size: var(--wa-fs-h2);
   font-family: var(--wa-font-display);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: var(--wa-fs-micro);
-  color: var(--wa-lime);
+  font-weight: 700;
+  color: var(--wa-text);
   margin: 0;
+  min-width: 0;
 }
 
-.name {
-  font-size: var(--wa-fs-h1);
-  margin: 0;
+/* The live greeting lit the steward's own name and nothing else (18595). */
+.greetName {
+  color: var(--wa-lime);
+  font-weight: 800;
+  text-shadow: 0 0 10px var(--wa-lime-soft);
 }
+
+/* ---- The welcome card: `#dashWelcomeCard` at index.html:2730 ---- */
 
 .directiveCard {
   background: linear-gradient(180deg, var(--wa-surface), var(--wa-black));
+  position: relative;
+  overflow: hidden;
+}
+
+/* Laid across the card, under nothing and over nothing: it never takes a
+   click and it never pushes the copy around. */
+.confetti {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.welcomeRow {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-3);
+  min-width: 0;
+}
+
+.welcomeAvatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--wa-lime), var(--wa-green));
+  color: var(--wa-black);
+  font-family: var(--wa-font-display);
+  font-weight: 700;
+  font-size: var(--wa-fs-body);
+  box-shadow: 0 0 15px var(--wa-lime-soft);
+}
+
+/* Three pulses, then still. Legacy set `animation: ... 2s ... 3` (1231). */
+.welcomePulse {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 12px;
+  border: 2px solid var(--wa-lime);
+  opacity: 0;
+  pointer-events: none;
+  animation: welcomeGlowPulse 2s cubic-bezier(0.24, 0, 0.38, 1) 3;
+}
+
+@keyframes welcomeGlowPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* Over the initial, so a photo that fails to load reveals the letter. */
+.welcomePhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.directiveRow {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--wa-border);
+  padding-top: var(--wa-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .directiveLabel {
@@ -41,14 +129,36 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--wa-text-dim);
-  margin: var(--wa-space-2) 0 0;
+  margin: 0;
 }
 
+/* The live directive was quieter than the greeting above it: body font, small,
+   dimmed, weight 500 (index.html:2745). The port had it in display type at
+   heading size, which read as a second title. */
 .directive {
-  font-family: var(--wa-font-display);
-  font-size: var(--wa-fs-h2);
-  color: var(--wa-text);
+  font-size: var(--wa-fs-small);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--wa-text-muted);
   margin: 0;
+}
+
+/* A 44px avatar and a heading have to share 320px without wrapping badly. */
+@media (max-width: 480px) {
+  .name {
+    font-size: var(--wa-fs-body);
+  }
+
+  .welcomeAvatar {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcomePulse {
+    animation: none;
+  }
 }
 
 .cardKicker {

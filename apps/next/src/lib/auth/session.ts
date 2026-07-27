@@ -1,8 +1,26 @@
 import 'server-only';
+import { cache } from 'react';
 import { toAdminRole, type AdminRole } from '@/lib/auth/roles';
 import { safeAvatarUrl } from '@/lib/sidebar';
 import { createClient } from '@/lib/supabase/server';
 import { fetchMemberProfile } from '@/lib/tour';
+
+/**
+ * The validated session user, once per request.
+ *
+ * `getUser()` revalidates the token against Supabase over the network, and the
+ * protected shell now asks three separate questions of it (the email, the
+ * avatar in the rail, the avatar on the welcome card). Caching here makes that
+ * one round trip instead of three without any caller having to thread a user
+ * object through.
+ */
+const currentUser = cache(async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+});
 
 /**
  * The authenticated user's email, resolved server-side via getUser() (which
@@ -11,10 +29,7 @@ import { fetchMemberProfile } from '@/lib/tour';
  * user-editable user_metadata.
  */
 export async function getAuthedEmail(): Promise<string | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await currentUser();
   return user?.email ?? null;
 }
 
@@ -30,10 +45,7 @@ export type { AdminRole };
  * Identity keeps coming from `getUser().email` and nothing else.
  */
 export async function getAvatarUrl(): Promise<string | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await currentUser();
   return safeAvatarUrl(user?.user_metadata?.skool_avatar_url);
 }
 

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getAuthedEmail } from '@/lib/auth/session';
+import { getAuthedEmail, getAvatarUrl } from '@/lib/auth/session';
 import { fetchOnboardingState } from '@/lib/onboarding';
 import {
   bundleState,
@@ -14,6 +14,7 @@ import { loadGovernorState } from '@/lib/governorState';
 import { chicagoToday } from '@/lib/today';
 import { fetchLedger } from '@/lib/ledgerFetch';
 import { fetchMemberProfile } from '@/lib/tour';
+import { greetingName } from '@/lib/welcome';
 import { RetakeTourLink } from '@/components/tour/RetakeTourLink';
 import { DirectiveCard } from './DirectiveCard';
 import { DisciplineLedger } from './DisciplineLedger';
@@ -24,13 +25,14 @@ export default async function DashboardPage() {
   // The layout guarantees an authenticated member; satisfy the type.
   if (!email) return null;
 
-  const [onboarding, rhythm, state, profile, wall, ledgerView] = await Promise.all([
+  const [onboarding, rhythm, state, profile, wall, ledgerView, avatarUrl] = await Promise.all([
     fetchOnboardingState(email),
     fetchRhythmStatus(email),
     loadGovernorState(),
     fetchMemberProfile(email),
     fetchWallCommunity(email),
     fetchLedger(),
+    getAvatarUrl(),
   ]);
 
   const governor = governorView(state.ok ? state.data : null, chicagoToday());
@@ -49,11 +51,16 @@ export default async function DashboardPage() {
     <div className={styles.page}>
       {/* The live app's dashboard heading was a greeting, not the archetype
           (index.html:18595 wrote "Good evening, Name" into #dashTitle). The
-          archetype still reads on this screen, on the First Steps count below. */}
+          archetype still reads on this screen, on the First Steps count below.
+          `greetingName` reproduces legacy's own fallback chain, which reached
+          for the local part of the email before it reached for "Steward"; the
+          port had reached for the archetype, which greeted an unnamed steward
+          as "Good evening, Disciplined Builder". */}
       <DirectiveCard
-        firstName={profile.firstName.length > 0 ? profile.firstName : archetype}
+        firstName={greetingName(profile.name, email)}
         directive={directive}
         fastActive={governor.fast !== null}
+        avatarUrl={avatarUrl}
       />
 
       <section className={`${styles.card} ${styles.bundleCard}`}>

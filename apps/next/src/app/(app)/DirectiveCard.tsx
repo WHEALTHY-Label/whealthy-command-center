@@ -1,10 +1,19 @@
 'use client';
 
+import { useRef, useState } from 'react';
+import { avatarInitial } from '@/lib/sidebar';
 import { useRequestedPersonalization } from './PersonalizationProvider';
+import { WelcomeConfetti } from './WelcomeConfetti';
 import styles from './page.module.css';
 
 /**
- * The Command Center greeting and Daily Directive.
+ * The Command Center welcome card: `#dashWelcomeCard` at index.html:2730.
+ *
+ * The live card was an avatar and a greeting on one row, a hairline, then the
+ * Daily Directive under it, with a confetti canvas laid across the whole thing.
+ * The port had the greeting and the directive but neither the steward's face
+ * nor the celebration, and it carried a "Command Center" eyebrow the live card
+ * never had. All three are settled here.
  *
  * The heading and the directive both arrive server rendered, then the AI
  * personalization is laid over the top once it lands, exactly as the live app
@@ -20,6 +29,7 @@ export function DirectiveCard({
   firstName,
   directive,
   fastActive,
+  avatarUrl,
 }: {
   firstName: string;
   /** What the server already resolved: the fast line, or the steady fallback. */
@@ -31,8 +41,13 @@ export function DirectiveCard({
    * mid-fast needs the day count more than a generated sentence.
    */
   fastActive: boolean;
+  /** Already passed through `safeAvatarUrl`; null shows the initial. */
+  avatarUrl: string | null;
 }) {
   const { ai, greeting } = useRequestedPersonalization();
+  const avatarRef = useRef<HTMLSpanElement>(null);
+  const [photoBroken, setPhotoBroken] = useState(false);
+
   // Derived, not stored: the directive is a pure function of what the server
   // rendered and what the model has said so far, so there is nothing to keep
   // in state and nothing to re-sync when the answer lands.
@@ -44,16 +59,50 @@ export function DirectiveCard({
   // without a subtitle. `triggerWelcomeCelebration` (18577) checked the same
   // pair.
   const aiTitle = ai?.dashTitle && ai.dashSubtitle ? ai.dashTitle : null;
-  // Server renders the hour-agnostic greeting so the hydrated tree matches,
-  // then the local hour refines it, then the model's own title replaces it.
-  const heading = aiTitle ?? `${greeting ?? 'Welcome back'}, ${firstName}`;
 
   return (
     <section className={`${styles.card} ${styles.directiveCard}`}>
-      <p className={styles.eyebrow}>Command Center</p>
-      <h1 className={styles.name}>{heading}</h1>
-      <p className={styles.directiveLabel}>Daily Directive</p>
-      <p className={styles.directive}>{line}</p>
+      <WelcomeConfetti originRef={avatarRef} />
+
+      <div className={styles.welcomeRow}>
+        {/* `#welcomeAvatarSlot` (2735): the ring pulses three times and stops,
+            the photo lies over the initial so a broken CDN shows the letter. */}
+        <span ref={avatarRef} className={styles.welcomeAvatar}>
+          <span className={styles.welcomePulse} aria-hidden="true" />
+          {avatarUrl && !photoBroken ? (
+            /* eslint-disable-next-line @next/next/no-img-element -- a remote
+               Skool CDN photo, sized by CSS; next/image would need a
+               remotePatterns entry for a 44px decoration. */
+            <img
+              src={avatarUrl}
+              alt=""
+              className={styles.welcomePhoto}
+              referrerPolicy="no-referrer"
+              onError={() => setPhotoBroken(true)}
+            />
+          ) : null}
+          <span aria-hidden="true">{avatarInitial(firstName)}</span>
+        </span>
+
+        {/* Server renders the hour-agnostic greeting so the hydrated tree
+            matches, then the local hour refines it, then the model's own title
+            replaces it. The model's title is rendered as text, where legacy
+            assigned it to innerHTML: the same words, without handing a model's
+            output the ability to write markup into the page. */}
+        <h1 className={styles.name}>
+          {aiTitle ?? (
+            <>
+              {greeting ?? 'Welcome back'}, <span className={styles.greetName}>{firstName}</span>!{' '}
+              <span aria-hidden="true">👋</span>
+            </>
+          )}
+        </h1>
+      </div>
+
+      <div className={styles.directiveRow}>
+        <p className={styles.directiveLabel}>Daily Directive</p>
+        <p className={styles.directive}>{line}</p>
+      </div>
     </section>
   );
 }
