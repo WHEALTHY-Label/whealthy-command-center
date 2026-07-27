@@ -1,4 +1,5 @@
 import { memberFn } from '@/lib/fn';
+import { PersonalHeader } from '../PersonalHeader';
 import { AffiliateClient } from './AffiliateClient';
 import ui from '@/components/ui.module.css';
 
@@ -17,11 +18,7 @@ export default async function AffiliatePage() {
 
   return (
     <div className={ui.page}>
-      <header className={ui.header}>
-        <p className={ui.eyebrow}>Affiliate Command</p>
-        <h1 className={ui.title}>Share the house</h1>
-        <p className={ui.sub}>Share your referral invite links and track your progress.</p>
-      </header>
+      <PersonalHeader view="affiliate" eyebrow="Affiliate Command" />
 
       <section className={ui.card}>
         <p className={ui.kicker}>Active referrals (unlock free month)</p>

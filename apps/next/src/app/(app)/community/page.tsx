@@ -1,5 +1,6 @@
 import { memberFn } from '@/lib/fn';
 import { SKOOL_URL } from '@/lib/catalog';
+import { PersonalHeader } from '../PersonalHeader';
 import ui from '@/components/ui.module.css';
 import styles from './community.module.css';
 
@@ -47,20 +48,13 @@ export default async function CommunityPage() {
 
   return (
     <div className={ui.page}>
-      <header className={ui.header}>
-        <p className={ui.eyebrow}>Community</p>
-        <h1 className={ui.title}>Iron sharpens iron</h1>
-        <p className={ui.sub}>
-          Connect with fellow Stewards on Skool. Accountability partners, group challenges, and
-          community support.
-        </p>
-      </header>
+      <PersonalHeader view="community" eyebrow="Community" />
 
       <section className={ui.cardLime}>
         <p className={ui.kicker}>Stewards Community</p>
         <p className={ui.body}>
-          The conversation lives on Skool. Step in, introduce yourself, and find your
-          accountability partners.
+          The conversation lives on Skool. Step in, introduce yourself, and find your accountability
+          partners.
         </p>
         <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" className={ui.primary}>
           Open Skool community

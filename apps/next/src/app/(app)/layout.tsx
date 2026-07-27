@@ -11,6 +11,7 @@ import {
   type OnboardingState,
 } from '@/lib/onboarding';
 import { fetchMemberProfile, firstUncheckedLabel, prettyArchetype } from '@/lib/tour';
+import { PersonalizationProvider } from './PersonalizationProvider';
 import styles from './layout.module.css';
 
 /**
@@ -50,25 +51,30 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     : prettyArchetype(state.archetype_name ?? state.archetype ?? null);
 
   return (
-    <div className={styles.shell}>
-      <Sidebar isAdmin={role !== null} />
-      <div className={styles.content}>{children}</div>
-      <FirstStepReporter done={profile.firstSteps} />
-      <GovernorDock />
-      <TourOverlay
-        tourDoneAt={profile.tourDoneAt}
-        context={{
-          firstName: profile.firstName,
-          archetypeName,
-          bundleClaimed: state.bundle_claimed === true,
-          fastActive: false,
-          fastDay: 0,
-          fastDuration: 0,
-          isAdmin: role !== null,
-          wordDay: '',
-          firstUnchecked: firstUncheckedLabel(profile.firstSteps),
-        }}
-      />
-    </div>
+    // One `synthesis` answer for the whole session, the way the live app kept
+    // it on `window.aiPersonalizations`. The layout survives client-side
+    // navigation, so every surface below reads the same answer.
+    <PersonalizationProvider>
+      <div className={styles.shell}>
+        <Sidebar isAdmin={role !== null} />
+        <div className={styles.content}>{children}</div>
+        <FirstStepReporter done={profile.firstSteps} />
+        <GovernorDock />
+        <TourOverlay
+          tourDoneAt={profile.tourDoneAt}
+          context={{
+            firstName: profile.firstName,
+            archetypeName,
+            bundleClaimed: state.bundle_claimed === true,
+            fastActive: false,
+            fastDay: 0,
+            fastDuration: 0,
+            isAdmin: role !== null,
+            wordDay: '',
+            firstUnchecked: firstUncheckedLabel(profile.firstSteps),
+          }}
+        />
+      </div>
+    </PersonalizationProvider>
   );
 }

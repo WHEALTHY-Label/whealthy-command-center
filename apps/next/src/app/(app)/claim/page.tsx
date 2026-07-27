@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAuthedEmail } from '@/lib/auth/session';
 import { memberFn } from '@/lib/fn';
 import { FALLBACK_CODE, bundleByKey } from '@/lib/catalog';
+import { PersonalHeader } from '../PersonalHeader';
 import { ClaimClient } from './ClaimClient';
 import ui from '@/components/ui.module.css';
 import styles from './claim.module.css';
@@ -46,29 +47,23 @@ export default async function ClaimPage() {
 
   return (
     <div className={ui.page}>
-      <header className={ui.header}>
-        <p className={ui.eyebrow}>Claim Bundle</p>
-        <h1 className={ui.title}>{claimed ? 'Your routine is active' : 'Claim your bundle'}</h1>
-        <p className={ui.sub}>
-          Redeem your Steward monthly supply or select custom blends.
-        </p>
-      </header>
+      {/* The live app titled this room after the steward, not after the state
+          of his order: `personalMap.claim` at index.html:18510 read
+          "<Name>'s Governance Bundle" whether or not the bundle was claimed.
+          The card below already says "Active", so the state is not lost. */}
+      <PersonalHeader view="claim" eyebrow="Claim Bundle" />
 
       {claimed ? (
         <>
           <section className={ui.cardLime}>
             <p className={ui.kicker}>Active</p>
-            <h2 className={styles.bundleName}>
-              Your {bundleName ?? 'WHEALTHY'} routine is active
-            </h2>
+            <h2 className={styles.bundleName}>Your {bundleName ?? 'WHEALTHY'} routine is active</h2>
             <p className={ui.body}>
               Your routine is active. Manage your routine, shipping, and next order here.
             </p>
             <div className={ui.row}>
               <span className={ui.pillGreen}>Status: Active</span>
-              <span className={ui.pill}>
-                Next shipment: {nextEligible ?? 'Pending'}
-              </span>
+              <span className={ui.pill}>Next shipment: {nextEligible ?? 'Pending'}</span>
             </div>
             <div className={ui.row}>
               <Link href="/portal" className={ui.quiet}>

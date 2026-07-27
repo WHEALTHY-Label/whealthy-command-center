@@ -2,6 +2,7 @@ import { memberFnGet } from '@/lib/fn';
 import { formatMoney, formatOrderDate, parseOrders } from '@/lib/orders';
 import { BILLING_PORTAL_URL } from '@/lib/catalog';
 import Link from 'next/link';
+import { PersonalHeader } from '../PersonalHeader';
 import ui from '@/components/ui.module.css';
 import styles from './portal.module.css';
 
@@ -14,11 +15,7 @@ export default async function PortalPage() {
 
   return (
     <div className={ui.page}>
-      <header className={ui.header}>
-        <p className={ui.eyebrow}>Product Portal</p>
-        <h1 className={ui.title}>Your orders</h1>
-        <p className={ui.sub}>Your orders, tracking, and billing in one place.</p>
-      </header>
+      <PersonalHeader view="portal" eyebrow="Product Portal" />
 
       {failed ? (
         <p className={ui.error}>

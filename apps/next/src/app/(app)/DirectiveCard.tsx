@@ -1,43 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { fetchDashPersonalization } from '@/lib/actions/personalize';
-import { allowCommunityDirective, mentionsWall, timeGreeting } from '@/lib/personalize';
+import { useRequestedPersonalization } from './PersonalizationProvider';
 import styles from './page.module.css';
-
-/** The legacy key, so a steward who used the old app keeps their spacing. */
-const NUDGE_KEY = 'wh_daily_comm_nudge_shown_at';
-
-function readNudge(): string | null {
-  try {
-    return window.localStorage.getItem(NUDGE_KEY);
-  } catch {
-    // Storage blocked. Treat it as never nudged rather than losing the call.
-    return null;
-  }
-}
-
-function stampNudge(iso: string): void {
-  try {
-    window.localStorage.setItem(NUDGE_KEY, iso);
-  } catch {
-    // A blocked write only costs the five day spacing, not the directive.
-  }
-}
 
 /**
  * The Command Center greeting and Daily Directive.
  *
  * The heading and the directive both arrive server rendered, then the AI
- * personalization is fetched after mount, exactly as the live app did with
- * `setTimeout(waFetchAIPersonalization, 150)` at index.html:18351. The card is
- * never blank and never waits on the model: if the call fails, is refused, or
- * the steward is offline, what the server rendered simply stays.
+ * personalization is laid over the top once it lands, exactly as the live app
+ * did with `setTimeout(waFetchAIPersonalization, 150)` at index.html:18351.
+ * The card is never blank and never waits on the model: if the call fails, is
+ * refused, or the steward is offline, what the server rendered simply stays.
  *
- * Two things can only be known in the browser, so they are read after mount:
- * the steward's local hour (the greeting is local time of day, and the server
- * has no idea what time it is where they are standing) and the community nudge
- * stamp in localStorage.
+ * The call itself lives in `PersonalizationProvider`, because the same answer
+ * also personalizes the My Journal and The Fast headers and the live app only
+ * ever asked once.
  */
 export function DirectiveCard({
   firstName,
@@ -55,43 +32,18 @@ export function DirectiveCard({
    */
   fastActive: boolean;
 }) {
-  const [greeting, setGreeting] = useState<string | null>(null);
-  const [aiTitle, setAiTitle] = useState<string | null>(null);
-  const [line, setLine] = useState(directive);
+  const { ai, greeting } = useRequestedPersonalization();
+  // Derived, not stored: the directive is a pure function of what the server
+  // rendered and what the model has said so far, so there is nothing to keep
+  // in state and nothing to re-sync when the answer lands.
+  const line = ai?.dailyDirective && !fastActive ? ai.dailyDirective : directive;
 
-  useEffect(() => {
-    let alive = true;
-
-    // The local hour has to be read outside render: react-hooks/purity bars a
-    // clock read during render, and a server rendered hour would hydrate
-    // wrong for every steward outside the server's timezone.
-    const greetTimer = setTimeout(() => {
-      if (alive) setGreeting(timeGreeting(new Date().getHours()));
-    }, 0);
-
-    const askTimer = setTimeout(() => {
-      void (async () => {
-        const now = Date.now();
-        const result = await fetchDashPersonalization(
-          new Date(now).getHours(),
-          allowCommunityDirective(readNudge(), now),
-        );
-        if (!alive || !result.ok || !result.personalization) return;
-        const p = result.personalization;
-        if (p.dashTitle) setAiTitle(p.dashTitle);
-        if (p.dailyDirective && !fastActive) setLine(p.dailyDirective);
-        // Only a directive that actually mentioned the wall spends the nudge.
-        if (mentionsWall(p.dailyDirective)) stampNudge(new Date(Date.now()).toISOString());
-      })();
-    }, 150);
-
-    return () => {
-      alive = false;
-      clearTimeout(greetTimer);
-      clearTimeout(askTimer);
-    };
-  }, [fastActive]);
-
+  // Both fields or neither, which is the one place legacy insisted on it:
+  // `aiMap.dash` at index.html:18538 had no per-field fallback, so the guard at
+  // 18546 kept the deterministic greeting whenever the model returned a title
+  // without a subtitle. `triggerWelcomeCelebration` (18577) checked the same
+  // pair.
+  const aiTitle = ai?.dashTitle && ai.dashSubtitle ? ai.dashTitle : null;
   // Server renders the hour-agnostic greeting so the hydrated tree matches,
   // then the local hour refines it, then the model's own title replaces it.
   const heading = aiTitle ?? `${greeting ?? 'Welcome back'}, ${firstName}`;
