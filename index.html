@@ -5299,6 +5299,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: view,
                     cursor: offset,
                     limit: limit
@@ -5492,6 +5493,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -5594,6 +5596,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     reporter_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId,
                     reason: 'Flagged by community'
                   })
@@ -5636,6 +5639,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       member_id: window.MEMBER_ID,
+                      wall_key: window.WALL_KEY,
                       post_id: post.id
                     })
                   });
@@ -5792,6 +5796,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     body: body,
                     display_mode: displayMode,
                     source: 'wall'
@@ -5851,6 +5856,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'single',
                     post_id: postId
                   })
@@ -6146,6 +6152,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'testimony_top'
                   })
                 });
@@ -6181,6 +6188,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'testimony_river',
                     cursor: offset,
                     limit: this.limits.river
@@ -6368,6 +6376,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -6432,6 +6441,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       member_id: window.MEMBER_ID,
+                      wall_key: window.WALL_KEY,
                       post_id: postId
                     })
                   });
@@ -6471,6 +6481,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'single',
                     post_id: postId
                   })
@@ -7037,6 +7048,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'praying_for',
                     limit: 100,
                     cursor: 0
@@ -7091,6 +7103,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'my_prayers',
                     limit: this.pageSize,
                     cursor: offset
@@ -7142,6 +7155,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'praying_for',
                     limit: this.pageSize,
                     cursor: offset
@@ -7236,6 +7250,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -7527,6 +7542,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: this.currentPostId,
                     note: note
                   })
@@ -7566,6 +7582,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: this.currentPostId,
                     note: note
                   })
@@ -7619,6 +7636,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: this.currentPostId
                   })
                 });
@@ -7658,6 +7676,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -7688,6 +7707,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -9736,6 +9756,7 @@ window.logPrayerRequest = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         body: text,
         display_mode: displayMode,
         source: 'bible365'
@@ -9780,6 +9801,7 @@ window.fetchBibleFeed = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         view: 'bible365',
         limit: 10,
         cursor: 0
@@ -9860,6 +9882,7 @@ window.handleBibleFeedPray = async function(btn, postId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         post_id: postId
       })
     });
@@ -10722,9 +10745,14 @@ const FN_BASE='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
 let MEMBER_EMAIL = __lsGet('wh_steward_email') || '';
 let MEMBER_NAME = '';
 let MEMBER_ID = null;
+/* Per-member Prayer Wall credential. Issued by the gate alongside MEMBER_ID and
+   sent with every wall-* call. Deliberately NOT persisted to localStorage: it is
+   re-issued each time the gate runs, so it never outlives the session. */
+let WALL_KEY = null;
 window.MEMBER_EMAIL = MEMBER_EMAIL;
 window.MEMBER_NAME = MEMBER_NAME;
 window.MEMBER_ID = MEMBER_ID;
+window.WALL_KEY = WALL_KEY;
 
   /* ================== MY BIBLE MODULE ================== */
   const BIBLE_BOOKS = [
@@ -11447,6 +11475,7 @@ window.MEMBER_ID = MEMBER_ID;
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
             body: JSON.stringify({
               member_id: window.MEMBER_ID,
+              wall_key: window.WALL_KEY,
               body: this.weightText,
               display_mode: postMode,
               source: 'prayer_handover',
@@ -12480,6 +12509,7 @@ async function waRunGate(emailArg){
       MEMBER_EMAIL = email;
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
       MEMBER_ID = (d.member && d.member.id) ? d.member.id : null;
+      WALL_KEY = (d.member && d.member.wall_key) ? d.member.wall_key : null;
       try { loadMemberDiscount(email); } catch(e) {}
       await waLoadProfileMeta();
       if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
@@ -12514,6 +12544,7 @@ async function waRunGate(emailArg){
       window.MEMBER_EMAIL = MEMBER_EMAIL;
       window.MEMBER_NAME = MEMBER_NAME;
       window.MEMBER_ID = MEMBER_ID;
+      window.WALL_KEY = WALL_KEY;
       
       // Hide the gate overlay and display main content
       waCloseGate();
@@ -12959,6 +12990,7 @@ window.submitCohortTestimony = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         body: text,
         display_mode: displayMode,
         source: 'challenge'
