@@ -11885,7 +11885,7 @@ function waOnHandleInput(){
     waNote('That looks like an email. Your Skool handle is the @name at the end of your profile link.');
     return;
   }
-  if (h.length < 2){ waCloseSuggest(); return; }
+  if (h.length < 3){ waCloseSuggest(); return; }
   if (waCache.has(h)){ waPaintSuggest(h, waCache.get(h)); return; }
   if (waAutoPaused){ waNote('Too many lookups. Give it a moment, then press Find my profile.'); return; }
 
