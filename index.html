@@ -11192,7 +11192,8 @@ window.WALL_KEY = WALL_KEY;
           task: 'bible_study',
           prompt: text,
           context: { book: BIBLE_READER.currentBook, chapter: BIBLE_READER.currentChapter },
-          email: MEMBER_EMAIL
+          email: MEMBER_EMAIL,
+          wall_key: window.WALL_KEY
         })
       });
       const typingEl = document.getElementById(typingId);
@@ -13425,6 +13426,7 @@ async function ask(task,prompt,scriptureWhitelist,allowCommunityDirective){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       email:MEMBER_EMAIL,
+      wall_key:window.WALL_KEY,
       task,
       prompt,
       scripture_whitelist:scriptureWhitelist||null,
