@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { describeAuthError } from '@/lib/auth-errors';
 import { fetchOnboardingState, gateDestination } from '@/lib/onboarding';
 
 export interface ActionResult {
@@ -27,7 +28,7 @@ export async function sendCode(_prev: ActionResult, formData: FormData): Promise
     options: { shouldCreateUser: true },
   });
   if (error) {
-    return { ok: false, error: 'Could not send the code. Please try again.' };
+    return { ok: false, error: describeAuthError(error.message, error.status) };
   }
   return { ok: true };
 }
