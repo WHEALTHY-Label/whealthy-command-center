@@ -12511,6 +12511,7 @@ async function waRunGate(emailArg){
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
       MEMBER_ID = (d.member && d.member.id) ? d.member.id : null;
       WALL_KEY = (d.member && d.member.wall_key) ? d.member.wall_key : null;
+      window.WALL_KEY = WALL_KEY;
       try { loadMemberDiscount(email); } catch(e) {}
       await waLoadProfileMeta();
       if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
@@ -13548,7 +13549,7 @@ async function loadMemberOrders() {
   loading.style.display = 'block';
 
   try {
-    var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email));
+    var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email), { headers: { 'x-wall-key': window.WALL_KEY || '' } });
     var data = await res.json();
     loading.style.display = 'none';
 
@@ -18741,7 +18742,7 @@ async function loadAndInit(){
       const r = await fetch(FN_BASE + '/get-member-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, wall_key: window.WALL_KEY })
       });
       const d = await r.json();
       const banner = document.getElementById('memberDiscountBanner');
