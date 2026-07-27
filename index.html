@@ -10955,7 +10955,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-state`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'get', email: MEMBER_EMAIL })
         });
         if (res.status === 200) {
@@ -10989,7 +10989,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         await fetch(`${FN_BASE}/my-bible-state`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'set',
             email: MEMBER_EMAIL,
@@ -11008,7 +11008,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-marks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'list', email: MEMBER_EMAIL })
         });
         if (res.status === 200) {
@@ -11026,7 +11026,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-marks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'add', email: MEMBER_EMAIL, book, chapter, verse, kind, body })
         });
         if (res.status === 200) {
@@ -11041,7 +11041,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-marks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'remove', email: MEMBER_EMAIL, id })
         });
         if (res.status === 200) {
@@ -11454,7 +11454,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/prayers-write`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'create',
             kind: 'handover',
@@ -11488,7 +11488,7 @@ window.WALL_KEY = WALL_KEY;
           if (wallRes.status === 200) {
             await fetch(`${FN_BASE}/prayers-write`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
               body: JSON.stringify({
                 action: 'lift',
                 id: prayerId,
@@ -11539,7 +11539,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/prayers-read`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ email: MEMBER_EMAIL })
         });
         if (res.status === 200) {
@@ -11609,7 +11609,7 @@ window.WALL_KEY = WALL_KEY;
       try {
         const res = await fetch(`${FN_BASE}/prayers-write`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'answered',
             id: this.selectedLedgerItem,
@@ -16251,7 +16251,7 @@ async function loadAttachPrayers() {
   try {
     const res = await fetch(FN_BASE + '/prayers-read', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
       body: JSON.stringify({ email: MEMBER_EMAIL, view: 'mirror' })
     });
     if (res.status === 200) {
@@ -16748,7 +16748,8 @@ Return JSON:
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_ANON}`
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'x-wall-key': window.WALL_KEY || ''
         },
         body: JSON.stringify({
           email: MEMBER_EMAIL,
