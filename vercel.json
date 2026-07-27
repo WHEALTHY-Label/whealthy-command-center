@@ -1,0 +1,30 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://whealthylabel.com https://*.whealthylabel.com https://thestewardsrhythm.com https://*.thestewardsrhythm.com"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), geolocation=(), usb=(), display-capture=(), microphone=(self)"
+        },
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://whealthylabel.com https://*.whealthylabel.com https://thestewardsrhythm.com https://*.thestewardsrhythm.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' https://yzaxzmuuvozonhgwhlim.supabase.co wss://yzaxzmuuvozonhgwhlim.supabase.co https://www.skool.com https://content.app-sources.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://checkout.shopify.com https://*.myshopify.com https://js.stripe.com https://checkout.stripe.com; form-action 'self' https://whealthylabel.com"
+        }
+      ]
+    }
+  ]
+}
