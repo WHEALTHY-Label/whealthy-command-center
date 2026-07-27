@@ -17718,7 +17718,7 @@ window.generateAffiliateLink=async function(){
       } catch(e) {}
     }
     var name = MEMBER_NAME || (email ? email.split('@')[0] : 'Member');
-    var res=await fetch(FN_BASE+'/register-affiliate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email||'member@whealthylabel.com',ref_id:refId})});
+    var res=await fetch(FN_BASE+'/register-affiliate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({member_id:window.MEMBER_ID,wall_key:window.WALL_KEY,name:name,email:email||'member@whealthylabel.com',ref_id:refId})});
     var data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
     renderAffiliateLinks(refId);
     alertEl.style.display='block';alertEl.style.background='rgba(204,255,0,0.08)';alertEl.style.border='1px solid rgba(204,255,0,0.15)';alertEl.style.color='#ccff00';alertEl.innerHTML='Links generated successfully!';
