@@ -1,4 +1,4 @@
-import { memberFn } from '@/lib/fn';
+import { loadGovernorState } from '@/lib/governorState';
 import { deriveFastView } from '@/lib/fastview';
 import { chicagoToday } from '@/lib/today';
 import { PersonalHeader } from '../PersonalHeader';
@@ -26,7 +26,7 @@ function parseEntries(data: unknown): RecordEntry[] {
 }
 
 export default async function RecordPage() {
-  const state = await memberFn('governor-state', { action: 'load' });
+  const state = await loadGovernorState();
   const entries = state.ok ? parseEntries(state.data) : [];
   const fast = deriveFastView(state.ok ? state.data.fast : null, chicagoToday());
   const inFast = fast.kind === 'active';

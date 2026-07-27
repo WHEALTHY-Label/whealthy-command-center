@@ -1,4 +1,4 @@
-import { memberFn } from '@/lib/fn';
+import { loadGovernorState } from '@/lib/governorState';
 import { PersonalHeader } from '../PersonalHeader';
 import { AffiliateClient } from './AffiliateClient';
 import ui from '@/components/ui.module.css';
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AffiliatePage() {
   // governor-state load carries the saved affiliate id and referral count.
-  const call = await memberFn('governor-state', { action: 'load' });
+  const call = await loadGovernorState();
   const refId =
     call.ok && typeof call.data.affiliate_ref_id === 'string' && call.data.affiliate_ref_id
       ? call.data.affiliate_ref_id

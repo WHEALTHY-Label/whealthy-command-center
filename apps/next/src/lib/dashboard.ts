@@ -1,6 +1,5 @@
 import { cache } from 'react';
 import { getPublicEnv } from '@/lib/env';
-import { chicagoToday } from '@/lib/today';
 
 /** A single anchor in today's rhythm (read-only render in Slice 3). */
 export interface DisciplineSlot {
@@ -287,37 +286,29 @@ export function parseGovernorFast(raw: unknown, todayIso: string): FastState | n
 }
 
 /**
- * Daily directive + active-fast info from governor-state.
+ * Daily directive + active-fast info out of a `governor-state` load.
  *
- * The body matters. `governor-state` reads `{ action, email }` out of the JSON
- * body and never looks at the query string, and its outer catch answers a
- * parse failure with HTTP **200** `{ok:false}`. The port used to POST with no
- * body at all, so `req.json()` threw, `res.ok` was true, every field was
- * absent, and the Daily Directive was pinned to its fallback forever. Both the
- * action and the email now ride in the body, matching index.html:13222.
+ * `governor-state` reads `{ action, email }` out of the JSON body and never
+ * looks at the query string, and its outer catch answers a parse failure with
+ * HTTP **200** `{ok:false}`, which is why the `ok` flag is checked here rather
+ * than left to the transport. The port used to POST with no body at all, so
+ * `req.json()` threw, `res.ok` was true, every field was absent, and the Daily
+ * Directive was pinned to its fallback forever.
+ *
+ * The fetch itself moved to `loadGovernorState()` so the rail and the page
+ * share one round trip. What is left is pure, and therefore tested.
+ *
+ * The day of the fast is counted in Chicago, the way `activeFastDay()` at
+ * index.html:15351 counted it off `realToday()`. On UTC the Daily Directive
+ * read a day ahead of the fast the steward was actually living, every evening
+ * after 7pm.
  */
-export const fetchGovernorState = cache(async (email: string): Promise<GovernorState> => {
-  const env = getPublicEnv();
-  try {
-    const res = await fetch(`${env.NEXT_PUBLIC_FN_BASE}/governor-state`, {
-      method: 'POST',
-      headers: authedHeaders(),
-      cache: 'no-store',
-      body: JSON.stringify({ action: 'load', email }),
-    });
-    if (!res.ok) return { aiDirective: null, fast: null };
-    const data = (await res.json()) as Record<string, unknown>;
-    if (data.ok !== true) return { aiDirective: null, fast: null };
-    const directive =
-      (typeof data.directive === 'string' && data.directive) ||
-      (typeof data.daily_directive === 'string' && data.daily_directive) ||
-      null;
-    // The day of the fast is counted in Chicago, the way `activeFastDay()` at
-    // index.html:15351 counted it off `realToday()`. On UTC the Daily Directive
-    // read a day ahead of the fast the steward was actually living, every
-    // evening after 7pm.
-    return { aiDirective: directive, fast: parseGovernorFast(data.fast, chicagoToday()) };
-  } catch {
-    return { aiDirective: null, fast: null };
-  }
-});
+export function governorView(raw: unknown, todayIso: string): GovernorState {
+  const data = rec(raw);
+  if (data.ok !== true) return { aiDirective: null, fast: null };
+  const directive =
+    (typeof data.directive === 'string' && data.directive) ||
+    (typeof data.daily_directive === 'string' && data.daily_directive) ||
+    null;
+  return { aiDirective: directive, fast: parseGovernorFast(data.fast, todayIso) };
+}

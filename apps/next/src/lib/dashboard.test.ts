@@ -3,6 +3,7 @@ import {
   activeFastDay,
   bundleState,
   firstStepsProgress,
+  governorView,
   parseGovernorFast,
   parseWallCommunity,
   selectDirective,
@@ -258,5 +259,64 @@ describe('parseGovernorFast', () => {
   it('returns null for anything that is not a row', () => {
     expect(parseGovernorFast(null, '2026-07-20')).toBeNull();
     expect(parseGovernorFast('active', '2026-07-20')).toBeNull();
+  });
+});
+
+describe('governorView', () => {
+  const plan = {
+    phases: [{ name: 'Entry', from: 1, to: 7 }],
+    focus: { Entry: ['Hold the morning.'] },
+  };
+
+  it('reads nothing out of a load the function itself called a failure', () => {
+    // `governor-state` answers a bad body with HTTP 200 {ok:false}, so the
+    // flag is the only signal that the payload is empty.
+    expect(governorView({ ok: false, directive: 'ignored' }, '2026-07-20')).toEqual({
+      aiDirective: null,
+      fast: null,
+    });
+  });
+
+  it('reads nothing out of a null load', () => {
+    expect(governorView(null, '2026-07-20')).toEqual({ aiDirective: null, fast: null });
+  });
+
+  it('prefers `directive` over `daily_directive`', () => {
+    expect(
+      governorView(
+        { ok: true, directive: 'Govern the hour.', daily_directive: 'Older.' },
+        '2026-07-20',
+      ).aiDirective,
+    ).toBe('Govern the hour.');
+  });
+
+  it('falls back to `daily_directive` when `directive` is absent or empty', () => {
+    expect(governorView({ ok: true, daily_directive: 'Older.' }, '2026-07-20').aiDirective).toBe(
+      'Older.',
+    );
+    expect(
+      governorView({ ok: true, directive: '', daily_directive: 'Older.' }, '2026-07-20')
+        .aiDirective,
+    ).toBe('Older.');
+  });
+
+  it('answers null for a directive that is not a string', () => {
+    expect(governorView({ ok: true, directive: 42 }, '2026-07-20').aiDirective).toBeNull();
+  });
+
+  it('hands the fast row to parseGovernorFast with the day it was given', () => {
+    const raw = {
+      ok: true,
+      fast: { status: 'active', start_date: '2026-07-20', duration: 40, plan },
+    };
+    expect(governorView(raw, '2026-07-22').fast).toEqual({
+      day: 3,
+      duration: 40,
+      phase: 'Hold the morning.',
+    });
+  });
+
+  it('carries no fast when the row is missing', () => {
+    expect(governorView({ ok: true, directive: 'Govern the day.' }, '2026-07-20').fast).toBeNull();
   });
 });

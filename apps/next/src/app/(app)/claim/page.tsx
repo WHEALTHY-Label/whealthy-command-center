@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getAuthedEmail } from '@/lib/auth/session';
 import { memberFn } from '@/lib/fn';
+import { loadGovernorState } from '@/lib/governorState';
 import { FALLBACK_CODE, bundleByKey } from '@/lib/catalog';
 import { PersonalHeader } from '../PersonalHeader';
 import { ClaimClient } from './ClaimClient';
@@ -14,7 +15,7 @@ export default async function ClaimPage() {
   if (!email) return null;
 
   const [state, codeCall] = await Promise.all([
-    memberFn('governor-state', { action: 'load' }),
+    loadGovernorState(),
     memberFn('get-member-code', {}),
   ]);
 

@@ -14,6 +14,9 @@
 }
 
 .brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   padding-bottom: var(--wa-space-2);
 }
 
@@ -22,7 +25,18 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   font-size: 1.125rem;
+  text-transform: uppercase;
   color: var(--wa-text);
+}
+
+/* The live wordmark lit the middle of the word: W<lime>HEAL</lime>THY. */
+.wordmarkAccent {
+  color: var(--wa-lime);
+}
+
+.brandSub {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
 }
 
 .section {
@@ -74,19 +88,141 @@
   color: var(--wa-lime);
 }
 
-.soon {
+/* A nav row that is a button rather than a destination: "Retake the Tour". */
+.linkButton {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: var(--wa-font-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* ---- Badges: `.si-claim` (index.html:65), `#navDayBadge` (2131), `#meBadge` (2124) ---- */
+
+.claim {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.claimDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--wa-lime);
+  animation: claimPulse 2s ease-in-out infinite;
+}
+
+.claimLabel {
   font-size: 0.625rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--wa-text-dim);
-  border: 1px solid var(--wa-border-mid);
-  border-radius: 999px;
-  padding: 1px 6px;
+  font-weight: 700;
+  color: var(--wa-lime);
 }
+
+@keyframes claimPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* A steward with nothing to claim should not see a lit row, so the border
+   only appears while the badge does. */
+.claimHighlight {
+  border: 1px solid var(--wa-border-lime);
+  box-shadow: 0 0 10px var(--wa-lime-soft);
+}
+
+.dayBadge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wa-lime);
+  background: var(--wa-lime-soft);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.unseenDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--wa-lime);
+}
+
+/* ---- Footer: `.sidebar-user` (index.html:154) then the log-out button ---- */
 
 .footer {
   margin-top: auto;
   padding-top: var(--wa-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wa-space-3);
+}
+
+.sidebarUser {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-2);
+  min-width: 0;
+}
+
+.avatar {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--wa-lime), var(--wa-green));
+  color: var(--wa-black);
+  font-family: var(--wa-font-display);
+  font-weight: 700;
+  font-size: var(--wa-fs-small);
+}
+
+/* Layered over the initial, so a photo that fails to load reveals the letter
+   underneath rather than a hole. */
+.avatarPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.userName {
+  font-size: var(--wa-fs-small);
+  font-weight: 600;
+  color: var(--wa-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
 }
 
 .signout {
@@ -164,5 +300,15 @@
     border: none;
     padding: 0;
     cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .claimDot {
+    animation: none;
+  }
+
+  .sidebar {
+    transition: none;
   }
 }

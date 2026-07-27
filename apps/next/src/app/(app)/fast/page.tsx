@@ -1,4 +1,4 @@
-import { memberFn } from '@/lib/fn';
+import { loadGovernorState } from '@/lib/governorState';
 import { deriveFastView } from '@/lib/fastview';
 import { parseReveal } from '@/lib/fastreveal';
 import { chicagoToday } from '@/lib/today';
@@ -10,7 +10,7 @@ import ui from '@/components/ui.module.css';
 export const dynamic = 'force-dynamic';
 
 export default async function FastPage() {
-  const state = await memberFn('governor-state', { action: 'load' });
+  const state = await loadGovernorState();
   const raw = state.ok ? state.data.fast : null;
   const fast = deriveFastView(raw, chicagoToday());
   // The full plan is only read for the pre-Day-1 reveal. Every other state

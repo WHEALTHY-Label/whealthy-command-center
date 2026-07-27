@@ -1,6 +1,7 @@
 import { memberFn } from '@/lib/fn';
 import { SKOOL_URL } from '@/lib/catalog';
 import { PersonalHeader } from '../PersonalHeader';
+import { CommunityPromo } from './CommunityPromo';
 import ui from '@/components/ui.module.css';
 import styles from './community.module.css';
 
@@ -50,17 +51,11 @@ export default async function CommunityPage() {
     <div className={ui.page}>
       <PersonalHeader view="community" eyebrow="Community" />
 
-      <section className={ui.cardLime}>
-        <p className={ui.kicker}>Stewards Community</p>
-        <p className={ui.body}>
-          The conversation lives on Skool. Step in, introduce yourself, and find your accountability
-          partners.
-        </p>
-        <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" className={ui.primary}>
-          Open Skool community
-        </a>
-      </section>
-
+      {/* `loadCommunityViewFeed` at index.html:16071 showed exactly one of the
+          two: the feed when Skool returned posts, the promo card otherwise
+          (and on any failure). The port showed the promo above the feed
+          always, which meant a steward with a live feed was still being asked
+          to go join the community he was already reading. */}
       {feed.length > 0 ? (
         <section className={ui.card}>
           <p className={ui.kicker}>Community feed</p>
@@ -86,7 +81,9 @@ export default async function CommunityPage() {
             ))}
           </ul>
         </section>
-      ) : null}
+      ) : (
+        <CommunityPromo icon="🤝" cta="Open Skool Community" />
+      )}
     </div>
   );
 }

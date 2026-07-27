@@ -3,13 +3,15 @@ import { getAuthedEmail } from '@/lib/auth/session';
 import { fetchOnboardingState } from '@/lib/onboarding';
 import {
   bundleState,
-  fetchGovernorState,
   fetchRhythmStatus,
   fetchWallCommunity,
   firstStepsProgress,
+  governorView,
   selectDirective,
   wallGarnish,
 } from '@/lib/dashboard';
+import { loadGovernorState } from '@/lib/governorState';
+import { chicagoToday } from '@/lib/today';
 import { fetchLedger } from '@/lib/ledgerFetch';
 import { fetchMemberProfile } from '@/lib/tour';
 import { RetakeTourLink } from '@/components/tour/RetakeTourLink';
@@ -22,15 +24,16 @@ export default async function DashboardPage() {
   // The layout guarantees an authenticated member; satisfy the type.
   if (!email) return null;
 
-  const [onboarding, rhythm, governor, profile, wall, ledgerView] = await Promise.all([
+  const [onboarding, rhythm, state, profile, wall, ledgerView] = await Promise.all([
     fetchOnboardingState(email),
     fetchRhythmStatus(email),
-    fetchGovernorState(email),
+    loadGovernorState(),
     fetchMemberProfile(email),
     fetchWallCommunity(email),
     fetchLedger(),
   ]);
 
+  const governor = governorView(state.ok ? state.data : null, chicagoToday());
   const archetype = onboarding.archetype_name ?? onboarding.archetype ?? 'Steward';
   const directive = selectDirective({ fast: governor.fast, aiDirective: governor.aiDirective });
   const bundle = bundleState(onboarding);

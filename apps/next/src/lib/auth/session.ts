@@ -1,5 +1,6 @@
 import 'server-only';
 import { toAdminRole, type AdminRole } from '@/lib/auth/roles';
+import { safeAvatarUrl } from '@/lib/sidebar';
 import { createClient } from '@/lib/supabase/server';
 import { fetchMemberProfile } from '@/lib/tour';
 
@@ -18,6 +19,23 @@ export async function getAuthedEmail(): Promise<string | null> {
 }
 
 export type { AdminRole };
+
+/**
+ * The steward's Skool profile photo, for the rail and the welcome card.
+ *
+ * This is the one thing the app reads off `user_metadata`, and it is read for
+ * pixels only: `waPaintAvatar` at index.html:12035 did exactly the same, and
+ * `waSafeAvatarUrl` (11999) is reproduced in `safeAvatarUrl` so a steward who
+ * edits his own metadata can still only point the tag at Skool over https.
+ * Identity keeps coming from `getUser().email` and nothing else.
+ */
+export async function getAvatarUrl(): Promise<string | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return safeAvatarUrl(user?.user_metadata?.skool_avatar_url);
+}
 
 /**
  * The caller's admin role, keyed by the validated session email.

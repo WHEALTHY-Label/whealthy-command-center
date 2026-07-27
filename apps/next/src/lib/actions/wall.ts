@@ -76,6 +76,21 @@ export async function fetchWallView(view: string, cursor = 0, limit = 12): Promi
   return { ok: true, posts: parseWallList(call.data) };
 }
 
+/**
+ * How many prayers the steward prayed for have been answered since he last
+ * looked. Lights the lime dot on My Prayers.
+ *
+ * `ME.recomputeBadges()` at index.html:7032 asked for the same view with the
+ * same limit of 100 and counted the same flag. A failure counts as zero: a dot
+ * that appears because the wall was briefly unreachable would send a steward
+ * to an empty screen.
+ */
+export async function unseenAnswerCount(): Promise<number> {
+  const res = await fetchWallView('praying_for', 0, 100);
+  if (!res.ok) return 0;
+  return res.posts.filter((p) => p.hasUnseenAnswer).length;
+}
+
 /** A deep-linked post, and why it is not showing when it is not. */
 export interface PinnedResult {
   post: WallPost | null;

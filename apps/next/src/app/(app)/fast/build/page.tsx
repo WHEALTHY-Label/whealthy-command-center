@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { memberFn } from '@/lib/fn';
+import { loadGovernorState } from '@/lib/governorState';
 import { fetchLedger } from '@/lib/actions/prayers';
 import {
   readinessRead,
@@ -53,10 +53,7 @@ function readEntries(data: Record<string, unknown>): RecordEntryLite[] {
 }
 
 export default async function FastBuildPage() {
-  const [state, ledger] = await Promise.all([
-    memberFn('governor-state', { action: 'load' }),
-    fetchLedger(),
-  ]);
+  const [state, ledger] = await Promise.all([loadGovernorState(), fetchLedger()]);
   const data = state.ok ? state.data : {};
 
   // A fast already in flight owns the screen. Building a second one would

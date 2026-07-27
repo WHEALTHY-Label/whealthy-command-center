@@ -1,4 +1,5 @@
 import { memberFn } from '@/lib/fn';
+import { loadGovernorState } from '@/lib/governorState';
 import { deriveFastView } from '@/lib/fastview';
 import { parseCohortBoard } from '@/lib/circles';
 import { chicagoToday } from '@/lib/today';
@@ -8,7 +9,7 @@ import ui from '@/components/ui.module.css';
 export const dynamic = 'force-dynamic';
 
 export default async function CohortPage() {
-  const state = await memberFn('governor-state', { action: 'load' });
+  const state = await loadGovernorState();
   const fast = deriveFastView(state.ok ? state.data.fast : null, chicagoToday());
 
   let board = null;
