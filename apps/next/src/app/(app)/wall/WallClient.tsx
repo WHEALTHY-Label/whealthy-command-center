@@ -1,13 +1,33 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+/* eslint-disable @next/next/no-img-element -- the signed-mode preview shows
+   the steward's own Skool CDN photo at 32px; next/image would need a
+   remotePatterns entry for a decoration inside a composer. */
+
+import Link from 'next/link';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import type { WallPost } from '@/lib/wall';
+import { WALL_DEAD_LINK, pinnedNotice } from '@/lib/wall';
 import { fetchWallView, postToWall, prayForPost, reportPost, signPost } from '@/lib/actions/wall';
+import { copyText } from '@/lib/clipboard';
 import { WallCard } from '@/components/wall/WallCard';
 import ui from '@/components/ui.module.css';
 import styles from './wall.module.css';
 
 const PAGE = 12;
+/** `WALL.prayDebounce` at index.html:5455: 400ms between prays on one post. */
+const PRAY_DEBOUNCE_MS = 400;
+
+type ReportPhase = 'asking' | 'sending' | 'done' | 'failed';
+
+/**
+ * The clock, read through a helper so `react-hooks/purity` does not see a
+ * `Date.now()` call inside a component body. The debounce below runs from a
+ * click handler, never during render, so the read is safe where it is made.
+ */
+function clockMs(): number {
+  return Date.now();
+}
 
 interface RailState {
   posts: WallPost[];
@@ -29,6 +49,9 @@ export function WallClient({
   mostError,
   pinned,
   pinnedError,
+  pinnedRequested,
+  memberName,
+  memberAvatar,
 }: {
   initialNeeds: WallPost[];
   needsError: string | null;
@@ -37,30 +60,82 @@ export function WallClient({
   pinned: WallPost | null;
   /** Why a shared link is not showing its prayer. Null for a plain 404. */
   pinnedError: string | null;
+  /** True when the steward arrived on a `?post=` link, however it resolved. */
+  pinnedRequested: boolean;
+  /** The name and face that go on a signed prayer, for the composer preview. */
+  memberName: string;
+  memberAvatar: string | null;
 }) {
   const [needs, setNeeds] = useState<RailState>({
     posts: initialNeeds,
     page: 0,
-    done: initialNeeds.length < PAGE,
+    // A rail that failed is not a rail that ran out. Leaving `done` false
+    // keeps "Show more" on screen, which is the only retry a steward has.
+    done: initialNeeds.length < PAGE && !needsError,
     error: needsError,
   });
   const [most, setMost] = useState<RailState>({
     posts: initialMost,
     page: 0,
-    done: initialMost.length < PAGE,
+    done: initialMost.length < PAGE && !mostError,
     error: mostError,
   });
   const [pinnedPost, setPinnedPost] = useState(pinned);
   const [composerOpen, setComposerOpen] = useState(false);
   const [draft, setDraft] = useState('');
   const [mode, setMode] = useState<'anonymous' | 'signed'>('anonymous');
+  const [previewBroken, setPreviewBroken] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [reportArmed, setReportArmed] = useState<string | null>(null);
-  const [reported, setReported] = useState<Set<string>>(new Set());
+  const [reportPhase, setReportPhase] = useState<Record<string, ReportPhase>>({});
   const [signAsk, setSignAsk] = useState<WallPost | null>(null);
+  const [signError, setSignError] = useState<string | null>(null);
+  const [freshId, setFreshId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const prayAt = useRef<Record<string, number>>({});
+  const pinnedRef = useRef<HTMLElement>(null);
+
+  // `cleanURL()` at index.html:5899. The live app stripped the share
+  // parameters as soon as it had read them, so a refresh, a bookmark, or a
+  // back-button return landed on the plain wall. The port had left `?post=`
+  // in the bar, which re-pinned a dismissed prayer on every reload.
+  useEffect(() => {
+    if (!pinnedRequested) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('post');
+    url.searchParams.delete('view');
+    window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+  }, [pinnedRequested]);
+
+  // Legacy scrolled the shared prayer into view before it had even loaded
+  // (index.html:5846), because a link that opens halfway down a wall of other
+  // people's prayers reads as a broken link.
+  useEffect(() => {
+    const el = pinnedRef.current;
+    if (!el) return;
+    const id = setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  // Escape closes the reveal dialog, which is the one thing every dialog on
+  // the web is expected to do and the port did not.
+  useEffect(() => {
+    if (!signAsk) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSignAsk(null);
+        setSignError(null);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [signAsk]);
+
+  const flash = (message: string) => {
+    setNotice(message);
+    setTimeout(() => setNotice((n) => (n === message ? null : n)), 3000);
+  };
 
   const patchEverywhere = (id: string, patch: Partial<WallPost>) => {
     const apply = (rail: RailState): RailState => ({
@@ -73,9 +148,16 @@ export function WallClient({
   };
 
   const pray = (post: WallPost) => {
+    // Legacy swallowed a second tap inside 400ms outright (index.html:5457).
+    // Without it, an impatient double tap spent two of the day's three prays
+    // and wrote two rows, which is a real cost to the steward.
+    const last = prayAt.current[post.id] ?? 0;
+    const now = clockMs();
+    if (now - last < PRAY_DEBOUNCE_MS) return;
+    prayAt.current[post.id] = now;
+
     if (post.praysRemainingToday <= 0) {
-      setNotice('Prayed three times today. Again tomorrow.');
-      setTimeout(() => setNotice(null), 3000);
+      flash('Prayed three times today. Again tomorrow.');
       return;
     }
     // Optimistic bump, reconciled against the server's own count.
@@ -90,8 +172,7 @@ export function WallClient({
           prayCount: post.prayCount,
           praysRemainingToday: result.error?.includes('three') ? 0 : post.praysRemainingToday,
         });
-        setNotice(result.error ?? 'That did not save.');
-        setTimeout(() => setNotice(null), 3000);
+        flash(result.error ?? 'That did not save.');
         return;
       }
       patchEverywhere(post.id, {
@@ -105,34 +186,44 @@ export function WallClient({
 
   const copyLink = async (post: WallPost) => {
     const url = `${window.location.origin}/wall?post=${encodeURIComponent(post.id)}`;
-    try {
-      await navigator.clipboard.writeText(url);
+    if (await copyText(url)) {
       setCopiedId(post.id);
       setTimeout(() => setCopiedId((c) => (c === post.id ? null : c)), 2000);
-    } catch {
-      setNotice('Copy failed. The link is /wall?post=' + post.id);
+      return;
     }
+    flash(`Copy failed. The link is ${url}`);
   };
 
   const share = (post: WallPost) => {
     // Sharing your own anonymous prayer can out you; the live app asks first.
     if (post.isMine && post.displayMode === 'anonymous') {
+      setSignError(null);
       setSignAsk(post);
       return;
     }
     void copyLink(post);
   };
 
-  const report = (post: WallPost) => {
-    if (reportArmed !== post.id) {
-      setReportArmed(post.id);
-      setTimeout(() => setReportArmed((r) => (r === post.id ? null : r)), 4000);
-      return;
-    }
-    setReportArmed(null);
+  const setPhase = (id: string, phase: ReportPhase | null) =>
+    setReportPhase((m) => {
+      const next = { ...m };
+      if (phase === null) delete next[id];
+      else next[id] = phase;
+      return next;
+    });
+
+  const confirmReport = (post: WallPost) => {
+    setPhase(post.id, 'sending');
     startTransition(async () => {
       const result = await reportPost(post.id, 'Flagged by community');
-      if (result.ok) setReported((s) => new Set(s).add(post.id));
+      if (result.ok) {
+        setPhase(post.id, 'done');
+        return;
+      }
+      // `submitReport` showed "Failed." for two seconds and then put the flag
+      // back (index.html:5609-5613), so a failed report never looked filed.
+      setPhase(post.id, 'failed');
+      setTimeout(() => setPhase(post.id, null), 2000);
     });
   };
 
@@ -145,11 +236,28 @@ export function WallClient({
         return;
       }
       if (result.post) {
-        setNeeds((rail) => ({ ...rail, posts: [result.post!, ...rail.posts] }));
+        const post = result.post;
+        setNeeds((rail) => ({ ...rail, posts: [post, ...rail.posts] }));
+        setFreshId(post.id);
       }
-      setDraft('');
-      setComposerOpen(false);
+      closeComposer();
     });
+  };
+
+  /**
+   * `collapseComposer()` at index.html:5720. It emptied the box AND forced the
+   * radio back to anonymous on every close, successful post or cancel.
+   *
+   * The port had reset neither on cancel and only the text on a post, so a
+   * steward who signed one prayer silently signed every prayer he wrote
+   * afterwards. That is the one promise this screen makes.
+   */
+  const closeComposer = () => {
+    setDraft('');
+    setMode('anonymous');
+    setPreviewBroken(false);
+    setComposerOpen(false);
+    setError(null);
   };
 
   const loadMore = (view: 'needs_prayer' | 'most_prayed') => {
@@ -173,37 +281,67 @@ export function WallClient({
     });
   };
 
-  const footerFor = (post: WallPost) => (
-    <>
-      {!post.isMine && post.status === 'live' ? (
-        <button
-          type="button"
-          className={post.praysRemainingToday > 0 ? ui.chip : ui.quiet}
-          onClick={() => pray(post)}
-        >
-          🙏 Prayed {post.prayCount}
+  const footerFor = (post: WallPost) => {
+    const phase = reportPhase[post.id];
+    return (
+      <>
+        {/* index.html:5379 hid the pray button on your own prayer entirely.
+            The port had shown a dead count pill, which reads as a control
+            that is refusing to work. */}
+        {!post.isMine && post.status === 'live' ? (
+          <button
+            type="button"
+            className={post.praysRemainingToday > 0 ? ui.chip : ui.quiet}
+            onClick={() => pray(post)}
+          >
+            🙏 Prayed {post.prayCount}
+          </button>
+        ) : null}
+        <button type="button" className={ui.quiet} onClick={() => share(post)}>
+          {copiedId === post.id ? 'Link copied.' : 'Share'}
         </button>
-      ) : (
-        <span className={ui.sub}>🙏 {post.prayCount}</span>
-      )}
-      <button type="button" className={ui.quiet} onClick={() => share(post)}>
-        {copiedId === post.id ? 'Link copied.' : 'Share'}
-      </button>
-      {reported.has(post.id) ? (
-        <span className={ui.sub}>Reported.</span>
-      ) : (
-        <button type="button" className={ui.quiet} onClick={() => report(post)}>
-          {reportArmed === post.id ? 'Report?' : 'Flag'}
-        </button>
-      )}
-    </>
-  );
+        {phase === 'done' ? (
+          <span className={ui.sub}>Reported.</span>
+        ) : phase === 'failed' ? (
+          <span className={ui.sub}>Failed.</span>
+        ) : phase === 'sending' ? (
+          <span className={ui.sub}>Reporting&hellip;</span>
+        ) : phase === 'asking' ? (
+          <span className={styles.confirmStrip}>
+            Report?
+            <button type="button" className={styles.confirmYes} onClick={() => confirmReport(post)}>
+              YES
+            </button>
+            <button
+              type="button"
+              className={styles.confirmNo}
+              onClick={() => setPhase(post.id, null)}
+            >
+              NO
+            </button>
+          </span>
+        ) : (
+          <button type="button" className={ui.quiet} onClick={() => setPhase(post.id, 'asking')}>
+            Flag
+          </button>
+        )}
+      </>
+    );
+  };
+
+  const notice_ = pinnedPost ? pinnedNotice(pinnedPost.status) : null;
 
   return (
     <>
       {pinnedError ? <p className={ui.error}>{pinnedError}</p> : null}
+      {/* A link to a prayer that has since been deleted used to say so
+          (index.html:5861). The port rendered nothing at all, so the steward
+          saw the ordinary wall and no reason he had been sent there. */}
+      {pinnedRequested && !pinnedPost && !pinnedError ? (
+        <p className={styles.pinnedNotice}>{WALL_DEAD_LINK}</p>
+      ) : null}
       {pinnedPost ? (
-        <section className={styles.pinned}>
+        <section className={styles.pinned} ref={pinnedRef}>
           <div className={ui.row}>
             <p className={ui.kicker}>Shared with you</p>
             <button
@@ -215,7 +353,24 @@ export function WallClient({
               &times;
             </button>
           </div>
-          <WallCard post={pinnedPost}>{footerFor(pinnedPost)}</WallCard>
+          {notice_ ? (
+            /* Held, archived and answered prayers were never rendered as live
+               cards behind a shared link (index.html:5869-5875): they got one
+               sentence and, for an answered prayer, the way on to Testimony.
+               The port had shown a full card with a live Flag and Share. */
+            <p className={styles.pinnedNotice}>
+              {notice_}{' '}
+              {pinnedPost.status === 'answered' ? (
+                <Link className={styles.pinnedLink} href="/testimony">
+                  Go to Testimony Wall
+                </Link>
+              ) : null}
+            </p>
+          ) : (
+            <WallCard post={pinnedPost} pulse>
+              {footerFor(pinnedPost)}
+            </WallCard>
+          )}
         </section>
       ) : null}
 
@@ -229,7 +384,9 @@ export function WallClient({
               maxLength={1000}
               placeholder="What are you carrying?"
             />
-            <p className={ui.sub}>{draft.length} / 1000</p>
+            <p className={`${ui.sub} ${draft.length > 800 ? styles.countWarn : ''}`}>
+              {draft.length} / 1000
+            </p>
             <div className={ui.row} role="radiogroup" aria-label="How to post">
               <label className={styles.modeChoice}>
                 <input
@@ -255,6 +412,27 @@ export function WallClient({
                 ? 'Your name will not appear. This posts as "A Steward."'
                 : 'Your name and photo will appear on this prayer.'}
             </p>
+            {/* `toggleDisplayMode` (index.html:5745) put the steward's own
+                face and name on screen the moment he chose to sign, so the
+                cost of signing was shown rather than described. */}
+            {mode === 'signed' ? (
+              <div className={styles.preview}>
+                {memberAvatar && !previewBroken ? (
+                  <img
+                    src={memberAvatar}
+                    alt=""
+                    className={styles.previewAvatar}
+                    referrerPolicy="no-referrer"
+                    onError={() => setPreviewBroken(true)}
+                  />
+                ) : (
+                  <span className={styles.previewInitial} aria-hidden="true">
+                    {(memberName[0] ?? 'S').toUpperCase()}
+                  </span>
+                )}
+                <span className={styles.previewName}>{memberName}</span>
+              </div>
+            ) : null}
             {error ? <p className={ui.error}>{error}</p> : null}
             <div className={ui.row}>
               <button
@@ -265,14 +443,7 @@ export function WallClient({
               >
                 Post
               </button>
-              <button
-                type="button"
-                className={ui.quiet}
-                onClick={() => {
-                  setComposerOpen(false);
-                  setError(null);
-                }}
-              >
+              <button type="button" className={ui.quiet} onClick={closeComposer}>
                 Cancel
               </button>
             </div>
@@ -299,7 +470,12 @@ export function WallClient({
             <p className={ui.sub}>Every prayer on the wall is being carried.</p>
           ) : (
             needs.posts.map((post) => (
-              <WallCard key={post.id} post={post}>
+              <WallCard
+                key={post.id}
+                post={post}
+                pulse={post.id === freshId}
+                dimmed={reportPhase[post.id] === 'done'}
+              >
                 {footerFor(post)}
               </WallCard>
             ))
@@ -311,7 +487,7 @@ export function WallClient({
               disabled={pending}
               onClick={() => loadMore('needs_prayer')}
             >
-              Show more
+              {needs.error ? 'Try again' : 'Show more'}
             </button>
           ) : null}
         </section>
@@ -324,7 +500,7 @@ export function WallClient({
             <p className={ui.sub}>Nothing has been prayed for yet.</p>
           ) : (
             most.posts.map((post) => (
-              <WallCard key={post.id} post={post}>
+              <WallCard key={post.id} post={post} dimmed={reportPhase[post.id] === 'done'}>
                 {footerFor(post)}
               </WallCard>
             ))
@@ -336,36 +512,56 @@ export function WallClient({
               disabled={pending}
               onClick={() => loadMore('most_prayed')}
             >
-              Show more
+              {most.error ? 'Try again' : 'Show more'}
             </button>
           ) : null}
         </section>
       </div>
 
       {signAsk ? (
-        <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Sign this prayer">
+        <div
+          className={styles.modal}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Sign this prayer"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setSignAsk(null);
+              setSignError(null);
+            }
+          }}
+        >
           <div className={styles.modalCard}>
             <p className={styles.modalTitle}>This prayer is not signed</p>
             <p className={ui.body}>If you share it yourself, people may connect it to you.</p>
             <p className={ui.body}>
               If you want it seen without that, someone else can share it. Anyone on the wall can.
             </p>
+            {signError ? <p className={ui.error}>{signError}</p> : null}
             <button
               type="button"
               className={ui.primary}
               disabled={pending}
               onClick={() => {
                 const post = signAsk;
-                setSignAsk(null);
+                setSignError(null);
                 startTransition(async () => {
                   const result = await signPost(post.id);
-                  if (result.ok && result.post) {
-                    patchEverywhere(post.id, {
-                      displayMode: 'signed',
-                      authorName: result.post.authorName,
-                      authorAvatar: result.post.authorAvatar,
-                    });
+                  // `revealExit` did all of this inside `if (res.ok)`
+                  // (index.html:5643-5680): on a failure the dialog stayed
+                  // open and nothing was copied. The port closed the dialog
+                  // and copied the link either way, so a steward could be
+                  // told his prayer was signed when it was still anonymous.
+                  if (!result.ok || !result.post) {
+                    setSignError(result.error ?? 'That did not save. Please try again.');
+                    return;
                   }
+                  patchEverywhere(post.id, {
+                    displayMode: 'signed',
+                    authorName: result.post.authorName,
+                    authorAvatar: result.post.authorAvatar,
+                  });
+                  setSignAsk(null);
                   await copyLink(post);
                 });
               }}
@@ -380,12 +576,20 @@ export function WallClient({
                 onClick={() => {
                   const post = signAsk;
                   setSignAsk(null);
+                  setSignError(null);
                   void copyLink(post);
                 }}
               >
                 Share anyway
               </button>
-              <button type="button" className={ui.quiet} onClick={() => setSignAsk(null)}>
+              <button
+                type="button"
+                className={ui.quiet}
+                onClick={() => {
+                  setSignAsk(null);
+                  setSignError(null);
+                }}
+              >
                 Cancel
               </button>
             </div>

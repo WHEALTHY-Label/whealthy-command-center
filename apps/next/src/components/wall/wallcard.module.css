@@ -13,6 +13,15 @@
   opacity: 0.6;
 }
 
+.cardArchived {
+  composes: card;
+  opacity: 0.75;
+}
+
+.dimmed {
+  opacity: 0.6;
+}
+
 .head {
   display: flex;
   align-items: center;
@@ -66,6 +75,46 @@
   overflow-wrap: anywhere;
 }
 
+/* The six-line clamp, the fade over its last line, and the Read more that
+   only appears when the text genuinely overflows (index.html:4802-4830). */
+.bodyWrap {
+  position: relative;
+}
+
+.clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: linear-gradient(transparent, var(--wa-surface));
+  pointer-events: none;
+}
+
+.readMore {
+  background: transparent;
+  border: none;
+  color: var(--wa-lime);
+  font-size: var(--wa-fs-small);
+  font-family: var(--wa-font-body);
+  padding: var(--wa-space-1) 0 0;
+  cursor: pointer;
+}
+
+.statusLine {
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-micro);
+  margin: 0;
+}
+
 .blockLabel {
   font-family: var(--wa-font-display);
   text-transform: uppercase;
@@ -100,4 +149,28 @@
 
 .unseen {
   border-color: var(--wa-border-lime);
+}
+
+/* `wall-pulse-border` (index.html:5059): a new or freshly shared card glows
+   once and settles, so a steward's eye lands on the card that just changed. */
+.pulse {
+  animation: wallGlow 1.5s ease-out;
+}
+
+@keyframes wallGlow {
+  0% {
+    border-color: var(--wa-lime);
+    box-shadow: 0 0 15px var(--wa-lime-soft);
+  }
+
+  100% {
+    border-color: var(--wa-border);
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
 }

@@ -49,10 +49,7 @@ export function parseWallPost(raw: unknown): WallPost | null {
   return {
     id: String(id),
     body: str(r.body) ?? '',
-    status:
-      status === 'answered' || status === 'archived' || status === 'held'
-        ? status
-        : 'live',
+    status: status === 'answered' || status === 'archived' || status === 'held' ? status : 'live',
     prayCount: num(r.pray_count),
     amenCount: num(r.amen_count),
     createdAt: str(r.created_at),
@@ -92,16 +89,45 @@ export function relativeTime(iso: string | null, nowMs: number): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 
-/** "Asked Jul 3 · Answered Jul 9 · 6 days" testimony time track. */
+/**
+ * "Asked July 3 · Answered July 9 · 6 days" testimony time track.
+ *
+ * The month is spelled out and the elapsed days are floored, both of which
+ * follow the live app exactly (index.html:6270-6277 for the testimony wall,
+ * index.html:7297-7304 for My Prayers, which agree with each other). The port
+ * had abbreviated the month and rounded the days, so a prayer answered 40
+ * hours later read "2 days" where the live app said "1 day".
+ */
 export function testimonyTrack(createdAt: string | null, answeredAt: string | null): string {
   if (!createdAt || !answeredAt) return '';
   const asked = new Date(createdAt);
   const answered = new Date(answeredAt);
   if (Number.isNaN(asked.getTime()) || Number.isNaN(answered.getTime())) return '';
-  const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  const days = Math.round((answered.getTime() - asked.getTime()) / 86400000);
+  const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+  const days = Math.floor((answered.getTime() - asked.getTime()) / 86400000);
   const elapsed = days <= 0 ? 'Same day' : days === 1 ? '1 day' : `${days} days`;
   return `Asked ${fmt(asked)} · Answered ${fmt(answered)} · ${elapsed}`;
+}
+
+/** What a shared link shows when the prayer behind it is gone (index.html:5861). */
+export const WALL_DEAD_LINK = 'This prayer is no longer on the wall.';
+
+/**
+ * What the shared-link slot says instead of a card, for a prayer that is no
+ * longer simply live (index.html:5869-5875). Null means render the card.
+ *
+ * The wall's archived wording ("has left the wall. It was carried for 30
+ * days.") is deliberately not the same as My Prayers' ("This prayer left the
+ * wall.", index.html:7455). A steward following a stranger's link needs to be
+ * told the wall's 30-day rule; a steward looking at his own shelf already
+ * knows it. Both sentences are the live app's own, kept where the live app
+ * kept them: this one here, the other one on the card itself.
+ */
+export function pinnedNotice(status: WallStatus): string | null {
+  if (status === 'held') return 'This prayer is under review.';
+  if (status === 'archived') return 'This prayer has left the wall. It was carried for 30 days.';
+  if (status === 'answered') return 'This prayer was answered.';
+  return null;
 }
 
 /** Whole hours left in the 24h answered-note edit window, 0 when closed. */

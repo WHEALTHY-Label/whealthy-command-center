@@ -52,6 +52,91 @@
   cursor: pointer;
 }
 
+/* The signed preview: the face and name that will actually appear on the
+   prayer, shown the moment "Sign it" is chosen (index.html:5178-5184). */
+.preview {
+  display: flex;
+  align-items: center;
+  gap: var(--wa-space-2);
+  border: 1px solid var(--wa-border-mid);
+  border-radius: var(--wa-radius);
+  padding: var(--wa-space-2);
+  background: var(--wa-glass);
+}
+
+.previewAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: 1px solid var(--wa-border-mid);
+}
+
+.previewInitial {
+  composes: previewAvatar;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wa-text-dim);
+  background: var(--wa-glass-hi);
+}
+
+.previewName {
+  font-family: var(--wa-font-display);
+  font-size: var(--wa-fs-small);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The character count turns lime past 800 (index.html:5741). */
+.countWarn {
+  color: var(--wa-lime);
+}
+
+/* The report confirm strip: a separate Yes and No, never the same control
+   the steward already tapped (index.html:5569-5578). */
+.confirmStrip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wa-space-1);
+  font-size: var(--wa-fs-micro);
+  color: var(--wa-text-dim);
+}
+
+.confirmYes {
+  min-height: 44px;
+  padding: 0 var(--wa-space-1);
+  background: transparent;
+  border: none;
+  color: var(--wa-lime);
+  font-size: var(--wa-fs-micro);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirmNo {
+  min-height: 44px;
+  padding: 0 var(--wa-space-1);
+  background: transparent;
+  border: none;
+  color: var(--wa-text-dim);
+  font-size: var(--wa-fs-micro);
+  cursor: pointer;
+}
+
+.pinnedNotice {
+  color: var(--wa-text-muted);
+  font-size: var(--wa-fs-small);
+  margin: 0;
+}
+
+.pinnedLink {
+  color: var(--wa-lime);
+}
+
 .pinned {
   display: flex;
   flex-direction: column;

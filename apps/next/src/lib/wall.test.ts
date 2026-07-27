@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  WALL_DEAD_LINK,
   editHoursLeft,
   parseWallList,
   parseWallPost,
+  pinnedNotice,
   relativeTime,
   testimonyTrack,
 } from './wall';
@@ -84,11 +86,48 @@ describe('relativeTime', () => {
 });
 
 describe('testimonyTrack', () => {
-  it('formats the asked/answered elapsed line', () => {
+  // The live app spelled the month out and floored the elapsed days
+  // (index.html:6269-6277). The port had abbreviated and rounded, so a prayer
+  // answered forty hours later read "2 days" where the live app said "1 day".
+  it('formats the asked/answered elapsed line with long months', () => {
     expect(testimonyTrack('2026-07-03T08:00:00Z', '2026-07-09T08:00:00Z')).toBe(
-      'Asked Jul 3 · Answered Jul 9 · 6 days',
+      'Asked July 3 · Answered July 9 · 6 days',
     );
+  });
+
+  it('floors the elapsed days rather than rounding', () => {
+    expect(testimonyTrack('2026-07-03T08:00:00Z', '2026-07-05T00:00:00Z')).toContain('· 1 day');
+    expect(testimonyTrack('2026-07-03T08:00:00Z', '2026-07-06T07:00:00Z')).toContain('· 2 days');
+  });
+
+  it('calls anything under a day the same day', () => {
     expect(testimonyTrack('2026-07-03T08:00:00Z', '2026-07-03T18:00:00Z')).toContain('Same day');
+  });
+
+  it('returns nothing when either end of the track is missing', () => {
+    expect(testimonyTrack(null, '2026-07-09T08:00:00Z')).toBe('');
+    expect(testimonyTrack('2026-07-03T08:00:00Z', null)).toBe('');
+    expect(testimonyTrack('not-a-date', '2026-07-09T08:00:00Z')).toBe('');
+  });
+});
+
+describe('pinnedNotice', () => {
+  // The shared-link slot (index.html:5869-5875) refused to render a card for
+  // anything that was not still live, and said why in each case.
+  it('speaks for every non-live status', () => {
+    expect(pinnedNotice('held')).toBe('This prayer is under review.');
+    expect(pinnedNotice('archived')).toBe(
+      'This prayer has left the wall. It was carried for 30 days.',
+    );
+    expect(pinnedNotice('answered')).toBe('This prayer was answered.');
+  });
+
+  it('stays silent for a live prayer so the card renders', () => {
+    expect(pinnedNotice('live')).toBeNull();
+  });
+
+  it('names the dead link the way the live app did', () => {
+    expect(WALL_DEAD_LINK).toBe('This prayer is no longer on the wall.');
   });
 });
 
