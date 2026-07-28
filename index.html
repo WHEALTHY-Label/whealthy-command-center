@@ -8580,11 +8580,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <h2 style="color:#fff;font-family:var(--font-display);font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:12px">
             The Complete Steward System — <span style="color:var(--lime);">$99 / Month</span>
           </h2>
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" style="max-width:320px; width:100%; height:auto; margin:16px auto; filter:drop-shadow(0 15px 30px rgba(0,0,0,0.6)); display:block;" alt="WHEALTHY 5-Product System">
+          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" style="max-width:480px; width:100%; height:auto; margin:20px auto; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.7)); display:block;" alt="WHEALTHY 5-Product System">
           <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.65;max-width:680px;margin:0 auto 20px">
             Everything you need to govern your energy across all 24 hours. Includes <strong style="color:#fff">Genius Guice</strong>, <strong style="color:#fff">Genius Joe</strong>, <strong style="color:#fff">Hydration</strong>, <strong style="color:#fff">Charge</strong>, and <strong style="color:#fff">Boss</strong> delivered to your door every month.
           </p>
-          <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
             <div style="display:flex;align-items:baseline;gap:8px">
               <span style="font-size:28px;font-weight:800;color:var(--lime);font-family:var(--font-display)">$99.00</span>
               <span style="font-size:14px;color:rgba(255,255,255,0.4);text-decoration:line-through">$195.00 MSRP</span>
@@ -8593,6 +8593,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="btn-lime" onclick="triggerAll5Checkout()" style="padding:14px 32px;font-size:15px;font-weight:800;letter-spacing:0.04em">
               CLAIM ALL 5 PRODUCTS ($99/MO) &rarr;
             </button>
+          </div>
+
+          <!-- Slide to Unlock Slider -->
+          <div class="iphone-slide-track js-slide-unlock-track" style="position:relative; width:100%; max-width:480px; height:60px; background:rgba(204,255,0,0.08); border:2px solid var(--lime); border-radius:100px; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(204,255,0,0.2); user-select:none; -webkit-user-select:none; cursor:pointer; margin: 0 auto;">
+            <span class="iphone-slide-text js-slide-unlock-text" style="font-family:var(--font-display); font-size:14px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); pointer-events:none; z-index:1;">
+              SLIDE TO UNLOCK $99 BUNDLE &rarr;
+            </span>
+            <div class="iphone-slide-thumb js-slide-unlock-thumb" style="position:absolute; left:4px; top:4px; width:50px; height:50px; background:var(--lime); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:grab; box-shadow:0 4px 15px rgba(0,0,0,0.5); z-index:2; transition:transform 0.1s ease-out;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
           </div>
         </div>
 
@@ -16015,14 +16025,21 @@ function renderDash(){
   h+='</div>'; // end left column
 
   // Right column: recommended product images
-  h+='<div style="flex:1;min-width:280px">';
+  h+='<div style="flex:1.2;min-width:300px">';
   h+='<div style="margin-bottom:24px">';
   h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Recommended 5-Product Protocol</div>';
-  h+='<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;text-align:center;cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">';
-  h+='<img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Complete Steward 5-Product System" style="height:150px;width:auto;object-fit:contain;margin:0 auto 12px;display:block;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.5))">';
-  h+='<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px">The Complete Steward Ecosystem</div>';
-  h+='<div style="font-size:13px;color:var(--lime);font-weight:700">$99.00 / month (Save 49%)</div>';
-  h+='<div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px">Includes Genius Guice, Genius Joe, Hydration, Charge & Boss</div>';
+  h+='<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:24px;text-align:center;">';
+  h+='<img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Complete Steward 5-Product System" style="max-width:380px;width:100%;height:260px;object-fit:contain;margin:0 auto 16px;display:block;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.6));cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">';
+  h+='<div style="font-size:18px;font-weight:800;font-family:var(--font-display);color:#fff;text-transform:uppercase;margin-bottom:4px">The Complete Steward Ecosystem</div>';
+  h+='<div style="font-size:14px;color:var(--lime);font-weight:700;margin-bottom:6px">$99.00 / month (Save 49%)</div>';
+  h+='<div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:16px">Includes Genius Guice, Genius Joe, Hydration, Charge & Boss</div>';
+  
+  // Slide to Unlock
+  h+='<div class="iphone-slide-track js-slide-unlock-track" style="position:relative; width:100%; height:54px; background:rgba(204,255,0,0.08); border:2px solid var(--lime); border-radius:100px; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(204,255,0,0.2); user-select:none; -webkit-user-select:none; cursor:pointer;">';
+  h+='<span class="iphone-slide-text js-slide-unlock-text" style="font-family:var(--font-display); font-size:13px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); pointer-events:none; z-index:1;">SLIDE TO GOVERN $99 BUNDLE &rarr;</span>';
+  h+='<div class="iphone-slide-thumb js-slide-unlock-thumb" style="position:absolute; left:4px; top:3px; width:44px; height:44px; background:var(--lime); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:grab; box-shadow:0 4px 15px rgba(0,0,0,0.5); z-index:2; transition:transform 0.1s ease-out;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>';
+  h+='</div>';
+
   h+='</div></div>';
   h+='</div>'; // end right column
 
@@ -20973,6 +20990,81 @@ async function loadAndInit(){
       if (!modal && !iframe) window.open(targetUrl, '_blank');
     }
   };
+  window.initAllIphoneSliders=function(){
+    var tracks = document.querySelectorAll('.js-slide-unlock-track, #iphoneSlideTrack');
+    tracks.forEach(function(track){
+      if (track.dataset.sliderInited) return;
+      track.dataset.sliderInited = '1';
+      var thumb = track.querySelector('.js-slide-unlock-thumb, #iphoneSlideThumb') || track.querySelector('div[style*="border-radius:50%"]');
+      var text = track.querySelector('.js-slide-unlock-text, #iphoneSlideText') || track.querySelector('span');
+      if (!thumb || !track) return;
+      var isDragging = false;
+      var startX = 0;
+      var currentX = 0;
+      var maxDrag = 0;
+      function updateMaxDrag() {
+        maxDrag = track.clientWidth - thumb.clientWidth - 8;
+      }
+      updateMaxDrag();
+      window.addEventListener('resize', updateMaxDrag);
+
+      function onStart(e) {
+        isDragging = true;
+        startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        thumb.style.transition = 'none';
+        thumb.style.cursor = 'grabbing';
+      }
+      function onMove(e) {
+        if (!isDragging) return;
+        var clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        var delta = clientX - startX;
+        currentX = Math.max(0, Math.min(delta, maxDrag));
+        thumb.style.transform = 'translateX(' + currentX + 'px)';
+        var progress = currentX / Math.max(1, maxDrag);
+        if (text) text.style.opacity = (1 - progress * 1.4).toString();
+        if (currentX >= maxDrag - 5) {
+          isDragging = false;
+          thumb.style.transform = 'translateX(' + maxDrag + 'px)';
+          if (text) {
+            text.textContent = '✓ $99 BUNDLE UNLOCKED!';
+            text.style.opacity = '1';
+          }
+          setTimeout(function(){
+            if (typeof triggerAll5Checkout === 'function') triggerAll5Checkout();
+            else if (typeof openCheckoutModal === 'function') openCheckoutModal();
+            setTimeout(function(){
+              thumb.style.transition = 'transform 0.3s ease';
+              thumb.style.transform = 'translateX(0px)';
+              if (text) {
+                text.textContent = 'SLIDE TO UNLOCK $99 BUNDLE →';
+                text.style.opacity = '1';
+              }
+            }, 1500);
+          }, 150);
+        }
+      }
+      function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        thumb.style.cursor = 'grab';
+        if (currentX < maxDrag - 5) {
+          thumb.style.transition = 'transform 0.3s ease';
+          thumb.style.transform = 'translateX(0px)';
+          if (text) text.style.opacity = '1';
+        }
+      }
+
+      thumb.addEventListener('mousedown', onStart);
+      track.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      thumb.addEventListener('touchstart', onStart, { passive: true });
+      track.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('touchend', onEnd);
+    });
+  };
   function enhance(){
     document.querySelectorAll('.view-header-block').forEach(function(bl){
       var host=bl.closest('[id$="View"]'); if(!host)return; var id=host.id;
@@ -20980,6 +21072,7 @@ async function loadAndInit(){
       if(DESC[id] && !bl.querySelector('.view-header-desc')){ var inner=bl.querySelector('div:not(.view-header-icon-box)')||bl; var p=document.createElement('p'); p.className='view-header-desc'; p.textContent=DESC[id]; inner.appendChild(p); }
       if(HELP[id]){ var q=document.createElement('button'); q.className='vh-help'; q.type='button'; q.setAttribute('aria-label','Help for this page'); q.textContent='?'; q.onclick=function(){ openHelp(id); }; bl.appendChild(q); }
     });
+    if (typeof initAllIphoneSliders === 'function') initAllIphoneSliders();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',enhance); else enhance();
   setTimeout(enhance,1500);

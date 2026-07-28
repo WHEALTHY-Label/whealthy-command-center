@@ -107,11 +107,11 @@ body {
 }
 .hero-title span { color: var(--lime); }
 .hero-img {
-  max-width: 320px;
+  max-width: 480px;
   width: 100%;
   height: auto;
-  margin: 16px auto 24px;
-  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6));
+  margin: 20px auto 28px;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
   display: block;
 }
 .hero-desc {
@@ -403,6 +403,16 @@ body {
       <span class="save-tag">49% OFF</span>
     </div>
     <button class="btn-primary" onclick="openCheckoutModal()">UNLOCK ALL 5 PRODUCTS ($99/MO) &rarr;</button>
+
+    <!-- Slide to Unlock Slider -->
+    <div class="iphone-slide-track js-slide-unlock-track" style="position:relative; width:100%; max-width:480px; height:60px; background:rgba(204,255,0,0.08); border:2px solid var(--lime); border-radius:100px; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(204,255,0,0.2); user-select:none; -webkit-user-select:none; cursor:pointer; margin: 20px auto 0;">
+      <span class="iphone-slide-text js-slide-unlock-text" style="font-family:var(--font-display); font-size:14px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); pointer-events:none; z-index:1;">
+        SLIDE TO UNLOCK $99 BUNDLE &rarr;
+      </span>
+      <div class="iphone-slide-thumb js-slide-unlock-thumb" style="position:absolute; left:4px; top:4px; width:50px; height:50px; background:var(--lime); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:grab; box-shadow:0 4px 15px rgba(0,0,0,0.5); z-index:2; transition:transform 0.1s ease-out;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </div>
+    </div>
   </div>
 
   <!-- 5 Products Grid -->
@@ -562,6 +572,83 @@ function closeCheckoutModal() {
   if (modal) modal.classList.remove('open');
   if (iframe) iframe.src = 'about:blank';
 }
+
+function initAllIphoneSliders() {
+  const tracks = document.querySelectorAll('.js-slide-unlock-track');
+  tracks.forEach(track => {
+    if (track.dataset.sliderInited) return;
+    track.dataset.sliderInited = '1';
+    const thumb = track.querySelector('.js-slide-unlock-thumb');
+    const text = track.querySelector('.js-slide-unlock-text');
+    if (!thumb || !track) return;
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
+    let maxDrag = 0;
+    function updateMaxDrag() {
+      maxDrag = track.clientWidth - thumb.clientWidth - 8;
+    }
+    updateMaxDrag();
+    window.addEventListener('resize', updateMaxDrag);
+
+    function onStart(e) {
+      isDragging = true;
+      startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      thumb.style.transition = 'none';
+      thumb.style.cursor = 'grabbing';
+    }
+    function onMove(e) {
+      if (!isDragging) return;
+      const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      const delta = clientX - startX;
+      currentX = Math.max(0, Math.min(delta, maxDrag));
+      thumb.style.transform = `translateX(${currentX}px)`;
+      const progress = currentX / Math.max(1, maxDrag);
+      if (text) text.style.opacity = (1 - progress * 1.4).toString();
+      if (currentX >= maxDrag - 5) {
+        isDragging = false;
+        thumb.style.transform = `translateX(${maxDrag}px)`;
+        if (text) {
+          text.textContent = '✓ $99 BUNDLE UNLOCKED!';
+          text.style.opacity = '1';
+        }
+        setTimeout(() => {
+          openCheckoutModal();
+          setTimeout(() => {
+            thumb.style.transition = 'transform 0.3s ease';
+            thumb.style.transform = 'translateX(0px)';
+            if (text) {
+              text.textContent = 'SLIDE TO UNLOCK $99 BUNDLE →';
+              text.style.opacity = '1';
+            }
+          }, 1500);
+        }, 150);
+      }
+    }
+    function onEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      thumb.style.cursor = 'grab';
+      if (currentX < maxDrag - 5) {
+        thumb.style.transition = 'transform 0.3s ease';
+        thumb.style.transform = 'translateX(0px)';
+        if (text) text.style.opacity = '1';
+      }
+    }
+
+    thumb.addEventListener('mousedown', onStart);
+    track.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+
+    thumb.addEventListener('touchstart', onStart, { passive: true });
+    track.addEventListener('touchstart', onStart, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', onEnd);
+  });
+}
+document.addEventListener('DOMContentLoaded', initAllIphoneSliders);
+initAllIphoneSliders();
 </script>
 </body>
 </html>
