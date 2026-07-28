@@ -95,17 +95,15 @@ function serveStatic(req, res) {
     if (!isAll5Visible) throw new Error('#all5View container is not visible after clicking dashboard card button!');
     console.log("✅ Verified: Dashboard card click navigates directly to #all5View.");
 
-    // Test Slide to Unlock click & 3-step modal flow
-    console.log("Testing Slide to Unlock & 3-Step Checkout Funnel...");
-    await page.evaluate(() => {
-      if (typeof window.triggerAll5Checkout === 'function') window.triggerAll5Checkout();
-    });
+    // Test Hero CTA button click & 3-step modal flow
+    console.log("Testing Hero CTA Button Click & 3-Step Checkout Funnel...");
+    await page.evaluate(() => window.triggerAll5Checkout());
     await page.waitForTimeout(300);
 
     // Verify Modal Step 1 is visible
     const isStep1Visible = await page.locator('#claimStep1').isVisible();
     if (!isStep1Visible) throw new Error('Modal Step 1 (Name & Email) is not visible!');
-    console.log("✅ Verified: Step 1 (Name & Email) opened upon Slide to Unlock.");
+    console.log("✅ Verified: Step 1 (Name & Email) opened upon Hero CTA button click.");
 
     // Fill Step 1
     await page.fill('#claimInputName', 'Ignacio Garcia');
