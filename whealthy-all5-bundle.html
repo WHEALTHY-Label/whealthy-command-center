@@ -107,19 +107,21 @@ body {
 }
 .hero-title span { color: var(--lime); }
 .hero-img {
-  max-width: 480px;
-  width: 100%;
+  max-height: 200px;
+  max-width: 280px;
+  width: auto;
   height: auto;
-  margin: 20px auto 28px;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
+  object-fit: contain;
+  margin: 12px auto 16px;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.7));
   display: block;
 }
 .hero-desc {
   color: rgba(255,255,255,0.75);
-  font-size: 16px;
-  max-width: 720px;
-  margin: 0 auto 28px;
-  line-height: 1.65;
+  font-size: 14px;
+  max-width: 600px;
+  margin: 0 auto 16px;
+  line-height: 1.45;
 }
 .price-row {
   display: flex;
