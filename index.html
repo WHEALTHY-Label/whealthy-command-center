@@ -13472,7 +13472,7 @@ async function load(){
         BUNDLE.allday = b.allday;
       }
       try {
-        await reloadLedger();
+        reloadLedger().catch(function(e){ console.error("Ledger load failed:", e); });
       } catch (e) {
         console.error("Ledger load failed:", e);
       }
@@ -18543,15 +18543,23 @@ function updateClaimBadge(){
 
 /* ================== INIT ================== */
 async function loadAndInit(){
-  try{ await load(); }catch(e){ console.error('load failed',e); if(window.hideBootLoader)hideBootLoader(); }
   initSidebarUser();
   updateClaimBadge();
   checkClaimModal();
   initSR();updateMeta();renderJournalContext();renderWall();renderMapDefault();updateNavBadge();restoreDraft();
-  try { fetchWallCommunityState(); } catch(e) {}
   renderDash();setHeaderFocus('dash');
   if(window.hideBootLoader)hideBootLoader();
+
+  load().then(function(){
+    renderDash();
+    updateMeta();
+    if(window.ME && typeof window.ME.recomputeBadges === 'function') window.ME.recomputeBadges();
+  }).catch(function(e){
+    console.error('load failed',e);
+  });
+
   setTimeout(waFetchAIPersonalization, 150);
+  try { fetchWallCommunityState(); } catch(e) {}
   
   // Persist Page Routing via Location Hash
   const hash = window.location.hash.replace('#', '');
