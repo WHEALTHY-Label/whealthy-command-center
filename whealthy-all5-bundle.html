@@ -106,6 +106,14 @@ body {
   line-height: 1.15;
 }
 .hero-title span { color: var(--lime); }
+.hero-img {
+  max-width: 320px;
+  width: 100%;
+  height: auto;
+  margin: 16px auto 24px;
+  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6));
+  display: block;
+}
 .hero-desc {
   color: rgba(255,255,255,0.75);
   font-size: 16px;
@@ -180,10 +188,17 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--border-light);
   border-radius: 18px;
-  padding: 28px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+}
+.card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 4px;
 }
 .card-role {
   font-size: 11px;
@@ -215,6 +230,46 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.videos-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+.video-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.video-wrap {
+  position: relative;
+  padding-bottom: 177.78%;
+  height: 0;
+}
+.video-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.video-caption {
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lime);
+  text-align: center;
 }
 
 .protocol-box {
@@ -261,9 +316,67 @@ body {
   text-align: center;
 }
 
+/* Checkout Popup Modal */
+.checkout-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.checkout-modal.open {
+  display: flex;
+}
+.checkout-modal-card {
+  width: 100%;
+  max-width: 600px;
+  height: 85vh;
+  background: #121418;
+  border: 1px solid rgba(204,255,0,0.3);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.8);
+}
+.checkout-modal-header {
+  padding: 16px 20px;
+  background: #0c0d0f;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.checkout-modal-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+.checkout-modal-close {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 24px;
+  cursor: pointer;
+}
+.checkout-modal-close:hover { color: var(--lime); }
+.checkout-modal-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
 @media (max-width: 600px) {
   .hero-title { font-size: 30px; }
   .container { padding: 24px 16px 60px; }
+  .checkout-modal-card { height: 92vh; }
 }
 </style>
 </head>
@@ -280,6 +393,7 @@ body {
   <div class="hero-box">
     <div class="badge-pill">⚡ MASTER ECOSYSTEM • SAVE $96/MONTH</div>
     <h1 class="hero-title">The Complete Steward System — <span>$99 / Month</span></h1>
+    <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" class="hero-img" alt="WHEALTHY 5-Product Master System">
     <p class="hero-desc">
       Govern your energy across all 24 hours. Includes all five core WHEALTHY formulas: <strong style="color:#fff">Genius Guice</strong>, <strong style="color:#fff">Genius Joe</strong>, <strong style="color:#fff">Hydration</strong>, <strong style="color:#fff">Charge</strong>, and <strong style="color:#fff">Boss</strong> delivered directly to your door each month.
     </p>
@@ -288,7 +402,7 @@ body {
       <span class="msrp-price">$195.00 MSRP</span>
       <span class="save-tag">49% OFF</span>
     </div>
-    <button class="btn-primary" onclick="openCheckout()">UNLOCK ALL 5 PRODUCTS ($99/MO) &rarr;</button>
+    <button class="btn-primary" onclick="openCheckoutModal()">UNLOCK ALL 5 PRODUCTS ($99/MO) &rarr;</button>
   </div>
 
   <!-- 5 Products Grid -->
@@ -298,6 +412,7 @@ body {
     <!-- Card 1 -->
     <div class="product-card">
       <span class="card-role">RISE & NOOTROPIC</span>
+      <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" class="card-img" alt="Genius Guice">
       <h3 class="card-name">Genius Guice</h3>
       <p class="card-desc">Organic hydration & clean nootropic energy. Eliminates morning brain fog and sharpens mental clarity without crash or jitters.</p>
       <div class="card-timing"><span>🌅</span> Morning Focus & Hydration</div>
@@ -306,6 +421,7 @@ body {
     <!-- Card 2 -->
     <div class="product-card">
       <span class="card-role">FOCUS & ADAPTOGENS</span>
+      <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" class="card-img" alt="Genius Joe Coffee">
       <h3 class="card-name">Genius Joe</h3>
       <p class="card-desc">Organic adaptogenic coffee blend powered by Lion's Mane and Chaga for sustained focus and cognitive endurance.</p>
       <div class="card-timing"><span>☕</span> Morning / Midday Coffee Ritual</div>
@@ -314,6 +430,7 @@ body {
     <!-- Card 3 -->
     <div class="product-card">
       <span class="card-role">CELLULAR BASELINE</span>
+      <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp" class="card-img" alt="WHEALTHY Hydration">
       <h3 class="card-name">WHEALTHY Hydration</h3>
       <p class="card-desc">Full-spectrum bioavailable electrolyte baseline. Quenches cellular fatigue and maintains nervous system hydration all day long.</p>
       <div class="card-timing"><span>💧</span> All-Day Hydration Baseline</div>
@@ -322,6 +439,7 @@ body {
     <!-- Card 4 -->
     <div class="product-card">
       <span class="card-role">STAMINA & CIRCULATION</span>
+      <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" class="card-img" alt="Charge Powder">
       <h3 class="card-name">Charge</h3>
       <p class="card-desc">Nitric oxide stamina formula. Boosts blood flow, oxygen delivery, and physical stamina through afternoon slumps.</p>
       <div class="card-timing"><span>⚡</span> Midday / Afternoon Energy</div>
@@ -330,11 +448,39 @@ body {
     <!-- Card 5 -->
     <div class="product-card">
       <span class="card-role">CORTISOL RESET</span>
+      <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" class="card-img" alt="Boss Capsules">
       <h3 class="card-name">Boss</h3>
       <p class="card-desc">Nighttime recovery and cortisol regulator. Calms your nervous system after heavy days and powers deep restorative sleep.</p>
       <div class="card-timing"><span>🌙</span> Evening Unwind & Sleep</div>
     </div>
 
+  </div>
+
+  <!-- Real Steward Video Testimonials -->
+  <div class="videos-box">
+    <h2 class="grid-title" style="margin-bottom:6px">🎥 Real Steward Testimonials & Reviews</h2>
+    <p style="font-size:14px;color:rgba(255,255,255,0.5)">Watch real members share how the 5-product system transformed their daily rhythm:</p>
+
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/Clo-3ACw_cc" title="Boss Capsules Review" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-caption">Boss Capsules — Evening Reset</div>
+      </div>
+      <div class="video-card">
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/aDmfm4Wflhk" title="Hydration Review" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-caption">Hydration — Cellular Baseline</div>
+      </div>
+      <div class="video-card">
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/nPEV9WZCc2s" title="Charge Energy Review" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-caption">Charge — Physical Stamina</div>
+      </div>
+    </div>
   </div>
 
   <!-- Protocol Section -->
@@ -383,7 +529,7 @@ body {
     <p style="font-size:15px;color:rgba(255,255,255,0.7);max-width:540px;margin:0 auto 24px">
       Includes all 5 products, free shipping, 30-day money-back guarantee, and immediate unlock of The Steward's Rhythm OS.
     </p>
-    <button class="btn-primary" onclick="openCheckout()" style="width:100%;max-width:480px;padding:20px 36px;">START MY 5-PRODUCT ROUTINE ($99/MO) &rarr;</button>
+    <button class="btn-primary" onclick="openCheckoutModal()" style="width:100%;max-width:480px;padding:20px 36px;">START MY 5-PRODUCT ROUTINE ($99/MO) &rarr;</button>
     <p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:16px">
       Member code <strong style="color:var(--lime)">WHSBGN</strong> (10% off) automatically applied at checkout.
     </p>
@@ -391,9 +537,30 @@ body {
 
 </main>
 
+<!-- Popup Checkout Modal -->
+<div class="checkout-modal" id="checkoutModal">
+  <div class="checkout-modal-card">
+    <div class="checkout-modal-header">
+      <span class="checkout-modal-title">Complete Steward $99 Bundle Checkout</span>
+      <button class="checkout-modal-close" onclick="closeCheckoutModal()">&times;</button>
+    </div>
+    <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank"></iframe>
+  </div>
+</div>
+
 <script>
-function openCheckout() {
-  window.location.href = './index.html#all5';
+function openCheckoutModal() {
+  const modal = document.getElementById('checkoutModal');
+  const iframe = document.getElementById('checkoutIframe');
+  const targetUrl = 'https://whealthylabel.com/charge-powder-hydration?bundle=all5';
+  if (iframe) iframe.src = targetUrl;
+  if (modal) modal.classList.add('open');
+}
+function closeCheckoutModal() {
+  const modal = document.getElementById('checkoutModal');
+  const iframe = document.getElementById('checkoutIframe');
+  if (modal) modal.classList.remove('open');
+  if (iframe) iframe.src = 'about:blank';
 }
 </script>
 </body>

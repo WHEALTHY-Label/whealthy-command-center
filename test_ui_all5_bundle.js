@@ -61,6 +61,11 @@ function serveStatic(req, res) {
 
     await page.goto(`http://localhost:${PORT}/whealthy-command-center-repo/index.html`, { waitUntil: 'domcontentloaded' });
     
+    // Verify #navClaim is hidden
+    const isClaimNavVisible = await page.locator('#navClaim').isVisible();
+    if (isClaimNavVisible) throw new Error('#navClaim sidebar button should be hidden!');
+    console.log("✅ Verified: #navClaim (Claim Bundle tab) is hidden in sidebar.");
+
     // Close gate overlay if present and navigate to all5
     await page.evaluate(async () => {
       const gate = document.getElementById('waGateOverlay');
@@ -92,6 +97,11 @@ function serveStatic(req, res) {
       if (!cardExists) throw new Error(`Product card title "${title}" not found inside #all5View!`);
     }
     console.log("✅ Verified: All 5 product cards are rendered inside #all5View.");
+
+    // Verify Video Testimonials section
+    const videoSectionVisible = await page.locator('#all5View').getByText('Real Steward Testimonials & Reviews').isVisible();
+    if (!videoSectionVisible) throw new Error('Video Testimonials section not visible inside #all5View!');
+    console.log("✅ Verified: Real Steward Video Testimonials section rendered.");
 
     // Verify Protocol Section
     const protocolVisible = await page.locator('#all5View').getByText('The 24-Hour Steward Daily Protocol').isVisible();
