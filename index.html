@@ -8548,12 +8548,36 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
 
 <div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
-          <div class="checkout-modal-card" onclick="event.stopPropagation()">
-            <div class="checkout-modal-header">
-              <span class="checkout-modal-title">Complete Checkout</span>
+          <div class="checkout-modal-card" onclick="event.stopPropagation()" style="max-width:540px; background:#121418; border:1px solid rgba(204,255,0,0.3); border-radius:20px;">
+            <div class="checkout-modal-header" style="padding:16px 20px; background:#0c0d0f; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+              <span class="checkout-modal-title" id="claimModalTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff;">Claim $99 Master System</span>
               <button class="checkout-modal-close" onclick="closeClaimCheckoutModal(null)">&times;</button>
             </div>
-            <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank"></iframe>
+
+            <!-- Step 1: Name & Email Capture Form -->
+            <div id="claimStep1" style="padding:28px 24px; text-align:center;">
+              <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:6px;">✓ 50% FOUNDER DISCOUNT UNLOCKED</div>
+              <h3 style="font-family:var(--font-display); font-size:24px; font-weight:900; text-transform:uppercase; color:#fff; margin-bottom:6px;">Lock Rate to Your Profile</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.6); max-width:420px; margin:0 auto 20px; line-height:1.5;">Enter your name & email to lock your exclusive $99.00/mo founder price to your profile before proceeding to checkout.</p>
+              
+              <div style="display:flex; flex-direction:column; gap:14px; max-width:400px; margin:0 auto; text-align:left;">
+                <div>
+                  <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">First & Last Name</label>
+                  <input type="text" id="claimInputName" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="e.g. Ignacio Garcia" required>
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">Email Address</label>
+                  <input type="email" id="claimInputEmail" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="you@example.com" required>
+                </div>
+                <div id="claimStep1Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
+                <button type="button" onclick="submitClaimStep1()" class="btn-lime" style="width:100%; padding:16px; font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">CONTINUE TO SECURE CHECKOUT &rarr;</button>
+              </div>
+            </div>
+
+            <!-- Step 2: Checkout Iframe -->
+            <div id="claimStep2" style="display:none; flex:1; height:100%;">
+              <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank" style="width:100%; height:100%; min-height:520px; border:none; background:#fff;"></iframe>
+            </div>
           </div>
         </div>
 
@@ -8584,18 +8608,13 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.65;max-width:680px;margin:0 auto 20px">
             Everything you need to govern your energy across all 24 hours. Includes <strong style="color:#fff">Genius Guice</strong>, <strong style="color:#fff">Genius Joe</strong>, <strong style="color:#fff">Hydration</strong>, <strong style="color:#fff">Charge</strong>, and <strong style="color:#fff">Boss</strong> delivered to your door every month.
           </p>
-          <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
-            <div style="display:flex;align-items:baseline;gap:8px">
-              <span style="font-size:28px;font-weight:800;color:var(--lime);font-family:var(--font-display)">$99.00</span>
-              <span style="font-size:14px;color:rgba(255,255,255,0.4);text-decoration:line-through">$195.00 MSRP</span>
-              <span style="font-size:12px;color:var(--lime);background:rgba(204,255,0,0.12);padding:2px 8px;border-radius:4px;font-weight:600">Save 49%</span>
-            </div>
-            <button class="btn-lime" onclick="triggerAll5Checkout()" style="padding:14px 32px;font-size:15px;font-weight:800;letter-spacing:0.04em">
-              CLAIM ALL 5 PRODUCTS ($99/MO) &rarr;
-            </button>
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:24px">
+            <span style="font-size:28px;font-weight:800;color:var(--lime);font-family:var(--font-display)">$99.00</span>
+            <span style="font-size:14px;color:rgba(255,255,255,0.4);text-decoration:line-through">$195.00 MSRP</span>
+            <span style="font-size:12px;color:var(--lime);background:rgba(204,255,0,0.12);padding:2px 8px;border-radius:4px;font-weight:600">Save 49%</span>
           </div>
 
-          <!-- Slide to Unlock Slider -->
+          <!-- Slide to Unlock Slider (ONLY BUTTON NEEDED HERE) -->
           <div class="iphone-slide-track js-slide-unlock-track" style="position:relative; width:100%; max-width:480px; height:60px; background:rgba(204,255,0,0.08); border:2px solid var(--lime); border-radius:100px; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(204,255,0,0.2); user-select:none; -webkit-user-select:none; cursor:pointer; margin: 0 auto;">
             <span class="iphone-slide-text js-slide-unlock-text" style="font-family:var(--font-display); font-size:14px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); pointer-events:none; z-index:1;">
               SLIDE TO UNLOCK $99 BUNDLE &rarr;
@@ -20972,17 +20991,62 @@ async function loadAndInit(){
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
   window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
   window.triggerAll5Checkout=function(){
-    var email = (typeof MEMBER_EMAIL !== 'undefined' && MEMBER_EMAIL) ? MEMBER_EMAIL : (window.MEMBER_EMAIL || '');
-    var targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(email) + '&bundle=all5';
-    if (typeof openCheckout === 'function') {
-      openCheckout(targetUrl);
+    var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
+    var step1 = document.getElementById('claimStep1');
+    var step2 = document.getElementById('claimStep2');
+    var nameInput = document.getElementById('claimInputName');
+    var emailInput = document.getElementById('claimInputEmail');
+
+    var existingEmail = (typeof MEMBER_EMAIL !== 'undefined' && MEMBER_EMAIL) ? MEMBER_EMAIL : (window.MEMBER_EMAIL || '');
+    var existingName = (typeof MEMBER_NAME !== 'undefined' && MEMBER_NAME) ? MEMBER_NAME : (window.MEMBER_NAME || '');
+
+    if (emailInput && existingEmail) emailInput.value = existingEmail;
+    if (nameInput && existingName) nameInput.value = existingName;
+
+    if (existingEmail && existingName) {
+      window.submitClaimStep1(existingName, existingEmail);
     } else {
-      var iframe = document.getElementById('checkoutIframe');
-      var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
-      if (iframe) iframe.src = targetUrl;
+      if (step1) step1.style.display = 'block';
+      if (step2) step2.style.display = 'none';
       if (modal) modal.classList.add('open');
-      if (!modal && !iframe) window.open(targetUrl, '_blank');
     }
+  };
+
+  window.submitClaimStep1=function(passedName, passedEmail){
+    var name = passedName || (document.getElementById('claimInputName') ? document.getElementById('claimInputName').value.trim() : '');
+    var email = passedEmail || (document.getElementById('claimInputEmail') ? document.getElementById('claimInputEmail').value.trim() : '');
+    var errEl = document.getElementById('claimStep1Err');
+
+    if (!email || !email.includes('@')) {
+      if (errEl) errEl.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    if (!name) {
+      if (errEl) errEl.textContent = 'Please enter your name.';
+      return;
+    }
+
+    window.MEMBER_EMAIL = email;
+    window.MEMBER_NAME = name;
+
+    var targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name) + '&bundle=all5';
+    var iframe = document.getElementById('checkoutIframe');
+    var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
+    var step1 = document.getElementById('claimStep1');
+    var step2 = document.getElementById('claimStep2');
+
+    if (iframe) iframe.src = targetUrl;
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'block';
+    if (modal) modal.classList.add('open');
+  };
+
+  window.closeClaimCheckoutModal=function(e){
+    if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains('checkout-modal-close')) return;
+    var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
+    var iframe = document.getElementById('checkoutIframe');
+    if (modal) modal.classList.remove('open');
+    if (iframe) iframe.src = 'about:blank';
   };
   window.initAllIphoneSliders=function(){
     var tracks = document.querySelectorAll('.js-slide-unlock-track, #iphoneSlideTrack');
