@@ -1,0 +1,12 @@
+{
+  "name": "whealthy-production-recovery",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "smoke": "playwright test tests/production-smoke.spec.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1"
+  }
+}

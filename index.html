@@ -623,6 +623,18 @@ textarea,input,select{font-size:16px}
   box-shadow:0 0 0 3px rgba(204,255,0,0.14);
 }
 #dashGate .wa-input:disabled{opacity:.5; cursor:not-allowed;}
+#dashGate .wa-code{
+  width:100%; box-sizing:border-box; text-align:center;
+  font-family:'Oswald','Arial Narrow',Arial,sans-serif; font-weight:700;
+  font-size:clamp(22px,7vw,34px); line-height:1.2;
+  letter-spacing:clamp(4px,2.4vw,12px); text-indent:clamp(4px,2.4vw,12px);
+  padding:14px 8px;
+}
+#dashGate .wa-sentto{
+  font-size:13px; line-height:1.55; color:var(--wa-body);
+  margin:0 0 16px; word-break:break-word; overflow-wrap:anywhere;
+}
+#dashGate .wa-sentto b{color:#fff; font-weight:600;}
 #dashGate .wa-input[aria-invalid="true"]{border-color:#5A2A2A;}
 #dashGate .wa-reveal{
   position:absolute; right:6px; top:50%; transform:translateY(-50%);
@@ -1858,99 +1870,47 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <h1 class="wa-title" id="waAccessTitle">Sign in</h1>
         <p class="wa-sub" id="waAccessSub">Use the email you want tied to your steward account.</p>
 
-        <div class="wa-tabs" role="tablist" aria-label="Sign in or create account">
-          <button class="wa-tab is-active" id="waTabLogin"  type="button" role="tab" aria-selected="true">Log in</button>
-          <button class="wa-tab"           id="waTabSignup" type="button" role="tab" aria-selected="false">Create account</button>
-        </div>
-
         <div class="wa-field">
           <label class="wa-label" for="waEmail">Email</label>
           <input id="waEmail" class="wa-input" type="email" placeholder="you@example.com"
                  autocomplete="email" autocapitalize="none" autocorrect="off"
-                 spellcheck="false" enterkeyhint="next">
-        </div>
-
-        <div class="wa-field">
-          <div class="wa-label-row">
-            <label class="wa-label" for="waPassword">Password</label>
-            <button class="wa-mini" id="waForgotBtn" type="button">Forgot password?</button>
-          </div>
-          <div class="wa-input-wrap">
-            <input id="waPassword" class="wa-input" type="password" placeholder="Your password"
-                   autocomplete="current-password" enterkeyhint="go">
-            <button class="wa-reveal" id="waRevealBtn" type="button" aria-label="Show password">Show</button>
-          </div>
+                 spellcheck="false" enterkeyhint="go">
         </div>
 
         <div class="wa-alert" id="waAccessAlert" role="status" aria-live="polite"></div>
 
         <button class="wa-btn wa-btn--primary" id="waSubmitBtn" type="button">
           <span class="wa-spin" aria-hidden="true"></span>
-          <span id="waSubmitLabel">Log in</span>
+          <span id="waSubmitLabel">Send me a code</span>
         </button>
 
-        <button class="wa-btn wa-btn--ghost" id="waSwitchToLoginBtn" type="button" style="display:none">Log in instead</button>
         <p class="wa-fine" id="waAccessFine"></p>
       </section>
 
-      <!-- ── RESET: ask for the address ────────────────────── -->
-      <section class="wa-screen" id="waScreenReset" aria-labelledby="waResetTitle">
-        <button class="wa-back" id="waResetBackBtn" type="button">&#8592; Back</button>
+      <!-- ── CODE: the emailed one time PIN ────────────── -->
+      <section class="wa-screen" id="waScreenCode" aria-labelledby="waCodeTitle">
+        <button class="wa-back" id="waCodeBackBtn" type="button">&#8592; Back</button>
 
-        <div id="waResetForm">
-          <h1 class="wa-title" id="waResetTitle">Reset your password</h1>
-          <p class="wa-sub">Enter your email and we will send you a link to set a new one.</p>
-
-          <div class="wa-field">
-            <label class="wa-label" for="waResetEmail">Email</label>
-            <input id="waResetEmail" class="wa-input" type="email" placeholder="you@example.com"
-                   autocomplete="email" autocapitalize="none" autocorrect="off"
-                   spellcheck="false" enterkeyhint="send">
-          </div>
-
-          <div class="wa-alert" id="waResetAlert" role="status" aria-live="polite"></div>
-
-          <button class="wa-btn wa-btn--primary" id="waResetSendBtn" type="button">
-            <span class="wa-spin" aria-hidden="true"></span>
-            <span id="waResetSendLabel">Send reset link</span>
-          </button>
-        </div>
-
-        <div id="waResetSent" style="display:none">
-          <h1 class="wa-title">Check your inbox</h1>
-          <p class="wa-sub" id="waResetSentBody"></p>
-          <button class="wa-btn wa-btn--primary" id="waResetDoneBtn" type="button">Back to log in</button>
-          <button class="wa-link" id="waResetAgainBtn" type="button">Use a different email</button>
-        </div>
-      </section>
-
-      <!-- ── RECOVERY LANDING: set a new password ──────────── -->
-      <section class="wa-screen" id="waScreenNewPassword" aria-labelledby="waNewPwTitle">
-        <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
-        <h1 class="wa-title" id="waNewPwTitle">Set a new password</h1>
-        <p class="wa-sub">Almost there. Choose a password and we will take you straight in.</p>
+        <h1 class="wa-title" id="waCodeTitle">Check your email</h1>
+        <p class="wa-sentto" id="waCodeSentTo">We sent a 6-digit code to <b id="waCodeEmail"></b>. It expires in 10 minutes.</p>
 
         <div class="wa-field">
-          <label class="wa-label" for="waNewPw">New password</label>
-          <div class="wa-input-wrap">
-            <input id="waNewPw" class="wa-input" type="password" placeholder="At least 8 characters"
-                   autocomplete="new-password">
-            <button class="wa-reveal" id="waNewPwReveal" type="button" aria-label="Show password">Show</button>
-          </div>
+          <label class="wa-label" for="waCode">6-digit code</label>
+          <input id="waCode" class="wa-input wa-code" type="text" placeholder="000000"
+                 inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                 autocomplete="one-time-code" autocapitalize="none" autocorrect="off"
+                 spellcheck="false" enterkeyhint="go" aria-describedby="waCodeSentTo">
         </div>
 
-        <div class="wa-field">
-          <label class="wa-label" for="waNewPw2">Confirm password</label>
-          <input id="waNewPw2" class="wa-input" type="password" placeholder="Type it again"
-                 autocomplete="new-password" enterkeyhint="go">
-        </div>
+        <div class="wa-alert" id="waCodeAlert" role="status" aria-live="polite"></div>
 
-        <div class="wa-alert" id="waNewPwAlert" role="status" aria-live="polite"></div>
-
-        <button class="wa-btn wa-btn--primary" id="waNewPwBtn" type="button">
+        <button class="wa-btn wa-btn--primary" id="waCodeBtn" type="button">
           <span class="wa-spin" aria-hidden="true"></span>
-          <span id="waNewPwLabel">Set password and continue</span>
+          <span id="waCodeLabel">Verify and continue</span>
         </button>
+
+        <button class="wa-link" id="waResendBtn" type="button">Send a new code</button>
+        <p class="wa-fine">Nobody from WHEALTHY will ever ask you for this code.</p>
       </section>
 
       <!-- ── RENDER FAULT ─────────────────────────────────── -->
@@ -5299,6 +5259,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: view,
                     cursor: offset,
                     limit: limit
@@ -5492,6 +5453,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -5594,6 +5556,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     reporter_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId,
                     reason: 'Flagged by community'
                   })
@@ -5636,6 +5599,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       member_id: window.MEMBER_ID,
+                      wall_key: window.WALL_KEY,
                       post_id: post.id
                     })
                   });
@@ -5792,6 +5756,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     body: body,
                     display_mode: displayMode,
                     source: 'wall'
@@ -5851,6 +5816,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'single',
                     post_id: postId
                   })
@@ -6146,6 +6112,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'testimony_top'
                   })
                 });
@@ -6181,6 +6148,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'testimony_river',
                     cursor: offset,
                     limit: this.limits.river
@@ -6368,6 +6336,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -6432,6 +6401,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       member_id: window.MEMBER_ID,
+                      wall_key: window.WALL_KEY,
                       post_id: postId
                     })
                   });
@@ -6471,6 +6441,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'single',
                     post_id: postId
                   })
@@ -7037,6 +7008,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'praying_for',
                     limit: 100,
                     cursor: 0
@@ -7091,6 +7063,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'my_prayers',
                     limit: this.pageSize,
                     cursor: offset
@@ -7142,6 +7115,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     view: 'praying_for',
                     limit: this.pageSize,
                     cursor: offset
@@ -7236,6 +7210,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -7527,6 +7502,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: this.currentPostId,
                     note: note
                   })
@@ -7566,6 +7542,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: this.currentPostId,
                     note: note
                   })
@@ -7619,6 +7596,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: this.currentPostId
                   })
                 });
@@ -7658,6 +7636,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -7688,6 +7667,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     member_id: window.MEMBER_ID,
+                    wall_key: window.WALL_KEY,
                     post_id: postId
                   })
                 });
@@ -7768,7 +7748,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-day', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: window.MEMBER_EMAIL })
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, wall_key: window.WALL_KEY })
             });
             const data = await res.json();
             
@@ -7919,7 +7899,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-join', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: window.MEMBER_EMAIL, invite_code: code })
+                body: JSON.stringify({ email: window.MEMBER_EMAIL, invite_code: code, wall_key: window.WALL_KEY })
               });
               const d = await res.json();
               
@@ -7980,7 +7960,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-create', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: window.MEMBER_EMAIL, name })
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, name, wall_key: window.WALL_KEY })
             });
             const d = await res.json();
             
@@ -8035,7 +8015,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-leave', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: window.MEMBER_EMAIL, circle_id: circleId })
+              body: JSON.stringify({ email: window.MEMBER_EMAIL, circle_id: circleId, wall_key: window.WALL_KEY })
             });
             const d = await res.json();
             
@@ -9677,6 +9657,7 @@ window.saveReflectionJournal = function() {
         body: JSON.stringify({
           action: 'save_reflection',
           email: MEMBER_EMAIL,
+          wall_key: window.WALL_KEY,
           day_number: currentDay,
           scripture_ref: scriptureRef,
           said: said,
@@ -9736,6 +9717,7 @@ window.logPrayerRequest = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         body: text,
         display_mode: displayMode,
         source: 'bible365'
@@ -9780,6 +9762,7 @@ window.fetchBibleFeed = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         view: 'bible365',
         limit: 10,
         cursor: 0
@@ -9860,6 +9843,7 @@ window.handleBibleFeedPray = async function(btn, postId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         post_id: postId
       })
     });
@@ -10722,9 +10706,14 @@ const FN_BASE='https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
 let MEMBER_EMAIL = __lsGet('wh_steward_email') || '';
 let MEMBER_NAME = '';
 let MEMBER_ID = null;
+/* Per-member Prayer Wall credential. Issued by the gate alongside MEMBER_ID and
+   sent with every wall-* call. Deliberately NOT persisted to localStorage: it is
+   re-issued each time the gate runs, so it never outlives the session. */
+let WALL_KEY = null;
 window.MEMBER_EMAIL = MEMBER_EMAIL;
 window.MEMBER_NAME = MEMBER_NAME;
 window.MEMBER_ID = MEMBER_ID;
+window.WALL_KEY = WALL_KEY;
 
   /* ================== MY BIBLE MODULE ================== */
   const BIBLE_BOOKS = [
@@ -10926,7 +10915,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-state`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'get', email: MEMBER_EMAIL })
         });
         if (res.status === 200) {
@@ -10960,7 +10949,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         await fetch(`${FN_BASE}/my-bible-state`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'set',
             email: MEMBER_EMAIL,
@@ -10979,7 +10968,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-marks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'list', email: MEMBER_EMAIL })
         });
         if (res.status === 200) {
@@ -10997,7 +10986,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-marks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'add', email: MEMBER_EMAIL, book, chapter, verse, kind, body })
         });
         if (res.status === 200) {
@@ -11012,7 +11001,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/my-bible-marks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'remove', email: MEMBER_EMAIL, id })
         });
         if (res.status === 200) {
@@ -11163,7 +11152,8 @@ window.MEMBER_ID = MEMBER_ID;
           task: 'bible_study',
           prompt: text,
           context: { book: BIBLE_READER.currentBook, chapter: BIBLE_READER.currentChapter },
-          email: MEMBER_EMAIL
+          email: MEMBER_EMAIL,
+          wall_key: window.WALL_KEY
         })
       });
       const typingEl = document.getElementById(typingId);
@@ -11424,7 +11414,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/prayers-write`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'create',
             kind: 'handover',
@@ -11447,6 +11437,7 @@ window.MEMBER_ID = MEMBER_ID;
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
             body: JSON.stringify({
               member_id: window.MEMBER_ID,
+              wall_key: window.WALL_KEY,
               body: this.weightText,
               display_mode: postMode,
               source: 'prayer_handover',
@@ -11457,7 +11448,7 @@ window.MEMBER_ID = MEMBER_ID;
           if (wallRes.status === 200) {
             await fetch(`${FN_BASE}/prayers-write`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
               body: JSON.stringify({
                 action: 'lift',
                 id: prayerId,
@@ -11508,7 +11499,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/prayers-read`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ email: MEMBER_EMAIL })
         });
         if (res.status === 200) {
@@ -11578,7 +11569,7 @@ window.MEMBER_ID = MEMBER_ID;
       try {
         const res = await fetch(`${FN_BASE}/prayers-write`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'answered',
             id: this.selectedLedgerItem,
@@ -11610,17 +11601,41 @@ const WA_SCREENS = {
   found:    'waScreenFound',
   notfound: 'waScreenNotFound',
   access:   'waScreenAccess',
+  code:     'waScreenCode',
   doorA:    'waScreenDoorA',
   doorB:    'waScreenDoorB',
-  reset:    'waScreenReset',
-  newpw:    'waScreenNewPassword',
   error:    'waScreenError'
 };
 
-const WA_ENTRY_URL = (typeof window !== 'undefined' && window.location)
-  ? String(window.location.hash || '') + String(window.location.search || '')
-  : '';
-function waIsRecoveryEntry(){ return /type=recovery/.test(WA_ENTRY_URL); }
+// Sign in is an emailed one time PIN. There is no password, so there is no
+// reset screen and no Supabase Auth recovery link to land on. The session a
+// member carries is their own random wall_key, held locally.
+const WA_SESS_EMAIL = 'wh_steward_email';
+const WA_SESS_KEY   = 'wh_steward_wall_key';
+const WA_PROFILE_LS = 'wh_steward_profile';
+
+function waSessionGet(){
+  try {
+    return {
+      email: String(__lsGet(WA_SESS_EMAIL) || '').trim().toLowerCase(),
+      wall_key: String(__lsGet(WA_SESS_KEY) || '').trim()
+    };
+  } catch(e){ return { email: '', wall_key: '' }; }
+}
+function waSessionSet(email, wall_key){
+  try {
+    if (email) __lsSet(WA_SESS_EMAIL, String(email).trim().toLowerCase());
+    if (wall_key) __lsSet(WA_SESS_KEY, String(wall_key).trim());
+  } catch(e){}
+}
+function waSessionClear(){
+  try { __lsDel(WA_SESS_EMAIL); __lsDel(WA_SESS_KEY); } catch(e){}
+}
+window.waSessionGet = waSessionGet;
+window.waSessionClear = waSessionClear;
+
+let waPendingEmail = '';
+let waCodeBusy = false;
 
 const waState = {
   screen: 'locate',
@@ -11855,7 +11870,7 @@ function waOnHandleInput(){
     waNote('That looks like an email. Your Skool handle is the @name at the end of your profile link.');
     return;
   }
-  if (h.length < 2){ waCloseSuggest(); return; }
+  if (h.length < 3){ waCloseSuggest(); return; }
   if (waCache.has(h)){ waPaintSuggest(h, waCache.get(h)); return; }
   if (waAutoPaused){ waNote('Too many lookups. Give it a moment, then press Find my profile.'); return; }
 
@@ -12007,8 +12022,10 @@ function waSafeAvatarUrl(url){
 }
 window.waSafeAvatarUrl = waSafeAvatarUrl;
 
+// The Skool handle and avatar used to live in Supabase Auth user_metadata.
+// PIN sign in creates no auth user, so they live beside the local session.
 async function waPersistSkoolProfile(){
-  if (!sb || !waState.profile) return;
+  if (!waState.profile) return;
   const p = waState.profile;
   const data = {};
   if (p.handle) data.skool_handle = p.handle;
@@ -12016,9 +12033,9 @@ async function waPersistSkoolProfile(){
   if (av) data.skool_avatar_url = av;
   if (!Object.keys(data).length) return;
   try {
-    const { data: res, error } = await sb.auth.updateUser({ data });
-    if (error) throw error;
-    if (res && res.user) waProfileMeta = res.user.user_metadata || null;
+    const next = Object.assign({}, waProfileMeta || {}, data);
+    __lsSet(WA_PROFILE_LS, JSON.stringify(next));
+    waProfileMeta = next;
   } catch(e){
     console.warn('[profile] could not save Skool profile:', e && e.message);
   }
@@ -12026,9 +12043,10 @@ async function waPersistSkoolProfile(){
 
 async function waLoadProfileMeta(){
   try {
-    const { data } = await sb.auth.getSession();
-    const u = data && data.session && data.session.user;
-    if (u && u.user_metadata) waProfileMeta = u.user_metadata;
+    const raw = __lsGet(WA_PROFILE_LS);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') waProfileMeta = parsed;
   } catch(e){}
 }
 
@@ -12204,117 +12222,147 @@ Return ONLY a valid JSON object matching this schema exactly (no preamble, no ma
 }
 window.waFetchAIPersonalization = waFetchAIPersonalization;
 
-function waSetMode(mode){
-  waState.mode = mode;
-  const isSignup = mode === 'signup';
-
-  const tL = waEl('waTabLogin'), tS = waEl('waTabSignup');
-  if (tL){ tL.classList.toggle('is-active', !isSignup); tL.setAttribute('aria-selected', String(!isSignup)); }
-  if (tS){ tS.classList.toggle('is-active',  isSignup); tS.setAttribute('aria-selected', String(isSignup)); }
-
-  const sub = waEl('waAccessSub');
-  if (sub) sub.textContent = isSignup
-    ? 'Use the email tied to your Stewards community membership.'
-    : 'Use the email tied to your steward account.';
+// Signing up and signing in are the same act now: prove you can read the
+// inbox. There is nothing left to toggle between.
+function waSetMode(){
+  waState.mode = 'login';
 
   const title = waEl('waAccessTitle');
-  if (title) title.textContent = isSignup ? 'Create your account' : 'Sign in';
+  if (title) title.textContent = 'Sign in';
 
-  const pw = waEl('waPassword');
-  if (pw){
-    pw.autocomplete = isSignup ? 'new-password' : 'current-password';
-    pw.placeholder  = isSignup ? 'At least 8 characters' : 'Your password';
-  }
+  const sub = waEl('waAccessSub');
+  if (sub) sub.textContent = 'Use the email tied to your Stewards community membership. We will send you a 6-digit code.';
 
   const fine = waEl('waAccessFine');
-  if (fine) fine.textContent = isSignup ? 'Use at least 8 characters.' : '';
-
-  const forgot = waEl('waForgotBtn');
-  if (forgot) forgot.style.display = isSignup ? 'none' : 'inline-flex';
-
-  const sw = waEl('waSwitchToLoginBtn');
-  if (sw) sw.style.display = 'none';
+  if (fine) fine.textContent = 'No password to remember. The code expires in 10 minutes.';
 
   const label = waEl('waSubmitLabel');
-  if (label) label.textContent = isSignup ? 'Create account' : 'Log in';
+  if (label) label.textContent = 'Send me a code';
 
   waAlert('waAccessAlert', '');
 }
 
-function waResetFormView(){
-  const f = waEl('waResetForm'), sent = waEl('waResetSent');
-  if (f) f.style.display = '';
-  if (sent) sent.style.display = 'none';
-  waAlert('waResetAlert', '');
-  waBusy('waResetSendBtn', 'waResetSendLabel', false, '', 'Send reset link');
+const WA_RESEND_COOLDOWN_S = 45;
+
+function waStartResendCooldown(seconds){
+  const link = waEl('waResendBtn');
+  if (!link) return;
+  if (waState.cooldownTimer){ clearInterval(waState.cooldownTimer); waState.cooldownTimer = null; }
+  let left = Math.max(0, seconds | 0);
+  const paint = () => {
+    if (left <= 0){
+      if (waState.cooldownTimer){ clearInterval(waState.cooldownTimer); waState.cooldownTimer = null; }
+      link.disabled = false;
+      link.textContent = 'Send a new code';
+      return;
+    }
+    link.disabled = true;
+    link.textContent = 'Send a new code in ' + left + 's';
+    left--;
+  };
+  paint();
+  waState.cooldownTimer = setInterval(paint, 1000);
 }
 
-function waGoReset(){
-  waResetFormView();
-  const typed = ((waEl('waEmail') || {}).value || '').trim();
-  const box = waEl('waResetEmail');
-  if (box) box.value = typed;
-  waShowScreen('reset');
-  if (box) setTimeout(() => { try { box.focus(); if (typed) box.select(); } catch(e){} }, 60);
+// gate-request-code answers the same way for every address, member or not, so
+// there is nothing in the response to branch on and nothing to leak.
+async function waRequestCode(email){
+  try {
+    await fetch(FN_BASE + '/gate-request-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    return true;
+  } catch (e) {
+    console.warn('[gate] request code failed:', e && e.message);
+    return false;
+  }
 }
 
-async function waSendReset(){
-  const email = ((waEl('waResetEmail') || {}).value || '').trim().toLowerCase();
-  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-    waAlert('waResetAlert', 'Enter a valid email address.', 'err');
+function waGoCode(email){
+  waPendingEmail = email;
+  waCodeBusy = false;
+  const who = waEl('waCodeEmail');
+  if (who) who.textContent = email;
+  const box = waEl('waCode');
+  if (box) box.value = '';
+  waAlert('waCodeAlert', '');
+  waBusy('waCodeBtn', 'waCodeLabel', false, '', 'Verify and continue');
+  waShowScreen('code');
+  waStartResendCooldown(WA_RESEND_COOLDOWN_S);
+  if (box) setTimeout(() => { try { box.focus(); } catch(e){} }, 60);
+}
+
+async function waResendCode(){
+  if (!waPendingEmail){ waShowScreen('access'); return; }
+  waAlert('waCodeAlert', '');
+  waStartResendCooldown(WA_RESEND_COOLDOWN_S);
+  await waRequestCode(waPendingEmail);
+  const box = waEl('waCode');
+  if (box){ box.value = ''; try { box.focus(); } catch(e){} }
+  waAlert('waCodeAlert', 'A new code is on its way. Any earlier code has stopped working.', 'soft');
+}
+
+async function waSubmitCode(){
+  const rest = 'Verify and continue';
+  if (waCodeBusy) return;
+
+  const code = String(((waEl('waCode') || {}).value || '')).replace(/[^0-9]/g, '').slice(0, 6);
+  if (code.length !== 6){
+    waAlert('waCodeAlert', 'Enter the 6-digit code from your email.', 'err');
     return;
   }
-  if (!sb){
-    waAlert('waResetAlert', 'We could not reach the sign in service. Reload and try again.', 'err');
+  if (!waPendingEmail){ waShowScreen('access'); return; }
+
+  waCodeBusy = true;
+  waAlert('waCodeAlert', '');
+  waBusy('waCodeBtn', 'waCodeLabel', true, 'Checking...', rest);
+
+  const fail = (msg) => {
+    waCodeBusy = false;
+    waBusy('waCodeBtn', 'waCodeLabel', false, '', rest);
+    waAlert('waCodeAlert', msg, 'err');
+    const box = waEl('waCode');
+    if (box){ box.value = ''; try { box.focus(); } catch(e){} }
+  };
+
+  let d = null, status = 0;
+  try {
+    const r = await fetch(FN_BASE + '/gate-verify-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: waPendingEmail, code })
+    });
+    status = r.status;
+    d = await r.json().catch(() => null);
+  } catch (e) {
+    console.warn('[gate] verify failed:', e && e.message);
+    fail('We could not reach the sign in service. Check your connection and try again.');
     return;
   }
 
-  waAlert('waResetAlert', '');
-  waBusy('waResetSendBtn', 'waResetSendLabel', true, 'Sending...', 'Send reset link');
-  try {
-    await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-  } catch (e) {
-    console.warn('[reset]', e && e.message);
+  if (status === 429){
+    fail('Too many tries. Give it a few minutes, then send yourself a new code.');
+    return;
   }
-  waBusy('waResetSendBtn', 'waResetSendLabel', false, '', 'Send reset link');
 
-  const body = waEl('waResetSentBody');
-  if (body) body.textContent = 'If ' + email + ' has an account, a reset link is on its way. Use it soon, the link does not last long.';
-  const f = waEl('waResetForm'), sent = waEl('waResetSent');
-  if (f) f.style.display = 'none';
-  if (sent) sent.style.display = '';
-}
-
-function waBackToLogin(){
-  const typed = ((waEl('waResetEmail') || {}).value || '').trim();
-  waSetMode('login');
-  if (typed){ const em = waEl('waEmail'); if (em) em.value = typed; }
-  waGoAccess();
-}
-
-async function waSetNewPassword(){
-  const a = (waEl('waNewPw') || {}).value || '';
-  const b = (waEl('waNewPw2') || {}).value || '';
-  const rest = 'Set password and continue';
-
-  if (a.length < 8){ waAlert('waNewPwAlert', 'Use a password of at least 8 characters.', 'err'); return; }
-  if (a !== b){ waAlert('waNewPwAlert', 'Those two passwords do not match.', 'err'); return; }
-  if (!sb){ waAlert('waNewPwAlert', 'We could not reach the sign in service. Reload and try again.', 'err'); return; }
-
-  waAlert('waNewPwAlert', '');
-  waBusy('waNewPwBtn', 'waNewPwLabel', true, 'Saving...', rest);
-  try {
-    const { data, error } = await sb.auth.updateUser({ password: a });
-    if (error) throw error;
-    waBusy('waNewPwBtn', 'waNewPwLabel', false, '', rest);
-    const email = data && data.user ? data.user.email : null;
-    if (!email){ waSetMode('login'); waGoAccess(); return; }
-    await waRunGate(email);
-  } catch (e) {
-    console.warn('[newpw]', e && e.message);
-    waBusy('waNewPwBtn', 'waNewPwLabel', false, '', rest);
-    waAlert('waNewPwAlert', 'We could not set that password. The link may have expired. Request a new one from the log in screen.', 'err');
+  if (!d || d.verified !== true){
+    if (d && d.lapsed === true){
+      waCodeBusy = false;
+      waBusy('waCodeBtn', 'waCodeLabel', false, '', rest);
+      waOpenGate('doorB');
+      return;
+    }
+    fail('That code did not work. Each code lasts 10 minutes and can only be used once.');
+    return;
   }
+
+  waSessionSet(waPendingEmail, d.member && d.member.wall_key);
+  await waPersistSkoolProfile();
+  waCodeBusy = false;
+  waBusy('waCodeBtn', 'waCodeLabel', false, '', rest);
+  await waRunGate(waPendingEmail, d);
 }
 
 function waGoAccess(){
@@ -12327,97 +12375,59 @@ function waGoAccess(){
 
 async function waSubmitAccess(){
   const email = ((waEl('waEmail') || {}).value || '').trim().toLowerCase();
-  const password = (waEl('waPassword') || {}).value || '';
-  const isSignup = waState.mode === 'signup';
-  const rest = isSignup ? 'Create account' : 'Log in';
+  const rest = 'Send me a code';
 
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
     waAlert('waAccessAlert', 'Enter a valid email address.', 'err');
     return;
   }
-  if (!password){
-    waAlert('waAccessAlert', 'Enter your password.', 'err');
-    return;
-  }
-  if (isSignup && password.length < 8){
-    waAlert('waAccessAlert', 'Use a password of at least 8 characters.', 'err');
-    return;
-  }
-  if (!sb){
-    waAlert('waAccessAlert', 'We could not reach the sign in service. Reload and try again.', 'err');
-    return;
-  }
 
   waAlert('waAccessAlert', '');
-  waBusy('waSubmitBtn', 'waSubmitLabel', true, isSignup ? 'Creating...' : 'Signing in...', rest);
+  waBusy('waSubmitBtn', 'waSubmitLabel', true, 'Sending...', rest);
 
+  // Someone who has not joined the community yet is pointed at the door they
+  // actually need rather than left waiting on a code that leads nowhere. This
+  // is the same check waRunGate already makes after sign in, moved earlier so
+  // it costs nobody an email.
+  let onboard = null;
   try {
-    if (isSignup){
-      // Check onboarding-state first
-      let onboard = null;
-      try {
-        const url = `${FN_BASE}/onboarding-state?email=${encodeURIComponent(email)}`;
-        const r = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        if (r.ok) {
-          onboard = await r.json();
-        }
-      } catch (e) {
-        console.warn('onboarding-state check failed during signup:', e);
-      }
-
-      if (onboard && (onboard.gate === 'join' || onboard.verified !== true)) {
-        waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
-        openJoinPopup(onboard.skool_url, onboard.discount_pct);
-        return;
-      }
-
-      const opts = { emailRedirectTo: window.location.href };
-      if (waState.handle) opts.data = { skool_handle: waState.handle };
-
-      const { data, error } = await sb.auth.signUp({ email, password, options: opts });
-      if (error) throw error;
-
-      if (!data || !data.session){
-        waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
-        waAlert('waAccessAlert', 'Check your inbox. If we can set up an account for that address, a confirmation link is on its way. If you already have an account, log in instead.', 'soft');
-        const sw = waEl('waSwitchToLoginBtn');
-        if (sw) sw.style.display = 'flex';
-        return;
-      }
-      await waPersistSkoolProfile();
-      await waRunGate(email);
-      return;
-    }
-
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    if (!data || !data.session) throw new Error('no_session');
-
-    await waPersistSkoolProfile();
-    await waRunGate(email);
-
-  } catch (err) {
-    console.warn('[auth]', err && err.message);
-    waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
-    waAlert('waAccessAlert', isSignup
-      ? 'We could not complete that. If you already have an account, log in instead.'
-      : 'That email and password combination did not work.', 'err');
-    const sw = waEl('waSwitchToLoginBtn');
-    if (sw) sw.style.display = isSignup ? 'flex' : 'none';
+    const r = await fetch(`${FN_BASE}/onboarding-state?email=${encodeURIComponent(email)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (r.ok) onboard = await r.json();
+  } catch (e) {
+    console.warn('[gate] onboarding-state check failed:', e && e.message);
   }
+
+  if (onboard && onboard.gate === 'pending'){
+    waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
+    openPendingModal(onboard.message);
+    return;
+  }
+  if (onboard && (onboard.gate === 'join' || onboard.verified !== true)){
+    waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
+    openJoinPopup(onboard.skool_url, onboard.discount_pct);
+    return;
+  }
+
+  const sent = await waRequestCode(email);
+  waBusy('waSubmitBtn', 'waSubmitLabel', false, '', rest);
+
+  if (!sent){
+    waAlert('waAccessAlert', 'We could not reach the sign in service. Check your connection and try again.', 'err');
+    return;
+  }
+
+  waGoCode(email);
 }
 
-async function waRunGate(emailArg){
+// `verified` is the payload gate-verify-code just returned. It carries the
+// same shape get-subscription does, so a fresh PIN sign in does not need to
+// ask the server the same question twice.
+async function waRunGate(emailArg, verified){
   let email = emailArg;
-  if (!email){
-    try {
-      const { data } = await sb.auth.getSession();
-      email = data && data.session && data.session.user ? data.session.user.email : null;
-    } catch(e) {}
-  }
+  if (!email) email = waSessionGet().email || null;
   if (!email){ waOpenGate('locate'); return; }
   email = String(email).trim().toLowerCase();
   window.ADMIN_ROLE = null;
@@ -12448,6 +12458,7 @@ async function waRunGate(emailArg){
   }
 
   if (onboard && onboard.gate === 'pending') {
+    waSessionClear();
     try { if (sb) await sb.auth.signOut(); } catch(e){}
     waResetAll();
     openPendingModal(onboard.message);
@@ -12455,34 +12466,41 @@ async function waRunGate(emailArg){
   }
 
   if (onboard && (onboard.gate === 'join' || onboard.verified !== true)) {
-    try { if (sb) await sb.auth.signOut(); } catch(e){}
+    waSessionClear();
     waResetAll();
     openJoinPopup(onboard.skool_url, onboard.discount_pct);
     return;
   }
 
-  let d = null;
-  try {
-    const r = await fetch(FN_BASE + '/get-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    if (!r.ok) throw new Error('gate_http_' + r.status);
-    d = await r.json();
-  } catch (e) {
-    console.warn('[gate] failed, failing closed to Door A', e);
-    waOpenGate('doorA');
-    return;
+  let d = (verified && verified.verified === true) ? verified : null;
+  if (!d) {
+    try {
+      const r = await fetch(FN_BASE + '/get-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!r.ok) throw new Error('gate_http_' + r.status);
+      d = await r.json();
+    } catch (e) {
+      console.warn('[gate] failed, failing closed to Door A', e);
+      waOpenGate('doorA');
+      return;
+    }
   }
 
   if (d && d.verified === true){
     const status = (d.member && d.member.member_status) || '';
     if (status === 'member'){
-      try { __lsSet('wh_steward_email', email); } catch(e) {}
       MEMBER_EMAIL = email;
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
       MEMBER_ID = (d.member && d.member.id) ? d.member.id : null;
+      // get-subscription is being closed so that an email address alone stops
+      // handing out a wall_key. When it stops returning one, the key from the
+      // PIN sign in that opened this session is the one we keep using.
+      WALL_KEY = (d.member && d.member.wall_key) ? d.member.wall_key : (waSessionGet().wall_key || null);
+      window.WALL_KEY = WALL_KEY;
+      waSessionSet(email, WALL_KEY);
       try { loadMemberDiscount(email); } catch(e) {}
       await waLoadProfileMeta();
       if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
@@ -12494,7 +12512,7 @@ async function waRunGate(emailArg){
         const vr = await fetch(FN_BASE + '/verify-member', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, member_id: MEMBER_ID, wall_key: WALL_KEY })
         });
         if (vr.ok) {
           const vd = await vr.json();
@@ -12517,6 +12535,7 @@ async function waRunGate(emailArg){
       window.MEMBER_EMAIL = MEMBER_EMAIL;
       window.MEMBER_NAME = MEMBER_NAME;
       window.MEMBER_ID = MEMBER_ID;
+      window.WALL_KEY = WALL_KEY;
       
       // Hide the gate overlay and display main content
       waCloseGate();
@@ -12558,9 +12577,10 @@ function waResetAll(){
   waState.profile = null;
   waState.mode = 'login';
   if (waState.cooldownTimer){ clearInterval(waState.cooldownTimer); waState.cooldownTimer = null; }
-  ['waHandle','waEmail','waPassword','waResetEmail','waNewPw','waNewPw2'].forEach(id => { const el = waEl(id); if (el) el.value = ''; });
-  waResetFormView();
-  waAlert('waNewPwAlert', '');
+  ['waHandle','waEmail','waCode'].forEach(id => { const el = waEl(id); if (el) el.value = ''; });
+  waPendingEmail = '';
+  waCodeBusy = false;
+  waAlert('waCodeAlert', '');
   if (waDebounceTimer){ clearTimeout(waDebounceTimer); waDebounceTimer = null; }
   if (waAbortCtl){ try { waAbortCtl.abort(); } catch(e){} waAbortCtl = null; }
   waAutoPaused = false;
@@ -12568,7 +12588,7 @@ function waResetAll(){
   const find = waEl('waFindBtn'); if (find) find.disabled = false;
   waAlert('waLocateAlert', ''); waAlert('waAccessAlert', '');
   waBusy('waFindBtn','waFindLabel', false, '', 'Find my profile');
-  waSetMode('login');
+  waSetMode();
 }
 window.waResetAll = waResetAll;
 
@@ -12614,48 +12634,28 @@ function waWire(){
     if (h) h.value = waState.handle || '';
   });
 
-  on('waTabLogin', 'click', () => waSetMode('login'));
-  on('waTabSignup', 'click', () => waSetMode('signup'));
-  on('waForgotBtn', 'click', waGoReset);
-  on('waResetSendBtn', 'click', waSendReset);
-  on('waResetEmail', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSendReset(); } });
-  on('waResetBackBtn', 'click', waBackToLogin);
-  on('waResetDoneBtn', 'click', waBackToLogin);
-  on('waResetAgainBtn', 'click', () => {
-    waResetFormView();
-    const box = waEl('waResetEmail');
-    if (box){ box.value = ''; setTimeout(() => { try { box.focus(); } catch(e){} }, 60); }
-  });
-
-  on('waNewPwBtn', 'click', waSetNewPassword);
-  on('waNewPw', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const n = waEl('waNewPw2'); if (n) n.focus(); } });
-  on('waNewPw2', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSetNewPassword(); } });
-  on('waNewPwReveal', 'click', () => {
-    const p = waEl('waNewPw'), b = waEl('waNewPwReveal');
-    if (!p || !b) return;
-    const show = p.type === 'password';
-    p.type = show ? 'text' : 'password';
-    b.textContent = show ? 'Hide' : 'Show';
-    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-  });
-  on('waSwitchToLoginBtn', 'click', () => {
-    waSetMode('login');
-    const pw = waEl('waPassword');
-    if (pw){ pw.value = ''; setTimeout(() => { try { pw.focus(); } catch(e){} }, 60); }
-  });
-
-  on('waEmail', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const p = waEl('waPassword'); if (p) p.focus(); } });
-  on('waPassword', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSubmitAccess(); } });
+  on('waEmail', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSubmitAccess(); } });
   on('waSubmitBtn', 'click', waSubmitAccess);
 
-  on('waRevealBtn', 'click', () => {
-    const p = waEl('waPassword'), b = waEl('waRevealBtn');
-    if (!p || !b) return;
-    const show = p.type === 'password';
-    p.type = show ? 'text' : 'password';
-    b.textContent = show ? 'Hide' : 'Show';
-    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  on('waCodeBtn', 'click', waSubmitCode);
+  on('waResendBtn', 'click', waResendCode);
+  on('waCodeBackBtn', 'click', () => {
+    if (waState.cooldownTimer){ clearInterval(waState.cooldownTimer); waState.cooldownTimer = null; }
+    waAlert('waCodeAlert', '');
+    waShowScreen('access');
+    const em = waEl('waEmail');
+    if (em) setTimeout(() => { try { em.focus(); em.select(); } catch(e){} }, 60);
   });
+  on('waCode', 'input', () => {
+    const box = waEl('waCode');
+    if (!box) return;
+    const clean = String(box.value || '').replace(/[^0-9]/g, '').slice(0, 6);
+    if (clean !== box.value) box.value = clean;
+    // Typing or pasting the sixth digit submits, which is what the autofill
+    // of a one-time-code on a phone keyboard does anyway.
+    if (clean.length === 6) waSubmitCode();
+  });
+  on('waCode', 'keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); waSubmitCode(); } });
 
   on('waDoorASignOut', 'click', () => { try{ logout(); }catch(e){} });
   on('waDoorBSignOut', 'click', () => { try{ logout(); }catch(e){} });
@@ -12832,7 +12832,7 @@ async function reloadLedger() {
     const rLedger = await fetch(FN_BASE + '/discipline-day', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: MEMBER_EMAIL, from: fromDate, to: toDate })
+      body: JSON.stringify({ email: MEMBER_EMAIL, wall_key: window.WALL_KEY, from: fromDate, to: toDate })
     });
     if (rLedger.ok) {
       window.CHIPS_DATA = await rLedger.json();
@@ -12887,6 +12887,7 @@ window.handleJoinCohortTap = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL,
+        wall_key: window.WALL_KEY,
         cohort_id: cohortId
       })
     });
@@ -12965,6 +12966,7 @@ window.submitCohortTestimony = async function() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         member_id: window.MEMBER_ID,
+        wall_key: window.WALL_KEY,
         body: text,
         display_mode: displayMode,
         source: 'challenge'
@@ -13171,7 +13173,7 @@ window.triggerWordArrives = async function(triggerSource) {
     const res = await fetch(FN_BASE + '/word-arrives', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: MEMBER_EMAIL })
+      body: JSON.stringify({ email: MEMBER_EMAIL, wall_key: window.WALL_KEY })
     });
     const d = await res.json();
     if (d.arrived) {
@@ -13228,7 +13230,7 @@ async function load(){
   try{
     const r=await fetch(FN_BASE+'/governor-state',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'load',email:MEMBER_EMAIL})});
+      body:JSON.stringify({action:'load',email:MEMBER_EMAIL,wall_key:window.WALL_KEY})});
     const d=await r.json();
     if(d.ok){
       S.entries = d.entries || [];
@@ -13283,6 +13285,7 @@ async function saveEntry(entry_date, text, tone, fast_id, fast_day, scribe_line,
     const payload = {
       action: 'save_entry',
       email: MEMBER_EMAIL,
+      wall_key: window.WALL_KEY,
       entry_date,
       text,
       tone,
@@ -13316,7 +13319,7 @@ async function burnEntryState(entry_date) {
     const r = await fetch(FN_BASE + '/governor-state', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'burn_entry', email: MEMBER_EMAIL, entry_date })
+      body: JSON.stringify({ action: 'burn_entry', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, entry_date })
     });
     const res = await r.json();
     if (res.ok) {
@@ -13332,7 +13335,7 @@ async function saveFast() {
     const r = await fetch(FN_BASE + '/governor-state', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'save_fast', email: MEMBER_EMAIL, fast: S.fast })
+      body: JSON.stringify({ action: 'save_fast', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, fast: S.fast })
     });
     return await r.json();
   } catch(e) {
@@ -13345,7 +13348,7 @@ async function endFast(status, ended_day, history_row) {
     const r = await fetch(FN_BASE + '/governor-state', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'end_fast', email: MEMBER_EMAIL, fast_id: S.fast.id, status, ended_day, history_row })
+      body: JSON.stringify({ action: 'end_fast', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, fast_id: S.fast.id, status, ended_day, history_row })
     });
     return await r.json();
   } catch(e) {
@@ -13360,6 +13363,7 @@ async function savePrefs() {
       body: JSON.stringify({
         action: 'save_prefs',
         email: MEMBER_EMAIL,
+        wall_key: window.WALL_KEY,
         scribe_style: S.prefs.scribeStyle || 'full',
         landed: S.prefs.landed || 0,
         missed: S.prefs.missed || 0,
@@ -13394,6 +13398,7 @@ async function ask(task,prompt,scriptureWhitelist,allowCommunityDirective){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       email:MEMBER_EMAIL,
+      wall_key:window.WALL_KEY,
       task,
       prompt,
       scripture_whitelist:scriptureWhitelist||null,
@@ -13518,7 +13523,7 @@ async function loadMemberOrders() {
   loading.style.display = 'block';
 
   try {
-    var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email));
+    var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email), { headers: { 'x-wall-key': window.WALL_KEY || '' } });
     var data = await res.json();
     loading.style.display = 'none';
 
@@ -13819,6 +13824,7 @@ async function submitCreateCohort() {
       },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        wall_key: window.WALL_KEY,
         name,
         start_date,
         end_date
@@ -14992,7 +14998,7 @@ Return ONLY the JSON profile delta.`;
       const res = await fetch(FN_BASE + '/governor-state', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'save_profile', email: MEMBER_EMAIL, delta })
+        body: JSON.stringify({ action: 'save_profile', email: MEMBER_EMAIL, wall_key: window.WALL_KEY, delta })
       });
       const data = await res.json();
       if (data.ok) {
@@ -15938,7 +15944,7 @@ window.loadDashboardCircle = async function() {
     const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/circle-day', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: window.MEMBER_EMAIL })
+      body: JSON.stringify({ email: window.MEMBER_EMAIL, wall_key: window.WALL_KEY })
     });
     const data = await res.json();
     if (!data || data.error) {
@@ -16042,6 +16048,7 @@ window.nudgeSteward = async function(circleId, forMemberId, btn) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: window.MEMBER_EMAIL,
+        wall_key: window.WALL_KEY,
         circle_id: circleId,
         for_member: forMemberId
       })
@@ -16119,7 +16126,7 @@ window.loadCommunityViewFeed = async function() {
     const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/skool-feed', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: window.MEMBER_EMAIL })
+      body: JSON.stringify({ email: window.MEMBER_EMAIL, wall_key: window.WALL_KEY })
     });
     
     if (!res.ok) {
@@ -16216,7 +16223,7 @@ async function loadAttachPrayers() {
   try {
     const res = await fetch(FN_BASE + '/prayers-read', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}`, 'x-wall-key': window.WALL_KEY || '' },
       body: JSON.stringify({ email: MEMBER_EMAIL, view: 'mirror' })
     });
     if (res.status === 200) {
@@ -16713,7 +16720,8 @@ Return JSON:
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_ANON}`
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'x-wall-key': window.WALL_KEY || ''
         },
         body: JSON.stringify({
           email: MEMBER_EMAIL,
@@ -16861,7 +16869,7 @@ window.discardFast=async function(){
   await fetch(FN_BASE+'/governor-state',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'discard_fast',email:MEMBER_EMAIL})
+    body:JSON.stringify({action:'discard_fast',email:MEMBER_EMAIL,wall_key:window.WALL_KEY})
   });
   W={step:0,laid:[],freeGuard:null,caffScope:null,whys:[],exp:null,matched:null,matchAlt:null,dur:null,start:null,recordConsent:false,anchorReasons:null,
     anchors:{wake:'06:40',lights:'22:00',oz:128,movement:true,laps:2,journal:5,prayer:true},carried:'alone',structureOnly:false,
@@ -17692,7 +17700,7 @@ window.generateAffiliateLink=async function(){
       } catch(e) {}
     }
     var name = MEMBER_NAME || (email ? email.split('@')[0] : 'Member');
-    var res=await fetch(FN_BASE+'/register-affiliate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email||'member@whealthylabel.com',ref_id:refId})});
+    var res=await fetch(FN_BASE+'/register-affiliate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({member_id:window.MEMBER_ID,wall_key:window.WALL_KEY,name:name,email:email||'member@whealthylabel.com',ref_id:refId})});
     var data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
     renderAffiliateLinks(refId);
     alertEl.style.display='block';alertEl.style.background='rgba(204,255,0,0.08)';alertEl.style.border='1px solid rgba(204,255,0,0.15)';alertEl.style.color='#ccff00';alertEl.innerHTML='Links generated successfully!';
@@ -18300,6 +18308,8 @@ function handleLogout(){
   // Clear the member session + member-scoped local caches
   try{
     __lsDel('wh_steward_email');
+    __lsDel('wh_steward_wall_key');
+    __lsDel('wh_steward_profile');
     __lsDel('wh_steward_ref_id');
     __lsDel('wh_equip_dismissed');
     __lsDel('governor_draft');
@@ -18440,24 +18450,14 @@ async function loadAndInit(){
   // Boot from Supabase session
   if (document.readyState === 'loading') {
     window.addEventListener('DOMContentLoaded', () => {
-      try { waWire(); waSetMode('login'); } catch(e){ console.error('[auth] wiring', e); }
-      if (sb) {
-        try {
-          sb.auth.onAuthStateChange((event) => {
-            if (event === 'PASSWORD_RECOVERY') waOpenGate('newpw');
-          });
-        } catch(e){}
-      }
+      try { waWire(); waSetMode(); } catch(e){ console.error('[auth] wiring', e); }
       (async () => {
         try {
-          if (!sb){ showGateFallback(); return; }
-          if (waIsRecoveryEntry()){ waOpenGate('newpw'); return; }
-          const { data } = await sb.auth.getSession();
-          const s = data && data.session;
-          if (s && s.user && s.user.email){
-            await waRunGate(s.user.email);
+          const sess = waSessionGet();
+          if (sess.email && sess.wall_key){
+            await waRunGate(sess.email);
           } else {
-            try { localStorage.removeItem('wh_steward_email'); } catch(e) {}
+            waSessionClear();
             waOpenGate('locate');
           }
         } catch (e) {
@@ -18467,24 +18467,14 @@ async function loadAndInit(){
       })();
     });
   } else {
-    try { waWire(); waSetMode('login'); } catch(e){ console.error('[auth] wiring', e); }
-    if (sb) {
-      try {
-        sb.auth.onAuthStateChange((event) => {
-          if (event === 'PASSWORD_RECOVERY') waOpenGate('newpw');
-        });
-      } catch(e){}
-    }
+    try { waWire(); waSetMode(); } catch(e){ console.error('[auth] wiring', e); }
     (async () => {
       try {
-        if (!sb){ showGateFallback(); return; }
-        if (waIsRecoveryEntry()){ waOpenGate('newpw'); return; }
-        const { data } = await sb.auth.getSession();
-        const s = data && data.session;
-        if (s && s.user && s.user.email){
-          await waRunGate(s.user.email);
+        const sess = waSessionGet();
+        if (sess.email && sess.wall_key){
+          await waRunGate(sess.email);
         } else {
-          try { localStorage.removeItem('wh_steward_email'); } catch(e) {}
+          waSessionClear();
           waOpenGate('locate');
         }
       } catch (e) {
@@ -18709,7 +18699,7 @@ async function loadAndInit(){
       const r = await fetch(FN_BASE + '/get-member-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, wall_key: window.WALL_KEY })
       });
       const d = await r.json();
       const banner = document.getElementById('memberDiscountBanner');
@@ -19844,7 +19834,7 @@ async function loadAndInit(){
         const token = await RHYTHM_BUILDER.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
-          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
+          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' }
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const d = await res.json();
@@ -20078,7 +20068,7 @@ async function loadAndInit(){
         // 1. Submit Assessment
         const res = await fetch(`${FN_BASE}/rhythm-assess?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             rmeq_items: rmeqAnswers,
             wake_time: wake,
@@ -20095,7 +20085,7 @@ async function loadAndInit(){
         document.getElementById('rhyLoaderText').textContent = 'Drafting your personalized rhythm...';
         const buildRes = await fetch(`${FN_BASE}/rhythm-build?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ email: window.MEMBER_EMAIL })
         });
         if (!buildRes.ok) throw new Error('Build failed: ' + buildRes.status);
@@ -20117,7 +20107,7 @@ async function loadAndInit(){
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
-          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon }
+          headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' }
         });
         const d = await res.json();
         
@@ -20205,7 +20195,7 @@ async function loadAndInit(){
         };
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify(payload)
         });
         if (!res.ok) {
@@ -20232,7 +20222,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-activate?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ plan_id: this.state.pendingDraftId })
         });
         if (!res.ok) throw new Error('Activation failed: ' + res.status);
@@ -20346,7 +20336,7 @@ async function loadAndInit(){
 
         const res = await fetch(`${FN_BASE}/rhythm-checkin?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             slot_id: slotId,
             date: today,
@@ -20377,7 +20367,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-nudge-check?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ email: window.MEMBER_EMAIL })
         });
         if (!res.ok) return;
@@ -20465,7 +20455,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'commit', length_days: lengthDays })
         });
         if (!res.ok) {
@@ -20487,7 +20477,7 @@ async function loadAndInit(){
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-season?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({ action: 'end' })
         });
         if (!res.ok) {
@@ -20617,7 +20607,7 @@ async function loadAndInit(){
 
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify(payload)
         });
 
@@ -20655,7 +20645,7 @@ async function loadAndInit(){
       try {
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'delete',
             slot_id: slotId
@@ -20695,7 +20685,7 @@ async function loadAndInit(){
       try {
         const res = await fetch(`${FN_BASE}/rhythm-slot?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon },
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             action: 'reorder',
             plan_id: slots[0].plan_id,

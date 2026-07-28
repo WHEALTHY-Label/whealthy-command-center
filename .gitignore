@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+test-results/
 *.log
 .env
 .env.*
@@ -7,4 +8,8 @@ node_modules/
 .env*
 .fuse_hidden*
 _to_delete/
-
+tools/recovery/node_modules/
+tools/recovery/test-results/
+tools/recovery/playwright-report/
+.recovery-tmp/
+supabase/.temp/

@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ref = new URLSearchParams(window.location.search).get('ref') || sessionStorage.getItem('whealthy_ref');
     if (ref) {
       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXh6bXV1dm96b25oZ3dobGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDEwNTksImV4cCI6MjA4OTM3NzA1OX0.azWx9VrATCtci1Xzedm4NwozQRHVP8kfROZZSDmlaL8';
-      const r = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/rest/v1/affiliates?select=name&ref_id=eq.'+ref, {
+      const r = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/rest/v1/public_affiliates?select=name&ref_id=eq.'+encodeURIComponent(ref), {
         headers: {'apikey': SUPABASE_ANON_KEY,'Authorization': 'Bearer '+SUPABASE_ANON_KEY}
       });
       const data = await r.json();

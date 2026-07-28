@@ -1,9 +1,12 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-// skool-feed-sync v3 — real Skool feed via the authenticated Next.js page data. NEVER fabricates.
-// Cookie is normalized: a bare auth_token JWT is wrapped as `auth_token=<jwt>` so Skool authenticates.
-// No cookie / not authenticated / fetch failure / empty -> writes nothing, keeps the last good sync.
+// skool-feed-sync v5 — real Skool feed via the authenticated Next.js page data. NEVER fabricates.
+// v5: MIRRORS DELETIONS — after a successful fetch, cached posts that no longer appear on the
+// Skool page are deleted, so a post removed in Skool disappears from the wall within one sync
+// (≤15 min). Reconciliation runs ONLY on success with posts present; every failure path still
+// leaves the last good cache untouched.
+// Cookie is normalized: a bare auth_token JWT is wrapped as `auth_token=<jwt>`.
 
 const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -56,9 +59,17 @@ Deno.serve(async (req) => {
       const { error } = await sb.from('skool_posts').upsert({ ...post, synced_at: new Date().toISOString() });
       if (error) console.error('[skool-feed-sync] upsert', post.id, error.message);
     }
-    const { data: all } = await sb.from('skool_posts').select('id').order('posted_at', { ascending: false });
-    if (all && all.length > 50) await sb.from('skool_posts').delete().in('id', all.slice(50).map((p: any) => p.id));
 
-    return done({ success: true, count: posts.length });
+    // v5: mirror deletions — the wall shows exactly what the Skool page shows.
+    const liveIds = posts.map((p: any) => p.id);
+    let removed = 0;
+    const { data: cached } = await sb.from('skool_posts').select('id');
+    const stale = (cached || []).map((r: any) => r.id).filter((id: string) => !liveIds.includes(id));
+    if (stale.length > 0) {
+      const { error: delErr } = await sb.from('skool_posts').delete().in('id', stale);
+      if (!delErr) removed = stale.length; else console.error('[skool-feed-sync] delete', delErr.message);
+    }
+
+    return done({ success: true, count: posts.length, removed });
   } catch (e) { return done({ success: false, reason: e instanceof Error ? e.message : String(e), count: 0 }); }
 });
