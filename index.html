@@ -8189,11 +8189,21 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <!-- Flow Wrapper -->
           <div id="hioFlowWrapper" class="g-card" style="padding: 28px 24px; margin-bottom: 32px; position: relative;">
             
-            <!-- STEP 1: The Door -->
+            <!-- STEP 1: The Door / Hand It Over Input -->
             <div id="hioStepDoor">
               <div class="hio-kicker">HAND IT OVER</div>
               <h2 class="hio-title" id="hioDoorHeadline">WHAT ARE YOU CARRYING?</h2>
               
+              <!-- Direct Text Input & AI Analysis -->
+              <div style="position:relative; display:flex; gap:10px; margin: 20px 0 16px 0; flex-wrap:wrap;">
+                <input type="text" id="hioNameInput" placeholder="Type or text what you are carrying tonight..." style="flex:1; min-width:240px; background:rgba(0,0,0,0.35); border:1px solid rgba(204,255,0,0.25); border-radius:12px; padding:16px 18px; color:#fff; font-size:15px; font-family:var(--font-body); outline:none; transition:all 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(204,255,0,0.25)';" onkeydown="if(event.key==='Enter')PRAYER.submitName();">
+                <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
+                <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:0 24px; height:52px; font-size:13px; font-weight:800; text-transform:uppercase; border-radius:12px; white-space:nowrap; cursor:pointer;">Hand It Over &rarr;</button>
+              </div>
+
+              <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
+
+              <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:10px;">Or select a category focus:</div>
               <div class="hio-chip-grid">
                 <button class="hio-chip" onclick="PRAYER.selectCategory('family')"><span>Family</span> <span>👥</span></button>
                 <button class="hio-chip" onclick="PRAYER.selectCategory('work')"><span>Work</span> <span>💼</span></button>
@@ -8204,30 +8214,10 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               </div>
 
               <!-- Subline message on door -->
-              <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-bottom:20px;"></p>
+              <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-top:16px; margin-bottom:20px;"></p>
 
               <div class="hio-footnote">
                 Everything you pray here is private by default and saved to My Prayers. Nothing goes on the community Prayer Wall unless you choose to put it there.
-              </div>
-            </div>
-
-            <!-- STEP 2: Name It -->
-            <div id="hioStepName" style="display:none;">
-              <div class="hio-kicker" id="hioNameKicker">Name It</div>
-              <h2 class="hio-title" style="font-size:24px; margin-bottom:16px;">What's the weight?</h2>
-              
-              <!-- Voice mic + Input box -->
-              <div style="position:relative; display:flex; gap:10px; margin-bottom:20px;">
-                <input type="text" id="hioNameInput" placeholder="Name it in one simple line..." style="flex:1; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:14px 16px; color:#fff; font-size:16px; font-family:var(--font-body); outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(255,255,255,0.12)';">
-                <!-- voice button -->
-                <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
-              </div>
-
-              <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
-
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px;">
-                <button class="btn-ghost" onclick="PRAYER.goBackToDoor()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
-                <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand It Over</button>
               </div>
             </div>
 
@@ -11455,16 +11445,21 @@ window.WALL_KEY = WALL_KEY;
 
     selectCategory(cat) {
       this.activeCategory = cat;
-      const kicker = document.getElementById("hioNameKicker");
-      if (kicker) kicker.textContent = "Name It · " + cat.toUpperCase();
-      
-      document.getElementById("hioStepDoor").style.display = 'none';
-      document.getElementById("hioStepName").style.display = 'block';
+      const input = document.getElementById("hioNameInput");
+      if (input) {
+        const categoryLabel = cat === 'head' ? 'your head' : (cat === 'freeform' ? 'your heart' : cat);
+        input.placeholder = "Type your prayer for " + categoryLabel + "...";
+        input.focus();
+      }
     },
 
     goBackToDoor() {
-      document.getElementById("hioStepDoor").style.display = 'block';
-      document.getElementById("hioStepName").style.display = 'none';
+      const stepDoor = document.getElementById("hioStepDoor");
+      if (stepDoor) stepDoor.style.display = 'block';
+      const stepHand = document.getElementById("hioStepHand");
+      if (stepHand) stepHand.style.display = 'none';
+      const stepLeave = document.getElementById("hioStepLeave");
+      if (stepLeave) stepLeave.style.display = 'none';
     },
 
     toggleVoice() {
@@ -11545,7 +11540,9 @@ window.WALL_KEY = WALL_KEY;
         console.warn("Failed to pre-load inline verses:", e);
       }
 
-      document.getElementById("hioStepName").style.display = 'none';
+      document.getElementById("hioStepDoor").style.display = 'none';
+      const stepName = document.getElementById("hioStepName");
+      if (stepName) stepName.style.display = 'none';
       document.getElementById("hioStepHand").style.display = 'block';
     },
 
