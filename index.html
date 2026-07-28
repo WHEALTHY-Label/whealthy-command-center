@@ -12699,68 +12699,69 @@ async function waRunGate(emailArg, verified){
       MEMBER_EMAIL = email;
       MEMBER_NAME = (d.member && d.member.name) ? `${d.member.name} ${d.member.last_name || ''}`.trim() : '';
       MEMBER_ID = (d.member && d.member.id) ? d.member.id : null;
-      // get-subscription is being closed so that an email address alone stops
-      // handing out a wall_key. When it stops returning one, the key from the
-      // PIN sign in that opened this session is the one we keep using.
       WALL_KEY = (d.member && d.member.wall_key) ? d.member.wall_key : (waSessionGet().wall_key || null);
       window.WALL_KEY = WALL_KEY;
-      waSessionSet(email, WALL_KEY);
-      try { loadMemberDiscount(email); } catch(e) {}
-      await waLoadProfileMeta();
-      if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
-        MEMBER_NAME = waProfileMeta.name || waProfileMeta.full_name || waProfileMeta.first_name || '';
-      }
-
-      // Fetch verify-member to resolve admin_role
-      try {
-        const vr = await fetch(FN_BASE + '/verify-member', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, member_id: MEMBER_ID, wall_key: WALL_KEY })
-        });
-        if (vr.ok) {
-          const vd = await vr.json();
-          window.ADMIN_ROLE = vd.admin_role || null;
-          window.TOUR_DONE_AT = vd.tour_done_at || null;
-          window.FIRST_STEPS = vd.first_steps || {};
-          const adminBtn = document.getElementById('parentAdmin');
-          if (adminBtn) {
-            if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
-              adminBtn.style.display = 'flex';
-              try { loadAdminRegistrationsCountSilently(); } catch(e){}
-            } else {
-              adminBtn.style.display = 'none';
-            }
-          }
-        }
-      } catch (ve) {
-        console.warn('Failed to call verify-member:', ve);
-      }
       window.MEMBER_EMAIL = MEMBER_EMAIL;
       window.MEMBER_NAME = MEMBER_NAME;
       window.MEMBER_ID = MEMBER_ID;
-      window.WALL_KEY = WALL_KEY;
-      
-      // Hide the gate overlay and display main content
+
+      waSessionSet(email, WALL_KEY);
+      try { loadMemberDiscount(email); } catch(e) {}
+
+      // Hide gate overlay & display main app layout IMMEDIATELY (0ms delay)
       waCloseGate();
       const content = waEl('appLayout') || waEl('sidebar') || document.querySelector('.dash-container');
       if (content) content.style.display = '';
       const mh = document.querySelector('.mobile-header');
       if (mh) mh.style.display = '';
-      
-      // Load and initialize Command Center
-      await loadAndInit();
-      if (window.ME && typeof window.ME.recomputeBadges === 'function') {
-        window.ME.recomputeBadges();
-      }
-      
-      if (!window.TOUR_DONE_AT) {
-        setTimeout(function() {
-          if (typeof startGuidedTour === 'function') {
-            startGuidedTour();
+
+      // Load & render Command Center view IMMEDIATELY from local cache
+      loadAndInit().then(() => {
+        if (window.ME && typeof window.ME.recomputeBadges === 'function') {
+          window.ME.recomputeBadges();
+        }
+      });
+
+      // Non-blocking background sync for profile-meta & verify-member
+      (async () => {
+        try {
+          await waLoadProfileMeta();
+          if (!MEMBER_NAME && typeof waProfileMeta !== 'undefined' && waProfileMeta) {
+            MEMBER_NAME = waProfileMeta.name || waProfileMeta.full_name || waProfileMeta.first_name || '';
+            window.MEMBER_NAME = MEMBER_NAME;
           }
-        }, 1500);
-      }
+        } catch(e) {}
+
+        try {
+          const vr = await fetch(FN_BASE + '/verify-member', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, member_id: MEMBER_ID, wall_key: WALL_KEY })
+          });
+          if (vr.ok) {
+            const vd = await vr.json();
+            window.ADMIN_ROLE = vd.admin_role || null;
+            window.TOUR_DONE_AT = vd.tour_done_at || null;
+            window.FIRST_STEPS = vd.first_steps || {};
+            const adminBtn = document.getElementById('parentAdmin');
+            if (adminBtn) {
+              if (window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin') {
+                adminBtn.style.display = 'flex';
+                try { loadAdminRegistrationsCountSilently(); } catch(e){}
+              } else {
+                adminBtn.style.display = 'none';
+              }
+            }
+            if (!window.TOUR_DONE_AT) {
+              setTimeout(function() {
+                if (typeof startGuidedTour === 'function') startGuidedTour();
+              }, 500);
+            }
+          }
+        } catch (ve) {
+          console.warn('Failed to call verify-member:', ve);
+        }
+      })();
       return;
     }
     if (status === 'lapsed'){ waOpenGate('doorB'); return; }
@@ -18606,11 +18607,24 @@ async function loadAndInit(){
   updateClaimBadge();
   checkClaimModal();
   initSR();updateMeta();renderJournalContext();renderWall();renderMapDefault();updateNavBadge();restoreDraft();
-  renderDash();setHeaderFocus('dash');
+
+  // Determine target view immediately from URL hash or query params
+  const hash = window.location.hash.replace('#', '');
+  const params = new URLSearchParams(window.location.search);
+  const bootView = params.get('view');
+  const bootPost = params.get('post');
+  
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',rhythm:'rhythmView'};
+  
+  const targetView = (bootView && map[bootView]) ? bootView : ((hash && map[hash]) ? hash : 'dash');
+  go(targetView);
+
   if(window.hideBootLoader)hideBootLoader();
 
+  // Asynchronous remote state load
   load().then(function(){
-    renderDash();
+    const currentView = window.location.hash.replace('#', '') || 'dash';
+    if (map[currentView]) go(currentView);
     updateMeta();
     if(window.ME && typeof window.ME.recomputeBadges === 'function') window.ME.recomputeBadges();
   }).catch(function(e){
@@ -18620,67 +18634,18 @@ async function loadAndInit(){
   setTimeout(waFetchAIPersonalization, 150);
   try { fetchWallCommunityState(); } catch(e) {}
   
-  // Persist Page Routing via Location Hash
-  const hash = window.location.hash.replace('#', '');
-  const params = new URLSearchParams(window.location.search);
-  const bootView = params.get('view');
-  const bootPost = params.get('post');
-  
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',rhythm:'rhythmView'};
-  
-  if (bootView === 'wall') {
-    const el = document.getElementById('navWall');
-    go('wall', el);
-    if (bootPost && window.WALL && typeof window.WALL.openSharedPost === 'function') {
-      window.WALL.openSharedPost(bootPost);
-    }
-  } else if (bootView === 'testimony') {
-    const el = document.getElementById('navTestimony');
-    go('testimony', el);
-    if (bootPost && window.TESTIMONY && typeof window.TESTIMONY.openSharedPost === 'function') {
-      window.TESTIMONY.openSharedPost(bootPost);
-    }
-  } else if (hash && map[hash]) {
-    const btnMap = {
-      dash: 'navDash',
-      rhythm: 'navRhythm',
-      record: 'navRecord',
-      fast: 'navFast',
-      bible: 'navBible',
-      wall: 'navWall',
-      testimony: 'navTestimony',
-      me: 'navMe',
-      prayer: 'navPrayer',
-      portal: 'navPortal',
-      affiliate: 'navAffiliate',
-      community: 'navCommunity',
-      communityEnter: 'navEnterCommunity',
-      claim: 'navClaim',
-      circle: 'navCircle',
-      cohort: 'navCohort',
-      admin: 'navAdmin'
-    };
-    const el = document.getElementById(btnMap[hash]);
-    go(hash, el);
-  } else {
-    // Default: trigger welcome header personalization
-    const initials = (window.MEMBER_NAME || 'S').charAt(0).toUpperCase();
-    const welcomeEl = document.getElementById('welcomeAvatarSlot');
-    if (welcomeEl) {
-      if (typeof waPaintWelcomeAvatar === 'function') {
-        waPaintWelcomeAvatar(welcomeEl, initials);
-      }
-    }
-    // Retrieve recommendation archetype to personalize subtitle
-    var archetype = '';
-    if (window.memberDataCache && window.memberDataCache.recommendation) {
-      archetype = window.memberDataCache.recommendation.archetype || '';
-    }
-    if (typeof triggerWelcomeCelebration === 'function') {
-      triggerWelcomeCelebration(window.MEMBER_NAME, archetype);
-    }
+  if (bootView === 'wall' && bootPost && window.WALL && typeof window.WALL.openSharedPost === 'function') {
+    window.WALL.openSharedPost(bootPost);
+  } else if (bootView === 'testimony' && bootPost && window.TESTIMONY && typeof window.TESTIMONY.openSharedPost === 'function') {
+    window.TESTIMONY.openSharedPost(bootPost);
   }
 
+  // Trigger welcome header avatar personalization
+  const initials = (window.MEMBER_NAME || 'S').charAt(0).toUpperCase();
+  const welcomeEl = document.getElementById('welcomeAvatarSlot');
+  if (welcomeEl && typeof waPaintWelcomeAvatar === 'function') {
+    waPaintWelcomeAvatar(welcomeEl, initials);
+  }
 
   const ta=document.getElementById('transcript');
   if (ta) {
