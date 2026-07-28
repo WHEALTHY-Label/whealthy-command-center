@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WHEALTHY | Order Confirmation — Steward's Governance System</title>
+  <meta name="description" content="Your order for the Whealthy Stewards Governance System is confirmed. Welcome to the Governance.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #080809;
+      --glass: rgba(22, 23, 25, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --lime: #ccff00;
+      --lime-soft: rgba(204, 255, 0, 0.08);
+      --lime-border: rgba(204, 255, 0, 0.3);
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.7);
+      --text-dim: rgba(255, 255, 255, 0.4);
+      --font-display: 'Oswald', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* BACKGROUND BLUEPRINT & GLOW EFFECT */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 60% 50% at 50% 30%, rgba(204,255,0,0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 70%, rgba(204,255,0,0.02) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+    
+    /* TOP ORDER SUCCESS BANNER */
+    .confirm-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .confirm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--lime-soft);
+      border: 1px solid var(--lime-border);
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+      box-shadow: 0 0 20px rgba(204,255,0,0.15);
+    }
+    
+    .confirm-badge::before {
+      content: '✓';
+      font-weight: 900;
+    }
+    
+    .confirm-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }
+    
+    .confirm-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    /* TOP PRODUCT SUMMARY STRIP */
+    .product-summary-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 16px 24px;
+      margin-bottom: 32px;
+    }
+    
+    .product-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .product-summary-thumb {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 4px;
+    }
+    
+    .product-summary-name {
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+    
+    .product-summary-price {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 900;
+      color: var(--text);
+      text-align: right;
+      white-space: nowrap;
+    }
+    
+    .product-summary-price span {
+      font-size: 14px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    
+    /* MAIN 2-COLUMN GRID (MATCHING SCREENSHOT) */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    
+    @media (max-width: 850px) {
+      .details-grid { grid-template-columns: 1fr; }
+    }
+    
+    .details-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    
+    .details-section-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    
+    .details-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    
+    .details-block strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    /* PAYMENT DETAILS TABLE */
+    .payment-table {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 15px;
+    }
+    
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+    
+    .payment-row strong {
+      color: var(--text);
+    }
+    
+    .payment-row--total {
+      padding-top: 14px;
+      border-top: 1px solid var(--glass-border);
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    
+    .payment-row--total .total-amount {
+      font-size: 24px;
+      color: var(--lime);
+      text-shadow: 0 0 15px rgba(204,255,0,0.2);
+    }
+    
+    /* MEMBERSHIP BENEFITS SECTION */
+    .benefits-section {
+      background: linear-gradient(135deg, rgba(204,255,0,0.06) 0%, rgba(204,255,0,0.01) 100%);
+      border: 1.5px solid var(--lime-border);
+      border-radius: var(--radius-xl);
+      padding: 40px 32px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    
+    .benefits-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    
+    .benefits-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      text-align: left;
+    }
+    
+    @media (max-width: 700px) {
+      .benefits-grid { grid-template-columns: 1fr; }
+    }
+    
+    .benefit-item {
+      background: rgba(18, 19, 23, 0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    
+    .benefit-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    .benefit-content h4 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+    
+    .benefit-content p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* SKOOL COMMUNITY CTA BUTTON */
+    .skool-cta-wrap {
+      text-align: center;
+      margin-top: 24px;
+    }
+    
+    .skool-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--lime);
+      color: #080809;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 20px 44px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 12px 36px rgba(204,255,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      max-width: 540px;
+      width: 100%;
+    }
+    
+    .skool-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 16px 48px rgba(204,255,0,0.55);
+    }
+    
+    .gov-footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 12px;
+      color: var(--text-dim);
+      border-top: 1px solid var(--glass-border);
+      margin-top: auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .gov-footer a { color: var(--text-dim); text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- CONFIRMATION HEADER -->
+    <div class="confirm-header">
+      <div class="confirm-badge">ORDER CONFIRMED</div>
+      <h1 class="confirm-title">WELCOME TO THE GOVERNANCE.</h1>
+      <p class="confirm-sub">Your order has been received and your 5-Product Governance System is being prepared for fast dispatch via USPS.</p>
+    </div>
+
+    <!-- PRODUCT STRIP -->
+    <div class="product-summary-strip">
+      <div class="product-summary-left">
+        <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="WHEALTHY Governance System" class="product-summary-thumb">
+        <div class="product-summary-name">WHEALTHY STEWARD'S GOVERNANCE SYSTEM</div>
+      </div>
+      <div class="product-summary-price" id="topHeaderPrice">
+        $99.00 <span>/ month</span>
+      </div>
+    </div>
+
+    <!-- DETAILS GRID (SCREENSHOT MATCHING LAYOUT) -->
+    <div class="details-grid">
+      
+      <!-- LEFT CARD: SHIPPING DETAILS & BILLING DETAILS -->
+      <div class="details-card">
+        <!-- SHIPPING DETAILS -->
+        <div>
+          <h3 class="details-section-title">Shipping Details</h3>
+          <div class="details-block">
+            <div id="shipName">Jacoby Berry</div>
+            <div id="shipStreet">6860 Prutzman , #8</div>
+            <div id="shipCityState">Beaumont, TX, 77706</div>
+            <div id="shipCountry">United States of America</div>
+          </div>
+        </div>
+
+        <!-- BILLING DETAILS -->
+        <div>
+          <h3 class="details-section-title">Billing Details</h3>
+          <div class="details-block">
+            <div id="billName">Jacoby Berry</div>
+            <div id="billStreet">6860 Prutzman , #8</div>
+            <div id="billCityState">Beaumont, TX, 77706</div>
+            <div id="billCountry">United States of America</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT CARD: PAYMENT DETAILS -->
+      <div class="details-card">
+        <div>
+          <h3 class="details-section-title">Payment Details</h3>
+          
+          <div class="payment-table">
+            <div class="payment-row">
+              <span>Subtotal:</span>
+              <strong id="subtotalVal">$99.00</strong>
+            </div>
+            <div class="payment-row">
+              <span>Standard Shipping:</span>
+              <strong id="shippingVal">$9.95</strong>
+            </div>
+            <div class="payment-row payment-row--total">
+              <span>Total:</span>
+              <strong class="total-amount" id="totalVal">$108.95</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDER METADATA -->
+        <div style="background: rgba(204,255,0,0.04); border: 1px solid rgba(204,255,0,0.2); border-radius: 14px; padding: 18px; font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+          <div style="font-weight: 800; color: var(--lime); font-family: var(--font-display); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.06em;">
+            🔒 FOUNDER RATE LOCKED FOR LIFE
+          </div>
+          Your recurring monthly rate is locked at <strong>$99.00/mo</strong>. Your order includes complimentary access to <strong>The Steward's Rhythm OS</strong> &amp; <strong>VIP Steward Community</strong>.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WHAT YOU GET INSIDE / MEMBERSHIP BENEFITS SECTION -->
+    <div class="benefits-section">
+      <h2 class="benefits-title">WHAT YOU GET ACCESS TO INSIDE THE STEWARDS</h2>
+      <p class="benefits-sub">The products govern your physical energy. The Stewards govern your growth in Bible, Body, and Business.</p>
+      
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <div class="benefit-icon">👑</div>
+          <div class="benefit-content">
+            <h4>VIP Steward Community Access (Skool)</h4>
+            <p>Connect with a private network of Stewards standing beside you. Daily accountability, routine sharing, and peer encouragement.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-icon">📱</div>
+          <div class="benefit-content">
+            <h4>The Steward's Rhythm (Daily Governance OS)</h4>
+            <p>Digital access to the daily governance operating system tracking cortisol, sleep recovery, energy blocks, and adaptogenic timing.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-icon">🧠</div>
+          <div class="benefit-content">
+            <h4>1-on-1 Mentorship &amp; Live Challenges</h4>
+            <p>Live weekly Q&amp;A sessions, 30-day rhythm challenges, and direct founder mentorship to eliminate gaps where focus fades.</p>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-icon">📦</div>
+          <div class="benefit-content">
+            <h4>Monthly Automatic Refills ($99 Rate Locked)</h4>
+            <p>All 5 physical products (Genius Joe, Boss, Charge, Genius Guice, and Hydration) delivered automatically to your door every month.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CTA BUTTON: REDIRECTS TO SKOOL ABOUT PAGE -->
+      <div class="skool-cta-wrap">
+        <a id="skoolCtaBtn" href="https://www.skool.com/bakndcreator/about" target="_blank" rel="noopener" class="skool-btn">
+          ACCESS THE WHEALTHY STEWARDS COMMUNITY &rarr;
+        </a>
+      </div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px;">
+        Click to claim your private access on the Skool About page
+      </p>
+    </div>
+
+  </div>
+
+  <footer class="gov-footer">
+    <p>&copy; 2026 WHEALTHY. All rights reserved.</p>
+    <p style="margin-top: 6px;"><a href="/whshipping-policy">Shipping Policy</a> | <a href="/whrefund-exchange">Refund &amp; Exchange</a></p>
+  </footer>
+
+  <script>
+    // SMART DATA POPULATION FROM URL PARAMS & LOCAL STORAGE
+    (function populateOrderDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      // Get params or read localStorage with defaults matching screenshot
+      const name = urlParams.get('name') || localStorage.getItem('wh_founder_name') || 'Jacoby Berry';
+      const street = urlParams.get('address') || localStorage.getItem('wh_shipping_addr') || '6860 Prutzman , #8';
+      const city = urlParams.get('city') || localStorage.getItem('wh_shipping_city') || 'Beaumont';
+      const state = urlParams.get('state') || localStorage.getItem('wh_shipping_state') || 'TX';
+      const zip = urlParams.get('zip') || localStorage.getItem('wh_shipping_zip') || '77706';
+      const country = urlParams.get('country') || 'United States of America';
+      
+      const subtotal = urlParams.get('subtotal') || '99.00';
+      const shipping = urlParams.get('shipping') || '9.95';
+      const total = (parseFloat(subtotal) + parseFloat(shipping)).toFixed(2);
+      
+      // Dynamic Skool URL with Referral parameter if present
+      const ref = urlParams.get('ref') || localStorage.getItem('wh_ref') || '';
+      const skoolBtn = document.getElementById('skoolCtaBtn');
+      if (skoolBtn) {
+        const baseSkoolUrl = 'https://www.skool.com/bakndcreator/about';
+        skoolBtn.href = ref ? baseSkoolUrl + '?ref=' + encodeURIComponent(ref) : baseSkoolUrl;
+      }
+
+      // Populate DOM elements
+      const shipName = document.getElementById('shipName');
+      const shipStreet = document.getElementById('shipStreet');
+      const shipCityState = document.getElementById('shipCityState');
+      const shipCountry = document.getElementById('shipCountry');
+      
+      const billName = document.getElementById('billName');
+      const billStreet = document.getElementById('billStreet');
+      const billCityState = document.getElementById('billCityState');
+      const billCountry = document.getElementById('billCountry');
+      
+      const topHeaderPrice = document.getElementById('topHeaderPrice');
+      const subtotalVal = document.getElementById('subtotalVal');
+      const shippingVal = document.getElementById('shippingVal');
+      const totalVal = document.getElementById('totalVal');
+      
+      if (shipName) shipName.textContent = name;
+      if (shipStreet) shipStreet.textContent = street;
+      if (shipCityState) shipCityState.textContent = `${city}, ${state}, ${zip}`;
+      if (shipCountry) shipCountry.textContent = country;
+      
+      if (billName) billName.textContent = name;
+      if (billStreet) billStreet.textContent = street;
+      if (billCityState) billCityState.textContent = `${city}, ${state}, ${zip}`;
+      if (billCountry) billCountry.textContent = country;
+      
+      if (topHeaderPrice) topHeaderPrice.innerHTML = `$${subtotal} <span>/ month</span>`;
+      if (subtotalVal) subtotalVal.textContent = `$${subtotal}`;
+      if (shippingVal) shippingVal.textContent = `$${shipping}`;
+      if (totalVal) totalVal.textContent = `$${total}`;
+    })();
+  </script>
+</body>
+</html>

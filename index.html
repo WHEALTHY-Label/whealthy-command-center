@@ -12420,6 +12420,9 @@ async function waRunGate(emailArg){
   }
   if (!email){ waOpenGate('locate'); return; }
   email = String(email).trim().toLowerCase();
+  window.ADMIN_ROLE = null;
+  const adminBtn = document.getElementById('parentAdmin');
+  if (adminBtn) adminBtn.style.display = 'none';
 
   const loader = waEl('bootLoader');
   waCloseGate();
@@ -12548,6 +12551,9 @@ async function waRunGate(emailArg){
 window.waRunGate = waRunGate;
 
 function waResetAll(){
+  window.ADMIN_ROLE = null;
+  const adminBtn = document.getElementById('parentAdmin');
+  if (adminBtn) adminBtn.style.display = 'none';
   waState.handle = '';
   waState.profile = null;
   waState.mode = 'login';

@@ -161,6 +161,29 @@ console.log("=== RUNNING ADMIN SURFACE & SECURITY GATE INTEGRATION TESTS ===");
 
     // Test a regular non-admin member
     console.log("Testing regular member non-admin view visibility...");
+    await page.unroute('**/functions/v1/get-subscription');
+    await page.unroute('**/functions/v1/verify-member');
+
+    await page.route('**/functions/v1/get-subscription', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          verified: true,
+          member: {
+            id: 2,
+            email: 'qa-steward-1@gmail.com',
+            name: 'QA Steward',
+            last_name: '',
+            member_status: 'member'
+          },
+          recommendation: null,
+          subscription: null,
+          orders: []
+        })
+      });
+    });
+
     await page.route('**/functions/v1/verify-member', async route => {
       await route.fulfill({
         status: 200,

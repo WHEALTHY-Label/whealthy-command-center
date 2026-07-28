@@ -99,6 +99,22 @@
 }
 
 /* ============================================
+   PRODUCT IMAGE WHITE-BG REMOVAL
+   mix-blend-mode:multiply makes white → transparent
+   on the dark page background. Instant, no image editing.
+   ============================================ */
+.time-block__image img,
+.product-card__image img,
+.try-offer__visual img,
+.included-item__img,
+.bundle-card__product-img,
+.bundle-tile__img,
+.purchase-popup__tile img,
+.rp-card__image img {
+  mix-blend-mode: multiply;
+}
+
+/* ============================================
    SHIPPING NOTICES
    ============================================ */
 .shipping-notice-block {
@@ -248,21 +264,21 @@ img{max-width:100%;height:auto}
 .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--white-60);background:var(--glass);border:1px solid var(--border);padding:5px 12px;border-radius:100px;backdrop-filter:blur(8px)}.chip__dot{width:4px;height:4px;background:var(--lime);border-radius:50%}
 .section-label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:14px}.section-headline{font-family:var(--font-display);font-weight:700;text-transform:uppercase;line-height:1.0;color:var(--text)}.section-sub{color:var(--text-muted);font-size:16px;line-height:1.65;max-width:560px}
 .hero{min-height:100svh;padding-top:40px;display:flex;align-items:center;position:relative;overflow:hidden}.hero__bg{position:absolute;inset:0;z-index:0}.hero__orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}.hero__orb--1{width:600px;height:600px;background:radial-gradient(circle,rgba(204,255,0,0.08)0%,transparent 70%);top:-100px;right:-100px;animation:float-orb 8s ease-in-out infinite}.hero__orb--2{width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,0.03)0%,transparent 70%);bottom:100px;left:-80px;animation:float-orb 12s ease-in-out infinite reverse}.hero__orb--3{width:300px;height:300px;background:radial-gradient(circle,rgba(204,255,0,0.05)0%,transparent 70%);top:50%;left:40%;animation:float-orb 10s ease-in-out infinite 3s}@keyframes float-orb{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-30px) translateX(15px)}66%{transform:translateY(20px) translateX(-10px)}}.hero__noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");opacity:.4;pointer-events:none}.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02)1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none}
-.hero__content{position:relative;z-index:2;width:100%;padding:0 0 60px;margin-top:0}.hero__layout{display:grid;grid-template-columns:1fr 520px;gap:48px;align-items:center}.hero__label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:6px 14px;border-radius:100px;margin-bottom:14px}.hero-animate .hero__label{opacity:0;transform:translateY(20px);animation:reveal-up .8s ease .2s forwards}.hero__headline{font-family:var(--font-display);font-weight:700;font-size:clamp(52px,7vw,92px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:16px;color:var(--white) !important}.hero-animate .hero__headline{opacity:0;transform:translateY(30px);animation:reveal-up .9s ease .35s forwards}.hero__headline em{font-style:normal;color:var(--lime);display:block}.hero__sub{font-size:17px;font-weight:400;line-height:1.65;color:var(--text-muted);max-width:520px;margin-bottom:20px}.hero-animate .hero__sub{opacity:0;transform:translateY(20px);animation:reveal-up .8s ease .5s forwards}.hero__sub strong{color:var(--text) !important;font-weight:500}.hero__ctas{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}.hero-animate .hero__ctas{opacity:0;transform:translateY(20px);animation:reveal-up .8s ease .65s forwards}.hero__chips{display:flex;flex-wrap:wrap;gap:8px}.hero-animate .hero__chips{opacity:0;animation:reveal-up .8s ease .8s forwards}
+.hero__content{position:relative;z-index:2;width:100%;padding:0 0 60px;margin-top:0}.hero__layout{display:grid;grid-template-columns:1fr 520px;gap:48px;align-items:center}.hero__label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:6px 14px;border-radius:100px;margin-bottom:14px}.hero-animate .hero__label{opacity:0;transform:translateY(20px);animation:reveal-up .8s ease .2s forwards}.hero__headline{font-family:var(--font-display);font-weight:700;font-size:clamp(52px,7vw,92px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:16px;color:var(--white) !important}.hero-animate .hero__headline{opacity:0;transform:translateY(30px);animation:reveal-up .9s ease .35s forwards}.hero__headline em{font-style:normal;color:#ccff00;display:block}.hero__sub{font-size:17px;font-weight:400;line-height:1.65;color:var(--text-muted);max-width:520px;margin-bottom:20px}.hero-animate .hero__sub{opacity:0;transform:translateY(20px);animation:reveal-up .8s ease .5s forwards}.hero__sub strong{color:var(--text) !important;font-weight:500}.hero__ctas{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}.hero-animate .hero__ctas{opacity:0;transform:translateY(20px);animation:reveal-up .8s ease .65s forwards}.hero__chips{display:flex;flex-wrap:wrap;gap:8px}.hero-animate .hero__chips{opacity:0;animation:reveal-up .8s ease .8s forwards}
 .hero__visual{position:relative}.hero-animate .hero__visual{opacity:0;transform:translateX(30px);animation:reveal-right 1s ease .4s forwards}.hero__visual-stack{position:relative}.hero__card{overflow:hidden;border-radius:var(--radius-lg)}.hero__card--main{width:100%;height:480px;background:transparent;border:none}
 .hero__metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
 .metric-card{position:relative;background:rgba(30,32,36,0.6);border:1px solid var(--border-mid);border-radius:var(--radius);padding:16px 20px;backdrop-filter:blur(20px)}.metric-card__label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--white-40);margin-bottom:4px}.metric-card__value{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--white);line-height:1.1}.metric-card__value span{font-size:12px;font-weight:400;color:var(--text-muted);display:block;margin-top:2px}.metric-card__value--lime{color:var(--lime)}.metric-card__bar{margin-top:8px;height:3px;background:var(--glass-hi);border-radius:2px;overflow:hidden}.metric-card__bar-fill{height:100%;background:var(--lime);border-radius:2px;width:0;transition:width 1.5s ease 1s}.metric-card__bar-fill.animated{width:var(--fill-width,70%)}
 @keyframes reveal-up{to{opacity:1;transform:translateY(0)}}@keyframes reveal-right{to{opacity:1;transform:translateX(0)}}
 .recognition{padding:70px 0;background:rgba(15,16,18,0.55);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}.recognition__label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);text-align:center;margin-bottom:16px}.recognition__headline{font-family:var(--font-display);font-size:clamp(24px,3.5vw,36px);font-weight:700;text-transform:uppercase;text-align:center;color:var(--text);margin-bottom:8px}.recognition__sub{text-align:center;color:var(--text-muted);font-size:15px;max-width:520px;margin:0 auto 52px}.recognition__cards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.recognition-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;position:relative;overflow:hidden;transition:var(--transition)}.recognition-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform var(--transition)}.recognition-card:hover::before{transform:scaleX(1)}.recognition-card:hover{background:var(--glass-mid);border-color:var(--border-mid);transform:translateY(-4px)}.recognition-card__tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:3px 8px;border-radius:4px;margin-bottom:16px}.recognition-card__name{font-family:var(--font-display);font-size:20px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:12px;line-height:1.1}.recognition-card__desc{font-size:13px;color:var(--text-muted);line-height:1.6}.recognition-card__quote{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;font-style:italic;color:var(--white-40);line-height:1.5}
 .alert-callout{display:flex;align-items:flex-start;gap:14px;background:linear-gradient(135deg,rgba(204,255,0,0.05)0%,rgba(204,255,0,0.02)100%);border:1px solid rgba(204,255,0,0.15);border-left:3px solid var(--lime);border-radius:var(--radius);padding:16px 20px;margin:32px 0}.alert-callout__icon{font-size:14px;flex-shrink:0;margin-top:1px}.alert-callout__label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:4px}.alert-callout__text{font-size:13px;color:var(--text-muted);line-height:1.6}
-.reframe{padding:100px 0;background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);position:relative;overflow:hidden}.reframe__headline-block{text-align:center;max-width:800px;margin:0 auto 70px}.reframe__headline{font-size:clamp(42px,6vw,80px);margin-bottom:24px}.reframe__headline .accent{color:var(--lime)}.reframe__sub{font-size:18px;color:var(--text-muted);line-height:1.7;max-width:600px;margin:0 auto}.comparison-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.comparison-card{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);transition:var(--transition)}.comparison-card:hover{border-color:var(--border-mid);transform:translateY(-4px)}.comparison-card--whealthy{border-color:rgba(204,255,0,0.25);background:linear-gradient(165deg,rgba(204,255,0,0.06)0%,rgba(204,255,0,0.02)100%)}.comparison-card--whealthy:hover{border-color:rgba(204,255,0,0.4)}.comparison-card__header{padding:20px 22px 16px;border-bottom:1px solid var(--border);background:var(--glass)}.comparison-card__emoji{font-size:24px;margin-bottom:8px}.comparison-card__brand{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text)}.comparison-card--whealthy .comparison-card__brand{color:var(--lime)}.comparison-card__body{padding:20px 22px}.comparison-card__row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:13px;color:var(--text-muted);line-height:1.5}.comparison-card__row:last-child{margin-bottom:0}.comparison-card__row-icon{font-size:12px;flex-shrink:0;margin-top:1px}.comparison-card--bad .comparison-card__row-icon{color:rgba(255,100,80,0.7)}.comparison-card--whealthy .comparison-card__row-icon{color:var(--lime)}
+.reframe{padding:100px 0;background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);position:relative;overflow:hidden}.reframe__headline-block{text-align:center;max-width:800px;margin:0 auto 70px}.reframe__headline{font-size:clamp(42px,6vw,80px);margin-bottom:24px}.reframe__headline .accent{color:#ccff00}.reframe__sub{font-size:18px;color:var(--text-muted);line-height:1.7;max-width:600px;margin:0 auto}.comparison-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.comparison-card{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);transition:var(--transition)}.comparison-card:hover{border-color:var(--border-mid);transform:translateY(-4px)}.comparison-card--whealthy{border-color:rgba(204,255,0,0.25);background:linear-gradient(165deg,rgba(204,255,0,0.06)0%,rgba(204,255,0,0.02)100%)}.comparison-card--whealthy:hover{border-color:rgba(204,255,0,0.4)}.comparison-card__header{padding:20px 22px 16px;border-bottom:1px solid var(--border);background:var(--glass)}.comparison-card__emoji{font-size:24px;margin-bottom:8px}.comparison-card__brand{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text)}.comparison-card--whealthy .comparison-card__brand{color:var(--lime)}.comparison-card__body{padding:20px 22px}.comparison-card__row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:13px;color:var(--text-muted);line-height:1.5}.comparison-card__row:last-child{margin-bottom:0}.comparison-card__row-icon{font-size:12px;flex-shrink:0;margin-top:1px}.comparison-card--bad .comparison-card__row-icon{color:rgba(255,100,80,0.7)}.comparison-card--whealthy .comparison-card__row-icon{color:var(--lime)}
 .pillars{padding:100px 0}.pillars__header{text-align:center;margin-bottom:64px}.pillars__headline{font-size:clamp(38px,5vw,64px);margin-bottom:16px}.pillars__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.pillar-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px 32px;position:relative;overflow:hidden;transition:var(--transition)}.pillar-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--lime),transparent);transform:scaleX(0);transition:transform var(--transition)}.pillar-card:hover::after{transform:scaleX(1)}.pillar-card:hover{background:var(--glass-mid);border-color:var(--border-mid);transform:translateY(-4px)}.pillar-card__orb{width:64px;height:64px;border-radius:50%;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;font-size:26px}.pillar-card__title{font-family:var(--font-display);font-size:28px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:16px;line-height:1.1}.pillar-card__title span{color:var(--lime);display:block}.pillar-card__desc{font-size:14px;color:var(--text-muted);line-height:1.7}.pillar-card__product{margin-top:24px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lime)}
 .governance-routine{padding:100px 0;background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);overflow:hidden}.governance-routine__header{text-align:center;max-width:700px;margin:0 auto 64px}.governance-routine__headline{font-size:clamp(38px,5vw,64px);margin-bottom:16px}.governance-timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative}.time-block{padding:0;position:relative;z-index:1;display:flex}.time-block__dot{display:none}.time-block__card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition);cursor:pointer;display:flex;flex-direction:column;width:100%}.time-block:hover .time-block__card,.time-block.active .time-block__card{border-color:rgba(204,255,0,0.2);background:linear-gradient(165deg,rgba(204,255,0,0.04)0%,rgba(255,255,255,0.03)100%)}.time-block__image{position:relative;width:100%;aspect-ratio:1/1;background:rgba(30,32,36,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid var(--border);overflow:hidden;flex-shrink:0}.time-block__image img{width:100%;height:100%;object-fit:contain;padding:0}.time-block__image-label{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--white-20);text-align:center;padding:0 8px}.time-block__body{padding:20px 20px 24px;display:flex;flex-direction:column;flex:1}.time-block__time{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:6px}.time-block__title{font-family:var(--font-display);font-size:20px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:10px;line-height:1.1}.time-block__promise{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:auto;padding-bottom:16px}.time-block__replaces{font-size:11px;color:var(--white-40);font-style:italic;margin-bottom:16px}.time-block__product-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:4px 10px;border-radius:4px;align-self:flex-start}
 .products{padding:100px 0}.products__header{text-align:center;margin-bottom:60px}.products__headline{font-size:clamp(36px,5vw,60px);margin-bottom:12px}.products__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.product-card{background:rgba(22,23,25,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;transition:var(--transition);cursor:pointer;display:flex;flex-direction:column}.product-card:hover{border-color:rgba(204,255,0,0.2);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.5)}.product-card__image{width:100%;aspect-ratio:1/1;background:rgba(30,32,36,0.5);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;flex-shrink:0}.product-card__image::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(204,255,0,0.03)0%,transparent 60%)}.product-card__image img{width:100%;height:100%;object-fit:contain;padding:0;position:relative;z-index:1}.product-card__body{padding:24px 24px 28px;display:flex;flex-direction:column;flex:1}.product-card__day-part{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}.product-card__name{font-family:var(--font-display);font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:12px;line-height:1.1}.product-card__benefit{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:auto;padding-bottom:16px}.product-card__replaces{font-size:12px;color:var(--white-40);font-style:italic;margin-bottom:20px;padding-top:12px;border-top:1px solid var(--border)}.product-card__cta{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);align-self:flex-start}.product-card__cta-arrow{transition:transform var(--transition-fast)}.product-card:hover .product-card__cta-arrow{transform:translateX(4px)}
 .testimonials{padding:100px 0;background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);overflow:hidden}.testimonials__header{margin-bottom:56px}.testimonials__headline{font-size:clamp(36px,5vw,60px);margin-bottom:12px}.testimonials__sub{max-width:480px}.testimonials__layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}.testimonials__cards{display:flex;flex-direction:column;gap:16px}.testimonial-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 26px;transition:var(--transition)}.testimonial-card:hover{background:var(--glass-mid);border-color:var(--border-mid)}.testimonial-card__quote{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:20px;font-style:italic}.testimonial-card__quote strong{font-style:normal;font-weight:600;color:var(--white) !important}.testimonial-card__meta{display:flex;align-items:center;gap:12px}.testimonial-card__avatar{width:38px;height:38px;border-radius:50%;background:rgba(30,32,36,0.6);border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}.testimonial-card__name{font-size:13px;font-weight:600;color:var(--text)}.testimonial-card__role{font-size:11px;color:var(--text-dim)}.testimonial-card__archetype{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);padding:3px 8px;border-radius:4px}.testimonials__stats{display:flex;flex-direction:column;gap:20px}.stat-card{background:rgba(22,23,25,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:28px}.stat-card__value{font-family:var(--font-display);font-size:52px;font-weight:700;color:var(--lime);line-height:1;margin-bottom:8px}.stat-card__value sup{font-size:28px;vertical-align:super}.stat-card__label{font-size:14px;color:var(--text-muted);line-height:1.5}.stat-card__context{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--white-40);font-style:italic}.progress-stat{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}.progress-stat__label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12px;color:var(--text-muted)}.progress-stat__pct{font-weight:600;color:var(--lime)}.progress-bar{height:4px;background:var(--glass-hi);border-radius:4px;overflow:hidden}.progress-bar__fill{height:100%;background:linear-gradient(90deg,var(--lime),rgba(204,255,0,0.6));border-radius:4px;width:0;transition:width 1.5s ease}.progress-bar__fill.animated{width:var(--pct,70%)}
 .community{padding:100px 0;overflow:hidden}.community__layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.community__copy .section-headline{font-size:clamp(38px,5vw,60px);margin-bottom:20px}.community__copy .section-sub{margin-bottom:36px}.community__points{display:flex;flex-direction:column;gap:20px;margin-bottom:40px}.community__point{display:flex;gap:16px;align-items:flex-start}.community__point-icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}.community__point-title{font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px}.community__point-desc{font-size:13px;color:var(--text-muted);line-height:1.55}.community__visual-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.community__visual-item{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--glass);transition:var(--transition)}.community__visual-item:first-child{grid-column:1/-1;aspect-ratio:16/7}.community__visual-item:hover{border-color:var(--border-mid);background:var(--glass-mid)}.community__visual-icon{font-size:28px;opacity:.5}.community__visual-label{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--white-20);text-align:center;padding:0 10px}
 .how-it-works{padding:90px 0;background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px)}.how-it-works__header{text-align:center;margin-bottom:60px}.how-it-works__headline{font-size:clamp(36px,5vw,58px);margin-bottom:12px}.how-it-works__steps{display:grid;grid-template-columns:repeat(4,1fr);position:relative}.how-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;position:relative}.how-step::after{content:'\2192';position:absolute;right:-8px;top:28px;color:var(--border-mid);font-size:18px;font-weight:300}.how-step:last-child::after{display:none}.how-step__num{width:56px;height:56px;border-radius:50%;border:1px solid var(--border-mid);background:var(--glass);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--lime);margin-bottom:24px}.how-step__title{font-family:var(--font-display);font-size:18px;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:10px;line-height:1.2}.how-step__desc{font-size:13px;color:var(--text-muted);line-height:1.6}
-.final-cta{padding:120px 0;position:relative;overflow:hidden;text-align:center}.final-cta__bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(204,255,0,0.06)0%,transparent 70%);pointer-events:none}.final-cta__grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02)1px,transparent 1px);background-size:48px 48px;pointer-events:none}.final-cta__content{position:relative;z-index:1;max-width:800px;margin:0 auto}.final-cta__eyebrow{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin-bottom:24px}.final-cta__headline{font-family:var(--font-display);font-weight:700;font-size:clamp(42px,6vw,84px);text-transform:uppercase;line-height:.95;margin-bottom:28px;color:var(--text)}.final-cta__headline em{font-style:normal;color:var(--lime)}.final-cta__sub{font-size:18px;color:var(--text-muted);max-width:520px;margin:0 auto 48px;line-height:1.7}.final-cta__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:32px}
+.final-cta{padding:120px 0;position:relative;overflow:hidden;text-align:center}.final-cta__bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(204,255,0,0.06)0%,transparent 70%);pointer-events:none}.final-cta__grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02)1px,transparent 1px);background-size:48px 48px;pointer-events:none}.final-cta__content{position:relative;z-index:1;max-width:800px;margin:0 auto}.final-cta__eyebrow{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin-bottom:24px}.final-cta__headline{font-family:var(--font-display);font-weight:700;font-size:clamp(42px,6vw,84px);text-transform:uppercase;line-height:.95;margin-bottom:28px;color:var(--text)}.final-cta__headline em{font-style:normal;color:#ccff00}.final-cta__sub{font-size:18px;color:var(--text-muted);max-width:520px;margin:0 auto 48px;line-height:1.7}.final-cta__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:32px}
 footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-top:1px solid var(--border);padding:40px 0}.footer__inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}.footer__logo{font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.06em;color:var(--text)}.footer__logo span{color:var(--lime)}.footer__links{display:flex;gap:24px;flex-wrap:wrap}.footer__link{font-size:12px;color:var(--text-dim);transition:color var(--transition-fast)}.footer__link:hover{color:var(--text-muted)}.footer__social{display:flex;gap:12px}.footer__social-link{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:var(--transition)}.footer__social-link:hover{background:var(--glass-mid);border-color:var(--border-mid);color:var(--text)}.footer__copy{width:100%;font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px}
 .sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:90;padding:16px 24px;background:rgba(8,8,9,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(204,255,0,0.15);display:flex;align-items:center;justify-content:center;gap:16px;transform:translateY(100%);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none}.sticky-cta.visible{transform:translateY(0);pointer-events:auto}.sticky-cta__text{font-size:13px;color:var(--text-muted);display:none}.sticky-cta .btn-primary{font-size:14px;padding:14px 28px}
 @media(min-width:641px){.sticky-cta__text{display:block}}
@@ -1376,9 +1392,9 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
   background: linear-gradient(
     90deg,
     #ccff00 0%,
-    #00ff88 25%,
+    #e0ff66 25%,
     #ccff00 50%,
-    #88ffcc 75%,
+    #e0ff66 75%,
     #ccff00 100%
   );
   background-size: 300% 100%;
@@ -1397,9 +1413,9 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
   background: linear-gradient(
     90deg,
     #ccff00 0%,
-    #00ff88 25%,
+    #e0ff66 25%,
     #ccff00 50%,
-    #88ffcc 75%,
+    #e0ff66 75%,
     #ccff00 100%
   ) !important;
   background-size: 300% 100% !important;
@@ -2078,11 +2094,15 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
 
 
 /* Quiz modal headroom: card clears the baknd site nav when embedded */
-.quiz-modal{align-items:flex-start;padding:clamp(72px,10svh,120px) 16px 24px}
+.quiz-modal{align-items:flex-start;padding:clamp(100px,14svh,160px) 16px 24px}
 .quiz-modal__card{max-height:calc(100svh - 160px)}
 .quiz-modal.result-mode{padding:0}
 .quiz-modal.result-mode .quiz-modal__card{max-height:100svh}
-@media (max-height:600px) and (orientation:landscape){.quiz-modal{padding:16px}.quiz-modal__card{max-height:calc(100svh - 32px)}}
+@media (max-width: 768px) {
+  .try-offer-grid-container { grid-template-columns: 1fr !important; }
+  .try-offer-gov-card { order: -1; }
+  .gov-strip-features-grid { grid-template-columns: 1fr !important; }
+}
 </style>
 </head>
 <body>
@@ -2095,6 +2115,9 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
     <span class="announcement-bar__text">We ship to U.S. addresses only.</span>
   </div>
 </div>
+<div style="background: rgba(204,255,0,0.06); border-bottom: 1px solid rgba(204,255,0,0.2); color: var(--lime); text-align: center; padding: 7px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; position: relative; z-index: 101;">
+  $99/mo Founder Rate &nbsp;|&nbsp; 5 Products. Every Day Governed. &nbsp;|&nbsp; Window closes Sept 1 &nbsp;|&nbsp; <a href="whealthy-governance-system.html" style="color: var(--lime); text-decoration: underline; margin-left: 4px;">Learn More &rarr;</a>
+</div>
 <div id="whealthy-app-embed">
 <div id="inviteBanner" style="background:var(--lime-soft);color:var(--lime);text-align:center;padding:12px;font-size:14px;font-weight:600;border-bottom:1px solid rgba(204,255,0,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:relative;z-index:100;letter-spacing:0.02em;">
   <span style="font-size:16px;vertical-align:middle;margin-right:6px">&#10024;</span> 
@@ -2102,13 +2125,129 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
 </div>
 </div>
 
-<section class="hero hero--cinematic" id="hero"><div class="particle-field" id="heroParticles"></div><div class="hero__bg"><div class="hero__orb hero__orb--1"></div><div class="hero__orb hero__orb--2"></div><div class="hero__orb hero__orb--3"></div><div class="hero__noise"></div><div class="hero__grid"></div></div><div class="hero__content container"><div class="hero__layout"><div class="hero__copy"><div id="affiliateHeroBadge"></div><h1 class="hero__headline">You Weren't<br>Meant to<br><em>Carry It Alone.</em></h1><p class="hero__sub">You carry work, family, and faith at the same time. The energy it takes is real, and you've been borrowing it.<br><br>The Stewards is the membership that governs it: a daily system delivered to your door, and people who carry the same weight standing with you. <strong>Start with the 2-minute pattern check.</strong></p><div class="hero__ctas" style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; margin-bottom: 24px;">
-  <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; width: 100%;">
-    <button class="btn-primary btn-primary--arc" onclick="openQuiz()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Find What's Draining You</button>
-    <a href="javascript:void(0)" onclick="joinStewards()" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--white-80);border:1px solid var(--border-mid);padding:14px 28px;border-radius:var(--radius);transition:var(--transition);background:var(--glass);backdrop-filter:blur(8px)">Join the Community</a>
+<section class="hero hero--cinematic" id="hero"><div class="particle-field" id="heroParticles"></div><div class="hero__bg"><div class="hero__orb hero__orb--1"></div><div class="hero__orb hero__orb--2"></div><div class="hero__orb hero__orb--3"></div><div class="hero__noise"></div><div class="hero__grid"></div></div><div class="hero__content container"><div class="hero__layout"><div class="hero__copy"><div id="affiliateHeroBadge"></div><h1 class="hero__headline">You Weren't<br>Meant to<br><em>Carry It Alone.</em></h1><p class="hero__sub">You carry work, family, and faith at the same time. The energy it takes is real, and you've been borrowing it.<br><br>The Stewards is the membership that governs it: a daily system delivered to your door, and people who carry the same weight standing with you. The Governance System puts all five products in your hands for $99/mo, less than half of buying them separately. The founder window closes September 1. <strong>Start with the 2-minute pattern check.</strong></p><div class="hero__ctas" style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; margin-bottom: 24px;">
+  <div style="display: flex; flex-direction: column; gap: 14px; width: 100%;">
+    <button class="btn-primary btn-primary--arc" onclick="openGovernancePage()" style="background: var(--lime); color: #080809; font-weight: 800; font-size: 16px; padding: 18px 32px; box-shadow: 0 0 35px rgba(204,255,0,0.4); border: none; width: 100%; max-width: 440px; justify-content: center;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Claim the Governance System | $99/mo &rarr;</button>
+    <p style="font-size: 11px; color: var(--lime); margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">5 products. Every day governed. Founder rate locked for life.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 6px;">
+      <button class="btn-primary btn-primary--outline" onclick="openQuiz()" style="padding: 12px 24px; font-size: 13px;">Find What's Draining You</button>
+      <a href="javascript:void(0)" onclick="joinStewards()" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--white-80);border:1px solid var(--border-mid);padding:12px 24px;border-radius:var(--radius);transition:var(--transition);background:var(--glass);backdrop-filter:blur(8px)">Join the Community</a>
+    </div>
   </div>
-  <p style="font-size: 12px; color: var(--text-dim); margin: 0; line-height: 1.4;">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code</p>
-</div><div class="hero__chips"><span class="chip"><span class="chip__dot"></span>Private</span><span class="chip"><span class="chip__dot"></span>2 Minutes</span><span class="chip"><span class="chip__dot"></span>Free to Join</span><span class="chip"><span class="chip__dot"></span>For Every Steward</span><span class="chip"><span class="chip__dot"></span>No Spike. No Crash.</span></div></div><div class="hero__visual" aria-hidden="true"><div class="hero__visual-stack"><div class="hero__card hero__card--main"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/background/brain-3784648.png" alt="WHEALTHY Lifestyle" style="width:100%;height:100%;object-fit:contain;border-radius:var(--radius-lg)"></div></div><div class="hero__metrics"><div class="metric-card"><div class="metric-card__label">Clarity Score</div><div class="metric-card__value metric-card__value--lime">Governed<span>Day 14 of your routine</span></div><div class="metric-card__bar"><div class="metric-card__bar-fill" style="--fill-width:84%" id="metricBar1"></div></div></div><div class="metric-card"><div class="metric-card__label">Energy Pattern</div><div class="metric-card__value">Stable<span>No spike detected &#183; 4:00 PM</span></div></div><div class="metric-card"><div class="metric-card__label">Caffeine Load</div><div class="metric-card__value">0<sup style="color:var(--lime)">&#8595;</sup><span>Second cup skipped</span></div></div></div></div></div></div></section>
+  <p style="font-size: 12px; color: var(--text-dim); margin: 0; line-height: 1.4;">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code &#183; Or go straight to the Governance System</p>
+</div><div class="hero__chips"><span class="chip"><span class="chip__dot"></span>$99/mo Founder Rate</span><span class="chip"><span class="chip__dot"></span>Private</span><span class="chip"><span class="chip__dot"></span>2 Minutes</span><span class="chip"><span class="chip__dot"></span>Free to Join</span><span class="chip"><span class="chip__dot"></span>For Every Steward</span><span class="chip"><span class="chip__dot"></span>No Spike. No Crash.</span></div></div><div class="hero__visual" aria-hidden="true"><div class="hero__visual-stack"><div class="hero__card hero__card--main"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/background/brain-3784648.png" alt="WHEALTHY Lifestyle" style="width:100%;height:100%;object-fit:contain;border-radius:var(--radius-lg)"></div></div><div class="hero__metrics"><div class="metric-card"><div class="metric-card__label">Clarity Score</div><div class="metric-card__value metric-card__value--lime">Governed<span>Day 14 of your routine</span></div><div class="metric-card__bar"><div class="metric-card__bar-fill" style="--fill-width:84%" id="metricBar1"></div></div></div><div class="metric-card"><div class="metric-card__label">Energy Pattern</div><div class="metric-card__value">Stable<span>No spike detected &#183; 4:00 PM</span></div></div><div class="metric-card"><div class="metric-card__label">Caffeine Load</div><div class="metric-card__value">0<sup style="color:var(--lime)">&#8595;</sup><span>Second cup skipped</span></div></div></div></div></div></div></section>
+
+<!-- Brand Explainer Video Section -->
+<section class="brand-explainer-section" id="explainer-video" style="padding: 64px 0 40px; background: transparent; text-align: center; position: relative; z-index: 2;">
+  <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+    <div style="display:inline-flex; align-items:center; gap:8px; background:var(--lime-soft); border:1px solid rgba(204,255,0,0.25); color:var(--lime); font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:6px 16px; border-radius:100px; margin-bottom:20px;">
+      <span style="display:block; width:6px; height:6px; background:var(--lime); border-radius:50%; box-shadow:0 0 8px var(--lime);"></span> Brand Overview
+    </div>
+    <h2 class="section-headline reveal" style="font-family:var(--font-display); font-size:clamp(32px, 5.5vw, 56px); font-weight:700; text-transform:uppercase; color:var(--white); line-height:1.05; margin-bottom:16px;">
+      See How <span style="color:#ccff00">WHEALTHY</span> Works
+    </h2>
+    <p class="section-sub reveal" style="font-size:16px; color:var(--text-muted); max-width:620px; margin:0 auto 36px; line-height:1.6;">
+      Watch how governing your energy pattern transforms daily focus, stamina, and faith.
+    </p>
+
+    <!-- Video Gallery: Thumbs Left + Large Player Right -->
+    <div class="reveal" style="display:grid; grid-template-columns:280px 1fr; gap:16px; align-items:start; text-align:left;">
+      <!-- Thumbnail Column (Left) -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div id="vidThumb0" onclick="switchFeaturedVideo(0)" style="position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; cursor:pointer; border:2px solid rgba(204,255,0,0.5); box-shadow:0 0 16px rgba(204,255,0,0.15); transition:all 0.3s ease;">
+          <img src="https://img.youtube.com/vi/D5ad4HOButc/mqdefault.jpg" alt="Video 1" style="width:100%; height:100%; object-fit:cover;">
+          <div style="position:absolute; inset:0; background:rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#ccff00"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div style="position:absolute; bottom:0; left:0; right:0; height:3px; background:#ccff00;"></div>
+        </div>
+        <div id="vidThumb1" onclick="switchFeaturedVideo(1)" style="position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; cursor:pointer; border:2px solid var(--border-mid); opacity:0.6; transition:all 0.3s ease;">
+          <img src="https://img.youtube.com/vi/x_Akoj0clrQ/mqdefault.jpg" alt="Video 2" style="width:100%; height:100%; object-fit:cover;">
+          <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="rgba(255,255,255,0.8)"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Large Featured Video Player (Right) -->
+      <div class="brand-video-wrap" style="position:relative; width:100%; padding-top:56.25%; border-radius:20px; overflow:hidden; border:1px solid rgba(204,255,0,0.3); background:#000; box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 30px rgba(204,255,0,0.1);">
+        <iframe id="explainerVideoFrame" src="https://www.youtube.com/embed/D5ad4HOButc?autoplay=1&mute=1&enablejsapi=1&rel=0&modestbranding=1&controls=1" title="WHEALTHY Brand Explainer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;"></iframe>
+        
+        <!-- Slightly Blurred Overlay & Click-to-Unmute CTA -->
+        <div id="explainerVideoOverlay" onclick="unmuteExplainerVideo()" style="position:absolute; inset:0; background:rgba(8,8,9,0.35); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; cursor:pointer; transition:opacity 0.4s ease, visibility 0.4s ease; z-index:5;">
+          <button style="display:inline-flex; align-items:center; gap:10px; background:var(--lime); color:#080809; font-family:var(--font-display); font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:14px 28px; border-radius:100px; border:none; cursor:pointer; box-shadow:0 0 24px rgba(204,255,0,0.4); transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            Click to Unmute
+          </button>
+          <span style="font-size:12px; color:rgba(255,255,255,0.7); font-weight:500; letter-spacing:0.04em;">Playing silently &#183; Tap anywhere for sound</span>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @media(max-width:768px){
+        .brand-explainer-section .reveal[style*="grid-template-columns:280px"]{
+          grid-template-columns:1fr !important;
+        }
+        .brand-explainer-section .reveal[style*="grid-template-columns:280px"] > div:first-child{
+          flex-direction:row !important;
+        }
+      }
+    </style>
+  </div>
+</section>
+
+<script>
+var featuredVideos = ['D5ad4HOButc', 'x_Akoj0clrQ'];
+var currentFeaturedIdx = 0;
+
+function switchFeaturedVideo(idx) {
+  if (idx === currentFeaturedIdx) return;
+  currentFeaturedIdx = idx;
+  var frame = document.getElementById('explainerVideoFrame');
+  frame.src = 'https://www.youtube.com/embed/' + featuredVideos[idx] + '?autoplay=1&mute=0&enablejsapi=1&rel=0&modestbranding=1&controls=1';
+
+  // Hide unmute overlay since user is actively choosing
+  var overlay = document.getElementById('explainerVideoOverlay');
+  if (overlay) { overlay.style.opacity = '0'; overlay.style.visibility = 'hidden'; }
+
+  // Update thumbnail active states
+  featuredVideos.forEach(function(_, i) {
+    var thumb = document.getElementById('vidThumb' + i);
+    if (i === idx) {
+      thumb.style.border = '2px solid rgba(204,255,0,0.5)';
+      thumb.style.boxShadow = '0 0 16px rgba(204,255,0,0.15)';
+      thumb.style.opacity = '1';
+      // Add active bar
+      if (!thumb.querySelector('.vid-active-bar')) {
+        var bar = document.createElement('div');
+        bar.className = 'vid-active-bar';
+        bar.style.cssText = 'position:absolute;bottom:0;left:0;right:0;height:3px;background:#ccff00;';
+        thumb.appendChild(bar);
+      }
+    } else {
+      thumb.style.border = '2px solid var(--border-mid)';
+      thumb.style.boxShadow = 'none';
+      thumb.style.opacity = '0.6';
+      var activeBar = thumb.querySelector('.vid-active-bar');
+      if (activeBar) activeBar.remove();
+    }
+  });
+}
+
+function unmuteExplainerVideo() {
+  var overlay = document.getElementById('explainerVideoOverlay');
+  var frame = document.getElementById('explainerVideoFrame');
+  if (overlay) {
+    overlay.style.opacity = '0';
+    overlay.style.visibility = 'hidden';
+  }
+  if (frame && frame.contentWindow) {
+    frame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+    frame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+  }
+}
+</script>
 
 <div class="section-divider section-divider--angle"><div class="section-divider__glow"></div></div>
 
@@ -2116,57 +2255,68 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
 
 <div class="section-divider section-divider--wave"><div class="section-divider__glow"></div></div>
 
-<section class="reframe" id="reframe"><div class="container"><div class="reframe__headline-block"><p class="section-label reveal">The Problem Isn't You</p><h2 class="section-headline reframe__headline reveal reveal-delay-1">You Don't Need<br>More <span class="accent">Stimulation.</span><br>You Need Governance.</h2><p class="reframe__sub reveal reveal-delay-2" style="margin-bottom: 16px;">The whole world runs on borrowed energy. A cup to start, an energy drink to survive the afternoon, another to reach bedtime. Everyone is shaped by the same pattern, and everyone meets the same crash. You were made for something the world cannot hand you in a can. Not more stimulation. A renewed mind that carries the weight without borrowing against tomorrow.</p><p class="reframe__sub reveal reveal-delay-2">You are not broken. You are ungoverned. The issue isn't lack of effort or willpower. It's an ungoverned energy pattern. The answer isn't another spike. It's a daily rhythm that protects what the day keeps taking from you.</p></div><div class="comparison-grid reveal"><div class="comparison-card comparison-card--bad"><div class="comparison-card__header"><div class="comparison-card__emoji">&#9749;</div><div class="comparison-card__brand">Coffee</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Ownership pattern. Can't function without it.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Anxiety spikes. Cortisol disruption early AM.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>The second and third cup loop begins.</span></div></div></div><div class="comparison-card comparison-card--bad"><div class="comparison-card__header"><div class="comparison-card__emoji">&#9889;</div><div class="comparison-card__brand">Energy Drinks</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Spike then crash. Panic switch energy.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>It left you 2 hours ago. Still at 3pm.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Anxiety, dependency, no rhythm.</span></div></div></div><div class="comparison-card comparison-card--bad"><div class="comparison-card__header"><div class="comparison-card__emoji">&#128138;</div><div class="comparison-card__brand">Supplements</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Ghost product. No felt difference.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>You stop buying in 60 days.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Health optimization without interpretability.</span></div></div></div><div class="comparison-card comparison-card--whealthy"><div class="comparison-card__header"><div class="comparison-card__emoji">&#9878;&#65039;</div><div class="comparison-card__brand">WHEALTHY</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>Governed energy. Stable rhythm. No spike.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>Felt difference you can name and repeat.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>A system, not another product to try.</span></div></div></div></div><div class="alert-callout reveal" style="max-width:680px;margin:52px auto 0"><span class="alert-callout__icon">&#9888;&#65039;</span><div><div class="alert-callout__label">Routine Signal</div><p class="alert-callout__text">The goal isn't a rush of focus. It isn't a crazy crash-free morning. It's coming home at the end of the day and still having something left. That's what governance feels like.</p></div></div></div></section>
+<section class="reframe" id="reframe"><div class="container"><div class="reframe__headline-block"><p class="section-label reveal">The Problem Isn't You</p><h2 class="section-headline reframe__headline reveal reveal-delay-1">You Don't Need<br>More <span class="accent">Stimulation.</span><br>You Need Governance.</h2><p class="reframe__sub reveal reveal-delay-2" style="margin-bottom: 16px;">The whole world runs on borrowed energy. A cup to start, an energy drink to survive the afternoon, another to reach bedtime. Everyone is shaped by the same pattern, and everyone meets the same crash. You were made for something the world cannot hand you in a can. Not more stimulation. A renewed mind that carries the weight without borrowing against tomorrow.</p><p class="reframe__sub reveal reveal-delay-2">You are not broken. You are ungoverned. The issue isn't lack of effort or willpower. It's an ungoverned energy pattern. The answer isn't another spike. It's a daily rhythm that protects what the day keeps taking from you.</p></div><div class="comparison-grid reveal"><div class="comparison-card comparison-card--bad"><div class="comparison-card__header"><div class="comparison-card__emoji">&#9749;</div><div class="comparison-card__brand">Coffee</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Ownership pattern. Can't function without it.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Anxiety spikes. Cortisol disruption early AM.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>The second and third cup loop begins.</span></div></div></div><div class="comparison-card comparison-card--bad"><div class="comparison-card__header"><div class="comparison-card__emoji">&#9889;</div><div class="comparison-card__brand">Energy Drinks</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Spike then crash. Panic switch energy.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>It left you 2 hours ago. Still at 3pm.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Anxiety, dependency, no rhythm.</span></div></div></div><div class="comparison-card comparison-card--bad"><div class="comparison-card__header"><div class="comparison-card__emoji">&#128138;</div><div class="comparison-card__brand">Supplements</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Ghost product. No felt difference.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>You stop buying in 60 days.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10007;</span><span>Health optimization without interpretability.</span></div></div></div><div class="comparison-card comparison-card--whealthy"><div class="comparison-card__header"><div class="comparison-card__emoji">&#9878;&#65039;</div><div class="comparison-card__brand">WHEALTHY</div></div><div class="comparison-card__body"><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>Governed energy. Stable rhythm. No spike.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>Felt difference you can name and repeat.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>A system, not another product to try.</span></div><div class="comparison-card__row"><span class="comparison-card__row-icon">&#10003;</span><span>All 5 products, one membership: $99/mo (founder rate)</span></div></div></div></div><div class="alert-callout reveal" style="max-width:680px;margin:52px auto 0"><span class="alert-callout__icon">&#9888;&#65039;</span><div><div class="alert-callout__label">Routine Signal</div><p class="alert-callout__text">The goal isn't a rush of focus. It isn't a crazy crash-free morning. It's coming home at the end of the day and still having something left. That's what governance feels like.</p></div></div></div></section>
 
 <section class="try-offer-section" id="try-offer">
 <div class="try-offer-section__orb"></div>
-<div class="container">
-<div class="try-offer__layout">
-<div class="try-offer__visual reveal">
-<div class="try-offer__badge">Introductory Offer</div>
-<img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp" alt="WHEALTHY Hydration Powder">
-<div class="product-shipping-notice">Ships to U.S. Addresses Only</div>
-</div>
-<div class="try-offer__content">
-<div class="reveal reveal-delay-1" style="display:inline-flex;align-items:center;gap:8px;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);color:var(--lime);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:20px">
-<span style="display:block;width:6px;height:6px;background:var(--lime);border-radius:50%;animation:pulse-dot 2s infinite"></span> Low Commitment
-</div>
-<h2 class="section-headline reveal reveal-delay-2" style="font-size:clamp(40px,5.5vw,64px);line-height:0.95;margin-bottom:24px">
-Don't Guess.<br>Experience It For<br><span style="color:var(--lime)">Just $20.</span>
-</h2>
-<p class="section-sub reveal reveal-delay-3" style="margin-bottom:28px;color:var(--text);font-size:17px;max-width:520px;line-height:1.6">
-We know the system works. But you shouldn't have to take our word for it. Get a full 30-day supply of our foundational Hydration formula for less than the cost of a few coffees. <strong style="color:var(--lime)">Experience the difference before committing to a monthly membership.</strong>
-</p>
-
-<div class="try-offer__benefits reveal reveal-delay-3" style="margin-bottom:32px;display:flex;flex-direction:column;gap:16px;background:var(--glass);border:1px solid rgba(204,255,0,0.15);padding:24px 28px;border-radius:var(--radius-lg);box-shadow:0 10px 30px rgba(0,0,0,0.2)">
-<div style="display:flex;align-items:flex-start;gap:16px">
-<span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);color:var(--text);font-size:14px;border:1px solid rgba(255,255,255,0.1);flex-shrink:0">&#10005;</span>
-<div><strong style="color:var(--text);font-size:15px;display:block;margin-bottom:4px;letter-spacing:0.02em">Zero Commitment</strong><span style="color:var(--text-muted);font-size:14px;line-height:1.5">No subscriptions, no hidden auto-billing. Just one single purchase.</span></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:16px">
-<span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--lime-soft);color:var(--lime);font-size:14px;border:1px solid rgba(204,255,0,0.2);flex-shrink:0">&#10003;</span>
-<div><strong style="color:var(--text);font-size:15px;display:block;margin-bottom:4px;letter-spacing:0.02em">Full 30-Day Supply</strong><span style="color:var(--text-muted);font-size:14px;line-height:1.5">Enough time to actually feel the shift in your daily energy and clarity.</span></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:16px">
-<span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--lime-soft);color:var(--lime);font-size:14px;border:1px solid rgba(204,255,0,0.2);flex-shrink:0">&#10003;</span>
-<div><strong style="color:var(--text);font-size:15px;display:block;margin-bottom:4px;letter-spacing:0.02em">Instant ROI</strong><span style="color:var(--text-muted);font-size:14px;line-height:1.5">Immediately replaces the midday crash and the desperate second cup of coffee.</span></div>
-</div>
+<div class="container" style="max-width: 960px;">
+<div class="try-offer-header text-center reveal" style="text-align: center; max-width: 720px; margin: 0 auto 36px;">
+  <div style="display:inline-flex;align-items:center;gap:8px;background:var(--lime-soft);border:1px solid rgba(204,255,0,0.2);color:var(--lime);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-bottom:16px">
+    The Whealthy Stewards Governance System
+  </div>
+  <h2 class="section-headline" style="font-size:clamp(36px,5vw,56px);line-height:0.95;margin-bottom:14px">
+    5 Products. 1 Governed Day.<br><span style="color:var(--lime)">$99/mo Founder Rate.</span>
+  </h2>
+  <p style="color:var(--text-muted);font-size:17px;line-height:1.6">
+    Stop borrowing against tomorrow. The Governance System delivers all 5 core formulas directly to your door monthly at 50% off retail—rate locked for life.
+  </p>
 </div>
 
-<div class="try-offer__action reveal reveal-delay-4" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
-<a href="https://whealthylabel.com/try-all" class="btn-primary btn-primary--arc" style="padding:22px 40px;font-size:16px;flex:1;justify-content:center;min-width:280px;box-shadow:0 0 40px rgba(204,255,0,0.4)">
-CLAIM YOUR $20 TRY OFFER
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;transform:translateX(2px)"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-</a>
-<div style="text-align:center;padding:12px 24px;background:rgba(204,255,0,0.05);border:1px solid rgba(204,255,0,0.2);border-radius:var(--radius)">
-<div style="text-decoration:line-through;color:var(--text-dim);font-size:13px;font-weight:600;margin-bottom:2px;letter-spacing:0.05em;text-transform:uppercase">Retail: $28</div>
-<div style="color:var(--lime);font-family:var(--font-display);font-size:36px;font-weight:700;line-height:1">$20</div>
-</div>
-</div>
-<p class="reveal reveal-delay-4" style="font-size:12px;color:var(--text-dim);margin-top:20px;text-align:center">
-<a href="https://whealthylabel.com/try-all" style="text-decoration:underline;text-underline-offset:3px">Or explore our other formulas to try individually</a>
-</p>
-</div>
+<!-- SINGLE FULL-WIDTH GOVERNANCE SYSTEM SHOWCASE CARD ($99/MO) -->
+<div class="try-offer-gov-card reveal" style="background: linear-gradient(135deg, rgba(204,255,0,0.08) 0%, rgba(204,255,0,0.02) 100%); border: 1.5px solid var(--lime); border-radius: var(--radius-xl); padding: 44px 38px; box-shadow: 0 0 60px rgba(204,255,0,0.15); position: relative; overflow: hidden;">
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 32px; border-bottom: 1px solid rgba(204,255,0,0.15); padding-bottom: 24px;">
+    <div>
+      <div style="font-family: var(--font-display); font-size: 12px; font-weight: 800; color: var(--lime); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px;">FOUNDER MEMBERSHIP</div>
+      <h3 style="font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px); font-weight: 900; text-transform: uppercase; color: #fff; line-height: 1.05; margin: 0;">GOVERN EVERY HOUR.</h3>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-family: var(--font-display); font-size: clamp(36px, 5vw, 54px); font-weight: 900; color: var(--lime); line-height: 1;">$99<span style="font-size: 20px; font-weight: 600; color: var(--text-muted);">/mo</span></div>
+      <div style="font-size: 13px; color: var(--text-dim);"><span style="text-decoration: line-through;">$198.96/mo retail</span> &middot; <strong style="color:var(--lime);">Save $99.96/mo (~50%)</strong></div>
+    </div>
+  </div>
+
+  <p style="font-size: 16px; color: var(--text); line-height: 1.65; margin-bottom: 28px;">
+    Your morning functional coffee, midday focus capsules, afternoon think drink, hydration power, and anytime charge—all synchronized in one monthly delivery. Rate locked for life. Cancel anytime.
+  </p>
+
+  <!-- 5-Product Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 32px;">
+    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 12px; text-align: center;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--lime); margin-bottom: 2px;">Genius Joe</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Morning Coffee</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 12px; text-align: center;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--lime); margin-bottom: 2px;">Boss Capsules</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Midday Focus</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 12px; text-align: center;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--lime); margin-bottom: 2px;">Charge Powder</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Anytime Energy</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 12px; text-align: center;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--lime); margin-bottom: 2px;">Genius Guice</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Afternoon Drink</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 12px; text-align: center;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--lime); margin-bottom: 2px;">Hydration</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Electrolyte Powder</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+    <a href="whealthy-governance-system.html" class="btn-primary btn-primary--arc" style="background: var(--lime); color: #080809; font-weight: 900; width: 100%; justify-content: center; padding: 22px 32px; font-size: 18px; box-shadow: 0 0 35px rgba(204,255,0,0.4);">Claim the Governance System | $99/mo &rarr;</a>
+    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">$9.95 U.S. shipping &middot; Cancel anytime &middot; VIP Steward Community + Rhythm App Included Free ($297 value)</p>
+  </div>
 </div>
 </div>
 </section>
@@ -2207,9 +2357,65 @@ CLAIM YOUR $20 TRY OFFER
     </div>
     <p class="shipping-notice-block__text">Please note: We currently ship physical products to U.S. addresses only.</p>
   </div>
+
+  <!-- Governance Routine CTA Block with Countdown Timer -->
+  <div class="governance-timeline-cta reveal" style="max-width: 780px; margin: 48px auto 0; background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.5px solid var(--lime); border-radius: 20px; padding: 40px 32px; text-align: center; box-shadow: 0 0 50px rgba(204,255,0,0.15);">
+    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.3); color:var(--lime); font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; padding:6px 16px; border-radius:100px; margin-bottom:16px;">
+      COMPLETE 5-PRODUCT GOVERNANCE SYSTEM
+    </div>
+    <h3 style="font-family:var(--font-display); font-size:clamp(28px, 4vw, 42px); font-weight:900; text-transform:uppercase; color:#fff; margin-bottom:12px;">Get the Complete System. <span style="color:var(--lime);">$99/mo.</span></h3>
+    <p style="font-size:15px; color:var(--text-muted); max-width:540px; margin:0 auto 24px; line-height:1.6;">All 5 products above, delivered monthly. Regular $198.96/mo. Founder rate: $99/mo, locked for life.</p>
+
+    <!-- COUNTDOWN TIMER -->
+    <div class="wh-timer" id="routineTimer" style="display:flex; justify-content:center; gap:12px; margin-bottom:24px;">
+      <div style="background:rgba(0,0,0,0.5); border:1px solid rgba(204,255,0,0.3); padding:10px 16px; border-radius:12px; min-width:64px;"><span class="wh-timer-days" style="font-family:var(--font-display); font-size:24px; font-weight:800; color:var(--lime); display:block;">00</span><span style="font-size:10px; color:var(--text-dim); text-transform:uppercase;">Days</span></div>
+      <div style="background:rgba(0,0,0,0.5); border:1px solid rgba(204,255,0,0.3); padding:10px 16px; border-radius:12px; min-width:64px;"><span class="wh-timer-hours" style="font-family:var(--font-display); font-size:24px; font-weight:800; color:var(--lime); display:block;">00</span><span style="font-size:10px; color:var(--text-dim); text-transform:uppercase;">Hours</span></div>
+      <div style="background:rgba(0,0,0,0.5); border:1px solid rgba(204,255,0,0.3); padding:10px 16px; border-radius:12px; min-width:64px;"><span class="wh-timer-mins" style="font-family:var(--font-display); font-size:24px; font-weight:800; color:var(--lime); display:block;">00</span><span style="font-size:10px; color:var(--text-dim); text-transform:uppercase;">Mins</span></div>
+      <div style="background:rgba(0,0,0,0.5); border:1px solid rgba(204,255,0,0.3); padding:10px 16px; border-radius:12px; min-width:64px;"><span class="wh-timer-secs" style="font-family:var(--font-display); font-size:24px; font-weight:800; color:var(--lime); display:block;">00</span><span style="font-size:10px; color:var(--text-dim); text-transform:uppercase;">Secs</span></div>
+    </div>
+
+    <div>
+      <a href="whealthy-governance-system.html" class="btn-primary btn-primary--arc" style="background:var(--lime); color:#080809; font-weight:800; padding:18px 40px; font-size:16px; display:inline-flex;">Claim the Governance System &rarr;</a>
+    </div>
+    <p style="font-size:12px; color:var(--text-dim); margin-top:14px;">Founder window closes September 1, 2026 &#183; $9.95 shipping &#183; Cancel anytime</p>
+  </div>
 </div></section>
 
-<div style="text-align:center;padding:60px 0" class="reveal"><div class="container"><button class="btn-primary btn-primary--arc" onclick="openQuiz()">Find Your Governance Routine</button><p style="font-size:12px;color:var(--text-dim);margin-top:12px">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code</p></div></div>
+<!-- NEW SECTION: GOVERNANCE SYSTEM FEATURE STRIP -->
+<section class="gov-feature-strip-section" style="padding: 60px 0; background: transparent; position: relative; z-index: 2;">
+  <div class="container">
+    <div class="reveal" style="background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.5px solid rgba(204,255,0,0.25); border-radius: var(--radius-xl); padding: 48px 36px; box-shadow: 0 0 50px rgba(0,0,0,0.4);">
+      <div style="text-align: center; margin-bottom: 36px;">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:var(--lime-soft); border:1px solid rgba(204,255,0,0.3); color:var(--lime); font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; padding:6px 16px; border-radius:100px; margin-bottom:14px;">Founder Membership</div>
+        <h2 style="font-family:var(--font-display); font-size:clamp(30px, 5vw, 48px); font-weight:900; text-transform:uppercase; color:#fff; margin-bottom:10px;">Every Product. Every Day. <span style="color:var(--lime);">One Membership.</span></h2>
+        <p style="font-size:16px; color:var(--text-muted); max-width:640px; margin:0 auto; line-height:1.6;">The Governance System delivers all 5 products monthly for $99/mo. Regular retail: $198.96/mo. Founder rate locked for life.</p>
+      </div>
+
+      <div class="gov-strip-features-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-bottom:40px;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; text-align:left;">
+          <div style="font-family:var(--font-display); font-size:18px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:6px;">5 Products Monthly</div>
+          <p style="font-size:14px; color:var(--text-muted); line-height:1.5;">Genius Joe, Boss Capsules, Charge, Genius Guice, Hydration. Delivered to your door.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; text-align:left;">
+          <div style="font-family:var(--font-display); font-size:18px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:6px;">$99.96/mo Saved</div>
+          <p style="font-size:14px; color:var(--text-muted); line-height:1.5;">Less than half the price of buying each product separately ($198.96 retail value).</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; text-align:left;">
+          <div style="font-family:var(--font-display); font-size:18px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:6px;">Locked for Life</div>
+          <p style="font-size:14px; color:var(--text-muted); line-height:1.5;">Your $99/mo founder rate never increases as long as your membership stays active.</p>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="whealthy-governance-system.html" class="btn-primary btn-primary--arc" style="background:var(--lime); color:#080809; font-weight:800; padding:20px 48px; font-size:17px; display:inline-flex;">Claim the Governance System | $99/mo &rarr;</a>
+        <p style="font-size:12px; color:var(--text-dim); margin-top:14px;">$9.95 shipping &#183; Cancel anytime &#183; VIP Community + Rhythm App included free ($297 value)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MID-PAGE QUIZ CTA -->
+<div style="text-align:center;padding:60px 0" class="reveal"><div class="container"><button class="btn-primary btn-primary--arc" onclick="openQuiz()">Find Your Governance Routine</button><p style="font-size:12px;color:var(--text-dim);margin-top:12px">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code</p><p style="font-size:13px; color:var(--text-muted); margin-top:14px;">Already know you want the full system? <a href="whealthy-governance-system.html" style="color:var(--lime); text-decoration:underline;">Get the Governance System for $99/mo &rarr;</a></p></div></div>
 
 
 <section class="testimonials" id="testimonials" style="padding: 100px 0;">
@@ -2224,22 +2430,22 @@ CLAIM YOUR $20 TRY OFFER
   </div>
 </section>
 
-<section class="community" id="community"><div class="container"><div class="community__layout"><div class="community__copy"><p class="section-label reveal">The Stewards</p><h2 class="section-headline reveal reveal-delay-1">The Products Govern<br>Your Energy.<br><span style="color:var(--lime)">The Community<br>Governs Your Growth.</span></h2><p class="section-sub reveal reveal-delay-2">A steward is someone who carries real weight and refuses to carry it recklessly. The Stewards is not a subscription box. It is a community of people who chose to govern what they were given, their energy, their faith, their families, and to stop handing the world their best hours with nothing left for the people at home. You don't join for a product. You join because you recognize yourself in this, and you want to stand beside people who carry the same weight.</p><div class="community__points reveal reveal-delay-2"><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="community__point-content"><div class="community__point-title">The Steward Community</div><div class="community__point-desc">Accountability, pattern threads, governance wins, and weekly check-ins with people who get it. Free to join on Skool.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg></div><div class="community__point-content"><div class="community__point-title">Products Available to Everyone</div><!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) --><div class="community__point-desc">Your governance system is available on its own. Community members get 10% off every product, every time. No membership required to buy.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div><div class="community__point-content"><div class="community__point-title">Monthly 30-Day Challenges</div><div class="community__point-desc">Replace borrowed energy with the governance routine. Most people who finish a challenge don't go back.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="community__point-content"><div class="community__point-title">Faith. Family. Focus.</div><div class="community__point-desc">Bible, body, and business. Stewardship is the foundation. Governing your body is not vanity. It's faithfulness.</div></div></div></div><div class="reveal"><a href="javascript:void(0)" onclick="joinStewards()" class="btn-primary btn-primary--arc">Join the Community &#183; Free</a><!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) --><p style="font-size:12px;color:var(--text-dim);margin-top:12px">Free to join &#183; 10% off all products &#183; Faith &#183; Family &#183; Focus</p></div></div><div class="community__visuals reveal reveal-delay-3"><div class="community__visual-grid"><div class="community__visual-item"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Gemini_Generated_Image_1i299m1i299m1i29-3789664.png" alt="Steward Community" style="width:100%;height:100%;object-fit:cover"></div><div class="community__visual-item"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Gemini_Generated_Image_xt3gqqxt3gqqxt3g-3789814.png" alt="Family Dinner" style="width:100%;height:100%;object-fit:cover"></div><div class="community__visual-item"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Screenshot_2026-03-17_at_6.30.30PM-3790236.png" alt="Small Group Bible Study" style="width:100%;height:100%;object-fit:cover"></div></div></div></div></div></section>
+<section class="community" id="community"><div class="container"><div class="community__layout"><div class="community__copy"><p class="section-label reveal">The Stewards</p><h2 class="section-headline reveal reveal-delay-1">The Products Govern<br>Your Energy.<br><span style="color:var(--lime)">The Community<br>Governs Your Growth.</span></h2><p class="section-sub reveal reveal-delay-2">A steward is someone who carries real weight and refuses to carry it recklessly. The Stewards is not a subscription box. It is a community of people who chose to govern what they were given, their energy, their faith, their families, and to stop handing the world their best hours with nothing left for the people at home. You don't join for a product. You join because you recognize yourself in this, and you want to stand beside people who carry the same weight.</p><div class="community__points reveal reveal-delay-2"><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="community__point-content"><div class="community__point-title">The Steward Community</div><div class="community__point-desc">Accountability, pattern threads, governance wins, and weekly check-ins with people who get it. Free to join on Skool.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="community__point-content"><div class="community__point-title">The Governance System</div><div class="community__point-desc">All 5 products in one membership for $99/mo. Stewards get the founder rate locked for life. Regular price: $198.96/mo.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg></div><div class="community__point-content"><div class="community__point-title">Products Available to Everyone</div><!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) --><div class="community__point-desc">Individual products are available to everyone with 10% off for community members. Or get all 5 in the Governance System membership for $99/mo, less than half of buying separately.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div><div class="community__point-content"><div class="community__point-title">Monthly 30-Day Challenges</div><div class="community__point-desc">Replace borrowed energy with the governance routine. Most people who finish a challenge don't go back.</div></div></div><div class="community__point"><div class="community__point-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="community__point-content"><div class="community__point-title">Faith. Family. Focus.</div><div class="community__point-desc">Bible, body, and business. Stewardship is the foundation. Governing your body is not vanity. It's faithfulness.</div></div></div></div><div class="reveal"><a href="javascript:void(0)" onclick="joinStewards()" class="btn-primary btn-primary--arc">Join the Community &#183; Free</a><!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) --><p style="font-size:12px;color:var(--text-dim);margin-top:12px">Free to join &#183; 10% off all products &#183; Faith &#183; Family &#183; Focus</p></div></div><div class="community__visuals reveal reveal-delay-3"><div class="community__visual-grid"><div class="community__visual-item"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Gemini_Generated_Image_1i299m1i299m1i29-3789664.png" alt="Steward Community" style="width:100%;height:100%;object-fit:cover"></div><div class="community__visual-item"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Gemini_Generated_Image_xt3gqqxt3gqqxt3g-3789814.png" alt="Family Dinner" style="width:100%;height:100%;object-fit:cover"></div><div class="community__visual-item"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/genius_guice/Screenshot_2026-03-17_at_6.30.30PM-3790236.png" alt="Small Group Bible Study" style="width:100%;height:100%;object-fit:cover"></div></div></div></div></div></section>
 
 <section class="founding" id="founding"><div class="founding__inner"><div class="founding__header"><div class="founding__rate-flag"><span class="alert-bar__dot"></span>Founding Window &#183; Build Your Future Now</div><h2 class="founding__headline">Share the Mission.<br><em>Build What Lasts.</em></h2><p class="founding__sub reveal">WHEALTHY is free to join because the mission matters more than a gate. But this is also the moment to build something real for yourself. Every person you invite now is tracked to you for life on Skool. When the paid membership launches, every one of those people becomes a paid commission, not just today, but permanently. The founding affiliate window gives you the highest rate we will ever offer. It will not last.</p></div><div class="founding__compare reveal"><div class="founding__rate-card founding__rate-card--now"><div class="founding__rate-label">Founding &#183; Now</div><div class="founding__rate-num">40%</div><div class="founding__rate-note">Locked in for life. Every person you invite is tracked permanently on Skool.</div></div><div class="founding__rate-card founding__rate-card--later"><div class="founding__rate-label">After Launch</div><div class="founding__rate-num">30%</div><div class="founding__rate-note">The standard rate once the founding window closes.</div></div></div><div class="founding__points reveal"><div class="founding__point"><span class="founding__point-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><p class="founding__point-text"><strong>Lifetime attribution.</strong> Every person you invite to the free community now is tracked to you forever on Skool. When the paid tier launches, those people become your recurring commissions. You are building your future income today.</p></div><div class="founding__point"><span class="founding__point-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><p class="founding__point-text"><strong>Share what you already believe in.</strong> You are inviting people into a free community that governs their energy and their growth. No pressure, no paywall. Just the mission.</p></div><div class="founding__point"><span class="founding__point-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><p class="founding__point-text"><strong>The founding rate won't last.</strong> 40% is only available during the launch window. After it closes, everyone locks in at 30%. The urgency is real.</p></div></div><div class="founding__cta-wrap reveal"><a href="https://www.skool.com/bakndcreator/about" target="_blank" rel="noopener" class="btn-primary btn-primary--arc" style="display:inline-flex">Become a Founding Affiliate</a><p class="founding__disclaimer">Affiliate commissions are paid by Skool under their affiliate program. Rates reflect commission percentage only and are not a representation of earnings. Lifetime attribution means every person invited through your link stays tracked to you permanently on Skool.</p></div></div></section>
 
 
-<section class="how-it-works" id="how-it-works"><div class="container"><div class="how-it-works__header"><p class="section-label reveal">Start Here</p><h2 class="section-headline how-it-works__headline reveal reveal-delay-1">Simple. Clear. Yours.</h2></div><div class="how-it-works__steps"><div class="how-step reveal reveal-delay-1"><div class="how-step__num">01</div><h3 class="how-step__title">Find What's<br>Draining You</h3><p class="how-step__desc">Five questions. Sixty seconds. Completely private.</p></div><div class="how-step reveal reveal-delay-2"><div class="how-step__num">02</div><h3 class="how-step__title">See Your<br>Energy Pattern</h3><p class="how-step__desc">Your archetype is a reflection, and it points to your system.</p></div><div class="how-step reveal reveal-delay-3"><div class="how-step__num">03</div><h3 class="how-step__title">Join the<br>Community</h3><p class="how-step__desc">Free to join. The people who carry the same weight, standing with you.</p></div><div class="how-step reveal reveal-delay-4"><div class="how-step__num">04</div><h3 class="how-step__title">Build Rhythm.<br>Stay Present.</h3><p class="how-step__desc">The pattern shifts. You come home with something left.</p></div></div></div></section>
+<section class="how-it-works" id="how-it-works"><div class="container"><div class="how-it-works__header"><p class="section-label reveal">Start Here</p><h2 class="section-headline how-it-works__headline reveal reveal-delay-1">Simple. Clear. Yours.</h2></div><div class="how-it-works__steps"><div class="how-step reveal reveal-delay-1"><div class="how-step__num">01</div><h3 class="how-step__title">Find What's<br>Draining You</h3><p class="how-step__desc">Five questions. Sixty seconds. Completely private.</p></div><div class="how-step reveal reveal-delay-2"><div class="how-step__num">02</div><h3 class="how-step__title">See Your<br>Energy Pattern</h3><p class="how-step__desc">Your archetype is a reflection, and it points to your system.</p></div><div class="how-step reveal reveal-delay-3"><div class="how-step__num">03</div><h3 class="how-step__title">Join the<br>Community</h3><p class="how-step__desc">Free to join. The people who carry the same weight, standing with you.</p></div><div class="how-step reveal reveal-delay-4"><div class="how-step__num">04</div><h3 class="how-step__title">Build Rhythm.<br>Stay Present.</h3><p class="how-step__desc">Start with the Governance System or your matched routine. The pattern shifts. You come home with something left.</p></div></div></div></section>
 
-<section class="final-cta" id="final-cta"><div class="particle-field" id="ctaParticles"></div><div class="final-cta__bg"></div><div class="final-cta__grid-overlay"></div><div class="final-cta__content reveal"><p class="final-cta__eyebrow">The Stewards Community</p><h2 class="final-cta__headline">You Don't Have<br>to Carry It Alone.<br><em>Start Here.</em></h2><!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) --><p class="final-cta__sub">A free community of stewards who govern their energy, their faith, and their families. Products are available to everyone. Members get 10% off. Begin with the 60-second pattern check.</p><button class="btn-primary btn-primary--arc" onclick="openQuiz()" style="font-size:17px;padding:20px 44px"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Find What's Draining You</button><p style="font-size:12px;color:var(--text-dim);margin-top:12px;text-align:center;">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code</p><div class="final-cta__chips"><span class="chip"><span class="chip__dot"></span>Free to Join</span><span class="chip"><span class="chip__dot"></span>10% Member Discount</span><span class="chip"><span class="chip__dot"></span>For Every Steward</span><span class="chip"><span class="chip__dot"></span>Faith &#183; Family &#183; Focus</span><span class="chip"><span class="chip__dot"></span>No Spike. No Crash.</span></div></div></section>
+<section class="final-cta" id="final-cta"><div class="particle-field" id="ctaParticles"></div><div class="final-cta__bg"></div><div class="final-cta__grid-overlay"></div><div class="final-cta__content reveal"><p class="final-cta__eyebrow">The Stewards Community</p><h2 class="final-cta__headline">You Don't Have<br>to Carry It Alone.<br><em>Start Here.</em></h2><!-- Source of truth: site_settings.member_discount_pct in Supabase (10%) --><p class="final-cta__sub">A free community of stewards who govern their energy, their faith, and their families. Products are available to everyone. Members get 10% off. Begin with the 60-second pattern check.</p><button class="btn-primary btn-primary--arc" onclick="openQuiz()" style="font-size:17px;padding:20px 44px"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Find What's Draining You</button><div style="margin-top:12px;"><a href="whealthy-governance-system.html" class="btn-primary btn-primary--outline" style="font-size:15px; padding:14px 28px; display:inline-flex;">Or Claim the Governance System | $99/mo &rarr;</a></div><p style="font-size:12px;color:var(--text-dim);margin-top:12px;text-align:center;">60 seconds &#183; Full pattern breakdown &#183; Skip the quiz and get all 5 products governed for $99/mo</p><div class="final-cta__chips"><span class="chip"><span class="chip__dot"></span>$99/mo Founder Rate</span><span class="chip"><span class="chip__dot"></span>Free to Join</span><span class="chip"><span class="chip__dot"></span>10% Member Discount</span><span class="chip"><span class="chip__dot"></span>For Every Steward</span><span class="chip"><span class="chip__dot"></span>Faith &#183; Family &#183; Focus</span><span class="chip"><span class="chip__dot"></span>No Spike. No Crash.</span></div></div></section>
 
-<footer><div class="container"><div class="footer__inner"><div class="footer__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div><div class="footer__links"><a href="https://whealthylabel.com/whprivacy-policy" class="footer__link">Privacy Policy</a><a href="https://whealthylabel.com/terms" class="footer__link">Terms of Use</a><a href="https://whealthylabel.com/contact-us" class="footer__link">Contact</a><a href="https://www.skool.com/bakndcreator" class="footer__link">The Steward Community</a></div><p class="footer__copy">&copy; 2026 WHEALTHY Label. All rights reserved. These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease. Faith &#183; Family &#183; Focus.</p></div></div></footer>
+<footer><div class="container"><div class="footer__inner"><div class="footer__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div><div class="footer__links"><a href="https://whealthylabel.com/whprivacy-policy" class="footer__link">Privacy Policy</a><a href="https://whealthylabel.com/terms" class="footer__link">Terms of Use</a><a href="https://whealthylabel.com/contact-us" class="footer__link">Contact</a><a href="https://www.skool.com/bakndcreator" class="footer__link">The Steward Community</a><a href="whealthy-governance-system.html" class="footer__link">Governance System</a></div><p class="footer__copy">&copy; 2026 WHEALTHY Label. All rights reserved. These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease. Faith &#183; Family &#183; Focus.</p></div></div></footer>
 
 <div class="sticky-cta" id="stickyCta">
   <span class="sticky-cta__text">Your energy pattern has a name.</span>
   <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
     <button class="btn-primary btn-primary--arc" onclick="openQuiz()">Find What's Draining You</button>
-    <p style="font-size:10px; color:var(--text-dim); margin:0; text-align:center;">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code</p>
+    <a href="whealthy-governance-system.html" style="font-size:11px; color:var(--lime); text-decoration:underline; white-space:nowrap; margin-top:2px;">$99/mo Governance System &rarr;</a>
   </div>
 </div>
 
@@ -3095,18 +3301,24 @@ var lastIdentity = null;
 const AK = ['morning-dependency', 'energy-without-aim', 'low-floor', 'holding-it-together'];
 const IK = ['family', 'work', 'faith', 'all'];
 
+function openGovernancePage() {
+  window.location.href = 'whealthy-governance-system.html';
+}
+
 const BUNDLE_CONFIG={
   'genius-joe':{name:'The Genius Joe Routine',checkoutUrl:'https://whealthylabel.com/new/genius-joe-functional-coffee-hydration-bundle',priceFull:null},
   'boss':{name:'The Boss Routine',checkoutUrl:'https://whealthylabel.com/new/boss-performance-capsules-hydration-bundle',priceFull:null},
   'genius-guice':{name:'The Genius Guice Routine',checkoutUrl:'https://whealthylabel.com/new/genius-guice-think-drink-powder-hydration-bundle',priceFull:null},
-  'charge':{name:'The Charge Routine',checkoutUrl:'https://whealthylabel.com/new/charge-powder-hydration',priceFull:null}
+  'charge':{name:'The Charge Routine',checkoutUrl:'https://whealthylabel.com/new/charge-powder-hydration',priceFull:null},
+  'governance-system':{name:'The Governance System',checkoutUrl:'whealthy-governance-system.html',priceFull:null}
 };
 
 const BUNDLE_PRICES = {
   'genius-joe': { tryPrice: 64.00, retail: 84.98, member: 57.60 },
   'boss': { tryPrice: 55.00, retail: 84.98, member: 49.50 },
   'genius-guice': { tryPrice: 60.00, retail: 84.98, member: 54.00 },
-  'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 }
+  'charge': { tryPrice: 60.00, retail: 84.98, member: 54.00 },
+  'governance-system': { tryPrice: 198.96, retail: 198.96, member: 99.00 }
 };
 
 const PROOF_MAP = {
@@ -3135,8 +3347,8 @@ function proofStatsBlock(bp) {
   +     '<div class="proof-stats__label">your member price &#183; 10% off</div>'
   +   '</div>'
   +   '<div class="proof-stats__item">'
-  +     '<div class="proof-stats__value">' + money(bp.retail - bp.member) + '</div>'
-  +     '<div class="proof-stats__label">under buying it the old way</div>'
+  +     '<div class="proof-stats__value">$99/mo</div>'
+  +     '<div class="proof-stats__label">all 5 products in full system</div>'
   +   '</div>'
   + '</div>';
 }
@@ -3168,6 +3380,7 @@ function resultsPriceBlock(bundleKey){
   +   '<div class="results-price__hero"><span class="results-price__amount">' + money(bp.member) + '</span><span class="results-price__per">/mo</span></div>'
   +   '<div class="results-price__unlock">Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>. Join the Stewards free to unlock your 10% code.</div>'
   +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping &#183; billed monthly &#183; cancel anytime</div>'
+  +   '<div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(204,255,0,0.15); font-size:13px; font-weight:700;"><a href="whealthy-governance-system.html" style="color:var(--lime); text-decoration:underline;">Or get all 5 products in the Governance System for $99/mo &rarr;</a></div>'
   + '</div>';
 }
 
@@ -3687,12 +3900,45 @@ function openQuiz(){
   if(window._wTrack)window._wTrack('quiz_open',{trigger:'cta'});
   const m=document.getElementById('quizModal');
   m.classList.remove('result-mode');
-  document.getElementById('qmFooter').style.display='flex';
   document.getElementById('quizCard').scrollTop=0;
-  renderQ(0);
+
+  /* Show welcome splash instead of jumping to Q1 */
+  document.getElementById('qmProgress').style.width='0%';
+  document.getElementById('qmFooter').style.display='none';
+  document.getElementById('qmBody').innerHTML = `
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 24px 32px; min-height:340px; gap:24px;">
+      <div style="font-size:36px; line-height:1; margin-bottom:4px;">&#9878;&#65039;</div>
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); color:#ccff00; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:5px 14px; border-radius:100px;">
+        <span style="display:block;width:6px;height:6px;background:#ccff00;border-radius:50%;box-shadow:0 0 6px #ccff00;"></span> 60-Second Pattern Check
+      </div>
+      <h2 style="font-family:var(--font-display); font-size:clamp(26px,5vw,38px); font-weight:700; text-transform:uppercase; color:var(--white); line-height:1.08; margin:0; max-width:420px;">
+        You're Running<br>on Borrowed<br><span style="color:#ccff00;">Energy.</span>
+      </h2>
+      <p style="font-size:15px; color:var(--text-muted); line-height:1.6; max-width:380px; margin:0;">
+        Most people carrying real responsibility have normalized being depleted. This quiz reveals your actual energy pattern in 60 seconds.
+      </p>
+      <button onclick="startQuizFromSplash()" class="btn-primary btn-primary--arc" style="font-size:15px; padding:16px 36px; margin-top:8px; justify-content:center;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Find What's Draining Me
+      </button>
+      <span style="font-size:11px; color:var(--text-dim); letter-spacing:0.03em;">Private &#183; No signup required &#183; Your 10% code at the end</span>
+    </div>
+  `;
+
   m.classList.add('open');
   document.body.classList.add('modal-open');
 }
+
+function startQuizFromSplash(){
+  document.getElementById('qmFooter').style.display='flex';
+  renderQ(0);
+}
+
+/* Auto-open quiz when user starts scrolling */
+window.addEventListener('scroll', function _quizScrollTrigger() {
+  openQuiz();
+  window.removeEventListener('scroll', _quizScrollTrigger);
+}, { passive: true });
 
 function closeQuiz(){
   const m=document.getElementById('quizModal');
@@ -4336,55 +4582,46 @@ function showFullResult(result, bundleKey){
   const name = (lastContactInfo && lastContactInfo.first_name) ? (lastContactInfo.first_name + ' ' + (lastContactInfo.last_name || '')) : '';
   const skoolPreviewUrl = appendRedirectParams(getSkoolJoinUrl(), result.key, d.n.join(' '), email, name);
 
-  // Steward-only turn and reframe copy block
-  const stewardTurnHtml = isSteward ? `
-  <!-- ===== STEWARD TURN & REFRAME ===== -->
-  <div class="steward-turn">
-    <p class="steward-turn__body">"You didn't come for caffeine. You came to change something you're carrying."</p>
-    <div class="steward-reframe">That's not an energy problem. It's a governance one.</div>
-  </div>` : '';
+  // Governance System Primary Offer Card in Quiz Results
+  const govResultCardHtml = `
+  <!-- ===== GOVERNANCE SYSTEM PRIMARY OFFER CARD ===== -->
+  <div class="gov-upsell-modal-card" style="background: linear-gradient(135deg, rgba(204,255,0,0.12) 0%, rgba(204,255,0,0.03) 100%); border: 1.5px solid var(--lime); border-radius: 18px; padding: 32px 26px; margin: 32px 0 24px; box-shadow: 0 0 40px rgba(204,255,0,0.18); text-align: left; position: relative;">
+    <div style="display:inline-flex; align-items:center; gap:6px; background:var(--lime); color:#080809; font-family:var(--font-display); font-size:11px; font-weight:900; letter-spacing:0.14em; text-transform:uppercase; padding:5px 14px; border-radius:100px; margin-bottom:14px; box-shadow:0 0 12px rgba(204,255,0,0.4);">
+      FOUNDER MEMBERSHIP &middot; BEST VALUE
+    </div>
+    <h3 style="font-family:var(--font-display); font-size:clamp(22px, 4vw, 28px); font-weight:900; text-transform:uppercase; color:#fff; line-height:1.1; margin-bottom:10px;">
+      YOUR MATCHED SYSTEM: THE GOVERNANCE SYSTEM
+    </h3>
+    <p style="font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:18px;">
+      Based on your pattern, you don't just need a single supplement—you need complete 24-hour energy governance. For <strong>$99/mo</strong> (regularly $198.96/mo), get <strong>all 5 products</strong> shipped monthly. Save $99.96/mo (~50%). Founder rate locked for life.
+    </p>
+
+    <!-- Mini 5-product grid -->
+    <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:20px; text-align:center;">
+      <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(204,255,0,0.2); border-radius:8px; padding:8px 4px;"><div style="font-size:11px; font-weight:800; color:var(--lime);">Genius Joe</div><div style="font-size:9px; color:var(--text-dim);">Coffee</div></div>
+      <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(204,255,0,0.2); border-radius:8px; padding:8px 4px;"><div style="font-size:11px; font-weight:800; color:var(--lime);">Boss</div><div style="font-size:9px; color:var(--text-dim);">Capsules</div></div>
+      <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(204,255,0,0.2); border-radius:8px; padding:8px 4px;"><div style="font-size:11px; font-weight:800; color:var(--lime);">Charge</div><div style="font-size:9px; color:var(--text-dim);">Powder</div></div>
+      <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(204,255,0,0.2); border-radius:8px; padding:8px 4px;"><div style="font-size:11px; font-weight:800; color:var(--lime);">Guice</div><div style="font-size:9px; color:var(--text-dim);">Think Drink</div></div>
+      <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(204,255,0,0.2); border-radius:8px; padding:8px 4px;"><div style="font-size:11px; font-weight:800; color:var(--lime);">Hydration</div><div style="font-size:9px; color:var(--text-dim);">Powder</div></div>
+    </div>
+
+    <button onclick="openGovernancePage()" class="btn-primary btn-primary--arc" style="width:100%; justify-content:center; background:var(--lime); color:#080809; font-weight:900; font-size:16px; padding:18px 24px; box-shadow:0 0 30px rgba(204,255,0,0.35);">
+      Claim the Governance System | $99/mo &rarr;
+    </button>
+    <p style="font-size:12px; color:var(--text-dim); text-align:center; margin-top:10px;">$9.95 U.S. shipping &middot; Cancel anytime &middot; Founder rate locked for life</p>
+  </div>`;
 
   // Decision path HTML based on fork
-  let decisionHtml = '';
-  if (isSteward) {
-    decisionHtml = `
-    <!-- ===== S7: DECISION BLOCK (dual path - Steward) ===== -->
-    <div class="s7-decision">
-      <div class="s7-decision__header">
-        <h2 class="s7-decision__title">THE ROUTINE IS YOURS.<br>CHOOSE HOW YOU START.</h2>
-        <p class="s7-decision__sub">Either way, your matched routine ships to your door. Stewards just never pay full price for it.</p>
-        ${window.INVITE_SENT ? `<p style="font-size:12px; color:var(--lime); margin-top:12px; font-weight:600; text-align:center; line-height:1.5;">Check ${(lastContactInfo && lastContactInfo.email) || 'your email'} &#8212; your invite to the Stewards Community is waiting, and your 10% code is inside.</p>` : ''}
-      </div>
-      <div class="s7-decision__paths">
-        <div class="s7-decision__path s7-decision__path--quiet">
-          <div class="s7-decision__path-label">START YOUR ROUTINE</div>
-          <p class="s7-decision__path-desc">Buy ${cfg.name} at full price. No account. No community. It ships, you start.</p>
-          <button class="btn-primary btn-primary--outline s7-decision__btn" onclick="openPurchasePopup()">Buy the Bundle &middot; ${money(bp.tryPrice)}/mo</button>
-          <p class="s7-decision__path-note">U.S. shipping only.</p>
-        </div>
-        <div class="s7-decision__divider"><span>or</span></div>
-        <div class="s7-decision__path s7-decision__path--join">
-          <div class="s7-decision__path-label">JOIN THE STEWARDS FIRST</div>
-          <p class="s7-decision__path-desc">Free forever. Your ${MEMBER_DISCOUNT_PCT}% code is waiting inside, next to people who carry the same weight you do.</p>
-          <button class="btn-primary s7-decision__btn" onclick="joinStewards()">Join Free &middot; ${money(bp.member)}/mo &middot; 10% off</button>
-          <div class="s7-decision__chips"><span class="chip"><span class="chip__dot"></span>Free forever</span><span class="chip"><span class="chip__dot"></span>Real people, real weight</span><span class="chip"><span class="chip__dot"></span>Your ${MEMBER_DISCOUNT_PCT}% code inside</span></div>
-        </div>
-      </div>
-    </div>`;
-  } else {
-    decisionHtml = `
-    <!-- ===== S7: DECISION BLOCK (single path - Customer) ===== -->
-    <div class="s7-decision">
-      <div class="s7-decision__header">
-        <h2 class="s7-decision__title">GET YOUR ROUTINE.</h2>
-        <p class="s7-decision__sub">Matched to your pattern. Get started today.</p>
-        ${window.INVITE_SENT ? `<p style="font-size:12px; color:var(--lime); margin-top:12px; font-weight:600; text-align:center; line-height:1.5;">Check ${(lastContactInfo && lastContactInfo.email) || 'your email'} &#8212; your invite to the Stewards Community is waiting, and your 10% code is inside.</p>` : ''}
-      </div>
-      <div style="text-align:center; margin-top:32px;">
-        <button class="btn-primary" onclick="openPurchasePopup()" style="padding:22px 48px; font-size:17px; justify-content:center;">Claim My Routine &amp; Start Today &middot; ${money(bp.tryPrice)}/mo</button>
-      </div>
-    </div>`;
-  }
+  let decisionHtml = `
+  <!-- ===== S7: DECISION BLOCK (Governance System Focus) ===== -->
+  <div class="s7-decision">
+    <div class="s7-decision__header">
+      <h2 class="s7-decision__title">YOUR PATTERN HAS A NAME.<br>GOVERN IT FOR $99/MO.</h2>
+      <p class="s7-decision__sub">Get all 5 formulas delivered monthly. Join the Stewards community free to unlock accountability and rhythm tracking.</p>
+      ${window.INVITE_SENT ? `<p style="font-size:12px; color:var(--lime); margin-top:12px; font-weight:600; text-align:center; line-height:1.5;">Check ${(lastContactInfo && lastContactInfo.email) || 'your email'} &#8212; your invite to the Stewards Community is waiting.</p>` : ''}
+    </div>
+    ${govResultCardHtml}
+  </div>`;
 
   // Community block (Steward only)
   const communityHtml = isSteward ? `
@@ -4397,24 +4634,13 @@ function showFullResult(result, bundleKey){
   </div>` : '';
 
   // Final CTA block based on fork
-  let finalCtaHtml = '';
-  if (isSteward) {
-    finalCtaHtml = `
-    <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
-    <p class="s9-final__sub">You've seen the weight. You've seen the pattern. Start the routine today at full price, or join the Stewards free and start it for less.</p>
-    ${window._affiliateName?`<p class="s9-final__affiliate">Your friend ${window._affiliateName} invited you to join.</p>`:''}
-    <div class="s9-final__buttons">
-      <button class="btn-primary" onclick="joinStewards()">Join Free &middot; ${money(bp.member)}/mo &middot; 10% off</button>
-    </div>
-    <button class="s9-final__buy-text" onclick="openPurchasePopup()">Or buy ${cfg.name} now &middot; ${money(bp.tryPrice)}/mo</button>`;
-  } else {
-    finalCtaHtml = `
-    <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
-    <p class="s9-final__sub">Start the routine today and govern your energy.</p>
-    <div class="s9-final__buttons">
-      <button class="btn-primary" onclick="openPurchasePopup()">Buy ${cfg.name} &middot; ${money(bp.tryPrice)}/mo</button>
-    </div>`;
-  }
+  let finalCtaHtml = `
+  <h2 class="s9-final__headline">THE PATTERN HAS A NAME.<br><em>NOW IT HAS A GOVERNOR.</em></h2>
+  <p class="s9-final__sub">You've seen the weight. You've seen the pattern. Get all 5 products governed for $99/mo.</p>
+  ${window._affiliateName?`<p class="s9-final__affiliate">Your friend ${window._affiliateName} invited you to join.</p>`:''}
+  <div class="s9-final__buttons">
+    <button class="btn-primary" onclick="openGovernancePage()" style="background:var(--lime); color:#080809; font-weight:900; padding:20px 36px; font-size:16px;">Claim the Governance System &middot; $99/mo &rarr;</button>
+  </div>`;
 
   card.innerHTML=`<button class="quiz-modal__close" onclick="closeQuiz()" style="position:sticky;top:16px;float:right;margin:16px 16px 0 0;z-index:10">&#10005;</button>
 <div class="result-container">
@@ -4725,6 +4951,39 @@ function retakeQuiz(){
   c.scrollTop=0;
   renderQ(0);
 }
+
+/* Reusable Countdown Timer for Founder Offer (Sept 1, 2026 11:59 PM CT) */
+(function initFounderTimer() {
+  const targetDate = new Date('2026-09-01T23:59:59-05:00').getTime();
+  
+  function updateTimer() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+    
+    if (distance <= 0) {
+      document.querySelectorAll('.wh-timer').forEach(el => el.style.display = 'none');
+      return;
+    }
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    const dStr = days < 10 ? '0' + days : days;
+    const hStr = hours < 10 ? '0' + hours : hours;
+    const mStr = minutes < 10 ? '0' + minutes : minutes;
+    const sStr = seconds < 10 ? '0' + seconds : seconds;
+    
+    document.querySelectorAll('.wh-timer-days').forEach(el => el.textContent = dStr);
+    document.querySelectorAll('.wh-timer-hours').forEach(el => el.textContent = hStr);
+    document.querySelectorAll('.wh-timer-mins').forEach(el => el.textContent = mStr);
+    document.querySelectorAll('.wh-timer-secs').forEach(el => el.textContent = sStr);
+  }
+  
+  updateTimer();
+  setInterval(updateTimer, 1000);
+})();
 </script>
 </body>
 </html>
