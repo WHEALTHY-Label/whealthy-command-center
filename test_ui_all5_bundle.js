@@ -61,10 +61,10 @@ function serveStatic(req, res) {
 
     await page.goto(`http://localhost:${PORT}/whealthy-command-center-repo/index.html`, { waitUntil: 'domcontentloaded' });
     
-    // Verify #navClaim is hidden
-    const isClaimNavVisible = await page.locator('#navClaim').isVisible();
-    if (isClaimNavVisible) throw new Error('#navClaim sidebar button should be hidden!');
-    console.log("✅ Verified: #navClaim (Claim Bundle tab) is hidden in sidebar.");
+    // Verify #navAll5 is labeled "Claim Your Bundle"
+    const navAll5Text = await page.locator('#navAll5').textContent();
+    if (!navAll5Text.includes('Claim Your Bundle')) throw new Error('#navAll5 label should be "Claim Your Bundle"!');
+    console.log("✅ Verified: #navAll5 sidebar button renamed to Claim Your Bundle and moved up.");
 
     // Render Dash and test dashboard bundle card
     await page.evaluate(() => {
