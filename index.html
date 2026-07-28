@@ -16533,6 +16533,54 @@ window.wizNext=async function(){
 let wizDir='next',lastWizStep=0;
 function stag(entering,ix){return entering?(' pop-in" style="animation-delay:'+(ix*38)+'ms"'):'"';}
 
+let fastVoiceRec = null;
+let isFastVoiceRecording = false;
+
+function toggleFastVoice(inputId, statusId, btnId) {
+  inputId = inputId || 'layFree';
+  statusId = statusId || 'layVoiceStatus';
+  btnId = btnId || 'btnLayVoice';
+
+  const inputEl = document.getElementById(inputId);
+  const statusEl = document.getElementById(statusId);
+  const btnEl = document.getElementById(btnId);
+
+  if (isFastVoiceRecording) {
+    if (fastVoiceRec) fastVoiceRec.stop();
+    isFastVoiceRecording = false;
+    if (btnEl) btnEl.textContent = '🎙️';
+    if (statusEl) statusEl.style.display = 'none';
+  } else {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+    fastVoiceRec = new SpeechRecognition();
+    fastVoiceRec.continuous = false;
+    fastVoiceRec.interimResults = false;
+    fastVoiceRec.lang = 'en-US';
+    fastVoiceRec.onresult = (event) => {
+      const text = event.results[0][0].transcript;
+      if (inputEl) {
+        inputEl.value = (inputEl.value ? inputEl.value + ' ' : '') + text;
+        if (typeof freeLay === 'function' && inputId === 'layFree') freeLay(inputEl);
+        if (typeof onAttachPrayerBodyInput === 'function' && inputId === 'newAttachPrayerBody') onAttachPrayerBodyInput(inputEl);
+      }
+    };
+    fastVoiceRec.onend = () => {
+      isFastVoiceRecording = false;
+      if (btnEl) btnEl.textContent = '🎙️';
+      if (statusEl) statusEl.style.display = 'none';
+    };
+    fastVoiceRec.start();
+    isFastVoiceRecording = true;
+    if (btnEl) btnEl.textContent = '⏹️';
+    if (statusEl) statusEl.style.display = 'block';
+  }
+}
+window.toggleFastVoice = toggleFastVoice;
+
 function renderWizard(){
   window.renderWizard = renderWizard;
   const root=document.getElementById('fastRoot');
@@ -16547,7 +16595,11 @@ function renderWizard(){
       h+='<div class="grp-label">'+g.label+'</div><div class="pill-row">'+
         g.items.map(i=>'<button class="pill'+(W.laid.includes(i)?' sel':'')+stag(entering,gi++)+' onclick="togLay(\''+i.replace(/'/g,"\\'")+'\')">'+i+'</button>').join('')+'</div>';
     });
-    h+='<input class="free-input" id="layFree" placeholder="Something else (type it plainly)" onchange="freeLay(this)">';
+    h+='<div style="display:flex; gap:10px; margin-top:12px; align-items:center;">';
+    h+='<input class="free-input" id="layFree" placeholder="Something else (type or speak plainly)" onchange="freeLay(this)" oninput="freeLay(this)" style="flex:1; margin-top:0;" value="'+(W.freeLaid||'')+'">';
+    h+='<button type="button" class="btn-ghost" id="btnLayVoice" onclick="toggleFastVoice(\'layFree\',\'layVoiceStatus\',\'btnLayVoice\')" style="width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px; flex-shrink:0;">🎙️</button>';
+    h+='</div>';
+    h+='<div id="layVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-top:6px; font-weight:700; text-transform:uppercase;">Listening...</div>';
     if(W.laid.includes('Coffee')){
       h+='<div class="grp-label" style="color:var(--lime)">Coffee only, or caffeine altogether?</div><div class="pill-row">'+
         '<button class="pill'+(W.caffScope==='coffee'?' sel':'')+'" onclick="setCaff(\'coffee\')">Coffee only</button>'+
@@ -16608,7 +16660,11 @@ function renderWizard(){
     
     // Create new prayer request
     h+='<div class="grp-label" style="margin-top:20px;">Or write a new prayer request</div>';
-    h+='<textarea class="free-input" id="newAttachPrayerBody" placeholder="What are you praying forward for during this fast?" style="width:100%; height:80px; margin-bottom:12px;" oninput="onAttachPrayerBodyInput(this)">' + W.attachedNewBody + '</textarea>';
+    h+='<div style="position:relative; margin-bottom:12px;">';
+    h+='<textarea class="free-input" id="newAttachPrayerBody" placeholder="What are you praying forward for during this fast? (Type or speak)" style="width:100%; height:80px; padding-right:54px; margin-top:0;" oninput="onAttachPrayerBodyInput(this)">' + W.attachedNewBody + '</textarea>';
+    h+='<button type="button" class="btn-ghost" id="btnAttachPrayerVoice" onclick="toggleFastVoice(\'newAttachPrayerBody\',\'attachPrayerVoiceStatus\',\'btnAttachPrayerVoice\')" style="position:absolute; right:8px; bottom:12px; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; padding:0; font-size:18px;">🎙️</button>';
+    h+='</div>';
+    h+='<div id="attachPrayerVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase;">Listening...</div>';
     
     const showCat = W.attachedNewBody.trim().length > 0;
     h+='<div id="newAttachPrayerCategoryRow" style="display:' + (showCat ? 'block' : 'none') + ';">'+
