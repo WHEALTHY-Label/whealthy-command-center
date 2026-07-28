@@ -1751,8 +1751,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         if(c) c.textContent = "SYS_READY // DEPLOYED";
         setTimeout(function(){
           b.classList.add('hide');
-          setTimeout(function(){try{b.remove()}catch(e){}},600);
-        },1200);
+          setTimeout(function(){try{b.remove()}catch(e){}},300);
+        },150);
       }
     };
     (function(){
@@ -1791,8 +1791,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         i=(i+1)%msgs.length;
         el.textContent=msgs[i];
         if(c) c.textContent=codes[i];
-      },1000);
-      setTimeout(function(){window.hideBootLoader();},12000);
+      },250);
+      setTimeout(function(){window.hideBootLoader();},1500);
     })();
   </script>
 </div>
