@@ -2057,6 +2057,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
       <button class="sidebar-item" id="navRhythm" onclick="go('rhythm',this)"><span class="si-dot"></span> My Rhythm</button>
       <button class="sidebar-item" id="navClaim" onclick="go('claim',this)" style="border: 1px solid rgba(204,255,0,0.08); box-shadow: 0 0 10px rgba(204,255,0,0.02);"><span class="si-dot"></span> Claim Bundle <span class="si-claim" id="claimBadge" style="display:none"><span class="si-claim-dot"></span><span class="si-claim-label">New</span></span></button>
+      <button class="sidebar-item" id="navAll5" onclick="go('all5',this)" style="border: 1px solid rgba(204,255,0,0.12); background: rgba(204,255,0,0.03);"><span class="si-dot"></span> $99 Complete Bundle</button>
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)"><span class="si-dot"></span> Try All</button>
 
       <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> My Journal</button>
@@ -8558,6 +8559,177 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       </div>
 
+      <!-- ============ $99 COMPLETE BUNDLE ============ -->
+      <div id="all5View" style="display:none">
+        <div class="view-header-block">
+          <div class="view-header-icon-box" style="background:rgba(204,255,0,0.1);color:var(--lime);border:1px solid rgba(204,255,0,0.25);">&#128230;</div>
+          <div>
+            <h1 class="view-header-title" id="all5Title">$99 Complete 5-Product Bundle</h1>
+            <p class="view-header-subtitle" id="all5Subtitle">The full 24-hour Steward energy, focus, hydration, and recovery ecosystem.</p>
+          </div>
+        </div>
+
+        <!-- Hero Banner -->
+        <div style="text-align:center;padding:36px 28px;background:linear-gradient(135deg, rgba(204,255,0,0.05) 0%, rgba(204,255,0,0.01) 100%);border:1px solid rgba(204,255,0,0.2);border-radius:20px;margin-bottom:28px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;right:0;background:var(--lime);color:#000;font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;padding:6px 16px;border-bottom-left-radius:12px;">
+            MASTER ECOSYSTEM • SAVE $96/MO
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(204,255,0,0.1);border:1px solid rgba(204,255,0,0.2);padding:6px 16px;border-radius:100px;color:var(--lime);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;">
+            ⚡ ALL 5 PRODUCTS INCLUDED
+          </div>
+          <h2 style="color:#fff;font-family:var(--font-display);font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:12px">
+            The Complete Steward System — <span style="color:var(--lime);">$99 / Month</span>
+          </h2>
+          <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.65;max-width:680px;margin:0 auto 20px">
+            Everything you need to govern your energy across all 24 hours. Includes <strong style="color:#fff">Genius Guice</strong>, <strong style="color:#fff">Genius Joe</strong>, <strong style="color:#fff">Hydration</strong>, <strong style="color:#fff">Charge</strong>, and <strong style="color:#fff">Boss</strong> delivered to your door every month.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:baseline;gap:8px">
+              <span style="font-size:28px;font-weight:800;color:var(--lime);font-family:var(--font-display)">$99.00</span>
+              <span style="font-size:14px;color:rgba(255,255,255,0.4);text-decoration:line-through">$195.00 MSRP</span>
+              <span style="font-size:12px;color:var(--lime);background:rgba(204,255,0,0.12);padding:2px 8px;border-radius:4px;font-weight:600">Save 49%</span>
+            </div>
+            <button class="btn-lime" onclick="triggerAll5Checkout()" style="padding:14px 32px;font-size:15px;font-weight:800;letter-spacing:0.04em">
+              CLAIM ALL 5 PRODUCTS ($99/MO) &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- 5 Product Cards Grid -->
+        <div style="margin-bottom:32px">
+          <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+            <span>📦</span> What's Inside Your $99 Monthly Box
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+
+            <!-- Card 1: Genius Guice -->
+            <div style="background:#0e1013;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--lime);background:rgba(204,255,0,0.1);padding:4px 10px;border-radius:6px;">RISE & NOOTROPIC</span>
+                <span style="font-size:12px;color:rgba(255,255,255,0.4)">Product 1 of 5</span>
+              </div>
+              <h4 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;margin:0">Genius Guice</h4>
+              <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin:0">Organic hydration & clean nootropic energy. Sharpens mental clarity, eliminates morning brain fog, and powers sustained focus without jitters.</p>
+              <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--lime);display:flex;align-items:center;gap:6px">
+                <span>🌅</span> Morning Focus & Energy Drink
+              </div>
+            </div>
+
+            <!-- Card 2: Genius Joe -->
+            <div style="background:#0e1013;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--lime);background:rgba(204,255,0,0.1);padding:4px 10px;border-radius:6px;">FOCUS & ADAPTOGENS</span>
+                <span style="font-size:12px;color:rgba(255,255,255,0.4)">Product 2 of 5</span>
+              </div>
+              <h4 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;margin:0">Genius Joe</h4>
+              <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin:0">Premium organic adaptogenic coffee blend. Formulated with Lion's Mane and Chaga to give deep focus and clean cognitive endurance with zero crash.</p>
+              <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--lime);display:flex;align-items:center;gap:6px">
+                <span>☕</span> Morning / Midday Coffee Ritual
+              </div>
+            </div>
+
+            <!-- Card 3: WHEALTHY Hydration -->
+            <div style="background:#0e1013;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--lime);background:rgba(204,255,0,0.1);padding:4px 10px;border-radius:6px;">CELLULAR BASELINE</span>
+                <span style="font-size:12px;color:rgba(255,255,255,0.4)">Product 3 of 5</span>
+              </div>
+              <h4 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;margin:0">WHEALTHY Hydration</h4>
+              <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin:0">Full-spectrum bioavailable electrolyte baseline. Restores cellular hydration, quenches deep fatigue, and supports optimal nervous system function.</p>
+              <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--lime);display:flex;align-items:center;gap:6px">
+                <span>💧</span> All-Day Hydration & Electrolytes
+              </div>
+            </div>
+
+            <!-- Card 4: Charge -->
+            <div style="background:#0e1013;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--lime);background:rgba(204,255,0,0.1);padding:4px 10px;border-radius:6px;">STAMINA & BLOOD FLOW</span>
+                <span style="font-size:12px;color:rgba(255,255,255,0.4)">Product 4 of 5</span>
+              </div>
+              <h4 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;margin:0">Charge</h4>
+              <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin:0">Nitric oxide booster and physical stamina formula. Increases circulation, boosts oxygen delivery, and keeps your body strong through afternoon slumps.</p>
+              <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--lime);display:flex;align-items:center;gap:6px">
+                <span>⚡</span> Midday / Afternoon Energy Boost
+              </div>
+            </div>
+
+            <!-- Card 5: Boss -->
+            <div style="background:#0e1013;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--lime);background:rgba(204,255,0,0.1);padding:4px 10px;border-radius:6px;">RECOVERY & CORTISOL RESET</span>
+                <span style="font-size:12px;color:rgba(255,255,255,0.4)">Product 5 of 5</span>
+              </div>
+              <h4 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;margin:0">Boss</h4>
+              <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin:0">Nighttime recovery and cortisol regulator. Calms the nervous system after demanding days, promotes deep restorative sleep, and builds morning readiness.</p>
+              <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--lime);display:flex;align-items:center;gap:6px">
+                <span>🌙</span> Evening Unwind & Deep Recovery
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 24-Hour Routine Protocol Section -->
+        <div style="background:#0e1013;border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:28px;margin-bottom:32px">
+          <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:6px">
+            The 24-Hour Steward Daily Protocol
+          </h3>
+          <p style="font-size:14px;color:rgba(255,255,255,0.5);margin:0 0 20px">How all 5 products layer across your daily rhythm:</p>
+          
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px">
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:22px;margin-bottom:6px">🌅</div>
+              <div style="font-size:11px;font-weight:700;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase">7:00 AM</div>
+              <div style="font-size:13px;font-weight:700;color:#fff;margin:4px 0">Genius Guice</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45)">Kickstart hydration & focus</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:22px;margin-bottom:6px">☕</div>
+              <div style="font-size:11px;font-weight:700;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase">9:00 AM</div>
+              <div style="font-size:13px;font-weight:700;color:#fff;margin:4px 0">Genius Joe</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45)">Deep work coffee blend</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:22px;margin-bottom:6px">💧</div>
+              <div style="font-size:11px;font-weight:700;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase">12:00 PM</div>
+              <div style="font-size:13px;font-weight:700;color:#fff;margin:4px 0">Hydration</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45)">Electrolyte baseline refresh</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:22px;margin-bottom:6px">⚡</div>
+              <div style="font-size:11px;font-weight:700;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase">3:00 PM</div>
+              <div style="font-size:13px;font-weight:700;color:#fff;margin:4px 0">Charge</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45)">Afternoon stamina & drive</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:22px;margin-bottom:6px">🌙</div>
+              <div style="font-size:11px;font-weight:700;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase">9:30 PM</div>
+              <div style="font-size:13px;font-weight:700;color:#fff;margin:4px 0">Boss</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45)">Cortisol reset & deep sleep</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Action Card & Value Stack -->
+        <div class="g-card" style="padding:32px;text-align:center;margin-bottom:32px">
+          <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--lime);margin-bottom:8px">LOCKED STEWARD PRICING</div>
+          <h3 style="font-family:var(--font-display);font-size:26px;font-weight:800;color:#fff;text-transform:uppercase;margin-bottom:12px">
+            Claim the Full 5-Product Ecosystem for $99/mo
+          </h3>
+          <p style="font-size:14px;color:rgba(255,255,255,0.6);max-width:540px;margin:0 auto 24px;line-height:1.6">
+            Member pricing locked at <strong>$99.00 / month</strong> (retails for $195/mo). Free shipping, 30-day empty-bag guarantee, and pause or cancel anytime in one click.
+          </p>
+          <button class="btn-lime" onclick="triggerAll5Checkout()" style="width:100%;max-width:520px;padding:16px 36px;font-size:16px;font-weight:800;margin:0 auto 16px;display:block">
+            START MY 5-PRODUCT ROUTINE ($99/MO) &rarr;
+          </button>
+          <p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0">
+            Your 10% Steward discount code <strong style="color:var(--lime)">WHSBGN</strong> automatically applies at checkout.
+          </p>
+        </div>
+
+      </div>
+
       <!-- ============ THE RECORD ============ -->
       <div id="recordView" style="display:none">
         <div class="view-header-block">
@@ -13647,8 +13819,8 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   
   // Reset all active/expanded states first
@@ -13675,7 +13847,9 @@ function go(view,el,label){
     }
   }
   try { personalizePageHeader(view); } catch(e) {}
-  if(view==='claim'){
+  if(view==='all5'){
+    document.getElementById('headerLine').textContent='$99 Complete Bundle';
+  } else if(view==='claim'){
     renderClaimPage();
     document.getElementById('headerLine').textContent='Claim Bundle';
   } else if(view==='communityEnter'){
@@ -20758,11 +20932,25 @@ async function loadAndInit(){
 </div>
 <script>
 (function(){
-  var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
-  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',portalView:'Your order history with live tracking and billing.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
-  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',portalView:'Your orders from the label show up here automatically with live tracking. When something ships, you will see the carrier, tracking number, and a link to follow it. Billing and subscription management is at the bottom.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
+  var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',all5View:'$99 Complete Bundle',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
+  var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',all5View:'The full 5-product WHEALTHY energy, focus, and recovery ecosystem for $99/mo.',portalView:'Your order history with live tracking and billing.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
+  var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',all5View:'The complete 5-product WHEALTHY ecosystem: Genius Guice, Genius Joe, Hydration, Charge, and Boss delivered to your door every month for $99/mo.',portalView:'Your orders from the label show up here automatically with live tracking. When something ships, you will see the carrier, tracking number, and a link to follow it. Billing and subscription management is at the bottom.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
   window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
+  window.triggerAll5Checkout=function(){
+    if (typeof confirmClaim === 'function') {
+      confirmClaim('all5-bundle');
+    } else {
+      var iframe = document.getElementById('checkoutIframe');
+      var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
+      if (iframe && modal) {
+        iframe.src = 'https://checkout.stripe.com/c/pay/cs_live_whealthy_all5';
+        modal.style.display = 'flex';
+      } else {
+        window.open('https://www.thestewardsrhythm.com/whealthy-claim-bundle.html?bundle=all5', '_blank');
+      }
+    }
+  };
   function enhance(){
     document.querySelectorAll('.view-header-block').forEach(function(bl){
       var host=bl.closest('[id$="View"]'); if(!host)return; var id=host.id;
