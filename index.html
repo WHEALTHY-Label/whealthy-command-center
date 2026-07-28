@@ -15988,32 +15988,26 @@ function renderDash(){
 
   // Start CTA (shown when no bundle claimed yet)
   if(productState!=='equipped'&&!window._bundleClaimed){
-    var recBundleName='your routine';
-    var recBundleKey=(window.REC&&window.REC.bundle_key)||'charge-hydration';
-    var recB=CC_BUNDLES.find(function(b){return b.key===recBundleKey;});
-    if(recB) recBundleName=recB.name;
     var memberName=(window.MEMBER_NAME||(window.MEMBER_EMAIL||'').split('@')[0]||'Steward').split(' ')[0];
     memberName=memberName.charAt(0).toUpperCase()+memberName.slice(1);
 
     h+='<div class="start-cta">';
     h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><span class="start-dot"></span><span style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:var(--lime)">Not running yet</span></div>';
     h+='<div style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:clamp(18px,3vw,24px);color:var(--text);line-height:1.15;margin-bottom:8px">Start your governed day, '+memberName+'</div>';
-    h+='<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:16px;max-width:520px">Your quiz pointed at <strong style="color:var(--lime);font-weight:600">'+recBundleName+'</strong>. Nothing ships until you say so. When you are ready it is $54.00/mo at your member price.</div>';
-    h+='<div><button type="button" class="start-btn" onclick="go(\'claim\',document.getElementById(\'navClaim\'))">See your personalized plan &rarr;</button></div>';
+    h+='<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:16px;max-width:520px">The complete 24-hour Steward ecosystem ($195 MSRP value) locked at <strong style="color:var(--lime);font-weight:600">$99.00/mo</strong> at your member price. Includes all 5 core products. Nothing ships until you say so.</div>';
+    h+='<div><button type="button" class="start-btn" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">See your 5-product plan &rarr;</button></div>';
     h+='</div>';
   }
 
   // Bundle meta
   h+='<div class="bundle-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))!important;gap:12px!important;margin:0!important">';
-  var recKey = (window.REC && window.REC.bundle_key) || 'charge-hydration';
-  var recBundle = CC_BUNDLES.find(function(b){return b.key===recKey}) || CC_BUNDLES[3];
-  var bundleName2 = window._bundleName || (recBundle ? recBundle.name : 'Not selected');
+  var bundleName2 = window._bundleName || 'The Complete Steward System ($99/mo)';
   var bundleStatus = productState==='equipped'?'Active':'Pending';
   var statusColor = productState==='equipped'?'color:var(--lime)':'color:#ffb700;font-weight:700';
   var autoColor = productState==='equipped'?'color:var(--lime)':'color:rgba(255,255,255,0.4)';
   var nextDateColor = window._nextEligible ? 'color:#fff':'color:rgba(255,255,255,0.4)';
 
-  h+='<div class="bundle-item"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
+  h+='<div class="bundle-item" style="cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
   h+='<div class="bundle-item"><div class="bundle-item__label">Next Eligible Date</div><div class="bundle-item__value" style="'+nextDateColor+'">'+(window._nextEligible||'Not scheduled')+'</div></div>';
   h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value" style="'+statusColor+'">'+bundleStatus+'</div></div>';
   h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(productState==='equipped'?'On':'Off')+'</div></div>';
@@ -16022,25 +16016,14 @@ function renderDash(){
 
   // Right column: recommended product images
   h+='<div style="flex:1;min-width:280px">';
-  var recKey2=(window.REC&&window.REC.bundle_key)||'charge-hydration';
-  var recBundle2=CC_BUNDLES.find(function(b){return b.key===recKey2;});
-  if(recBundle2&&recBundle2.products&&recBundle2.products.length>0){
-    h+='<div style="margin-bottom:24px">';
-    h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Recommended Protocol</div>';
-    h+='<div style="display:flex;gap:16px;flex-wrap:wrap">';
-    recBundle2.products.forEach(function(p){
-      const ex = exclusions();
-      if (ex.has(p.name)) {
-        return;
-      }
-      h+='<div style="flex:1;min-width:140px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:24px;text-align:center">';
-      h+='<img src="'+p.img+'" alt="'+p.name+'" style="height:160px;object-fit:contain;margin-bottom:20px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5))">';
-      h+='<div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:8px">'+p.name+'</div>';
-      h+='<div style="font-size:13px;color:rgba(255,255,255,0.4)">'+p.role+'</div>';
-      h+='</div>';
-    });
-    h+='</div></div>';
-  }
+  h+='<div style="margin-bottom:24px">';
+  h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Recommended 5-Product Protocol</div>';
+  h+='<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;text-align:center;cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">';
+  h+='<img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Complete Steward 5-Product System" style="height:150px;width:auto;object-fit:contain;margin:0 auto 12px;display:block;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.5))">';
+  h+='<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px">The Complete Steward Ecosystem</div>';
+  h+='<div style="font-size:13px;color:var(--lime);font-weight:700">$99.00 / month (Save 49%)</div>';
+  h+='<div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px">Includes Genius Guice, Genius Joe, Hydration, Charge & Boss</div>';
+  h+='</div></div>';
   h+='</div>'; // end right column
 
   h+='</div>'; // end flex layout

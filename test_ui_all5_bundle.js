@@ -35,7 +35,7 @@ function serveStatic(req, res) {
   const page = await context.newPage();
 
   try {
-    console.log("=== RUNNING $99 COMPLETE BUNDLE TAB INTEGRATION TEST ===");
+    console.log("=== RUNNING $99 COMPLETE BUNDLE TAB & DASHBOARD CARD INTEGRATION TEST ===");
 
     // Mock onboarding-state
     await page.route('**/functions/v1/onboarding-state', async route => {
@@ -66,22 +66,34 @@ function serveStatic(req, res) {
     if (isClaimNavVisible) throw new Error('#navClaim sidebar button should be hidden!');
     console.log("✅ Verified: #navClaim (Claim Bundle tab) is hidden in sidebar.");
 
-    // Close gate overlay if present and navigate to all5
-    await page.evaluate(async () => {
+    // Render Dash and test dashboard bundle card
+    await page.evaluate(() => {
       const gate = document.getElementById('waGateOverlay');
       if (gate) gate.style.display = 'none';
       if (typeof window.waCloseGate === 'function') window.waCloseGate();
-      
-      const btn = document.getElementById('navAll5');
-      if (btn) window.go('all5', btn);
+      window.go('dash');
+      if (typeof window.renderDash === 'function') window.renderDash();
+    });
+    await page.waitForTimeout(500);
+
+    const dashCardText = await page.locator('#dashRoot').textContent();
+    if (!dashCardText.includes('$99')) {
+      throw new Error('Dashboard card does not reflect $99 price!');
+    }
+    console.log("✅ Verified: Dashboard YOUR BUNDLE card updated with $99 pricing.");
+
+    // Trigger dashboard card CTA click
+    await page.evaluate(() => {
+      const btn = document.querySelector('.start-btn');
+      if (btn) btn.click();
       else window.go('all5');
     });
     await page.waitForTimeout(500);
 
     // Verify #all5View is visible
     const isAll5Visible = await page.locator('#all5View').isVisible();
-    if (!isAll5Visible) throw new Error('#all5View container is not visible after clicking navAll5!');
-    console.log("✅ Verified: #all5View is visible upon navigation.");
+    if (!isAll5Visible) throw new Error('#all5View container is not visible after clicking dashboard card button!');
+    console.log("✅ Verified: Dashboard card click navigates directly to #all5View.");
 
     // Verify header line text
     const headerLineText = await page.locator('#headerLine').textContent();
@@ -115,7 +127,7 @@ function serveStatic(req, res) {
     if (!standaloneHeroVisible) throw new Error('Standalone hero not visible in whealthy-all5-bundle.html!');
     console.log("✅ Verified: Standalone page whealthy-all5-bundle.html loads and renders hero cleanly.");
 
-    console.log("=== ALL 5 BUNDLE TAB INTEGRATION TESTS PASSED ===");
+    console.log("=== ALL 5 BUNDLE TAB & DASHBOARD CARD INTEGRATION TESTS PASSED ===");
   } catch (err) {
     console.error("❌ TEST FAILED:", err);
     process.exitCode = 1;
