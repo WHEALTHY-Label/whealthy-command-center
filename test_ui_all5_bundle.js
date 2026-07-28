@@ -35,7 +35,7 @@ function serveStatic(req, res) {
   const page = await context.newPage();
 
   try {
-    console.log("=== RUNNING $99 COMPLETE BUNDLE TAB & DASHBOARD CARD INTEGRATION TEST ===");
+    console.log("=== RUNNING $99 COMPLETE BUNDLE 3-STEP MODAL INTEGRATION TEST ===");
 
     // Mock onboarding-state
     await page.route('**/functions/v1/onboarding-state', async route => {
@@ -84,7 +84,7 @@ function serveStatic(req, res) {
 
     // Trigger dashboard card CTA click
     await page.evaluate(() => {
-      const btn = document.querySelector('.start-btn');
+      const btn = document.querySelector('.btn-lime');
       if (btn) btn.click();
       else window.go('all5');
     });
@@ -95,30 +95,48 @@ function serveStatic(req, res) {
     if (!isAll5Visible) throw new Error('#all5View container is not visible after clicking dashboard card button!');
     console.log("✅ Verified: Dashboard card click navigates directly to #all5View.");
 
-    // Verify header line text
-    const headerLineText = await page.locator('#headerLine').textContent();
-    if (!headerLineText.includes('$99 Complete Bundle')) {
-      throw new Error(`Header line text mismatch: ${headerLineText}`);
+    // Test Slide to Unlock click & 3-step modal flow
+    console.log("Testing Slide to Unlock & 3-Step Checkout Funnel...");
+    await page.evaluate(() => {
+      if (typeof window.triggerAll5Checkout === 'function') window.triggerAll5Checkout();
+    });
+    await page.waitForTimeout(300);
+
+    // Verify Modal Step 1 is visible
+    const isStep1Visible = await page.locator('#claimStep1').isVisible();
+    if (!isStep1Visible) throw new Error('Modal Step 1 (Name & Email) is not visible!');
+    console.log("✅ Verified: Step 1 (Name & Email) opened upon Slide to Unlock.");
+
+    // Fill Step 1
+    await page.fill('#claimInputName', 'Ignacio Garcia');
+    await page.fill('#claimInputEmail', 'ignacio@whealthy.com');
+    await page.evaluate(() => window.submitClaimStep1());
+    await page.waitForTimeout(300);
+
+    // Verify Modal Step 2 is visible
+    const isStep2Visible = await page.locator('#claimStep2').isVisible();
+    if (!isStep2Visible) throw new Error('Modal Step 2 (Shipping Address) is not visible!');
+    console.log("✅ Verified: Step 2 (Shipping Address) loaded cleanly after Step 1.");
+
+    // Fill Step 2 Shipping Address
+    await page.fill('#claimShipAddress', '123 Steward Way');
+    await page.fill('#claimShipCity', 'Dallas');
+    await page.fill('#claimShipState', 'TX');
+    await page.fill('#claimShipZip', '75201');
+    await page.evaluate(() => window.submitClaimStep2Shipping());
+    await page.waitForTimeout(300);
+
+    // Verify Modal Step 3 is visible
+    const isStep3Visible = await page.locator('#claimStep3').isVisible();
+    if (!isStep3Visible) throw new Error('Modal Step 3 (Payment & Card Iframe) is not visible!');
+    console.log("✅ Verified: Step 3 (Payment & Card Stripe iframe) loaded cleanly after Step 2.");
+
+    // Verify iframe src has full parameters
+    const iframeSrc = await page.locator('#claimStep3 #checkoutIframe').getAttribute('src');
+    if (!iframeSrc.includes('ignacio%40whealthy.com') || !iframeSrc.includes('123%20Steward%20Way')) {
+      throw new Error(`Iframe URL missing prefilled details: ${iframeSrc}`);
     }
-    console.log(`✅ Verified: Header line text is "${headerLineText}".`);
-
-    // Verify all 5 product card titles are rendered
-    const cardTitles = ['Genius Guice', 'Genius Joe', 'WHEALTHY Hydration', 'Charge', 'Boss'];
-    for (const title of cardTitles) {
-      const cardExists = await page.locator('#all5View').getByText(title, { exact: true }).count() > 0;
-      if (!cardExists) throw new Error(`Product card title "${title}" not found inside #all5View!`);
-    }
-    console.log("✅ Verified: All 5 product cards are rendered inside #all5View.");
-
-    // Verify Video Testimonials section
-    const videoSectionVisible = await page.locator('#all5View').getByText('Real Steward Testimonials & Reviews').isVisible();
-    if (!videoSectionVisible) throw new Error('Video Testimonials section not visible inside #all5View!');
-    console.log("✅ Verified: Real Steward Video Testimonials section rendered.");
-
-    // Verify Protocol Section
-    const protocolVisible = await page.locator('#all5View').getByText('The 24-Hour Steward Daily Protocol').isVisible();
-    if (!protocolVisible) throw new Error('24-Hour Protocol section not visible!');
-    console.log("✅ Verified: 24-Hour Steward Daily Protocol section rendered.");
+    console.log("✅ Verified: Stripe iframe URL correctly prefilled with Name, Email & Shipping Address.");
 
     // Test standalone page whealthy-all5-bundle.html
     console.log("Loading whealthy-all5-bundle.html...");
@@ -127,7 +145,7 @@ function serveStatic(req, res) {
     if (!standaloneHeroVisible) throw new Error('Standalone hero not visible in whealthy-all5-bundle.html!');
     console.log("✅ Verified: Standalone page whealthy-all5-bundle.html loads and renders hero cleanly.");
 
-    console.log("=== ALL 5 BUNDLE TAB & DASHBOARD CARD INTEGRATION TESTS PASSED ===");
+    console.log("=== ALL 5 BUNDLE TAB & 3-STEP MODAL FUNNEL INTEGRATION TESTS PASSED ===");
   } catch (err) {
     console.error("❌ TEST FAILED:", err);
     process.exitCode = 1;

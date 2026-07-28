@@ -8547,39 +8547,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
 
 
-<div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
-          <div class="checkout-modal-card" onclick="event.stopPropagation()" style="max-width:540px; background:#121418; border:1px solid rgba(204,255,0,0.3); border-radius:20px;">
-            <div class="checkout-modal-header" style="padding:16px 20px; background:#0c0d0f; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
-              <span class="checkout-modal-title" id="claimModalTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff;">Claim $99 Master System</span>
-              <button class="checkout-modal-close" onclick="closeClaimCheckoutModal(null)">&times;</button>
-            </div>
 
-            <!-- Step 1: Name & Email Capture Form -->
-            <div id="claimStep1" style="padding:28px 24px; text-align:center;">
-              <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:6px;">✓ 50% FOUNDER DISCOUNT UNLOCKED</div>
-              <h3 style="font-family:var(--font-display); font-size:24px; font-weight:900; text-transform:uppercase; color:#fff; margin-bottom:6px;">Lock Rate to Your Profile</h3>
-              <p style="font-size:13px; color:rgba(255,255,255,0.6); max-width:420px; margin:0 auto 20px; line-height:1.5;">Enter your name & email to lock your exclusive $99.00/mo founder price to your profile before proceeding to checkout.</p>
-              
-              <div style="display:flex; flex-direction:column; gap:14px; max-width:400px; margin:0 auto; text-align:left;">
-                <div>
-                  <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">First & Last Name</label>
-                  <input type="text" id="claimInputName" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="e.g. Ignacio Garcia" required>
-                </div>
-                <div>
-                  <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">Email Address</label>
-                  <input type="email" id="claimInputEmail" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="you@example.com" required>
-                </div>
-                <div id="claimStep1Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
-                <button type="button" onclick="submitClaimStep1()" class="btn-lime" style="width:100%; padding:16px; font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">CONTINUE TO SECURE CHECKOUT &rarr;</button>
-              </div>
-            </div>
-
-            <!-- Step 2: Checkout Iframe -->
-            <div id="claimStep2" style="display:none; flex:1; height:100%;">
-              <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank" style="width:100%; height:100%; min-height:520px; border:none; background:#fff;"></iframe>
-            </div>
-          </div>
-        </div>
 
       </div>
 
@@ -20983,6 +20951,122 @@ async function loadAndInit(){
 <div class="vh-pop-back" id="vhPopBack" onclick="if(event.target===this)vhCloseHelp()">
   <div class="vh-pop"><h4 id="vhPopTitle">Help</h4><p id="vhPopBody"></p><button onclick="vhCloseHelp()">Got it</button></div>
 </div>
+
+<div id="claimCheckoutModal" class="checkout-modal" onclick="closeClaimCheckoutModal(event)">
+  <div class="checkout-modal-card" onclick="event.stopPropagation()" style="max-width:540px; background:#121418; border:1px solid rgba(204,255,0,0.3); border-radius:20px; padding:20px;">
+    <div class="checkout-modal-header" style="padding:0 0 16px; background:transparent; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <span class="checkout-modal-title" id="claimModalTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff;">Claim $99 Master System</span>
+      <button class="checkout-modal-close" onclick="closeClaimCheckoutModal(null)" style="background:none; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+
+    <!-- STEP 1: NAME & EMAIL -->
+    <div id="claimStep1" style="display:block;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 1 OF 3</span>
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Claim 50% Founder Rate</span>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:var(--lime);">33% Complete</span>
+      </div>
+
+      <div style="text-align:center; margin-bottom:14px;">
+        <h3 style="font-family:var(--font-display); font-size:22px; font-weight:900; text-transform:uppercase; color:#fff; line-height:1.1; margin-bottom:4px;">
+          50% DISCOUNT UNLOCKED<br><span style="color:var(--lime);">LOCK RATE TO YOUR PROFILE</span>
+        </h3>
+        <p style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.4; max-width:400px; margin:0 auto;">
+          Enter your name & email to lock your exclusive $99.00/mo founder price to your profile.
+        </p>
+      </div>
+
+      <div style="background:linear-gradient(135deg, rgba(204,255,0,0.08) 0%, rgba(204,255,0,0.02) 100%); border:1.5px solid rgba(204,255,0,0.3); border-radius:14px; padding:14px; text-align:center; margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">✓ 50% FOUNDER DISCOUNT ACTIVE</div>
+        <div style="font-family:var(--font-display); font-size:38px; font-weight:900; color:var(--lime); line-height:1;">
+          $99.00<span style="font-size:18px; color:rgba(255,255,255,0.5); font-weight:700;">/mo</span>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:#ff4d4d; text-decoration:line-through; margin-top:2px;">
+          $195.00/mo Regular MSRP
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; text-align:left; max-width:420px; margin:0 auto;">
+        <div>
+          <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">First & Last Name</label>
+          <input type="text" id="claimInputName" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="e.g. Ignacio Garcia" required>
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">Email Address</label>
+          <input type="email" id="claimInputEmail" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="you@example.com" required>
+        </div>
+        <div id="claimStep1Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
+        <button type="button" onclick="submitClaimStep1()" class="btn-lime" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">CONTINUE TO SHIPPING ADDRESS (STEP 2 OF 3) &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: SHIPPING ADDRESS -->
+    <div id="claimStep2" style="display:none;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 2 OF 3</span>
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Shipping Address</span>
+        </div>
+        <button type="button" onclick="goToClaimStep1()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline;">
+          &larr; Back to Step 1
+        </button>
+      </div>
+
+      <div style="background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); border-radius:10px; padding:8px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">⏳</span>
+          <div>
+            <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase;">FOUNDER RATE RESERVED</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.6);">Complete checkout before timer expires</div>
+          </div>
+        </div>
+        <div style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--lime);">07:00</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px;">
+          <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:10px;">🚚 Shipping Address</div>
+          <div style="margin-bottom:10px;">
+            <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Street Address</label>
+            <input type="text" id="claimShipAddress" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="123 Main St" required>
+          </div>
+          <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">City</label>
+              <input type="text" id="claimShipCity" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="Dallas" required>
+            </div>
+            <div>
+              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">State</label>
+              <input type="text" id="claimShipState" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="TX" maxlength="2" required>
+            </div>
+            <div>
+              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Zip</label>
+              <input type="text" id="claimShipZip" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="75201" required>
+            </div>
+          </div>
+        </div>
+        <div id="claimStep2Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
+        <button type="button" onclick="submitClaimStep2Shipping()" class="btn-lime" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">CONTINUE TO PAYMENT & CARD (STEP 3 OF 3) &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: PAYMENT & CARD (STRIPE CHECKOUT) -->
+    <div id="claimStep3" style="display:none; flex:1; height:100%;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 3 OF 3</span>
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Payment Details</span>
+        </div>
+        <button type="button" onclick="goToClaimStep2()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline;">
+          &larr; Back to Shipping
+        </button>
+      </div>
+      <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank" style="width:100%; height:100%; min-height:500px; border:none; background:#fff; border-radius:12px;"></iframe>
+    </div>
+  </div>
+</div>
 <script>
 (function(){
   var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',all5View:'$99 Complete Bundle',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
@@ -20994,28 +21078,30 @@ async function loadAndInit(){
     var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
     var step1 = document.getElementById('claimStep1');
     var step2 = document.getElementById('claimStep2');
-    var nameInput = document.getElementById('claimInputName');
-    var emailInput = document.getElementById('claimInputEmail');
+    var step3 = document.getElementById('claimStep3');
 
-    var existingEmail = (typeof MEMBER_EMAIL !== 'undefined' && MEMBER_EMAIL) ? MEMBER_EMAIL : (window.MEMBER_EMAIL || '');
-    var existingName = (typeof MEMBER_NAME !== 'undefined' && MEMBER_NAME) ? MEMBER_NAME : (window.MEMBER_NAME || '');
-
-    if (emailInput && existingEmail) emailInput.value = existingEmail;
-    if (nameInput && existingName) nameInput.value = existingName;
-
-    if (existingEmail && existingName) {
-      window.submitClaimStep1(existingName, existingEmail);
-    } else {
-      if (step1) step1.style.display = 'block';
-      if (step2) step2.style.display = 'none';
-      if (modal) modal.classList.add('open');
-    }
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (step3) step3.style.display = 'none';
+    if (modal) modal.classList.add('open');
   };
 
-  window.submitClaimStep1=function(passedName, passedEmail){
-    var name = passedName || (document.getElementById('claimInputName') ? document.getElementById('claimInputName').value.trim() : '');
-    var email = passedEmail || (document.getElementById('claimInputEmail') ? document.getElementById('claimInputEmail').value.trim() : '');
+  window.goToClaimStep1=function(){
+    var step1 = document.getElementById('claimStep1');
+    var step2 = document.getElementById('claimStep2');
+    var step3 = document.getElementById('claimStep3');
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (step3) step3.style.display = 'none';
+  };
+
+  window.submitClaimStep1=function(){
+    var nameEl = document.getElementById('claimInputName');
+    var emailEl = document.getElementById('claimInputEmail');
     var errEl = document.getElementById('claimStep1Err');
+
+    var name = nameEl ? nameEl.value.trim() : '';
+    var email = emailEl ? emailEl.value.trim() : '';
 
     if (!email || !email.includes('@')) {
       if (errEl) errEl.textContent = 'Please enter a valid email address.';
@@ -21028,26 +21114,70 @@ async function loadAndInit(){
 
     window.MEMBER_EMAIL = email;
     window.MEMBER_NAME = name;
+    if (errEl) errEl.textContent = '';
 
-    var targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name) + '&bundle=all5';
-    var iframe = document.getElementById('checkoutIframe');
-    var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
     var step1 = document.getElementById('claimStep1');
     var step2 = document.getElementById('claimStep2');
+    var step3 = document.getElementById('claimStep3');
+
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'block';
+    if (step3) step3.style.display = 'none';
+  };
+
+  window.goToClaimStep2=function(){
+    var step1 = document.getElementById('claimStep1');
+    var step2 = document.getElementById('claimStep2');
+    var step3 = document.getElementById('claimStep3');
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'block';
+    if (step3) step3.style.display = 'none';
+  };
+
+  window.submitClaimStep2Shipping=function(){
+    var addressEl = document.getElementById('claimShipAddress');
+    var cityEl = document.getElementById('claimShipCity');
+    var stateEl = document.getElementById('claimShipState');
+    var zipEl = document.getElementById('claimShipZip');
+    var errEl = document.getElementById('claimStep2Err');
+
+    var address = addressEl ? addressEl.value.trim() : '';
+    var city = cityEl ? cityEl.value.trim() : '';
+    var state = stateEl ? stateEl.value.trim() : '';
+    var zip = zipEl ? zipEl.value.trim() : '';
+
+    if (!address || !city || !state || !zip) {
+      if (errEl) errEl.textContent = 'Please fill out all shipping address fields.';
+      return;
+    }
+    if (errEl) errEl.textContent = '';
+
+    var email = window.MEMBER_EMAIL || '';
+    var name = window.MEMBER_NAME || '';
+
+    var targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name) + '&address=' + encodeURIComponent(address) + '&city=' + encodeURIComponent(city) + '&state=' + encodeURIComponent(state) + '&zip=' + encodeURIComponent(zip) + '&bundle=all5';
+
+    var iframe = document.querySelector('#claimStep3 iframe') || document.getElementById('checkoutIframe');
+    var step1 = document.getElementById('claimStep1');
+    var step2 = document.getElementById('claimStep2');
+    var step3 = document.getElementById('claimStep3');
+    var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
 
     if (iframe) iframe.src = targetUrl;
     if (step1) step1.style.display = 'none';
-    if (step2) step2.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (step3) step3.style.display = 'block';
     if (modal) modal.classList.add('open');
   };
 
   window.closeClaimCheckoutModal=function(e){
     if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains('checkout-modal-close')) return;
     var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
-    var iframe = document.getElementById('checkoutIframe');
+    var iframe = document.querySelector('#claimStep3 iframe') || document.getElementById('checkoutIframe');
     if (modal) modal.classList.remove('open');
     if (iframe) iframe.src = 'about:blank';
   };
+
   window.initAllIphoneSliders=function(){
     var tracks = document.querySelectorAll('.js-slide-unlock-track, #iphoneSlideTrack');
     tracks.forEach(function(track){
@@ -21065,6 +21195,11 @@ async function loadAndInit(){
       }
       updateMaxDrag();
       window.addEventListener('resize', updateMaxDrag);
+
+      track.onclick = function() {
+        if (typeof triggerAll5Checkout === 'function') triggerAll5Checkout();
+        else if (typeof openCheckoutModal === 'function') openCheckoutModal();
+      };
 
       function onStart(e) {
         isDragging = true;

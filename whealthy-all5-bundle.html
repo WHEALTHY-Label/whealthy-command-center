@@ -548,19 +548,42 @@ body {
 
 <!-- Popup Checkout Modal -->
 <div class="checkout-modal" id="checkoutModal">
-  <div class="checkout-modal-card" style="max-width:540px; background:#121418; border:1px solid rgba(204,255,0,0.3); border-radius:20px;">
-    <div class="checkout-modal-header" style="padding:16px 20px; background:#0c0d0f; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+  <div class="checkout-modal-card" style="max-width:540px; background:#121418; border:1px solid rgba(204,255,0,0.3); border-radius:20px; padding:20px;">
+    <div class="checkout-modal-header" style="padding:0 0 16px; background:transparent; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <span class="checkout-modal-title">Claim $99 Master System</span>
       <button class="checkout-modal-close" onclick="closeCheckoutModal()">&times;</button>
     </div>
 
-    <!-- Step 1: Name & Email Form -->
-    <div id="modalStep1" style="padding:28px 24px; text-align:center;">
-      <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:6px;">✓ 50% FOUNDER DISCOUNT UNLOCKED</div>
-      <h3 style="font-family:var(--font-display); font-size:24px; font-weight:900; text-transform:uppercase; color:#fff; margin-bottom:6px;">Lock Rate to Your Profile</h3>
-      <p style="font-size:13px; color:rgba(255,255,255,0.6); max-width:420px; margin:0 auto 20px; line-height:1.5;">Enter your name & email to lock your exclusive $99.00/mo founder price to your profile before proceeding to checkout.</p>
-      
-      <div style="display:flex; flex-direction:column; gap:14px; max-width:400px; margin:0 auto; text-align:left;">
+    <!-- STEP 1: NAME & EMAIL -->
+    <div id="modalStep1" style="display:block;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 1 OF 3</span>
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Claim 50% Founder Rate</span>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:var(--lime);">33% Complete</span>
+      </div>
+
+      <div style="text-align:center; margin-bottom:14px;">
+        <h3 style="font-family:var(--font-display); font-size:22px; font-weight:900; text-transform:uppercase; color:#fff; line-height:1.1; margin-bottom:4px;">
+          50% DISCOUNT UNLOCKED<br><span style="color:var(--lime);">LOCK RATE TO YOUR PROFILE</span>
+        </h3>
+        <p style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.4; max-width:400px; margin:0 auto;">
+          Enter your name & email to lock your exclusive $99.00/mo founder price to your profile.
+        </p>
+      </div>
+
+      <div style="background:linear-gradient(135deg, rgba(204,255,0,0.08) 0%, rgba(204,255,0,0.02) 100%); border:1.5px solid rgba(204,255,0,0.3); border-radius:14px; padding:14px; text-align:center; margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">✓ 50% FOUNDER DISCOUNT ACTIVE</div>
+        <div style="font-family:var(--font-display); font-size:38px; font-weight:900; color:var(--lime); line-height:1;">
+          $99.00<span style="font-size:18px; color:rgba(255,255,255,0.5); font-weight:700;">/mo</span>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:#ff4d4d; text-decoration:line-through; margin-top:2px;">
+          $195.00/mo Regular MSRP
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; text-align:left; max-width:420px; margin:0 auto;">
         <div>
           <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">First & Last Name</label>
           <input type="text" id="modalInputName" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="e.g. Ignacio Garcia" required>
@@ -570,25 +593,98 @@ body {
           <input type="email" id="modalInputEmail" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="you@example.com" required>
         </div>
         <div id="modalStep1Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
-        <button type="button" onclick="submitModalStep1()" class="btn-primary" style="width:100%; padding:16px; font-size:15px; font-weight:800; text-transform:uppercase;">CONTINUE TO SECURE CHECKOUT &rarr;</button>
+        <button type="button" onclick="submitModalStep1()" class="btn-primary" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase;">CONTINUE TO SHIPPING ADDRESS (STEP 2 OF 3) &rarr;</button>
       </div>
     </div>
 
-    <!-- Step 2: Checkout Iframe -->
-    <div id="modalStep2" style="display:none; flex:1; height:100%;">
-      <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank" style="width:100%; height:100%; min-height:520px; border:none; background:#fff;"></iframe>
+    <!-- STEP 2: SHIPPING ADDRESS -->
+    <div id="modalStep2" style="display:none;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 2 OF 3</span>
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Shipping Address</span>
+        </div>
+        <button type="button" onclick="goToModalStep1()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline;">
+          &larr; Back to Step 1
+        </button>
+      </div>
+
+      <div style="background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); border-radius:10px; padding:8px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">⏳</span>
+          <div>
+            <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase;">FOUNDER RATE RESERVED</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.6);">Complete checkout before timer expires</div>
+          </div>
+        </div>
+        <div style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--lime);">07:00</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px;">
+          <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:10px;">🚚 Shipping Address</div>
+          <div style="margin-bottom:10px;">
+            <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Street Address</label>
+            <input type="text" id="modalShipAddress" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="123 Main St" required>
+          </div>
+          <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">City</label>
+              <input type="text" id="modalShipCity" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="Dallas" required>
+            </div>
+            <div>
+              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">State</label>
+              <input type="text" id="modalShipState" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="TX" maxlength="2" required>
+            </div>
+            <div>
+              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Zip</label>
+              <input type="text" id="modalShipZip" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="75201" required>
+            </div>
+          </div>
+        </div>
+        <div id="modalStep2Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
+        <button type="button" onclick="submitModalStep2Shipping()" class="btn-primary" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase;">CONTINUE TO PAYMENT & CARD (STEP 3 OF 3) &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: PAYMENT & CARD -->
+    <div id="modalStep3" style="display:none; flex:1; height:100%;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 3 OF 3</span>
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Payment Details</span>
+        </div>
+        <button type="button" onclick="goToModalStep2()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline;">
+          &larr; Back to Shipping
+        </button>
+      </div>
+      <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank" style="width:100%; height:100%; min-height:500px; border:none; background:#fff; border-radius:12px;"></iframe>
     </div>
   </div>
 </div>
 
 <script>
+let savedName = '';
+let savedEmail = '';
+
 function openCheckoutModal() {
   const modal = document.getElementById('checkoutModal');
   const step1 = document.getElementById('modalStep1');
   const step2 = document.getElementById('modalStep2');
+  const step3 = document.getElementById('modalStep3');
   if (step1) step1.style.display = 'block';
   if (step2) step2.style.display = 'none';
+  if (step3) step3.style.display = 'none';
   if (modal) modal.classList.add('open');
+}
+
+function goToModalStep1() {
+  const step1 = document.getElementById('modalStep1');
+  const step2 = document.getElementById('modalStep2');
+  const step3 = document.getElementById('modalStep3');
+  if (step1) step1.style.display = 'block';
+  if (step2) step2.style.display = 'none';
+  if (step3) step3.style.display = 'none';
 }
 
 function submitModalStep1() {
@@ -605,14 +701,52 @@ function submitModalStep1() {
     return;
   }
 
-  const targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name) + '&bundle=all5';
+  savedName = name;
+  savedEmail = email;
+  if (errEl) errEl.textContent = '';
+
+  const step1 = document.getElementById('modalStep1');
+  const step2 = document.getElementById('modalStep2');
+  const step3 = document.getElementById('modalStep3');
+
+  if (step1) step1.style.display = 'none';
+  if (step2) step2.style.display = 'block';
+  if (step3) step3.style.display = 'none';
+}
+
+function goToModalStep2() {
+  const step1 = document.getElementById('modalStep1');
+  const step2 = document.getElementById('modalStep2');
+  const step3 = document.getElementById('modalStep3');
+  if (step1) step1.style.display = 'none';
+  if (step2) step2.style.display = 'block';
+  if (step3) step3.style.display = 'none';
+}
+
+function submitModalStep2Shipping() {
+  const address = document.getElementById('modalShipAddress') ? document.getElementById('modalShipAddress').value.trim() : '';
+  const city = document.getElementById('modalShipCity') ? document.getElementById('modalShipCity').value.trim() : '';
+  const state = document.getElementById('modalShipState') ? document.getElementById('modalShipState').value.trim() : '';
+  const zip = document.getElementById('modalShipZip') ? document.getElementById('modalShipZip').value.trim() : '';
+  const errEl = document.getElementById('modalStep2Err');
+
+  if (!address || !city || !state || !zip) {
+    if (errEl) errEl.textContent = 'Please fill out all shipping address fields.';
+    return;
+  }
+  if (errEl) errEl.textContent = '';
+
+  const targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(savedEmail) + '&name=' + encodeURIComponent(savedName) + '&address=' + encodeURIComponent(address) + '&city=' + encodeURIComponent(city) + '&state=' + encodeURIComponent(state) + '&zip=' + encodeURIComponent(zip) + '&bundle=all5';
+
   const iframe = document.getElementById('checkoutIframe');
   const step1 = document.getElementById('modalStep1');
   const step2 = document.getElementById('modalStep2');
+  const step3 = document.getElementById('modalStep3');
 
   if (iframe) iframe.src = targetUrl;
   if (step1) step1.style.display = 'none';
-  if (step2) step2.style.display = 'block';
+  if (step2) step2.style.display = 'none';
+  if (step3) step3.style.display = 'block';
 }
 
 function closeCheckoutModal() {
