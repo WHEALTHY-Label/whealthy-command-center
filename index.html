@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>WHEALTHY — The Steward's Rhythm</title>
@@ -1007,6 +1008,7 @@ textarea,input,select{font-size:16px}
 }
 
 /* Claim Checkout Modal */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .checkout-modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -1031,12 +1033,12 @@ textarea,input,select{font-size:16px}
   padding: 0;
   max-width: 960px;
   width: 95%;
-  height: 85vh;
+  max-height: 90vh;
   position: relative;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 .checkout-modal-header {
   padding: 16px 24px;
@@ -17553,11 +17555,11 @@ window.closeClaimModal=closeClaimModal;
 function claimBundle(){
   // Record claim in localStorage
   __lsSet('wh_claim_dismissed_month',new Date().toISOString().slice(0,7));
-  // Navigate directly to claim page in SPA
-  go('claim', document.getElementById('navClaim'));
   closeClaimModal();
   // Remove badge
   updateClaimBadge();
+  // Open the 3-step checkout modal for $99 bundle
+  if (typeof triggerAll5Checkout === 'function') triggerAll5Checkout();
 }
 window.claimBundle=claimBundle;
 
@@ -21188,9 +21190,9 @@ async function loadAndInit(){
       </div>
     </div>
 
-    <!-- STEP 3: PAYMENT & CARD (STRIPE CHECKOUT) -->
-    <div id="claimStep3" style="display:none; flex:1; height:100%;">
-      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+    <!-- STEP 3: NATIVE STRIPE PAYMENT -->
+    <div id="claimStep3" style="display:none; flex-direction:column; gap:12px;">
+      <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:8px;">
           <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 3 OF 3</span>
           <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Payment Details</span>
@@ -21199,7 +21201,64 @@ async function loadAndInit(){
           &larr; Back to Shipping
         </button>
       </div>
-      <iframe id="checkoutIframe" class="checkout-modal-iframe" src="about:blank" style="width:100%; height:100%; min-height:500px; border:none; background:#fff; border-radius:12px;"></iframe>
+
+      <!-- Founder Rate Reserved Timer -->
+      <div style="background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); border-radius:10px; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">⏳</span>
+          <div>
+            <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase;">FOUNDER RATE RESERVED</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.6);">Complete checkout before timer expires</div>
+          </div>
+        </div>
+        <div id="claimTimerDisplay" style="font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--lime); letter-spacing:0.06em;">02:00</div>
+      </div>
+
+      <!-- Confirmed Shipping Summary -->
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:11px; color:rgba(255,255,255,0.6);">
+          <strong style="color:var(--lime);">Shipping To:</strong> <span id="claimShipSummary">—</span>
+        </div>
+        <button onclick="goToClaimStep2()" style="background:none; border:none; color:var(--lime); font-size:10px; cursor:pointer; text-decoration:underline; font-weight:700;">Edit</button>
+      </div>
+
+      <!-- Stripe Loading Spinner -->
+      <div id="claimStripeLoading" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px 20px; text-align:center;">
+        <div style="width:36px; height:36px; border:3px solid rgba(204,255,0,0.3); border-top-color:var(--lime); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:12px;"></div>
+        <div style="font-family:var(--font-display); font-size:14px; font-weight:700; color:#fff;">Loading Secure Payment Form...</div>
+      </div>
+
+      <!-- Native Stripe Payment Form -->
+      <form id="claimPaymentForm" onsubmit="handleClaimPaymentSubmit(event)" style="display:none; flex-direction:column; gap:12px; text-align:left;">
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:12px;">
+          <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Card Information</div>
+          <div id="claimPaymentElement" style="background:rgba(255,255,255,0.03); border:1px solid rgba(204,255,0,0.2); border-radius:12px; padding:10px;"></div>
+        </div>
+        <!-- Terms & Recurring Billing Notice -->
+        <div style="font-size:11px; color:rgba(255,255,255,0.6); line-height:1.5; text-align:center; padding:10px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+          Today's Initial Charge: <strong style="color:#ffffff;">$99.00</strong> &bull; Next Recurring Payment Date: <strong style="color:var(--lime);" id="claimNextBillingDate">—</strong> ($99.00/mo).<br>
+          By providing your card information, you allow WHEALTHY LABEL to charge your card for future payments in accordance with their terms.
+        </div>
+        <div id="claimPaymentError" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px;"></div>
+        <button type="submit" id="claimPayBtn" class="btn-lime" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; border:none; border-radius:10px;">
+          ⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) &rarr;
+        </button>
+        <div style="font-size:11px; color:rgba(255,255,255,0.35); text-align:center; display:flex; align-items:center; justify-content:center; gap:12px;">
+          <span>🔒 256-Bit SSL</span><span>&bull;</span><span>🚚 Ships via USPS</span><span>&bull;</span><span>🛡️ Cancel Anytime</span>
+        </div>
+      </form>
+
+      <!-- Success State -->
+      <div id="claimCheckoutSuccess" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding:30px 16px; text-align:center;">
+        <div style="width:52px; height:52px; border-radius:50%; background:rgba(204,255,0,0.15); border:2px solid var(--lime); display:flex; align-items:center; justify-content:center; color:var(--lime); font-size:26px; font-weight:bold; margin-bottom:14px; box-shadow:0 0 30px rgba(204,255,0,0.3);">✓</div>
+        <div style="font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:8px;">System Unlocked!</div>
+        <div style="font-size:13px; color:#fff; line-height:1.5; max-width:360px; margin-bottom:20px;">
+          Welcome to WHEALTHY. Your Founder Membership ($99.00/mo) is active and your Governance System bundle is being prepared for shipment.
+        </div>
+        <button onclick="closeClaimCheckoutModal(null)" class="btn-lime" style="cursor:pointer; border:none; max-width:240px; padding:14px 28px; font-size:14px; font-weight:700; border-radius:10px;">
+          CLOSE WINDOW &rarr;
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -21306,27 +21365,169 @@ async function loadAndInit(){
     var email = window.MEMBER_EMAIL || '';
     var name = window.MEMBER_NAME || '';
 
-    var targetUrl = 'https://whealthylabel.com/charge-powder-hydration?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name) + '&address=' + encodeURIComponent(address) + '&city=' + encodeURIComponent(city) + '&state=' + encodeURIComponent(state) + '&zip=' + encodeURIComponent(zip) + '&bundle=all5';
+    // Store shipping for Step 3
+    window._claimShipping = { address: address, city: city, state: state, zip: zip };
 
-    var iframe = document.querySelector('#claimStep3 iframe') || document.getElementById('checkoutIframe');
     var step1 = document.getElementById('claimStep1');
     var step2 = document.getElementById('claimStep2');
     var step3 = document.getElementById('claimStep3');
     var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
 
-    if (iframe) iframe.src = targetUrl;
     if (step1) step1.style.display = 'none';
     if (step2) step2.style.display = 'none';
-    if (step3) step3.style.display = 'block';
+    if (step3) step3.style.display = 'flex';
     if (modal) modal.classList.add('open');
+
+    // Show confirmed shipping summary
+    var shipSummary = document.getElementById('claimShipSummary');
+    if (shipSummary) shipSummary.textContent = address + ', ' + city + ' ' + state + ' ' + zip;
+
+    // Compute next billing date (30 days from now)
+    var nextDate = new Date(); nextDate.setDate(nextDate.getDate() + 30);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var dateStr = months[nextDate.getMonth()] + ' ' + nextDate.getDate() + ', ' + nextDate.getFullYear();
+    var nextEl = document.getElementById('claimNextBillingDate');
+    if (nextEl) nextEl.textContent = dateStr;
+
+    // Start countdown timer
+    window._claimTimerSec = 120;
+    if (window._claimTimerInterval) clearInterval(window._claimTimerInterval);
+    var timerEl = document.getElementById('claimTimerDisplay');
+    function updateClaimTimer() {
+      var m = Math.floor(window._claimTimerSec / 60);
+      var s = window._claimTimerSec % 60;
+      if (timerEl) timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      if (window._claimTimerSec <= 0) clearInterval(window._claimTimerInterval);
+      window._claimTimerSec--;
+    }
+    updateClaimTimer();
+    window._claimTimerInterval = setInterval(updateClaimTimer, 1000);
+
+    // Mount Stripe Elements
+    startClaimStripeCheckout(name, email);
+  };
+
+  // --- Stripe Native Checkout ---
+  var claimStripeInstance = null;
+  var claimStripeElements = null;
+
+  async function startClaimStripeCheckout(name, email) {
+    var loadingEl = document.getElementById('claimStripeLoading');
+    var formEl = document.getElementById('claimPaymentForm');
+    var successEl = document.getElementById('claimCheckoutSuccess');
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (formEl) formEl.style.display = 'none';
+    if (successEl) successEl.style.display = 'none';
+
+    try {
+      if (!claimStripeInstance) {
+        claimStripeInstance = Stripe('pk_live_51JjRYdLONi76ZSYJX2HKdWQyD7ME0IWgSvFcxtaLOQV7xkBt8Id3HQ1CEsVdLi0L01faf40EQFQ5NqzoLI6LbGOj0003LWhD3q');
+      }
+      if (claimStripeElements) {
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (formEl) formEl.style.display = 'flex';
+        return;
+      }
+      var res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/governance-native-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, firstName: name, lastName: '' }),
+      });
+      var data = await res.json();
+      if (!data.clientSecret) throw new Error(data.error || 'Failed to initialize payment');
+
+      var appearance = {
+        theme: 'night',
+        variables: {
+          colorPrimary: '#ccff00',
+          colorBackground: '#14151a',
+          colorText: '#ffffff',
+          colorDanger: '#ff4436',
+          fontFamily: 'DM Sans, sans-serif',
+          borderRadius: '10px',
+        },
+      };
+      claimStripeElements = claimStripeInstance.elements({ clientSecret: data.clientSecret, appearance: appearance });
+      var paymentElement = claimStripeElements.create('payment');
+      var container = document.getElementById('claimPaymentElement');
+      if (container) container.innerHTML = '';
+      paymentElement.mount('#claimPaymentElement');
+      paymentElement.on('ready', function() {
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (formEl) formEl.style.display = 'flex';
+      });
+    } catch (err) {
+      console.error('[claim-checkout] Init error:', err);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (formEl) formEl.style.display = 'flex';
+      var errEl = document.getElementById('claimPaymentError');
+      if (errEl) errEl.textContent = 'Could not load payment form. Please try again.';
+    }
+  }
+
+  window.handleClaimPaymentSubmit = async function(e) {
+    e.preventDefault();
+    if (!claimStripeInstance || !claimStripeElements) return;
+    var payBtn = document.getElementById('claimPayBtn');
+    var errEl = document.getElementById('claimPaymentError');
+    if (errEl) errEl.textContent = '';
+
+    var shipping = window._claimShipping || {};
+    var name = window.MEMBER_NAME || '';
+    var email = window.MEMBER_EMAIL || '';
+
+    if (payBtn) { payBtn.disabled = true; payBtn.textContent = 'PROCESSING PAYMENT...'; payBtn.style.opacity = '0.7'; }
+
+    try {
+      var result = await claimStripeInstance.confirmPayment({
+        elements: claimStripeElements,
+        confirmParams: {
+          return_url: window.location.origin + '/whealthy-order-confirmation.html',
+          payment_method_data: {
+            billing_details: {
+              name: name,
+              email: email,
+              address: {
+                line1: shipping.address || '',
+                city: shipping.city || '',
+                state: shipping.state || '',
+                postal_code: shipping.zip || '',
+                country: 'US',
+              },
+            },
+          },
+        },
+        redirect: 'if_required',
+      });
+
+      if (result.error) {
+        if (errEl) errEl.textContent = result.error.message || 'Payment failed. Please check card details.';
+        if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
+      } else if (result.paymentIntent && (result.paymentIntent.status === 'succeeded' || result.paymentIntent.status === 'processing')) {
+        // Success!
+        if (window._claimTimerInterval) clearInterval(window._claimTimerInterval);
+        var formEl = document.getElementById('claimPaymentForm');
+        var successEl = document.getElementById('claimCheckoutSuccess');
+        var loadingEl = document.getElementById('claimStripeLoading');
+        if (formEl) formEl.style.display = 'none';
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (successEl) successEl.style.display = 'flex';
+      } else {
+        if (errEl) errEl.textContent = 'Something unexpected happened. Please try again.';
+        if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
+      }
+    } catch (err) {
+      console.error('[claim-checkout] Payment error:', err);
+      if (errEl) errEl.textContent = 'Payment error. Please try again.';
+      if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
+    }
   };
 
   window.closeClaimCheckoutModal=function(e){
     if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains('checkout-modal-close')) return;
     var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
-    var iframe = document.querySelector('#claimStep3 iframe') || document.getElementById('checkoutIframe');
     if (modal) modal.classList.remove('open');
-    if (iframe) iframe.src = 'about:blank';
+    if (window._claimTimerInterval) clearInterval(window._claimTimerInterval);
   };
 
   window.initAllIphoneSliders=function(){

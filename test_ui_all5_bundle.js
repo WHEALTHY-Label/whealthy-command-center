@@ -139,6 +139,55 @@ function serveStatic(req, res) {
     if (!hasAddressInput || !hasCityInput) throw new Error('Step 2 missing shipping address fields!');
     console.log("✅ Verified: Step 2 has Address, City, State, Zip fields.");
 
+    // Fill Step 2 shipping fields and submit to Step 3
+    await page.fill('#claimShipAddress', '4011 Shilling Way');
+    await page.fill('#claimShipCity', 'Dallas');
+    await page.fill('#claimShipState', 'TX');
+    await page.fill('#claimShipZip', '75237');
+
+    // Mock the Stripe checkout fetch to prevent real API call
+    await page.route('**/governance-native-checkout', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ clientSecret: 'pi_test_secret_test' }),
+      });
+    });
+
+    await page.evaluate(() => window.submitClaimStep2Shipping());
+    await page.waitForTimeout(500);
+
+    // Step 3 should now be visible
+    const step3Visible = await page.evaluate(() => {
+      const s3 = document.getElementById('claimStep3');
+      return s3 && s3.style.display !== 'none';
+    });
+    if (!step3Visible) throw new Error('Step 3 (Payment) did not appear after Step 2 submit!');
+    console.log("✅ Verified: Step 3 shows native payment form after Step 2 submit.");
+
+    // Verify Step 3 uses native Stripe Elements (not old external iframe)
+    const hasOldIframe = await page.evaluate(() => !!document.querySelector('#claimStep3 #checkoutIframe'));
+    if (hasOldIframe) throw new Error('Step 3 should use native Stripe Elements, not the old external checkout iframe!');
+
+    const hasTimerDisplay = await page.evaluate(() => !!document.getElementById('claimTimerDisplay'));
+    const hasShipSummary = await page.evaluate(() => {
+      const el = document.getElementById('claimShipSummary');
+      return el && el.textContent.includes('4011 Shilling Way');
+    });
+    const hasPaymentElement = await page.evaluate(() => !!document.getElementById('claimPaymentElement'));
+    const hasPayBtn = await page.evaluate(() => !!document.getElementById('claimPayBtn'));
+    const hasNextBillingDate = await page.evaluate(() => {
+      const el = document.getElementById('claimNextBillingDate');
+      return el && el.textContent !== '—';
+    });
+
+    if (!hasTimerDisplay) throw new Error('Step 3 missing countdown timer!');
+    if (!hasShipSummary) throw new Error('Step 3 missing confirmed shipping summary!');
+    if (!hasPaymentElement) throw new Error('Step 3 missing Stripe payment element container!');
+    if (!hasPayBtn) throw new Error('Step 3 missing payment submit button!');
+    if (!hasNextBillingDate) throw new Error('Step 3 missing next billing date!');
+    console.log("✅ Verified: Step 3 has timer, shipping summary, Stripe card element, billing date, pay button.");
+
     // Close modal
     await page.evaluate(() => window.closeClaimCheckoutModal(null));
     await page.waitForTimeout(300);
