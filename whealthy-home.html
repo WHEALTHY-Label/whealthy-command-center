@@ -3931,10 +3931,38 @@ function startQuizFromSplash(){
   renderQ(0);
 }
 
-/* Auto-open quiz when user starts scrolling */
-window.addEventListener('scroll', function _quizScrollTrigger() {
-  openQuiz();
-  window.removeEventListener('scroll', _quizScrollTrigger);
+function openGovPopup() {
+  const m=document.getElementById('quizModal');
+  m.classList.remove('result-mode');
+  document.getElementById('quizCard').scrollTop=0;
+  document.getElementById('qmProgress').style.width='0%';
+  document.getElementById('qmFooter').style.display='none';
+  document.getElementById('qmBody').innerHTML = `
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:36px 20px 28px; min-height:340px; gap:20px;">
+      <div style="font-size:36px; line-height:1; margin-bottom:2px;">&#9878;&#65039;</div>
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); color:#ccff00; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:5px 14px; border-radius:100px;">
+        <span style="display:block;width:6px;height:6px;background:#ccff00;border-radius:50%;box-shadow:0 0 6px #ccff00;"></span> $99/mo Founder Membership
+      </div>
+      <h2 style="font-family:var(--font-display); font-size:clamp(24px,4.5vw,34px); font-weight:700; text-transform:uppercase; color:var(--white); line-height:1.08; margin:0; max-width:420px;">
+        Govern Your Energy.<br>All 5 Products.<br><span style="color:#ccff00;">$99/Month.</span>
+      </h2>
+      <p style="font-size:14px; color:var(--text-muted); line-height:1.55; max-width:380px; margin:0;">
+        Stop borrowing against tomorrow. The Governance System delivers all 5 core formulas directly to your door monthly at 50% off retail — founder rate locked for life.
+      </p>
+      <a href="https://whealthylabel.com/gov" class="btn-primary btn-primary--arc" style="font-size:15px; font-weight:800; padding:16px 32px; margin-top:4px; justify-content:center; text-decoration:none; width:100%; max-width:360px; background:#ccff00; color:#080809;">
+        Claim the Governance System | $99/mo &rarr;
+      </a>
+      <span style="font-size:11px; color:var(--text-dim); letter-spacing:0.03em;">$9.95 shipping &#183; Cancel anytime &#183; VIP Community Included</span>
+    </div>
+  `;
+  m.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+/* Auto-open $99 Governance System popup when user starts scrolling */
+window.addEventListener('scroll', function _scrollPopupTrigger() {
+  openGovPopup();
+  window.removeEventListener('scroll', _scrollPopupTrigger);
 }, { passive: true });
 
 function closeQuiz(){
