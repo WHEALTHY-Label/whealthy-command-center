@@ -53,6 +53,36 @@ const BUNDLE_MAP: Record<string, { name: string; variants: Array<{ id: number; q
       { id: 52358763610394, qty: 1, title: "Charge Powder (Cotton Candy)" },
       { id: 52358764396826, qty: 1, title: "Hydration Powder (Lemonade)" }
     ]
+  },
+  "all5": {
+    name: "The Complete Steward Governance System (5 Products)",
+    variants: [
+      { id: 52358763348250, qty: 1, title: "Genius Joe Mushroom Coffee (Medium Roast)" },
+      { id: 52358764200218, qty: 1, title: "BOSS" },
+      { id: 52358764986650, qty: 1, title: "Genius Guice Focus Powder (Sour Candy)" },
+      { id: 52358763610394, qty: 1, title: "Charge Powder (Cotton Candy)" },
+      { id: 52358764396826, qty: 1, title: "Hydration Powder (Lemonade)" }
+    ]
+  },
+  "all-5": {
+    name: "The Complete Steward Governance System (5 Products)",
+    variants: [
+      { id: 52358763348250, qty: 1, title: "Genius Joe Mushroom Coffee (Medium Roast)" },
+      { id: 52358764200218, qty: 1, title: "BOSS" },
+      { id: 52358764986650, qty: 1, title: "Genius Guice Focus Powder (Sour Candy)" },
+      { id: 52358763610394, qty: 1, title: "Charge Powder (Cotton Candy)" },
+      { id: 52358764396826, qty: 1, title: "Hydration Powder (Lemonade)" }
+    ]
+  },
+  "complete-bundle": {
+    name: "The Complete Steward Governance System (5 Products)",
+    variants: [
+      { id: 52358763348250, qty: 1, title: "Genius Joe Mushroom Coffee (Medium Roast)" },
+      { id: 52358764200218, qty: 1, title: "BOSS" },
+      { id: 52358764986650, qty: 1, title: "Genius Guice Focus Powder (Sour Candy)" },
+      { id: 52358763610394, qty: 1, title: "Charge Powder (Cotton Candy)" },
+      { id: 52358764396826, qty: 1, title: "Hydration Powder (Lemonade)" }
+    ]
   }
 };
 

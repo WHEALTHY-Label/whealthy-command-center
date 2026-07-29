@@ -21103,15 +21103,7 @@ async function loadAndInit(){
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
   window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
   window.triggerAll5Checkout=function(){
-    var modal = document.getElementById('claimCheckoutModal') || document.getElementById('checkoutModal');
-    var step1 = document.getElementById('claimStep1');
-    var step2 = document.getElementById('claimStep2');
-    var step3 = document.getElementById('claimStep3');
-
-    if (step1) step1.style.display = 'block';
-    if (step2) step2.style.display = 'none';
-    if (step3) step3.style.display = 'none';
-    if (modal) modal.classList.add('open');
+    window.location.href = 'whealthy-governance-system.html';
   };
 
   window.goToClaimStep1=function(){

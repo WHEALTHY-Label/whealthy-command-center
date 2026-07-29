@@ -662,14 +662,7 @@ let savedName = '';
 let savedEmail = '';
 
 function openCheckoutModal() {
-  const modal = document.getElementById('checkoutModal');
-  const step1 = document.getElementById('modalStep1');
-  const step2 = document.getElementById('modalStep2');
-  const step3 = document.getElementById('modalStep3');
-  if (step1) step1.style.display = 'block';
-  if (step2) step2.style.display = 'none';
-  if (step3) step3.style.display = 'none';
-  if (modal) modal.classList.add('open');
+  window.location.href = 'whealthy-governance-system.html';
 }
 
 function goToModalStep1() {
