@@ -1009,6 +1009,9 @@ textarea,input,select{font-size:16px}
 
 /* Claim Checkout Modal */
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  #claimStripeLoading div:first-child { animation: none; }
+}
 .checkout-modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -1031,7 +1034,7 @@ textarea,input,select{font-size:16px}
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 24px;
   padding: 0;
-  max-width: 960px;
+  max-width: 540px;
   width: 95%;
   max-height: 90vh;
   position: relative;
@@ -1039,6 +1042,14 @@ textarea,input,select{font-size:16px}
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+}
+#claimCheckoutModal input:focus {
+  outline: none;
+  border-color: var(--lime) !important;
+  box-shadow: 0 0 0 2px rgba(204,255,0,0.25);
+}
+#claimCheckoutModal input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .checkout-modal-header {
   padding: 16px 24px;
@@ -21094,14 +21105,14 @@ async function loadAndInit(){
   <div class="checkout-modal-card" onclick="event.stopPropagation()" style="max-width:540px; background:#121418; border:1px solid rgba(204,255,0,0.3); border-radius:20px; padding:20px;">
     <div class="checkout-modal-header" style="padding:0 0 16px; background:transparent; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <span class="checkout-modal-title" id="claimModalTitle" style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff;">Claim $99 Master System</span>
-      <button class="checkout-modal-close" onclick="closeClaimCheckoutModal(null)" style="background:none; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+      <button class="checkout-modal-close" onclick="closeClaimCheckoutModal(null)" aria-label="Close checkout" style="background:none; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer; min-height:44px; min-width:44px; display:flex; align-items:center; justify-content:center;">&times;</button>
     </div>
 
     <!-- STEP 1: NAME & EMAIL -->
     <div id="claimStep1" style="display:block;">
       <div style="background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.2); border-radius:10px; padding:8px 12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 1 OF 3</span>
+          <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">Step 1 of 3</span>
           <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Claim 50% Founder Rate</span>
         </div>
         <span style="font-size:11px; font-weight:700; color:var(--lime);">33% Complete</span>
@@ -21128,15 +21139,15 @@ async function loadAndInit(){
 
       <div style="display:flex; flex-direction:column; gap:12px; text-align:left; max-width:420px; margin:0 auto;">
         <div>
-          <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">First & Last Name</label>
-          <input type="text" id="claimInputName" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="e.g. Ignacio Garcia" required>
+          <label for="claimInputName" style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">Full Name <span style="color:#ff4d4d;">*</span></label>
+          <input type="text" id="claimInputName" autocomplete="name" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="e.g. Ignacio Garcia" required>
         </div>
         <div>
-          <label style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">Email Address</label>
-          <input type="email" id="claimInputEmail" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="you@example.com" required>
+          <label for="claimInputEmail" style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">Email Address <span style="color:#ff4d4d;">*</span></label>
+          <input type="email" id="claimInputEmail" autocomplete="email" style="width:100%; font-size:14px; padding:12px 14px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="you@example.com" required>
         </div>
         <div id="claimStep1Err" style="color:#ff4d4d; font-size:12px; text-align:center; min-height:16px; font-weight:600;"></div>
-        <button type="button" onclick="submitClaimStep1()" class="btn-lime" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">CONTINUE TO SHIPPING ADDRESS (STEP 2 OF 3) &rarr;</button>
+        <button type="button" onclick="submitClaimStep1()" class="btn-lime" style="width:100%; padding:16px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">CONTINUE &rarr; SHIPPING ADDRESS</button>
       </div>
     </div>
 
@@ -21147,41 +21158,41 @@ async function loadAndInit(){
           <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 2 OF 3</span>
           <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Shipping Address</span>
         </div>
-        <button type="button" onclick="goToClaimStep1()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline;">
-          &larr; Back to Step 1
+        <button type="button" onclick="goToClaimStep1()" style="background:none; border:none; color:var(--lime); font-size:12px; cursor:pointer; text-decoration:underline; min-height:44px; padding:8px 12px;">
+          &larr; Back
         </button>
       </div>
 
       <div style="background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); border-radius:10px; padding:8px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:16px;">⏳</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14M5 2h14M12 17.5v.5M12 22v-4M12 6v.5M12 2v4M17 14.5l-2-1.5M7 14.5l2-1.5"/><path d="M17 17c0-5-2.5-5-5-7.5-2.5 2.5-5 2.5-5 7.5a5 5 0 0 0 10 0z"/></svg>
           <div>
             <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase;">FOUNDER RATE RESERVED</div>
             <div style="font-size:10px; color:rgba(255,255,255,0.6);">Complete checkout before timer expires</div>
           </div>
         </div>
-        <div style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--lime);">07:00</div>
+        <div id="claimStep2Timer" style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--lime);">07:00</div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:12px; text-align:left;">
         <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px;">
-          <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:10px;">🚚 Shipping Address</div>
+          <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Shipping Address</div>
           <div style="margin-bottom:10px;">
-            <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Street Address</label>
-            <input type="text" id="claimShipAddress" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="123 Main St" required>
+            <label for="claimShipAddress" style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Street Address <span style="color:#ff4d4d;">*</span></label>
+            <input type="text" id="claimShipAddress" autocomplete="street-address" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="123 Main St" required>
           </div>
           <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;">
             <div>
-              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">City</label>
-              <input type="text" id="claimShipCity" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="Dallas" required>
+              <label for="claimShipCity" style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">City <span style="color:#ff4d4d;">*</span></label>
+              <input type="text" id="claimShipCity" autocomplete="address-level2" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="Dallas" required>
             </div>
             <div>
-              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">State</label>
-              <input type="text" id="claimShipState" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="TX" maxlength="2" required>
+              <label for="claimShipState" style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">State <span style="color:#ff4d4d;">*</span></label>
+              <input type="text" id="claimShipState" autocomplete="address-level1" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="TX" maxlength="2" required>
             </div>
             <div>
-              <label style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Zip</label>
-              <input type="text" id="claimShipZip" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="75201" required>
+              <label for="claimShipZip" style="font-size:10px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; display:block; margin-bottom:3px;">Zip <span style="color:#ff4d4d;">*</span></label>
+              <input type="text" id="claimShipZip" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]*" style="width:100%; font-size:13px; padding:10px 12px; background:#1c1f26; border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:8px;" placeholder="75201" required>
             </div>
           </div>
         </div>
@@ -21197,15 +21208,15 @@ async function loadAndInit(){
           <span style="font-size:10px; font-weight:800; background:var(--lime); color:#000; padding:2px 8px; border-radius:4px; text-transform:uppercase;">STEP 3 OF 3</span>
           <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">Payment Details</span>
         </div>
-        <button type="button" onclick="goToClaimStep2()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline;">
-          &larr; Back to Shipping
+        <button type="button" onclick="goToClaimStep2()" style="background:none; border:none; color:var(--lime); font-size:12px; cursor:pointer; text-decoration:underline; min-height:44px; padding:8px 12px;">
+          &larr; Back
         </button>
       </div>
 
       <!-- Founder Rate Reserved Timer -->
       <div style="background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); border-radius:10px; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:16px;">⏳</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14M5 2h14M12 17.5v.5M12 22v-4M12 6v.5M12 2v4M17 14.5l-2-1.5M7 14.5l2-1.5"/><path d="M17 17c0-5-2.5-5-5-7.5-2.5 2.5-5 2.5-5 7.5a5 5 0 0 0 10 0z"/></svg>
           <div>
             <div style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase;">FOUNDER RATE RESERVED</div>
             <div style="font-size:10px; color:rgba(255,255,255,0.6);">Complete checkout before timer expires</div>
@@ -21219,7 +21230,7 @@ async function loadAndInit(){
         <div style="font-size:11px; color:rgba(255,255,255,0.6);">
           <strong style="color:var(--lime);">Shipping To:</strong> <span id="claimShipSummary">—</span>
         </div>
-        <button onclick="goToClaimStep2()" style="background:none; border:none; color:var(--lime); font-size:10px; cursor:pointer; text-decoration:underline; font-weight:700;">Edit</button>
+        <button onclick="goToClaimStep2()" style="background:none; border:none; color:var(--lime); font-size:11px; cursor:pointer; text-decoration:underline; font-weight:700; min-height:44px; padding:8px 12px;">Edit</button>
       </div>
 
       <!-- Stripe Loading Spinner -->
@@ -21244,18 +21255,18 @@ async function loadAndInit(){
           ⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) &rarr;
         </button>
         <div style="font-size:11px; color:rgba(255,255,255,0.35); text-align:center; display:flex; align-items:center; justify-content:center; gap:12px;">
-          <span>🔒 256-Bit SSL</span><span>&bull;</span><span>🚚 Ships via USPS</span><span>&bull;</span><span>🛡️ Cancel Anytime</span>
+          <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>256-Bit SSL</span><span>&bull;</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:3px;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Ships via USPS</span><span>&bull;</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:3px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Cancel Anytime</span>
         </div>
       </form>
 
       <!-- Success State -->
       <div id="claimCheckoutSuccess" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding:30px 16px; text-align:center;">
-        <div style="width:52px; height:52px; border-radius:50%; background:rgba(204,255,0,0.15); border:2px solid var(--lime); display:flex; align-items:center; justify-content:center; color:var(--lime); font-size:26px; font-weight:bold; margin-bottom:14px; box-shadow:0 0 30px rgba(204,255,0,0.3);">✓</div>
+        <div style="width:52px; height:52px; border-radius:50%; background:rgba(204,255,0,0.15); border:2px solid var(--lime); display:flex; align-items:center; justify-content:center; color:var(--lime); margin-bottom:14px; box-shadow:0 0 30px rgba(204,255,0,0.3);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <div style="font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:8px;">System Unlocked!</div>
         <div style="font-size:13px; color:#fff; line-height:1.5; max-width:360px; margin-bottom:20px;">
           Welcome to WHEALTHY. Your Founder Membership ($99.00/mo) is active and your Governance System bundle is being prepared for shipment.
         </div>
-        <button onclick="closeClaimCheckoutModal(null)" class="btn-lime" style="cursor:pointer; border:none; max-width:240px; padding:14px 28px; font-size:14px; font-weight:700; border-radius:10px;">
+        <button id="claimSuccessClose" onclick="closeClaimCheckoutModal(null)" class="btn-lime" style="cursor:pointer; border:none; max-width:240px; padding:14px 28px; font-size:14px; font-weight:700; border-radius:10px;">
           CLOSE WINDOW &rarr;
         </button>
       </div>
@@ -21333,6 +21344,25 @@ async function loadAndInit(){
     if (step1) step1.style.display = 'none';
     if (step2) step2.style.display = 'block';
     if (step3) step3.style.display = 'none';
+
+    // Start Step 2 countdown timer (7 minutes)
+    if (!window._claimTimerSec || window._claimTimerSec <= 0) {
+      window._claimTimerSec = 420;
+    }
+    if (window._claimTimerInterval) clearInterval(window._claimTimerInterval);
+    var timer2El = document.getElementById('claimStep2Timer');
+    var timer3El = document.getElementById('claimTimerDisplay');
+    function updateBothTimers() {
+      var m = Math.floor(window._claimTimerSec / 60);
+      var s = window._claimTimerSec % 60;
+      var txt = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      if (timer2El) timer2El.textContent = txt;
+      if (timer3El) timer3El.textContent = txt;
+      if (window._claimTimerSec <= 0) clearInterval(window._claimTimerInterval);
+      window._claimTimerSec--;
+    }
+    updateBothTimers();
+    window._claimTimerInterval = setInterval(updateBothTimers, 1000);
   };
 
   window.goToClaimStep2=function(){
@@ -21397,6 +21427,9 @@ async function loadAndInit(){
       var m = Math.floor(window._claimTimerSec / 60);
       var s = window._claimTimerSec % 60;
       if (timerEl) timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      // Also update Step 2 timer
+      var timer2El = document.getElementById('claimStep2Timer');
+      if (timer2El) timer2El.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
       if (window._claimTimerSec <= 0) clearInterval(window._claimTimerInterval);
       window._claimTimerSec--;
     }
@@ -21512,7 +21545,11 @@ async function loadAndInit(){
         var loadingEl = document.getElementById('claimStripeLoading');
         if (formEl) formEl.style.display = 'none';
         if (loadingEl) loadingEl.style.display = 'none';
-        if (successEl) successEl.style.display = 'flex';
+        if (successEl) {
+          successEl.style.display = 'flex';
+          var closeBtn = document.getElementById('claimSuccessClose');
+          if (closeBtn) setTimeout(function(){ closeBtn.focus(); }, 100);
+        }
       } else {
         if (errEl) errEl.textContent = 'Something unexpected happened. Please try again.';
         if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
