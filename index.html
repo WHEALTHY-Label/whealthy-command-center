@@ -21428,9 +21428,10 @@ async function loadAndInit(){
         if (formEl) formEl.style.display = 'flex';
         return;
       }
+      var anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
       var res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/create-native-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + anon, 'apikey': anon },
         body: JSON.stringify({ bundleKey: 'all5', email: email, name: name }),
       });
       var data = await res.json();
