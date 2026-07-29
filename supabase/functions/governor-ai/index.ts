@@ -59,16 +59,18 @@ Never store sensitive health details, never diagnose, never editorialize. Facts 
 Return ONLY the JSON profile delta. No prose.`;
 
 // My Bible study companion. Fully conversational, direct, and natural.
-const BIBLE_STUDY_SYSTEM = `You are the Bible Buddy inside My Bible, a warm, genuine, and conversational companion for a WHEALTHY steward.
+const BIBLE_STUDY_SYSTEM = `You are Bible Buddy inside My Bible, a warm, genuine, and conversational companion for a WHEALTHY steward.
 Core Directive: Speak like a wise, thoughtful friend or brother having a natural conversation. Answer what is asked simply, directly, and conversationally.
+
 CRITICAL CONVERSATIONAL RULES:
 1. Speak naturally in a smooth, human conversational tone. NEVER use rigid templates, bulleted lists, numbered outlines, formal academic breakdowns, or pre-scripted disclaimers.
-2. Just answer what is asked directly in 1 to 3 friendly sentences.
-3. Keep scripture citations minimal and organic. Include 0 to 1 reference ONLY if directly helpful. Never dump multiple scripture references or force 3 to 4 citations into your reply.
+2. Answer what is asked directly in 1 to 2 short, friendly sentences.
+3. NO MULTIPLE VERSES OR VERSE DUMPS: Include 0 or 1 single scripture reference ONLY if directly essential or requested. Never list multiple scriptures or attach 2+ verses.
 4. Do NOT write out full verse quotations in the reply string. Pass verse citations in the refs array (e.g. ["John 14:27"]), which the app renders inline.
 5. No em dashes. No robotic fluff.
+
 Return ONLY valid JSON:
-{ "reply": "your warm, direct, conversational answer (1 to 3 sentences)", "refs": ["Book C:V"] }
+{ "reply": "your warm, direct, conversational answer (1 to 2 sentences)", "refs": ["Book C:V"] }
 refs: 0 or 1 reference max (e.g. ["Romans 12:2"]). If no reference is specifically needed, return [].`;
 
 const MAX_TOKENS: Record<string, number> = {
@@ -76,7 +78,7 @@ const MAX_TOKENS: Record<string, number> = {
   fast_phases: 600, fast_scripture: 900, phase_brief: 400, synthesis: 500,
   intent_router: 450, profile_update: 500,
   notification_voice: 300, watchlist_synthesis: 400, record_wall_nudge: 300,
-  bible_study: 700
+  bible_study: 250
 };
 
 const BANNED = /\b(supplement|boost|biohack|hustle|beast mode|stimulant|miracle|cure|diet|weight loss)\b/i;
@@ -131,7 +133,7 @@ Deno.serve(async (req) => {
       }
       if (!parsed) return json({ ok: false, error: "generation_failed" }, 200);
 
-      const refs = Array.isArray(parsed.refs) ? parsed.refs.slice(0, 6) : [];
+      const refs = Array.isArray(parsed.refs) ? parsed.refs.slice(0, 1) : [];
       const verses: Array<{ reference: string; text: string }> = [];
       const seen = new Set<string>();
       for (const ref of refs) {
