@@ -95,46 +95,16 @@ function serveStatic(req, res) {
     if (!isAll5Visible) throw new Error('#all5View container is not visible after clicking dashboard card button!');
     console.log("✅ Verified: Dashboard card click navigates directly to #all5View.");
 
-    // Test Hero CTA button click & 3-step modal flow
-    console.log("Testing Hero CTA Button Click & 3-Step Checkout Funnel...");
+    // Test Hero CTA button click & Custom Governance Checkout routing
+    console.log("Testing Hero CTA Button Click & Custom Governance Checkout Routing...");
     await page.evaluate(() => window.triggerAll5Checkout());
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(500);
 
-    // Verify Modal Step 1 is visible
-    const isStep1Visible = await page.locator('#claimStep1').isVisible();
-    if (!isStep1Visible) throw new Error('Modal Step 1 (Name & Email) is not visible!');
-    console.log("✅ Verified: Step 1 (Name & Email) opened upon Hero CTA button click.");
-
-    // Fill Step 1
-    await page.fill('#claimInputName', 'Ignacio Garcia');
-    await page.fill('#claimInputEmail', 'ignacio@whealthy.com');
-    await page.evaluate(() => window.submitClaimStep1());
-    await page.waitForTimeout(300);
-
-    // Verify Modal Step 2 is visible
-    const isStep2Visible = await page.locator('#claimStep2').isVisible();
-    if (!isStep2Visible) throw new Error('Modal Step 2 (Shipping Address) is not visible!');
-    console.log("✅ Verified: Step 2 (Shipping Address) loaded cleanly after Step 1.");
-
-    // Fill Step 2 Shipping Address
-    await page.fill('#claimShipAddress', '123 Steward Way');
-    await page.fill('#claimShipCity', 'Dallas');
-    await page.fill('#claimShipState', 'TX');
-    await page.fill('#claimShipZip', '75201');
-    await page.evaluate(() => window.submitClaimStep2Shipping());
-    await page.waitForTimeout(300);
-
-    // Verify Modal Step 3 is visible
-    const isStep3Visible = await page.locator('#claimStep3').isVisible();
-    if (!isStep3Visible) throw new Error('Modal Step 3 (Payment & Card Iframe) is not visible!');
-    console.log("✅ Verified: Step 3 (Payment & Card Stripe iframe) loaded cleanly after Step 2.");
-
-    // Verify iframe src has full parameters
-    const iframeSrc = await page.locator('#claimStep3 #checkoutIframe').getAttribute('src');
-    if (!iframeSrc.includes('ignacio%40whealthy.com') || !iframeSrc.includes('123%20Steward%20Way')) {
-      throw new Error(`Iframe URL missing prefilled details: ${iframeSrc}`);
+    const currentUrl = page.url();
+    if (!currentUrl.includes('whealthy-governance-system.html')) {
+      throw new Error(`Expected redirect to whealthy-governance-system.html but got: ${currentUrl}`);
     }
-    console.log("✅ Verified: Stripe iframe URL correctly prefilled with Name, Email & Shipping Address.");
+    console.log("✅ Verified: Hero CTA button navigates directly to custom Governance System checkout page.");
 
     // Test standalone page whealthy-all5-bundle.html
     console.log("Loading whealthy-all5-bundle.html...");

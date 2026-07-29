@@ -16003,9 +16003,9 @@ function renderDash(){
   var nextDateColor = window._nextEligible ? 'color:#fff':'color:rgba(255,255,255,0.4)';
 
   h+='<div class="bundle-item" style="cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Next Eligible Date</div><div class="bundle-item__value" style="'+nextDateColor+'">'+(window._nextEligible||'Not scheduled')+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Next Auto-Refill</div><div class="bundle-item__value" style="'+nextDateColor+'">'+(window._nextEligible||(productState==='equipped'?'In 30 Days':'Not scheduled'))+'</div></div>';
   h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value" style="'+statusColor+'">'+bundleStatus+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(productState==='equipped'?'On':'Off')+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(productState==='equipped'?'Active (Every 30 Days)':'Off')+'</div></div>';
   h+='</div>';
   h+='</div>'; // end left column
 
