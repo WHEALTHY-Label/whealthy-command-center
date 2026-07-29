@@ -21428,10 +21428,10 @@ async function loadAndInit(){
         if (formEl) formEl.style.display = 'flex';
         return;
       }
-      var res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/governance-native-checkout', {
+      var res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/create-native-subscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, firstName: name, lastName: '' }),
+        body: JSON.stringify({ bundleKey: 'all5', email: email, name: name }),
       });
       var data = await res.json();
       if (!data.clientSecret) throw new Error(data.error || 'Failed to initialize payment');

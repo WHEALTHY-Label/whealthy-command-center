@@ -37,10 +37,16 @@ serve(async (req) => {
     });
 
     // 2. Create a Product to attach to the subscription
+    const isAll5 = bundleKey === 'all5';
     const product = await stripe.products.create({
-      name: `WHEALTHY Routine: ${bundleKey.toUpperCase()}`,
-      description: 'Personalized governance system designed from your energy assessment.',
+      name: isAll5 ? 'WHEALTHY Governance System — All 5' : `WHEALTHY Routine: ${bundleKey.toUpperCase()}`,
+      description: isAll5
+        ? 'The complete 5-product WHEALTHY ecosystem: Genius Guice, Genius Joe, Hydration, Charge, and Boss.'
+        : 'Personalized governance system designed from your energy assessment.',
     });
+
+    // Price: $99/mo for All 5 bundle, $59.99/mo for individual routines
+    const unitAmount = isAll5 ? 9900 : 5999;
 
     // 3. Create the Subscription with default_incomplete
     const subscription = await stripe.subscriptions.create({
@@ -50,7 +56,7 @@ serve(async (req) => {
           price_data: {
             currency: 'usd',
             product: product.id,
-            unit_amount: 5999, // $59.99
+            unit_amount: unitAmount,
             recurring: {
               interval: 'month',
             }
@@ -66,8 +72,7 @@ serve(async (req) => {
       expand: ['latest_invoice.payment_intent'],
     });
 
-    // 3. Extract the client_secret from the payment_intent
-    // The TypeScript inference for expanded objects can sometimes require asserting
+    // 4. Extract the client_secret from the payment_intent
     const invoice = subscription.latest_invoice as any;
     const paymentIntent = invoice.payment_intent as any;
     
