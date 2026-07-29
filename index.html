@@ -21211,7 +21211,30 @@ async function loadAndInit(){
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
   window.vhCloseHelp=function(){ var bk=document.getElementById('vhPopBack'); if(bk)bk.classList.remove('open'); };
   window.triggerAll5Checkout=function(){
-    window.location.href = 'whealthy-governance-system.html';
+    var modal = document.getElementById('claimCheckoutModal');
+    if (!modal) { window.location.href = 'whealthy-governance-system.html'; return; }
+
+    // Reset to Step 1 every time
+    var s1 = document.getElementById('claimStep1');
+    var s2 = document.getElementById('claimStep2');
+    var s3 = document.getElementById('claimStep3');
+    if (s1) s1.style.display = 'block';
+    if (s2) s2.style.display = 'none';
+    if (s3) s3.style.display = 'none';
+
+    // Pre-fill name/email if already known from session
+    var nameInput = document.getElementById('claimInputName');
+    var emailInput = document.getElementById('claimInputEmail');
+    if (nameInput && window.MEMBER_NAME && !nameInput.value) nameInput.value = window.MEMBER_NAME;
+    if (emailInput && window.MEMBER_EMAIL && !emailInput.value) emailInput.value = window.MEMBER_EMAIL;
+
+    // Clear any previous errors
+    var err1 = document.getElementById('claimStep1Err');
+    var err2 = document.getElementById('claimStep2Err');
+    if (err1) err1.textContent = '';
+    if (err2) err2.textContent = '';
+
+    modal.classList.add('open');
   };
 
   window.goToClaimStep1=function(){

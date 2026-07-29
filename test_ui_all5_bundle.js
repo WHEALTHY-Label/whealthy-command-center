@@ -95,16 +95,59 @@ function serveStatic(req, res) {
     if (!isAll5Visible) throw new Error('#all5View container is not visible after clicking dashboard card button!');
     console.log("✅ Verified: Dashboard card click navigates directly to #all5View.");
 
-    // Test Hero CTA button click & Custom Governance Checkout routing
-    console.log("Testing Hero CTA Button Click & Custom Governance Checkout Routing...");
+    // Test Hero CTA button click opens checkout modal (not redirect)
+    console.log("Testing Hero CTA Button Click opens 3-step checkout modal...");
     await page.evaluate(() => window.triggerAll5Checkout());
     await page.waitForTimeout(500);
 
-    const currentUrl = page.url();
-    if (!currentUrl.includes('whealthy-governance-system.html')) {
-      throw new Error(`Expected redirect to whealthy-governance-system.html but got: ${currentUrl}`);
-    }
-    console.log("✅ Verified: Hero CTA button navigates directly to custom Governance System checkout page.");
+    // Modal should be open
+    const modalOpen = await page.evaluate(() => {
+      const modal = document.getElementById('claimCheckoutModal');
+      return modal && modal.classList.contains('open');
+    });
+    if (!modalOpen) throw new Error('Checkout modal did not open after triggerAll5Checkout()!');
+    console.log("✅ Verified: Hero CTA opens 3-step checkout modal popup.");
+
+    // Step 1 should be visible with Name & Email fields
+    const step1Visible = await page.evaluate(() => {
+      const s1 = document.getElementById('claimStep1');
+      return s1 && s1.style.display !== 'none';
+    });
+    if (!step1Visible) throw new Error('Step 1 (Name & Email) is not visible!');
+    
+    const hasNameInput = await page.locator('#claimInputName').isVisible();
+    const hasEmailInput = await page.locator('#claimInputEmail').isVisible();
+    if (!hasNameInput || !hasEmailInput) throw new Error('Step 1 missing Name or Email input fields!');
+    console.log("✅ Verified: Step 1 shows Name & Email fields.");
+
+    // Fill Step 1 and advance to Step 2
+    await page.fill('#claimInputName', 'Test Steward');
+    await page.fill('#claimInputEmail', 'test@whealthy.com');
+    await page.evaluate(() => window.submitClaimStep1());
+    await page.waitForTimeout(300);
+
+    const step2Visible = await page.evaluate(() => {
+      const s2 = document.getElementById('claimStep2');
+      return s2 && s2.style.display !== 'none';
+    });
+    if (!step2Visible) throw new Error('Step 2 (Shipping Address) did not appear after Step 1 submit!');
+    console.log("✅ Verified: Step 2 shows Shipping Address form after Step 1 submit.");
+
+    // Verify Step 2 has shipping fields
+    const hasAddressInput = await page.locator('#claimShipAddress').isVisible();
+    const hasCityInput = await page.locator('#claimShipCity').isVisible();
+    if (!hasAddressInput || !hasCityInput) throw new Error('Step 2 missing shipping address fields!');
+    console.log("✅ Verified: Step 2 has Address, City, State, Zip fields.");
+
+    // Close modal
+    await page.evaluate(() => window.closeClaimCheckoutModal(null));
+    await page.waitForTimeout(300);
+    const modalClosed = await page.evaluate(() => {
+      const modal = document.getElementById('claimCheckoutModal');
+      return modal && !modal.classList.contains('open');
+    });
+    if (!modalClosed) throw new Error('Modal did not close properly!');
+    console.log("✅ Verified: Modal closes cleanly.");
 
     // Test standalone page whealthy-all5-bundle.html
     console.log("Loading whealthy-all5-bundle.html...");
