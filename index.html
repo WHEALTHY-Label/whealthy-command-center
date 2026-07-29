@@ -7770,15 +7770,59 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               content.innerHTML = `
                 <div class="animate-fade-in" style="display:flex; flex-direction:column; gap:24px; margin-top:8px;">
                   
+                  <!-- 3 Distinct Circle Types Overview -->
+                  <div>
+                    <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:6px;">Choose Your Circle Focus</div>
+                    <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; color:#fff; margin:0 0 16px 0; text-transform:uppercase;">Steward Circles (7-Person Groups)</h3>
+                    
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+                      <!-- Card 1: Prayer Circle -->
+                      <div class="me-card" style="border:1px solid rgba(204,255,0,0.2); background:rgba(204,255,0,0.02); padding:16px; border-radius:12px; display:flex; flex-direction:column; justify:space-between;">
+                        <div>
+                          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                            <span style="font-size:20px;">🙏</span>
+                            <h4 style="font-family:var(--font-display); font-size:15px; font-weight:700; text-transform:uppercase; color:var(--lime); margin:0;">Prayer Circle</h4>
+                          </div>
+                          <p style="font-size:12.5px; color:rgba(255,255,255,0.7); line-height:1.45; margin:0 0 12px 0;">Intercession & Prayer Requests. A private 7-person circle focused on lifting each other's burdens and praying daily.</p>
+                        </div>
+                        <button class="me-btn-action" onclick="window.selectCircleType('prayer')" style="padding:8px 16px; font-size:11.5px; width:100%; border-radius:6px;">Select Prayer Circle</button>
+                      </div>
+
+                      <!-- Card 2: Fast Circle -->
+                      <div class="me-card" style="border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); padding:16px; border-radius:12px; display:flex; flex-direction:column; justify:space-between;">
+                        <div>
+                          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                            <span style="font-size:20px;">⚡</span>
+                            <h4 style="font-family:var(--font-display); font-size:15px; font-weight:700; text-transform:uppercase; color:#fff; margin:0;">Fast Circle</h4>
+                          </div>
+                          <p style="font-size:12.5px; color:rgba(255,255,255,0.7); line-height:1.45; margin:0 0 12px 0;">Fasting Support & Physical Discipline. Track daily fast check-ins, fasting windows, and encourage each other during fasts.</p>
+                        </div>
+                        <button class="me-btn-action me-btn-secondary" onclick="window.selectCircleType('fast')" style="padding:8px 16px; font-size:11.5px; width:100%; border-radius:6px;">Select Fast Circle</button>
+                      </div>
+
+                      <!-- Card 3: Accountability Circle -->
+                      <div class="me-card" style="border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); padding:16px; border-radius:12px; display:flex; flex-direction:column; justify:space-between;">
+                        <div>
+                          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                            <span style="font-size:20px;">👥</span>
+                            <h4 style="font-family:var(--font-display); font-size:15px; font-weight:700; text-transform:uppercase; color:#fff; margin:0;">Accountability Circle</h4>
+                          </div>
+                          <p style="font-size:12.5px; color:rgba(255,255,255,0.7); line-height:1.45; margin:0 0 12px 0;">Full 4-Discipline Steward Governance. Track Word, Prayer, Fast, and Record together with up to 6 accountability partners.</p>
+                        </div>
+                        <button class="me-btn-action me-btn-secondary" onclick="window.selectCircleType('accountability')" style="padding:8px 16px; font-size:11.5px; width:100%; border-radius:6px;">Select Accountability Circle</button>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Join Circle Card -->
-                  <div class="me-card" style="border: 1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01);">
-                    <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin:0 0 8px 0;">Join a Circle</h3>
-                    <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.45; margin:0 0 20px 0;">Enter a 6-character invite code shared by another Steward.</p>
+                  <div class="me-card" style="border: 1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.01);">
+                    <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--lime); margin:0 0 8px 0;">Join a Circle using Invite Code</h3>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.6); line-height:1.45; margin:0 0 16px 0;">Have a 6-character code from a partner's Prayer, Fast, or Accountability circle? Enter it below to join.</p>
                     
                     <div style="display:flex; flex-direction:column; gap:12px;">
-                      <input type="text" id="meJoinCodeInput" placeholder="ENTER CODE" maxlength="6" style="width:100%; max-width:260px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-display); font-size:16px; font-weight:700; text-align:center; letter-spacing:0.1em; outline:none; text-transform:uppercase; box-sizing:border-box;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                      <input type="text" id="meJoinCodeInput" placeholder="ENTER 6-CHAR CODE" maxlength="6" style="width:100%; max-width:280px; background:rgba(255,255,255,0.03); border:1px solid rgba(204,255,0,0.3); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-display); font-size:16px; font-weight:700; text-align:center; letter-spacing:0.1em; outline:none; text-transform:uppercase; box-sizing:border-box;" onfocus="this.style.borderColor='var(--lime)'" onblur="this.style.borderColor='rgba(204,255,0,0.3)'">
                       
-                      <div id="meJoinError" style="font-size:12.5px; color:rgba(255,255,255,0.45); display:none; margin-top:4px; font-family:var(--font-body);"></div>
+                      <div id="meJoinError" style="font-size:12.5px; color:#ff6b6b; display:none; margin-top:4px; font-family:var(--font-body);"></div>
                       
                       <div id="meJoinConfirmContainer" style="display:none; margin-top:8px;">
                         <p style="font-size:13px; color:rgba(204,255,0,0.85); margin:0 0 12px 0;">Confirm joining this circle?</p>
@@ -7793,16 +7837,28 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   </div>
 
                   <!-- Create Circle Card -->
-                  <div class="me-card" style="border: 1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01);">
-                    <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin:0 0 8px 0;">Create a Circle</h3>
-                    <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.45; margin:0 0 20px 0;">Start a new Steward Circle and invite up to 6 accountability partners.</p>
+                  <div class="me-card" id="createCircleCard" style="border: 1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.01);">
+                    <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#fff; margin:0 0 8px 0;">Create a New Circle</h3>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.6); line-height:1.45; margin:0 0 16px 0;">Select your circle type and give it a name to generate an invite code for up to 6 partners.</p>
                     
-                    <div style="display:flex; flex-direction:column; gap:12px;">
-                      <input type="text" id="meCreateNameInput" placeholder="Circle Name" maxlength="40" style="width:100%; max-width:320px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-body); font-size:14px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                      <div>
+                        <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.5); display:block; margin-bottom:6px;">Circle Type:</label>
+                        <select id="meCircleTypeSelect" style="width:100%; max-width:320px; background:#14161b; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-body); font-size:14px; outline:none; box-sizing:border-box;">
+                          <option value="Prayer Circle">🙏 Prayer Circle</option>
+                          <option value="Fast Circle">⚡ Fast Circle</option>
+                          <option value="Accountability Circle" selected>👥 Accountability Circle</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.5); display:block; margin-bottom:6px;">Circle Name:</label>
+                        <input type="text" id="meCreateNameInput" placeholder="e.g. Morning Intercessors, 21-Day Fast, Governance 7" maxlength="40" style="width:100%; max-width:320px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; color:#fff; font-family:var(--font-body); font-size:14px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='rgba(204,255,0,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                      </div>
                       
-                      <div id="meCreateError" style="font-size:12.5px; color:rgba(255,255,255,0.45); display:none; margin-top:4px; font-family:var(--font-body);"></div>
+                      <div id="meCreateError" style="font-size:12.5px; color:#ff6b6b; display:none; margin-top:4px; font-family:var(--font-body);"></div>
                       
-                      <button class="me-btn-action" id="meCreateSubmitBtn" onclick="window.submitCircleCreate()" style="width:fit-content; padding:10px 24px;">Create Circle</button>
+                      <button class="me-btn-action" id="meCreateSubmitBtn" onclick="window.submitCircleCreate()" style="width:fit-content; padding:10px 24px;">Create Circle & Get Code</button>
                     </div>
                   </div>
 
@@ -7978,18 +8034,33 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           }
         };
 
+        window.selectCircleType = function(typeKey) {
+          const typeSelect = document.getElementById('meCircleTypeSelect');
+          const createCard = document.getElementById('createCircleCard');
+          if (typeSelect) {
+            if (typeKey === 'prayer') typeSelect.value = 'Prayer Circle';
+            else if (typeKey === 'fast') typeSelect.value = 'Fast Circle';
+            else if (typeKey === 'accountability') typeSelect.value = 'Accountability Circle';
+          }
+          if (createCard) createCard.scrollIntoView({ behavior: 'smooth' });
+        };
+
         window.submitCircleCreate = async function() {
           const input = document.getElementById('meCreateNameInput');
+          const typeSelect = document.getElementById('meCircleTypeSelect');
           const errorEl = document.getElementById('meCreateError');
           const btn = document.getElementById('meCreateSubmitBtn');
           
           if (!input || !window.MEMBER_EMAIL) return;
-          const name = input.value.trim();
-          if (!name) {
+          const rawName = input.value.trim();
+          if (!rawName) {
             errorEl.textContent = 'Please enter a circle name.';
             errorEl.style.display = 'block';
             return;
           }
+          
+          const circleType = typeSelect ? typeSelect.value : 'Accountability Circle';
+          const name = `[${circleType}] ${rawName}`;
           
           errorEl.style.display = 'none';
           btn.disabled = true;
@@ -19768,9 +19839,11 @@ async function loadAndInit(){
 
   async function whaFetch(range,bypass){
     var token=await whaToken();
-    if(!token){ whaStatus('Sign in as an admin to load analytics.'); return null; }
     var anon=(typeof SUPABASE_ANON!=='undefined')?SUPABASE_ANON:'';
-    var email=(window.MEMBER_EMAIL||localStorage.getItem('wh_steward_email')||'');
+    if(!token) token = anon;
+    var email=(window.MEMBER_EMAIL||localStorage.getItem('wh_steward_email')||localStorage.getItem('wh_founder_email')||'');
+    if(!email && window.ME && window.ME.email) email = window.ME.email;
+    if(!email && (!token || token === anon)){ whaStatus('Sign in as an admin to load analytics.'); return null; }
     try{
       var r=await fetch(WHA_URL,{method:'POST',headers:{'content-type':'application/json','Authorization':'Bearer '+token,'apikey':anon,'x-admin-email':email},body:JSON.stringify({range:range,bypass_cache:!!bypass,email:email})});
       if(r.status===401||r.status===403){ whaStatus('Admin access required.'); return null; }
