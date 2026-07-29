@@ -7820,13 +7820,37 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               const isShepherd = m.role === 'shepherd';
               
               membersHtml += `
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:10px; background:${isSelf ? 'rgba(204,255,0,0.03)' : 'rgba(255,255,255,0.01)'}; border:1px solid ${isSelf ? 'rgba(204,255,0,0.15)' : 'rgba(255,255,255,0.04)'}; margin-bottom:8px;">
-                  <div style="font-size:13.5px; font-weight:600; color:${isSelf ? 'var(--lime)' : '#fff'}; display:flex; align-items:center; gap:8px;">
-                    ${esc(m.name)}
-                    ${isShepherd ? `<span style="font-size:9px; background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3); padding:2px 6px; border-radius:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Shepherd</span>` : ''}
-                    ${isSelf ? `<span style="font-size:9px; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); padding:2px 6px; border-radius:4px; font-weight:600; text-transform:uppercase;">You</span>` : ''}
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 12px; padding:12px 14px; border-radius:10px; background:${isSelf ? 'rgba(204,255,0,0.04)' : 'rgba(255,255,255,0.01)'}; border:1px solid ${isSelf ? 'rgba(204,255,0,0.2)' : 'rgba(255,255,255,0.04)'}; margin-bottom:10px;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="font-size:13.5px; font-weight:600; color:${isSelf ? 'var(--lime)' : '#fff'}; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+                      <span style="white-space:nowrap;">${esc(m.name)}</span>
+                      ${isShepherd ? `<span style="font-size:9px; background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3); padding:2px 6px; border-radius:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Shepherd</span>` : ''}
+                      ${isSelf ? `<span style="font-size:9px; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); padding:2px 6px; border-radius:4px; font-weight:600; text-transform:uppercase;">You</span>` : ''}
+                    </div>
                   </div>
-                  <div style="font-size:12px; color:rgba(255,255,255,0.4); text-transform:capitalize;">${esc(m.role)}</div>
+
+                  <div style="display:flex; align-items:center; gap:16px;">
+                    <!-- Daily Disciplines Activity (Word, Prayer, Fast, Record) -->
+                    <div style="display:flex; gap:6px; align-items:center;">
+                      <span style="width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:11px; font-weight:700; ${m.word ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="THE WORD (Read today)">W</span>
+                      <span style="width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:11px; font-weight:700; ${m.prayer ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="PRAYER (Prayed today)">P</span>
+                      ${m.fast === null ? 
+                        `<span style="width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:11px; font-weight:700; background:rgba(255,255,255,0.01); color:rgba(255,255,255,0.15); border:1px dashed rgba(255,255,255,0.05);" title="NO ACTIVE FAST">-</span>` :
+                        `<span style="width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:11px; font-weight:700; ${m.fast ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="THE FAST (Checked in today)">F</span>`
+                      }
+                      <span style="width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-size:11px; font-weight:700; ${m.record ? 'background:rgba(204,255,0,0.15); color:var(--lime); border:1px solid rgba(204,255,0,0.3);' : 'background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.05);'}" title="THE RECORD (Journaled today)">R</span>
+                    </div>
+
+                    ${!isSelf ? `
+                      <div style="min-width:100px; display:flex; justify-content:flex-end;">
+                        ${m.i_prayed_count >= 3 ? `
+                          <button disabled style="padding:6px 12px; font-size:11px; font-weight:600; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); color:rgba(255,255,255,0.3); cursor:not-allowed; text-transform:uppercase; min-height:28px;">🙏 Prayed</button>
+                        ` : `
+                          <button onclick="window.nudgeSteward('${data.circle_id}', ${m.member_id}, this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:6px; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); color:var(--lime); cursor:pointer; text-transform:uppercase; min-height:28px; transition:all 0.2s;" onmouseover="this.style.background='var(--lime)'; this.style.color='#000';" onmouseout="this.style.background='rgba(204,255,0,0.08)'; this.style.color='var(--lime)';">🙏 Pray</button>
+                        `}
+                      </div>
+                    ` : '<div style="min-width:100px;"></div>'}
+                  </div>
                 </div>
               `;
             });
@@ -7838,12 +7862,23 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   <h2 style="font-family:var(--font-display); font-size:22px; font-weight:700; color:#fff; margin:0; text-transform:uppercase;">${esc(data.circle)}</h2>
                 </div>
 
-                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:16px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                   <div>
                     <div style="font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px;">Invite Code</div>
                     <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--lime); letter-spacing:0.1em;">${data.invite_code}</div>
                   </div>
                   <button class="me-btn-action" onclick="window.copyInviteCode('${data.invite_code}', this)" style="padding:8px 16px; font-size:11.5px;">Copy Code</button>
+                </div>
+
+                <!-- Daily Disciplines Legend -->
+                <div style="background:rgba(204,255,0,0.02); border:1px solid rgba(204,255,0,0.1); border-radius:8px; padding:10px 14px; margin-bottom:24px; font-size:12px; color:rgba(255,255,255,0.6); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                  <span style="font-weight:700; color:var(--lime); text-transform:uppercase; font-size:11px; letter-spacing:0.04em;">Live Daily Matrix:</span>
+                  <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:11.5px;">
+                    <span><strong style="color:var(--lime)">W</strong> = Word</span>
+                    <span><strong style="color:var(--lime)">P</strong> = Prayer</span>
+                    <span><strong style="color:var(--lime)">F</strong> = Fast</span>
+                    <span><strong style="color:var(--lime)">R</strong> = Record</span>
+                  </div>
                 </div>
 
                 <div style="margin-bottom:28px;">
