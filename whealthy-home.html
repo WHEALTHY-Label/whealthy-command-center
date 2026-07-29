@@ -2128,15 +2128,13 @@ footer{background:rgba(15,16,18,0.6);backdrop-filter:blur(40px);-webkit-backdrop
 </div>
 
 <section class="hero hero--cinematic" id="hero"><div class="particle-field" id="heroParticles"></div><div class="hero__bg"><div class="hero__orb hero__orb--1"></div><div class="hero__orb hero__orb--2"></div><div class="hero__orb hero__orb--3"></div><div class="hero__noise"></div><div class="hero__grid"></div></div><div class="hero__content container"><div class="hero__layout"><div class="hero__copy"><div id="affiliateHeroBadge"></div><h1 class="hero__headline">You Weren't<br>Meant to<br><em>Carry It Alone.</em></h1><p style="font-family:var(--font-display); font-size:clamp(13px, 3vw, 22px); font-weight:750; text-transform:uppercase; letter-spacing:-0.02em; color:var(--text-muted); margin:14px 0 0; line-height:1.3;">THE ENERGY GOVERNANCE SYSTEM FOR THE PERSON WHO HAS TO SHOW UP ANYWAY</p><p class="hero__sub">You carry work, family, and faith at the same time. The energy it takes is real, and you've been borrowing it.<br><br>The Stewards is the membership that governs it: a daily system delivered to your door, and people who carry the same weight standing with you. The Governance System puts all five products in your hands for $99/mo, less than half of buying them separately. The founder window closes September 1. <strong>Start with the 2-minute pattern check.</strong></p><div class="hero__ctas" style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; margin-bottom: 24px;">
-  <div style="display: flex; flex-direction: column; gap: 14px; width: 100%;">
-    <button class="btn-primary btn-primary--arc" onclick="openGovernancePage()" style="background: var(--lime); color: #080809; font-weight: 800; font-size: 16px; padding: 18px 32px; box-shadow: 0 0 35px rgba(204,255,0,0.4); border: none; width: 100%; max-width: 440px; justify-content: center;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Claim the Governance System | $99/mo &rarr;</button>
+  <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+    <a href="https://whealthylabel.com/gov" class="btn-primary btn-primary--arc" style="background: var(--lime); color: #080809; font-weight: 800; font-size: 16px; padding: 18px 32px; box-shadow: 0 0 35px rgba(204,255,0,0.4); border: none; width: 100%; max-width: 440px; justify-content: center; text-decoration: none;">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Claim the Governance System | $99/mo &rarr;
+    </a>
     <p style="font-size: 11px; color: var(--lime); margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">5 products. Every day governed. Founder rate locked for life.</p>
-    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 6px;">
-      <button class="btn-primary btn-primary--outline" onclick="openQuiz()" style="padding: 12px 24px; font-size: 13px;">Find What's Draining You</button>
-      <a href="javascript:void(0)" onclick="joinStewards()" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--white-80);border:1px solid var(--border-mid);padding:12px 24px;border-radius:var(--radius);transition:var(--transition);background:var(--glass);backdrop-filter:blur(8px)">Join the Community</a>
-    </div>
   </div>
-  <p style="font-size: 12px; color: var(--text-dim); margin: 0; line-height: 1.4;">60 seconds &#183; Full pattern breakdown &#183; Your 10% member code &#183; Or go straight to the Governance System</p>
 </div><div class="hero__chips"><span class="chip"><span class="chip__dot"></span>$99/mo Founder Rate</span><span class="chip"><span class="chip__dot"></span>Private</span><span class="chip"><span class="chip__dot"></span>2 Minutes</span><span class="chip"><span class="chip__dot"></span>Free to Join</span><span class="chip"><span class="chip__dot"></span>For Every Steward</span><span class="chip"><span class="chip__dot"></span>No Spike. No Crash.</span></div></div><div class="hero__visual" aria-hidden="true"><div class="hero__visual-stack"><div class="hero__card hero__card--main"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/background/brain-3784648.png" alt="WHEALTHY Lifestyle" style="width:100%;height:100%;object-fit:contain;border-radius:var(--radius-lg)"></div></div><div class="hero__metrics"><div class="metric-card"><div class="metric-card__label">Clarity Score</div><div class="metric-card__value metric-card__value--lime">Governed<span>Day 14 of your routine</span></div><div class="metric-card__bar"><div class="metric-card__bar-fill" style="--fill-width:84%" id="metricBar1"></div></div></div><div class="metric-card"><div class="metric-card__label">Energy Pattern</div><div class="metric-card__value">Stable<span>No spike detected &#183; 4:00 PM</span></div></div><div class="metric-card"><div class="metric-card__label">Caffeine Load</div><div class="metric-card__value">0<sup style="color:var(--lime)">&#8595;</sup><span>Second cup skipped</span></div></div></div></div></div></div></section>
 
 <!-- Brand Explainer Video Section -->
@@ -3905,21 +3903,23 @@ function openQuiz(){
   document.getElementById('qmProgress').style.width='0%';
   document.getElementById('qmFooter').style.display='none';
   document.getElementById('qmBody').innerHTML = `
-    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:36px 20px 28px; min-height:340px; gap:20px;">
-      <div style="font-size:36px; line-height:1; margin-bottom:2px;">&#9878;&#65039;</div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 24px 32px; min-height:340px; gap:24px;">
+      <div style="font-size:36px; line-height:1; margin-bottom:4px;">&#9878;&#65039;</div>
       <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.25); color:#ccff00; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:5px 14px; border-radius:100px;">
-        <span style="display:block;width:6px;height:6px;background:#ccff00;border-radius:50%;box-shadow:0 0 6px #ccff00;"></span> $99/mo Founder Membership
+        <span style="display:block;width:6px;height:6px;background:#ccff00;border-radius:50%;box-shadow:0 0 6px #ccff00;"></span> 60-Second Pattern Check
       </div>
-      <h2 style="font-family:var(--font-display); font-size:clamp(24px,4.5vw,34px); font-weight:700; text-transform:uppercase; color:var(--white); line-height:1.08; margin:0; max-width:420px;">
-        Govern Your Energy.<br>All 5 Products.<br><span style="color:#ccff00;">$99/Month.</span>
+      <h2 style="font-family:var(--font-display); font-size:clamp(26px,5vw,38px); font-weight:700; text-transform:uppercase; color:var(--white); line-height:1.08; margin:0; max-width:420px;">
+        You're Running<br>on Borrowed<br><span style="color:#ccff00;">Energy.</span>
       </h2>
-      <p style="font-size:14px; color:var(--text-muted); line-height:1.55; max-width:380px; margin:0;">
-        Stop borrowing against tomorrow. The Governance System delivers all 5 core formulas directly to your door monthly at 50% off retail — founder rate locked for life.
+      <p style="font-size:15px; color:var(--text-muted); line-height:1.6; max-width:380px; margin:0;">
+        Most people carrying real responsibility have normalized being depleted. This quiz reveals your actual energy pattern in 60 seconds.
       </p>
-      <a href="https://whealthylabel.com/gov" class="btn-primary btn-primary--arc" style="font-size:15px; font-weight:800; padding:16px 32px; margin-top:4px; justify-content:center; text-decoration:none; width:100%; max-width:360px; background:#ccff00; color:#080809;">
-        Claim the Governance System | $99/mo &rarr;
-      </a>
-      <span style="font-size:11px; color:var(--text-dim); letter-spacing:0.03em;">$9.95 shipping &#183; Cancel anytime &#183; VIP Community Included</span>
+      <button onclick="startQuizFromSplash()" class="btn-primary btn-primary--arc" style="font-size:15px; padding:16px 36px; margin-top:8px; justify-content:center;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/><path d="M6 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Find What's Draining Me
+      </button>
+      <span style="font-size:11px; color:var(--text-dim); letter-spacing:0.03em;">Private &#183; No signup required &#183; Your 10% code at the end</span>
+      <a href="https://whealthylabel.com/gov" style="font-size:12px; color:#ccff00; text-decoration:underline; margin-top:4px;">$99/mo Governance System &rarr;</a>
     </div>
   `;
 
