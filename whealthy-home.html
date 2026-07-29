@@ -2491,10 +2491,7 @@ function unmuteExplainerVideo() {
 
 <footer><div class="container"><div class="footer__inner"><div class="footer__logo">W<span style="color:var(--lime) !important">HEAL</span>THY</div><div class="footer__links"><a href="https://whealthylabel.com/whprivacy-policy" class="footer__link">Privacy Policy</a><a href="https://whealthylabel.com/terms" class="footer__link">Terms of Use</a><a href="https://whealthylabel.com/contact-us" class="footer__link">Contact</a><a href="https://www.skool.com/bakndcreator" class="footer__link">The Steward Community</a><a href="https://whealthylabel.com/gov" class="footer__link">Governance System</a></div><p class="footer__copy">&copy; 2026 WHEALTHY Label. All rights reserved. These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease. Faith &#183; Family &#183; Focus.</p></div></div></footer>
 
-<div class="sticky-cta" id="stickyCta">
-  <span class="sticky-cta__text">5 products. $99/mo. Founder rate locked for life.</span>
-  <a href="https://whealthylabel.com/gov" class="btn-primary btn-primary--arc" style="text-decoration:none;">Claim the Governance System &rarr;</a>
-</div>
+
 
 
 <div class="quiz-modal" id="quizModal"><div class="quiz-modal__backdrop" onclick="closeQuiz()"></div><div class="quiz-modal__card" id="quizCard"><button class="quiz-modal__close" onclick="closeQuiz()">&#10005;</button><div class="quiz-modal__progress"><div class="quiz-modal__progress-fill" id="qmProgress"></div></div><div class="quiz-modal__body" id="qmBody"></div><div class="quiz-modal__footer" id="qmFooter"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" stroke="var(--lime)" stroke-width="1" stroke-linejoin="round"/></svg><span class="quiz-modal__footer-text">Private &#183; 60 seconds &#183; Your 10% code at the end</span></div></div></div>
@@ -4010,26 +4007,7 @@ function openGovPopup() {
   document.body.classList.add('modal-open');
 }
 
-let hasTriggeredGovPopup = false;
-function triggerGovPopupOnce() {
-  if (hasTriggeredGovPopup) return;
-  const modal = document.getElementById('quizModal');
-  if (modal && modal.classList.contains('open')) return;
-  hasTriggeredGovPopup = true;
-  openGovPopup();
-}
 
-/* Open $99 Governance System popup after scrolling 450px down OR 15s timer */
-window.addEventListener('scroll', function _scrollPopupTrigger() {
-  if (window.scrollY > 450) {
-    triggerGovPopupOnce();
-    window.removeEventListener('scroll', _scrollPopupTrigger);
-  }
-}, { passive: true });
-
-setTimeout(function _timerPopupTrigger() {
-  triggerGovPopupOnce();
-}, 15000);
 
 function closeQuiz(){
   const m=document.getElementById('quizModal');
