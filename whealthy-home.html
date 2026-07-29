@@ -4010,11 +4010,26 @@ function openGovPopup() {
   document.body.classList.add('modal-open');
 }
 
-/* Auto-open $99 Governance System popup when user starts scrolling */
-window.addEventListener('scroll', function _scrollPopupTrigger() {
+let hasTriggeredGovPopup = false;
+function triggerGovPopupOnce() {
+  if (hasTriggeredGovPopup) return;
+  const modal = document.getElementById('quizModal');
+  if (modal && modal.classList.contains('open')) return;
+  hasTriggeredGovPopup = true;
   openGovPopup();
-  window.removeEventListener('scroll', _scrollPopupTrigger);
+}
+
+/* Open $99 Governance System popup after scrolling 450px down OR 15s timer */
+window.addEventListener('scroll', function _scrollPopupTrigger() {
+  if (window.scrollY > 450) {
+    triggerGovPopupOnce();
+    window.removeEventListener('scroll', _scrollPopupTrigger);
+  }
 }, { passive: true });
+
+setTimeout(function _timerPopupTrigger() {
+  triggerGovPopupOnce();
+}, 15000);
 
 function closeQuiz(){
   const m=document.getElementById('quizModal');
