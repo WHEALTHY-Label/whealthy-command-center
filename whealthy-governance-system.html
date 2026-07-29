@@ -3360,23 +3360,64 @@
       const thumb = track.querySelector('.js-slide-unlock-thumb, #iphoneSlideThumb') || track.querySelector('div[style*="border-radius:50%"]');
       const text = track.querySelector('.js-slide-unlock-text, #iphoneSlideText') || track.querySelector('span');
       if (!thumb || !track) return;
+      track.style.touchAction = 'none';
+      thumb.style.touchAction = 'none';
       const isHero = track.id === 'iphoneSlideTrack' || track.closest('.gov-hero');
       let isDragging = false;
       let startX = 0;
       let currentX = 0;
       let maxDrag = 0;
+      let initialMouseX = 0;
+
       function updateMaxDrag() {
         maxDrag = track.clientWidth - thumb.clientWidth - 8;
       }
       updateMaxDrag();
       window.addEventListener('resize', updateMaxDrag);
+
+      function triggerUnlockSuccess() {
+        thumb.style.transform = `translateX(${maxDrag}px)`;
+        const originalText = text ? text.textContent : '';
+        if (text) {
+          text.textContent = '✓ 50% DISCOUNT UNLOCKED!';
+          text.style.opacity = '1';
+        }
+        if (isHero) {
+          const retailEl = document.getElementById('heroRetailPrice');
+          const unlockedEl = document.getElementById('heroUnlockedPrice');
+          if (retailEl) {
+            retailEl.style.textDecoration = 'line-through';
+            retailEl.style.fontSize = '22px';
+            retailEl.style.color = 'var(--text-dim)';
+          }
+          if (unlockedEl) {
+            unlockedEl.style.display = 'inline-block';
+            unlockedEl.style.opacity = '1';
+            unlockedEl.style.transform = 'scale(1.05)';
+          }
+        }
+        setTimeout(() => {
+          openUnlockModal();
+          setTimeout(() => {
+            thumb.style.transition = 'transform 0.3s ease';
+            thumb.style.transform = 'translateX(0px)';
+            currentX = 0;
+            if (text) {
+              text.textContent = originalText;
+              text.style.opacity = '1';
+            }
+          }, 600);
+        }, 180);
+      }
+
       function onStart(e) {
         isDragging = true;
-        startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        initialMouseX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        startX = initialMouseX - currentX;
         thumb.style.transition = 'none';
         thumb.style.cursor = 'grabbing';
-        if (e.cancelable) e.preventDefault();
       }
+
       function onMove(e) {
         if (!isDragging) return;
         if (e.cancelable) e.preventDefault();
@@ -3404,52 +3445,44 @@
         }
         if (currentX >= maxDrag - 5) {
           isDragging = false;
-          thumb.style.transform = `translateX(${maxDrag}px)`;
-          const originalText = text ? text.textContent : '';
-          if (text) {
-            text.textContent = '✓ 50% DISCOUNT UNLOCKED!';
-            text.style.opacity = '1';
-          }
-          if (isHero) {
-            const retailEl = document.getElementById('heroRetailPrice');
-            const unlockedEl = document.getElementById('heroUnlockedPrice');
-            if (retailEl) {
-              retailEl.style.textDecoration = 'line-through';
-              retailEl.style.fontSize = '22px';
-              retailEl.style.color = 'var(--text-dim)';
-            }
-            if (unlockedEl) {
-              unlockedEl.style.display = 'inline-block';
-              unlockedEl.style.opacity = '1';
-              unlockedEl.style.transform = 'scale(1.05)';
-            }
-          }
-          setTimeout(() => {
-            openUnlockModal();
-            setTimeout(() => {
-              thumb.style.transition = 'transform 0.3s ease';
-              thumb.style.transform = 'translateX(0px)';
-              if (text) {
-                text.textContent = originalText;
-                text.style.opacity = '1';
-              }
-            }, 600);
-          }, 180);
+          triggerUnlockSuccess();
         }
       }
-      function onEnd() {
+
+      function onEnd(e) {
         if (!isDragging) return;
         isDragging = false;
-        if (currentX < maxDrag - 5) {
+        const endX = e && e.changedTouches ? e.changedTouches[0].clientX : (e ? e.clientX : initialMouseX);
+        const dragDist = Math.abs(endX - initialMouseX);
+        
+        if (currentX >= maxDrag - 5 || dragDist > maxDrag * 0.6) {
+          triggerUnlockSuccess();
+        } else {
           thumb.style.transition = 'transform 0.3s ease';
           thumb.style.transform = 'translateX(0px)';
+          currentX = 0;
           if (text) text.style.opacity = '1';
         }
       }
+
+      /* Track click fallback for simple tap to unlock */
+      track.addEventListener('click', function(e) {
+        if (currentX > 0 && currentX < maxDrag - 5) return; // ignore click if mid-drag
+        const rect = track.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        if (clickX > rect.width * 0.3) {
+          thumb.style.transition = 'transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)';
+          triggerUnlockSuccess();
+        }
+      });
+
       thumb.addEventListener('mousedown', onStart);
+      track.addEventListener('mousedown', onStart);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onEnd);
+
       thumb.addEventListener('touchstart', onStart, { passive: false });
+      track.addEventListener('touchstart', onStart, { passive: false });
       window.addEventListener('touchmove', onMove, { passive: false });
       window.addEventListener('touchend', onEnd);
     });
