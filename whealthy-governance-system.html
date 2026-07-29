@@ -35,7 +35,21 @@
  body { color: var(--text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
  .js-slide-unlock-track, #iphoneSlideTrack { touch-action: none; }
  img { max-width: 100%; display: block; border-radius: 16px; }
- .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+ .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
+ /* ===== MOBILE RESPONSIVE FIXES ===== */
+ @media (max-width: 680px) {
+   .gov-bundle-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+   .gov-bundle-grid > div:first-child { order: -1; }
+   .gov-price-row { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+   .gov-price-row > div { margin-left: auto; }
+   .gov-total-box { flex-direction: column !important; gap: 12px !important; text-align: center !important; }
+   .gov-total-box > div { text-align: center !important; }
+   .gov-hero__tagline { font-size: clamp(12px, 3.4vw, 28px) !important; padding: 0 4px; }
+   .container { padding: 0 16px; }
+ }
+ @media (max-width: 420px) {
+   .gov-hero__tagline { font-size: 12px !important; letter-spacing: -0.03em !important; }
+ }
  /* ===== HERO ===== */
  .gov-hero {
  min-height: 100vh;
@@ -106,7 +120,7 @@
  margin: 18px auto 0;
  max-width: 720px;
  font-family: var(--font-display);
- font-size: clamp(11.5px, 2.4vw, 28px);
+ font-size: clamp(13px, 3vw, 28px);
  line-height: 1.25;
  letter-spacing: -0.02em;
  font-weight: 750;
@@ -114,7 +128,6 @@
  text-transform: uppercase;
  position: relative;
  z-index: 1;
- white-space: nowrap;
  }
  .gov-hero__price-block {
  display: flex;
@@ -1925,7 +1938,7 @@
         See how much you save with our 50% Founder Rate compared to ordering individual products at regular retail.
       </p>
       <!-- 2-COLUMN GRID: BUNDLE IMAGE LEFT, COMPARISON TABLE RIGHT -->
-      <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 32px; align-items: center; background: rgba(18, 19, 23, 0.7); border: 1.5px solid rgba(204,255,0,0.25); border-radius: 24px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(204,255,0,0.08); text-align: left;">
+      <div class="gov-bundle-grid" style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 32px; align-items: center; background: rgba(18, 19, 23, 0.7); border: 1.5px solid rgba(204,255,0,0.25); border-radius: 24px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(204,255,0,0.08); text-align: left;">
         
         <!-- LEFT: BUNDLE PREVIEW IMAGE -->
         <div style="text-align: center;">
@@ -1946,7 +1959,7 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
             <!-- ROW 1 -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
+            <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
               <span style="color: var(--text); font-weight: 600;">☕ Genius Joe (Adaptogenic Coffee)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$42.00</span>
@@ -1954,7 +1967,7 @@
               </div>
             </div>
             <!-- ROW 2 -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
+            <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
               <span style="color: var(--text); font-weight: 600;">🧠 Boss Capsules (Adaptogens &amp; Nootropics)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$38.00</span>
@@ -1962,7 +1975,7 @@
               </div>
             </div>
             <!-- ROW 3 -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
+            <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
               <span style="color: var(--text); font-weight: 600;">⚡ Charge Powder (Clean Hydrating Energy)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$36.00</span>
@@ -1970,7 +1983,7 @@
               </div>
             </div>
             <!-- ROW 4 -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
+            <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
               <span style="color: var(--text); font-weight: 600;">🎯 Genius Guice (Cognitive Hydration)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$44.00</span>
@@ -1978,7 +1991,7 @@
               </div>
             </div>
             <!-- ROW 5 -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
+            <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
               <span style="color: var(--text); font-weight: 600;">💧 Hydration Powder (Cellular Electrolytes)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$38.96</span>
@@ -1986,7 +1999,7 @@
               </div>
             </div>
             <!-- ROW 6 BONUS -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
+            <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
               <span style="color: var(--lime); font-weight: 700;">👑 VIP Steward Community &amp; Rhythm App</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: var(--text-dim); text-decoration: line-through;">$297.00</span>
@@ -1995,7 +2008,7 @@
             </div>
           </div>
           <!-- TOTAL COMPARISON BOX UNDER TABLE -->
-          <div style="background: rgba(204,255,0,0.08); border: 1.5px solid rgba(204,255,0,0.3); border-radius: 14px; padding: 14px 18px; margin-top: 16px; display: flex; align-items: center; justify-content: space-between;">
+          <div class="gov-total-box" style="background: rgba(204,255,0,0.08); border: 1.5px solid rgba(204,255,0,0.3); border-radius: 14px; padding: 14px 18px; margin-top: 16px; display: flex; align-items: center; justify-content: space-between;">
             <div>
               <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim);">REGULAR RETAIL TOTAL</div>
               <div style="font-family: var(--font-display); font-size: 20px; font-weight: 700; color: #ff4d4d; text-decoration: line-through;">$198.96/mo</div>
