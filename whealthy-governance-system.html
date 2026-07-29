@@ -34,22 +34,83 @@
  }
  body { color: var(--text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
  .js-slide-unlock-track, #iphoneSlideTrack { touch-action: none; }
- img { max-width: 100%; display: block; border-radius: 16px; }
- .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
- /* ===== MOBILE RESPONSIVE FIXES ===== */
- @media (max-width: 680px) {
-   .gov-bundle-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-   .gov-bundle-grid > div:first-child { order: -1; }
-   .gov-price-row { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
-   .gov-price-row > div { margin-left: auto; }
-   .gov-total-box { flex-direction: column !important; gap: 12px !important; text-align: center !important; }
-   .gov-total-box > div { text-align: center !important; }
-   .gov-hero__tagline { font-size: clamp(12px, 3.4vw, 28px) !important; padding: 0 4px; }
-   .container { padding: 0 16px; }
- }
- @media (max-width: 420px) {
-   .gov-hero__tagline { font-size: 12px !important; letter-spacing: -0.03em !important; }
- }
+  img { max-width: 100%; display: block; border-radius: 16px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
+  .gov-vs-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    max-width: 640px;
+    margin: 0 auto 28px;
+  }
+  .gov-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto 48px;
+    text-align: left;
+  }
+  /* ===== MOBILE RESPONSIVE & LAYOUT FIXES ===== */
+  @media (max-width: 768px) {
+    .gov-bundle-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+    .gov-bundle-grid > div:first-child { order: -1; }
+    .gov-price-row { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+    .gov-price-row > div { margin-left: 0 !important; margin-top: 4px; }
+    .gov-total-box { flex-direction: column !important; gap: 12px !important; text-align: center !important; }
+    .gov-total-box > div { text-align: center !important; }
+    .gov-vs-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .gov-pillars-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .gov-hero__tagline { font-size: clamp(12px, 3.4vw, 24px) !important; padding: 0 4px; }
+    .container { padding: 0 16px !important; }
+
+    /* Fix timeline tooltip horizontal scroll overflow */
+    .clock-tooltip { max-width: 260px !important; font-size: 12px !important; }
+    .timeline, .rhythm-clock, section { overflow-x: hidden !important; }
+
+    /* Sticky Bottom Bar Mobile Optimization */
+    #stickyOrderBar {
+      padding: 8px 12px !important;
+    }
+    #stickyOrderBar > div {
+      gap: 8px !important;
+    }
+    #stickyOrderBar img {
+      width: 38px !important;
+      height: 38px !important;
+    }
+    #stickyOrderBar .js-slide-unlock-track {
+      width: 160px !important;
+      height: 40px !important;
+    }
+    #stickyOrderBar .js-slide-unlock-thumb {
+      width: 32px !important;
+      height: 32px !important;
+    }
+    #stickyOrderBar .js-slide-unlock-text {
+      font-size: 9px !important;
+      padding-left: 12px !important;
+      letter-spacing: 0.03em !important;
+    }
+
+    /* Social Proof Toast Position relative to sticky bar */
+    #socialProofToast {
+      bottom: calc(68px + env(safe-area-inset-bottom)) !important;
+      left: 12px !important;
+      right: 12px !important;
+      max-width: calc(100vw - 24px) !important;
+      padding: 10px 14px !important;
+      z-index: 10000 !important;
+    }
+  } }
+  }
+
+  @media (min-width: 769px) {
+    #socialProofToast {
+      bottom: 80px !important;
+    }
+  }
  /* ===== HERO ===== */
  .gov-hero {
  min-height: 100vh;
@@ -1960,7 +2021,7 @@
           <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
             <!-- ROW 1 -->
             <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
-              <span style="color: var(--text); font-weight: 600;">☕ Genius Joe (Adaptogenic Coffee)</span>
+              <span style="color: var(--text); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg> Genius Joe (Adaptogenic Coffee)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$42.00</span>
                 <span style="color: var(--lime); font-weight: 700;">INCLUDED</span>
@@ -1968,7 +2029,7 @@
             </div>
             <!-- ROW 2 -->
             <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
-              <span style="color: var(--text); font-weight: 600;">🧠 Boss Capsules (Adaptogens &amp; Nootropics)</span>
+              <span style="color: var(--text); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="6"></rect><path d="M12 8v8"></path><path d="M8 12h8"></path></svg> Boss Capsules (Adaptogens &amp; Nootropics)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$38.00</span>
                 <span style="color: var(--lime); font-weight: 700;">INCLUDED</span>
@@ -1976,7 +2037,7 @@
             </div>
             <!-- ROW 3 -->
             <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
-              <span style="color: var(--text); font-weight: 600;">⚡ Charge Powder (Clean Hydrating Energy)</span>
+              <span style="color: var(--text); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Charge Powder (Clean Hydrating Energy)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$36.00</span>
                 <span style="color: var(--lime); font-weight: 700;">INCLUDED</span>
@@ -1984,7 +2045,7 @@
             </div>
             <!-- ROW 4 -->
             <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
-              <span style="color: var(--text); font-weight: 600;">🎯 Genius Guice (Cognitive Hydration)</span>
+              <span style="color: var(--text); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg> Genius Guice (Cognitive Hydration)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$44.00</span>
                 <span style="color: var(--lime); font-weight: 700;">INCLUDED</span>
@@ -1992,7 +2053,7 @@
             </div>
             <!-- ROW 5 -->
             <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);">
-              <span style="color: var(--text); font-weight: 600;">💧 Hydration Powder (Cellular Electrolytes)</span>
+              <span style="color: var(--text); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg> Hydration Powder (Cellular Electrolytes)</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: #ff4d4d; text-decoration: line-through; font-weight: 600;">$38.96</span>
                 <span style="color: var(--lime); font-weight: 700;">INCLUDED</span>
@@ -2000,7 +2061,7 @@
             </div>
             <!-- ROW 6 BONUS -->
             <div class="gov-price-row" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
-              <span style="color: var(--lime); font-weight: 700;">👑 VIP Steward Community &amp; Rhythm App</span>
+              <span style="color: var(--lime); font-weight: 700; display: inline-flex; align-items: center; gap: 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"></path></svg> VIP Steward Community &amp; Rhythm App</span>
               <div style="display: flex; gap: 16px;">
                 <span style="color: var(--text-dim); text-decoration: line-through;">$297.00</span>
                 <span style="color: var(--lime); font-weight: 800;">FREE FOR LIFE</span>
@@ -2457,7 +2518,7 @@
       <h2 class="section-headline">Why $99/mo. And Why It Won't Last.</h2>
       
       <div style="background: rgba(22,23,25,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(204,255,0,0.25); border-radius: 20px; padding: 36px 28px; margin: 36px 0 24px;">
-        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; max-width: 640px; margin: 0 auto 28px;">
+        <div class="gov-vs-grid">
           <div style="background: rgba(15,16,18,0.8); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px;">
             <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">5 Products Separately</div>
             <div style="font-family: var(--font-display); font-size: 32px; font-weight: 900; color: var(--text-dim); text-decoration: line-through;">$198.96<span style="font-size:16px;">/mo</span></div>
@@ -2591,7 +2652,7 @@
  When you claim your Governance System today, you don't just get 5 physical products delivered every month. You get full digital access to <strong>The Steward's Rhythm (Daily Governance OS)</strong> operating system and the <strong>VIP Steward Community</strong> ($297 value &mdash; included 100% FREE).
  </p>
  <!-- 4 VISUAL PILLARS GRID -->
- <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 1000px; margin: 0 auto 48px; text-align: left;">
+ <div class="gov-pillars-grid">
  
  <!-- Pillar 1: VIP Steward Community -->
  <div style="background: rgba(22,23,25,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(204,255,0,0.2); border-radius: var(--radius-xl); padding: 32px; transition: transform 0.3s ease;">
