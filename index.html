@@ -3023,11 +3023,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <!-- New Top Header Bar with Mode Toggles -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <h1 id="bibleTitleHeader" style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--lime); margin:0; text-transform:uppercase; letter-spacing:0.04em;">Bible 365</h1>
+            <h1 id="bibleTitleHeader" style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--lime); margin:0; text-transform:uppercase; letter-spacing:0.04em;">My Bible</h1>
             <!-- Toggles -->
             <div style="display:inline-flex; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:3px;">
-              <button id="toggleBible365" onclick="switchBibleMode('365')" style="border:none; border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer; background:var(--lime); color:#000; transition:all 0.2s;">Bible 365</button>
-              <button id="toggleMyBible" onclick="switchBibleMode('my')" style="border:none; border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer; background:none; color:rgba(255,255,255,0.6); transition:all 0.2s;">My Bible</button>
+              <button id="toggleMyBible" onclick="switchBibleMode('my')" style="border:none; border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer; background:var(--lime); color:#000; transition:all 0.2s;">My Bible</button>
+              <button id="toggleBible365" onclick="switchBibleMode('365')" style="border:none; border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer; background:none; color:rgba(255,255,255,0.6); transition:all 0.2s;">Bible 365</button>
             </div>
           </div>
           <div style="display:flex; align-items:center; gap:16px;">
@@ -3039,17 +3039,17 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="btn-ghost" style="width:38px; height:38px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);" onclick="toggleCalendar()">&#9881;</button>
           </div>
         </div>
-        <!-- How Bible 365 works -->
+        <!-- How My Bible works -->
         <div class="g-card" style="margin-bottom:20px;padding:20px 24px;">
           <details>
-            <summary id="bibleHowSummary" style="cursor:pointer;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.06em;">How Bible 365 works</summary>
+            <summary id="bibleHowSummary" style="cursor:pointer;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--lime);text-transform:uppercase;letter-spacing:0.06em;">How My Bible works</summary>
             <div style="margin-top:12px;">
-              <div id="bibleHow365">
+              <div id="bibleHow365" style="display:none;">
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">The whole Bible in 365 days. Your Day 1 was the day you started — the calendar moves whether you read or not, so today's number is your place in the year, not your page count.</p>
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Each day is one reading: a theme and a passage. Open it, read it, mark it read.</p>
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0;">Missed days stay open behind you. Go back and complete them any time — your streak counts consecutive days you actually finished.</p>
               </div>
-              <div id="bibleHowMy" style="display:none;">
+              <div id="bibleHowMy" style="display:block;">
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Every book, every chapter, open whenever you want. This is your Bible to read freely, at your own pace, with no calendar and no streak.</p>
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;">Tap a verse to highlight it or leave a private note. Your highlights, your notes, and the spot you left off are saved to you and follow you across devices.</p>
               <p class="g-body" style="color:rgba(255,255,255,0.6);line-height:1.6;margin:0;">Stuck on a passage? Ask The Steward's Bible Buddy. It answers with scripture and context only, never opinions, so you can go deeper and stay in the Word.</p>
@@ -3060,7 +3060,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         <div id="word-chain-container"></div>
         <div id="wordQuietStateContainer" style="margin-bottom: 20px;"></div>
-        <div id="bible365ContentWrapper">
+        <div id="bible365ContentWrapper" style="display:none;">
                   <div id="bible365Root">
           <!-- Two-column grid -->
           <div class="bible-grid">
@@ -3275,7 +3275,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       </div>
 
         <!-- ============ MY BIBLE CONTENT WRAPPER ============ -->
-        <div id="myBibleContentWrapper" style="display:none;">
+        <div id="myBibleContentWrapper" style="display:block;">
           <style>
             .mybible-grid {
               display: grid;
@@ -11511,8 +11511,53 @@ window.WALL_KEY = WALL_KEY;
               setTimeout(() => r.style.outline = 'none', 1500);
             }
           });
-        }, 100);
       });
+    }
+  };
+
+  window.switchBibleMode = function(mode) {
+    const btn365 = document.getElementById('toggleBible365');
+    const btnMy = document.getElementById('toggleMyBible');
+    const titleHeader = document.getElementById('bibleTitleHeader');
+    const wrapper365 = document.getElementById('bible365ContentWrapper');
+    const wrapperMy = document.getElementById('myBibleContentWrapper');
+    const how365 = document.getElementById('bibleHow365');
+    const howMy = document.getElementById('bibleHowMy');
+    const howSummary = document.getElementById('bibleHowSummary');
+
+    if (mode === '365') {
+      if (btn365) {
+        btn365.style.background = 'var(--lime)';
+        btn365.style.color = '#000';
+      }
+      if (btnMy) {
+        btnMy.style.background = 'none';
+        btnMy.style.color = 'rgba(255,255,255,0.6)';
+      }
+      if (titleHeader) titleHeader.textContent = 'Bible 365';
+      if (wrapper365) wrapper365.style.display = 'block';
+      if (wrapperMy) wrapperMy.style.display = 'none';
+      if (how365) how365.style.display = 'block';
+      if (howMy) howMy.style.display = 'none';
+      if (howSummary) howSummary.textContent = 'How Bible 365 works';
+    } else {
+      if (btnMy) {
+        btnMy.style.background = 'var(--lime)';
+        btnMy.style.color = '#000';
+      }
+      if (btn365) {
+        btn365.style.background = 'none';
+        btn365.style.color = 'rgba(255,255,255,0.6)';
+      }
+      if (titleHeader) titleHeader.textContent = 'My Bible';
+      if (wrapperMy) wrapperMy.style.display = 'block';
+      if (wrapper365) wrapper365.style.display = 'none';
+      if (howMy) howMy.style.display = 'block';
+      if (how365) how365.style.display = 'none';
+      if (howSummary) howSummary.textContent = 'How My Bible works';
+      if (typeof BIBLE_READER !== 'undefined' && typeof BIBLE_READER.init === 'function') {
+        BIBLE_READER.init();
+      }
     }
   };
 
@@ -14605,8 +14650,9 @@ function go(view,el,label){
     document.getElementById('headerLine').textContent='My Rhythm';
     if(typeof initRhythm==='function') initRhythm();
   } else if(view==='bible'){
-    document.getElementById('headerLine').textContent='Bible 365';
+    document.getElementById('headerLine').textContent='My Bible';
     if(typeof initBible365==='function'&&!window._bibleInited){window._bibleInited=true;initBible365();}
+    if(typeof switchBibleMode==='function') switchBibleMode('my');
   } else if(['affiliate','community','portal','tryall'].indexOf(view)>=0){
     const labels={affiliate:'Affiliate Links',community:'Community',portal:'Product Portal',tryall:'Try All'};
     document.getElementById('headerLine').textContent=labels[view]||'Module';
