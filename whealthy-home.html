@@ -287,10 +287,15 @@ img{max-width:100%;height:auto}
 .gov-carousel__ring{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%}
 @media(max-width:768px){.gov-carousel__ring{grid-template-columns:repeat(2,1fr);gap:16px}}
 @media(max-width:480px){.gov-carousel__ring{grid-template-columns:repeat(2,1fr);gap:12px}}
-.gov-carousel__card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:border-color var(--transition-fast),box-shadow var(--transition-fast),background var(--transition-fast);cursor:pointer;box-sizing:border-box}
-.gov-carousel__card:hover,.gov-carousel__card:focus-visible{border-color:rgba(204,255,0,0.4);background:linear-gradient(165deg,rgba(204,255,0,0.05)0%,rgba(255,255,255,0.03)100%);box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+.gov-carousel__card{background:transparent;border:none;border-radius:var(--radius-lg);overflow:visible;display:block;text-decoration:none;cursor:pointer;box-sizing:border-box;transform-style:preserve-3d}
+.gov-carousel__card-front,.gov-carousel__card-back{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius-lg);overflow:hidden;box-sizing:border-box;transition:border-color var(--transition-fast),box-shadow var(--transition-fast),background var(--transition-fast)}
+.gov-carousel__card-front{background:var(--glass);border:1px solid var(--border);display:flex;flex-direction:column}
+.gov-carousel__card:hover .gov-carousel__card-front,.gov-carousel__card:focus-visible .gov-carousel__card-front{border-color:rgba(204,255,0,0.4);background:linear-gradient(165deg,rgba(204,255,0,0.05)0%,rgba(255,255,255,0.03)100%);box-shadow:0 10px 30px rgba(0,0,0,0.4)}
 .gov-carousel__card:focus-visible{outline:2px solid var(--lime);outline-offset:4px}
-.gov-carousel__card--system{border:1.5px solid var(--lime);background:linear-gradient(165deg,rgba(204,255,0,0.06)0%,rgba(22,23,25,0.85)100%);box-shadow:0 0 25px rgba(204,255,0,0.12)}
+.gov-carousel__card--system .gov-carousel__card-front{border:1.5px solid var(--lime);background:linear-gradient(165deg,rgba(204,255,0,0.06)0%,rgba(22,23,25,0.85)100%);box-shadow:0 0 25px rgba(204,255,0,0.12)}
+.gov-carousel__card-back{background:linear-gradient(165deg,rgba(25,27,31,0.92)0%,rgba(12,13,15,0.92)100%);border:1px solid rgba(204,255,0,0.2);transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.gov-carousel__card--system .gov-carousel__card-back{border:1.5px solid var(--lime);box-shadow:0 0 25px rgba(204,255,0,0.15)}
+.gov-carousel__card-back-text{font-family:'Oswald',sans-serif !important;font-size:13px !important;font-weight:700 !important;letter-spacing:.2em;text-transform:uppercase;color:var(--lime)}
 .gov-carousel__card-image{position:relative;width:100%;aspect-ratio:1/1;background:rgba(30,32,36,0.4);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);overflow:hidden;flex-shrink:0}
 .gov-carousel__card-image img{width:100%;height:100%;object-fit:contain;padding:12px;transition:transform var(--transition)}
 .gov-carousel__card:hover .gov-carousel__card-image img{transform:scale(1.05)}
@@ -311,7 +316,7 @@ img{max-width:100%;height:auto}
   .gov-carousel.gov-carousel--3d.is-dragging .gov-carousel__stage{cursor:grabbing}
   .gov-carousel.gov-carousel--3d .gov-carousel__ring{display:block;position:relative;width:var(--card-width);height:360px;transform-style:preserve-3d;animation:ring-spin 45s linear infinite;margin:0 auto}
   .gov-carousel.gov-carousel--3d .gov-carousel__ring:hover,.gov-carousel.gov-carousel--3d:focus-within .gov-carousel__ring,.gov-carousel.gov-carousel--3d.is-dragging .gov-carousel__ring{animation-play-state:paused}
-  .gov-carousel.gov-carousel--3d .gov-carousel__card{position:absolute;inset:0;width:var(--card-width);height:100%;transform:rotateY(calc(var(--i) * 60deg)) translateZ(var(--ring-radius));backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .gov-carousel.gov-carousel--3d .gov-carousel__card{position:absolute;inset:0;width:var(--card-width);height:100%;transform:rotateY(calc(var(--i) * 60deg)) translateZ(var(--ring-radius));transform-style:preserve-3d}
   @media(max-width:768px){.gov-carousel.gov-carousel--3d .gov-carousel__stage{height:340px}.gov-carousel.gov-carousel--3d .gov-carousel__ring{height:300px}}
   @media(max-width:480px){.gov-carousel.gov-carousel--3d .gov-carousel__stage{height:290px}.gov-carousel.gov-carousel--3d .gov-carousel__ring{height:260px;animation-duration:60s}}
 }
@@ -2348,63 +2353,99 @@ function unmuteExplainerVideo() {
   <div class="gov-carousel__stage">
     <div class="gov-carousel__ring" id="govCarouselRing">
       <a class="gov-carousel__card" href="https://whealthylabel.com/new/genius-joe-functional-coffee-hydration-bundle" style="--i:0" aria-label="Genius Joe &#183; Functional Coffee">
-        <div class="gov-carousel__card-image">
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="Genius Joe" loading="lazy">
+        <div class="gov-carousel__card-front">
+          <div class="gov-carousel__card-image">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/GJ_COFFE_NEW_PRODUCT_IMAGE-4174744.jpeg?format=webp" alt="Genius Joe" loading="lazy">
+          </div>
+          <div class="gov-carousel__card-body">
+            <div class="gov-carousel__card-label">Morning &#183; The Morning Stack</div>
+            <h3 class="gov-carousel__card-title">Genius Joe</h3>
+            <span class="gov-carousel__card-tag">Functional Coffee</span>
+          </div>
         </div>
-        <div class="gov-carousel__card-body">
-          <div class="gov-carousel__card-label">Morning &#183; The Morning Stack</div>
-          <h3 class="gov-carousel__card-title">Genius Joe</h3>
-          <span class="gov-carousel__card-tag">Functional Coffee</span>
+        <div class="gov-carousel__card-back">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="gov-carousel__card-back-text">WHEALTHY</div>
         </div>
       </a>
       <a class="gov-carousel__card" href="https://whealthylabel.com/new/boss-performance-capsules-hydration-bundle" style="--i:1" aria-label="Boss &#183; Performance Capsules">
-        <div class="gov-carousel__card-image">
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss" loading="lazy">
+        <div class="gov-carousel__card-front">
+          <div class="gov-carousel__card-image">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss" loading="lazy">
+          </div>
+          <div class="gov-carousel__card-body">
+            <div class="gov-carousel__card-label">Morning &#183; The Morning Stack</div>
+            <h3 class="gov-carousel__card-title">Boss</h3>
+            <span class="gov-carousel__card-tag">Performance Capsules</span>
+          </div>
         </div>
-        <div class="gov-carousel__card-body">
-          <div class="gov-carousel__card-label">Morning &#183; The Morning Stack</div>
-          <h3 class="gov-carousel__card-title">Boss</h3>
-          <span class="gov-carousel__card-tag">Performance Capsules</span>
+        <div class="gov-carousel__card-back">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="gov-carousel__card-back-text">WHEALTHY</div>
         </div>
       </a>
       <a class="gov-carousel__card" href="https://whealthylabel.com/new/try-hydration-powder" style="--i:2" aria-label="Hydration &#183; Hydration Powder">
-        <div class="gov-carousel__card-image">
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp" alt="Hydration" loading="lazy">
+        <div class="gov-carousel__card-front">
+          <div class="gov-carousel__card-image">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/ww_1-4178263.jpeg?format=webp" alt="Hydration" loading="lazy">
+          </div>
+          <div class="gov-carousel__card-body">
+            <div class="gov-carousel__card-label">All Day &#183; Continuous</div>
+            <h3 class="gov-carousel__card-title">Hydration</h3>
+            <span class="gov-carousel__card-tag">Hydration Powder</span>
+          </div>
         </div>
-        <div class="gov-carousel__card-body">
-          <div class="gov-carousel__card-label">All Day &#183; Continuous</div>
-          <h3 class="gov-carousel__card-title">Hydration</h3>
-          <span class="gov-carousel__card-tag">Hydration Powder</span>
+        <div class="gov-carousel__card-back">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="gov-carousel__card-back-text">WHEALTHY</div>
         </div>
       </a>
       <a class="gov-carousel__card" href="https://whealthylabel.com/new/charge-powder-hydration" style="--i:3" aria-label="Charge &#183; Charge Powder">
-        <div class="gov-carousel__card-image">
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge" loading="lazy">
+        <div class="gov-carousel__card-front">
+          <div class="gov-carousel__card-image">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/charge_cc-4175625.jpeg?format=webp" alt="Charge" loading="lazy">
+          </div>
+          <div class="gov-carousel__card-body">
+            <div class="gov-carousel__card-label">2pm &#183; Energy Governance</div>
+            <h3 class="gov-carousel__card-title">Charge</h3>
+            <span class="gov-carousel__card-tag">Charge Powder</span>
+          </div>
         </div>
-        <div class="gov-carousel__card-body">
-          <div class="gov-carousel__card-label">2pm &#183; Energy Governance</div>
-          <h3 class="gov-carousel__card-title">Charge</h3>
-          <span class="gov-carousel__card-tag">Charge Powder</span>
+        <div class="gov-carousel__card-back">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="gov-carousel__card-back-text">WHEALTHY</div>
         </div>
       </a>
       <a class="gov-carousel__card" href="https://whealthylabel.com/new/genius-guice-think-drink-powder-hydration-bundle" style="--i:4" aria-label="Genius Guice &#183; Think Drink">
-        <div class="gov-carousel__card-image">
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice" loading="lazy">
+        <div class="gov-carousel__card-front">
+          <div class="gov-carousel__card-image">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice" loading="lazy">
+          </div>
+          <div class="gov-carousel__card-body">
+            <div class="gov-carousel__card-label">Afternoon &#183; Personalized to you</div>
+            <h3 class="gov-carousel__card-title">Genius Guice</h3>
+            <span class="gov-carousel__card-tag">Think Drink</span>
+          </div>
         </div>
-        <div class="gov-carousel__card-body">
-          <div class="gov-carousel__card-label">Afternoon &#183; Personalized to you</div>
-          <h3 class="gov-carousel__card-title">Genius Guice</h3>
-          <span class="gov-carousel__card-tag">Think Drink</span>
+        <div class="gov-carousel__card-back">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="gov-carousel__card-back-text">WHEALTHY</div>
         </div>
       </a>
       <a class="gov-carousel__card gov-carousel__card--system" href="#governance-cta" style="--i:5" aria-label="The Governance System &#183; All 5 Products">
-        <div class="gov-carousel__card-image">
-          <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Governance System" loading="lazy">
+        <div class="gov-carousel__card-front">
+          <div class="gov-carousel__card-image">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Governance System" loading="lazy">
+          </div>
+          <div class="gov-carousel__card-body">
+            <div class="gov-carousel__card-label">The Full Day &#183; $99/mo</div>
+            <h3 class="gov-carousel__card-title">Governance System</h3>
+            <span class="gov-carousel__card-tag">All 5 Products</span>
+          </div>
         </div>
-        <div class="gov-carousel__card-body">
-          <div class="gov-carousel__card-label">The Full Day &#183; $99/mo</div>
-          <h3 class="gov-carousel__card-title">Governance System</h3>
-          <span class="gov-carousel__card-tag">All 5 Products</span>
+        <div class="gov-carousel__card-back">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="gov-carousel__card-back-text">SYSTEM</div>
         </div>
       </a>
     </div>
