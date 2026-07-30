@@ -12341,47 +12341,95 @@ function waSafeAvatarUrl(url){
   try {
     const u = new URL(url);
     if (u.protocol !== 'https:') return null;
-    if (u.hostname !== 'skool.com' && !u.hostname.endsWith('.skool.com')) return null;
     return u.href;
   } catch(e){ return null; }
 }
 window.waSafeAvatarUrl = waSafeAvatarUrl;
 
+function waLoadProfileMeta(){
+  try {
+    const raw = __lsGet(WA_PROFILE_LS);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        waProfileMeta = Object.assign({}, waProfileMeta || {}, parsed);
+      }
+    }
+    // Also check local gate/member session caches for instant avatar & name recovery
+    const gateRaw = __lsGet('wh_steward_gate');
+    if (gateRaw) {
+      try {
+        const gParsed = JSON.parse(gateRaw);
+        if (gParsed && gParsed.email) {
+          if (!window.MEMBER_EMAIL) window.MEMBER_EMAIL = gParsed.email;
+        }
+      } catch(e){}
+    }
+    const memCache = __lsGet('wh_steward_member_cache');
+    if (memCache) {
+      try {
+        const mParsed = JSON.parse(memCache);
+        if (mParsed && mParsed.name && !window.MEMBER_NAME) {
+          window.MEMBER_NAME = mParsed.name;
+          if (typeof MEMBER_NAME !== 'undefined') MEMBER_NAME = mParsed.name;
+        }
+        if (mParsed && (mParsed.avatar_url || mParsed.skool_avatar_url)) {
+          waProfileMeta = Object.assign({}, waProfileMeta || {}, {
+            skool_avatar_url: mParsed.skool_avatar_url || mParsed.avatar_url,
+            avatar_url: mParsed.avatar_url || mParsed.skool_avatar_url
+          });
+        }
+      } catch(e){}
+    }
+  } catch(e){}
+  window.waProfileMeta = waProfileMeta;
+}
+try { waLoadProfileMeta(); } catch(e){}
+
 // The Skool handle and avatar used to live in Supabase Auth user_metadata.
 // PIN sign in creates no auth user, so they live beside the local session.
 async function waPersistSkoolProfile(){
-  if (!waState.profile) return;
+  if (!waState || !waState.profile) return;
   const p = waState.profile;
   const data = {};
   if (p.handle) data.skool_handle = p.handle;
   const av = waSafeAvatarUrl(p.avatar_url);
-  if (av) data.skool_avatar_url = av;
+  if (av) {
+    data.skool_avatar_url = av;
+    data.avatar_url = av;
+  }
+  if (p.name) data.name = p.name;
   if (!Object.keys(data).length) return;
   try {
     const next = Object.assign({}, waProfileMeta || {}, data);
     __lsSet(WA_PROFILE_LS, JSON.stringify(next));
     waProfileMeta = next;
+    window.waProfileMeta = next;
   } catch(e){
     console.warn('[profile] could not save Skool profile:', e && e.message);
   }
 }
 
-async function waLoadProfileMeta(){
-  try {
-    const raw = __lsGet(WA_PROFILE_LS);
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === 'object') waProfileMeta = parsed;
-  } catch(e){}
+function waResolveAvatarUrl(){
+  if (waProfileMeta) {
+    const url = waSafeAvatarUrl(waProfileMeta.skool_avatar_url || waProfileMeta.avatar_url);
+    if (url) return url;
+  }
+  if (window.waState && window.waState.profile) {
+    const url = waSafeAvatarUrl(window.waState.profile.avatar_url || window.waState.profile.skool_avatar_url);
+    if (url) return url;
+  }
+  return null;
 }
 
 function waPaintAvatar(el, initials){
   if (!el) return;
-  el.textContent = initials;
-  const old = el.querySelector('.wh-avatar-photo');
-  if (old) { try { old.remove(); } catch(e){} }
+  const url = waResolveAvatarUrl();
+  const existingImg = el.querySelector('.wh-avatar-photo');
+  if (existingImg && url && existingImg.src === url) return;
 
-  const url = waSafeAvatarUrl(waProfileMeta && waProfileMeta.skool_avatar_url);
+  el.textContent = initials;
+  if (existingImg) { try { existingImg.remove(); } catch(e){} }
   if (!url) return;
 
   const img = document.createElement('img');
@@ -12396,6 +12444,10 @@ window.waPaintAvatar = waPaintAvatar;
 
 function waPaintWelcomeAvatar(el, initials){
   if (!el) return;
+  const url = waResolveAvatarUrl();
+  const existingImg = el.querySelector('.wh-avatar-photo');
+  if (existingImg && url && existingImg.src === url) return;
+
   var pulse = el.querySelector('.welcome-pulse');
   el.innerHTML = '';
   if (pulse) el.appendChild(pulse);
@@ -12407,7 +12459,6 @@ function waPaintWelcomeAvatar(el, initials){
   var textNode = document.createTextNode(initials);
   el.appendChild(textNode);
 
-  const url = waSafeAvatarUrl(waProfileMeta && waProfileMeta.skool_avatar_url);
   if (!url) return;
 
   const img = document.createElement('img');
@@ -18696,20 +18747,25 @@ window.handleLogout=handleLogout;
 
 /* ================== SIDEBAR USER ================== */
 function initSidebarUser(){
-  const email=MEMBER_EMAIL;
-  if(!email)return;
-  const name=MEMBER_NAME || email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-  const initials=name.charAt(0).toUpperCase();
-  const el=document.getElementById('sidebarAvatar');
+  waLoadProfileMeta();
+  const email = MEMBER_EMAIL || window.MEMBER_EMAIL || '';
+  if(!email) return;
+  const name = MEMBER_NAME || window.MEMBER_NAME || (waProfileMeta && (waProfileMeta.name || waProfileMeta.full_name || waProfileMeta.first_name)) || email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  if (name) {
+    MEMBER_NAME = name;
+    window.MEMBER_NAME = name;
+  }
+  const initials = (name || 'S').charAt(0).toUpperCase();
+  const el = document.getElementById('sidebarAvatar');
   if(el) {
     waPaintAvatar(el, initials);
   }
-  const welcomeEl=document.getElementById('welcomeAvatarSlot');
+  const welcomeEl = document.getElementById('welcomeAvatarSlot');
   if(welcomeEl) {
     waPaintWelcomeAvatar(welcomeEl, initials);
   }
-  const nm=document.getElementById('sidebarName');if(nm)nm.textContent=name;
-  const em=document.getElementById('sidebarEmail');if(em)em.textContent='Member';
+  const nm = document.getElementById('sidebarName'); if(nm) nm.textContent = name;
+  const em = document.getElementById('sidebarEmail'); if(em) em.textContent = 'Member';
 }
 function updateClaimBadge(){
   const btn=document.getElementById('navClaim');
@@ -18726,6 +18782,7 @@ function updateClaimBadge(){
 
 /* ================== INIT ================== */
 async function loadAndInit(){
+  waLoadProfileMeta();
   initSidebarUser();
   updateClaimBadge();
   checkClaimModal();
@@ -18746,8 +18803,7 @@ async function loadAndInit(){
 
   // Asynchronous remote state load
   load().then(function(){
-    const currentView = window.location.hash.replace('#', '') || 'dash';
-    if (map[currentView]) go(currentView);
+    initSidebarUser();
     updateMeta();
     if(window.ME && typeof window.ME.recomputeBadges === 'function') window.ME.recomputeBadges();
   }).catch(function(e){
