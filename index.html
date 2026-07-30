@@ -11462,6 +11462,20 @@ window.WALL_KEY = WALL_KEY;
       </div>
     `;
     thread.scrollTop = thread.scrollHeight;
+
+    const activeChapterText = (BIBLE_READER.loadedVerses || [])
+      .map(v => `${v.verse}. ${v.text}`)
+      .join(' ')
+      .slice(0, 3500);
+
+    const activeMarks = (BIBLE_READER.marks || [])
+      .filter(m => m.book === BIBLE_READER.currentBook && m.chapter === BIBLE_READER.currentChapter)
+      .map(m => {
+        const vObj = (BIBLE_READER.loadedVerses || []).find(v => v.verse === m.verse);
+        const vTxt = vObj ? vObj.text : '';
+        return `${m.book} ${m.chapter}:${m.verse} [${m.kind}] ${vTxt}${m.body ? ' (Note: ' + m.body + ')' : ''}`;
+      });
+
     try {
       const res = await fetch(`${FN_BASE}/governor-ai`, {
         method: 'POST',
@@ -11469,8 +11483,13 @@ window.WALL_KEY = WALL_KEY;
         body: JSON.stringify({
           task: 'bible_study',
           prompt: text,
-          context: { book: BIBLE_READER.currentBook, chapter: BIBLE_READER.currentChapter },
-          email: MEMBER_EMAIL,
+          context: {
+            book: BIBLE_READER.currentBook,
+            chapter: BIBLE_READER.currentChapter,
+            active_text: activeChapterText,
+            highlights: activeMarks
+          },
+          email: MEMBER_EMAIL || window.MEMBER_EMAIL,
           wall_key: window.WALL_KEY
         })
       });
