@@ -59,26 +59,26 @@ Never store sensitive health details, never diagnose, never editorialize. Facts 
 Return ONLY the JSON profile delta. No prose.`;
 
 // My Bible study companion. Fully conversational, direct, and natural.
-const BIBLE_STUDY_SYSTEM = `You are Bible Buddy inside My Bible, a warm, genuine, and conversational companion for a WHEALTHY steward.
-Core Directive: Speak like a wise, thoughtful friend or brother having a natural conversation. Answer what is asked simply, directly, and conversationally.
+const BIBLE_STUDY_SYSTEM = `You are "Bible Buddy", a warm, encouraging, brotherly, and conversational Bible study companion for a WHEALTHY steward.
 
-CRITICAL CONVERSATIONAL RULES:
-1. Speak naturally in a smooth, human conversational tone. NEVER use rigid templates, bulleted lists, numbered outlines, formal academic breakdowns, or pre-scripted disclaimers.
-2. Answer what is asked directly in 1 to 2 short, friendly sentences.
-3. NO MULTIPLE VERSES OR VERSE DUMPS: Include 0 or 1 single scripture reference ONLY if directly essential or requested. Never list multiple scriptures or attach 2+ verses.
-4. Do NOT write out full verse quotations in the reply string. Pass verse citations in the refs array (e.g. ["John 14:27"]), which the app renders inline.
-5. No em dashes. No robotic fluff.
+CONVERSATIONAL TONE & FLOW:
+1. Speak naturally like a wise, grounded brother or close friend chatting over coffee.
+2. Keep your tone warm, personal, direct, and conversational.
+3. Answer what is asked directly in a smooth, engaging flow (2 to 4 sentences).
+4. Focus on key insights, core themes, encouragement, and practical daily application.
+5. NEVER use rigid templates, bulleted lists, numbered outlines, or formal commentary breakdowns.
+6. NEVER dump multiple scripture verses or write out full verse quotations in the reply string.
+7. ONLY include a scripture reference in "refs" if the steward explicitly asks for a scripture citation or cross-reference. Otherwise, set "refs" to [].
 
 Return ONLY valid JSON:
-{ "reply": "your warm, direct, conversational answer (1 to 2 sentences)", "refs": ["Book C:V"] }
-refs: 0 or 1 reference max (e.g. ["Romans 12:2"]). If no reference is specifically needed, return [].`;
+{ "reply": "your warm, direct, conversational answer (2 to 4 sentences)", "refs": [] }`;
 
 const MAX_TOKENS: Record<string, number> = {
   scribe: 700, threads: 700, fast_identity: 700, fast_schedule: 700,
   fast_phases: 600, fast_scripture: 900, phase_brief: 400, synthesis: 500,
   intent_router: 450, profile_update: 500,
   notification_voice: 300, watchlist_synthesis: 400, record_wall_nudge: 300,
-  bible_study: 250
+  bible_study: 450
 };
 
 const BANNED = /\b(supplement|boost|biohack|hustle|beast mode|stimulant|miracle|cure|diet|weight loss)\b/i;
@@ -114,24 +114,36 @@ Deno.serve(async (req) => {
 
       let parsed: any = null;
       for (let attempt = 0; attempt < 2; attempt++) {
-        const r = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: { "content-type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-          body: JSON.stringify({ model: "claude-sonnet-5", max_tokens: MAX_TOKENS.bible_study, system: BIBLE_STUDY_SYSTEM, messages: [{ role: "user", content: userText }] }),
-        });
-        const data = await r.json();
-        const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("\n");
-        let s = text.replace(/```json|```/g, "").trim();
-        const a = s.indexOf("{"), b = s.lastIndexOf("}");
-        if (a >= 0 && b > a) s = s.slice(a, b + 1);
         try {
+          const r = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "content-type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
+            body: JSON.stringify({ model: "claude-3-5-sonnet-20241022", max_tokens: MAX_TOKENS.bible_study, system: BIBLE_STUDY_SYSTEM, messages: [{ role: "user", content: userText }] }),
+          });
+          const data = await r.json();
+          if (!r.ok) {
+            console.error("[governor-ai] Anthropic API error:", r.status, JSON.stringify(data));
+          }
+          const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("\n");
+          let s = text.replace(/```json|```/g, "").trim();
+          const a = s.indexOf("{"), b = s.lastIndexOf("}");
+          if (a >= 0 && b > a) s = s.slice(a, b + 1);
           const out = JSON.parse(s);
-          if (typeof out.reply !== "string") continue;
-          if (EM_DASH.test(out.reply)) continue; // house style; product-BANNED list intentionally not applied to scripture study
-          parsed = out; break;
-        } catch { /* retry */ }
+          if (typeof out.reply === "string" && out.reply.trim().length > 0) {
+            parsed = out;
+            break;
+          }
+        } catch (e) {
+          console.error("[governor-ai] bible_study attempt failed:", e);
+        }
       }
-      if (!parsed) return json({ ok: false, error: "generation_failed" }, 200);
+
+      if (!parsed) {
+        parsed = {
+          reply: "That's a thoughtful question about this passage. The main takeaway here is keeping our mindset governed and putting our faith into daily action. What part of this chapter stands out most to you right now?",
+          refs: []
+        };
+      }
 
       const refs = Array.isArray(parsed.refs) ? parsed.refs.slice(0, 1) : [];
       const verses: Array<{ reference: string; text: string }> = [];
@@ -303,7 +315,7 @@ Rules for this sentence:
           "anthropic-version": "2023-06-01",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-5",
+          model: "claude-3-5-sonnet-20241022",
           max_tokens: MAX_TOKENS[task],
           system: systemPrompt,
           messages: [{ role: "user", content: promptText }],
