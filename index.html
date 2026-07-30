@@ -1811,12 +1811,12 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 </div>
 
 <!-- ═══ LOGIN GATE OVERLAY ═══ -->
-<div class="login-gate" id="loginGate">
+<div class="login-gate hidden" id="loginGate">
   <div id="dashGate" class="wa-root">
     <div class="wa-card">
 
       <!-- ── SCREEN 1: LOCATE ───────────────────────────────── -->
-      <section class="wa-screen" id="waScreenLocate" aria-labelledby="waLocateTitle">
+      <section class="wa-screen is-active" id="waScreenLocate" aria-labelledby="waLocateTitle">
         <div class="wa-mark">WHEALTHY <b>/</b> STEWARDS</div>
         <h1 class="wa-title" id="waLocateTitle">Let's find you</h1>
         <p class="wa-sub">Enter your Skool handle and we will pull up your public profile, so you know you are in the right place before you sign in. Your handle is the <b>@name</b> at the end of your Skool link.</p>
@@ -2068,8 +2068,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <!-- Section 1 — General -->
       <div class="nav-section-title">General</div>
       <button class="sidebar-item active" id="navDash" onclick="go('dash',this)"><span class="si-dot"></span> Home</button>
+      <button class="sidebar-item" id="navRhythm" onclick="go('rhythm',this)"><span class="si-dot"></span> My Rhythm</button>
       <button class="sidebar-item" id="navAll5" onclick="go('all5',this)" style="border: 1px solid rgba(204,255,0,0.12); background: rgba(204,255,0,0.03);"><span class="si-dot"></span> Claim Your Bundle</button>
-      <button class="sidebar-item" id="navRhythm" onclick="go('rhythm',this)" style="display: none;"><span class="si-dot"></span> My Rhythm</button>
       <button class="sidebar-item" id="navTryall" onclick="go('tryall',this)" style="display: none;"><span class="si-dot"></span> Try All</button>
 
       <button class="sidebar-item" id="navRecord" onclick="go('record',this)"><span class="si-dot"></span> My Journal</button>
@@ -2318,6 +2318,49 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             justify-content: center;
             transition: all 0.2s;
             flex-shrink: 0;
+          }
+
+          /* Modern Rhythm Modal Styling */
+          .rhy-modal-input {
+            width: 100% !important;
+            margin-top: 6px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            color: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 12px 14px !important;
+            font-size: 14px !important;
+            font-family: inherit !important;
+            color-scheme: dark !important;
+            outline: none !important;
+            box-sizing: border-box !important;
+            transition: all 0.2s ease !important;
+          }
+          .rhy-modal-input:focus {
+            border-color: var(--lime) !important;
+            box-shadow: 0 0 16px rgba(204, 255, 0, 0.3) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+          }
+          .rhy-day-chip-label {
+            cursor: pointer !important;
+            user-select: none !important;
+          }
+          .rhy-day-chip {
+            padding: 10px 0 !important;
+            border-radius: 10px !important;
+            background: rgba(255, 255, 255, 0.04) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            text-align: center !important;
+            transition: all 0.2s ease !important;
+          }
+          .rhy-day-checkbox:checked + .rhy-day-chip {
+            background: var(--lime) !important;
+            color: #080809 !important;
+            border-color: var(--lime) !important;
+            box-shadow: 0 0 12px rgba(204, 255, 0, 0.35) !important;
           }
           .rhy-slot-checkbox:hover {
             border-color: var(--lime);
@@ -2608,23 +2651,26 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
           <!-- ═══ ADD / EDIT RHYTHM SLOT MODAL ═══ -->
           <div class="claim-modal-overlay" id="rhySlotEditModal" style="z-index:10000;">
-            <div class="claim-modal" style="position:relative; max-width:480px; width:100%;">
+            <div class="claim-modal" style="position:relative; max-width:480px; width:100%; background:rgba(18,20,24,0.96); backdrop-filter:blur(28px); border:1px solid rgba(204,255,0,0.25); border-radius:24px; padding:28px; box-shadow:0 24px 64px rgba(0,0,0,0.85), 0 0 35px rgba(204,255,0,0.1);">
               <div class="claim-modal-glow"></div>
               <button class="claim-modal-close" onclick="RHYTHM_BUILDER.closeEditSlotModal()">&times;</button>
               <div class="claim-modal-body" style="text-align:left;">
-                <div id="rhyModalTitle" class="claim-modal-bundle" style="font-size:20px; line-height:1.2; margin-bottom:16px; color:#fff;">Edit Anchor</div>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                  <div style="width:32px; height:32px; border-radius:10px; background:rgba(204,255,0,0.12); display:flex; align-items:center; justify-content:center; color:var(--lime); font-size:15px; font-weight:800;">⚓</div>
+                  <div id="rhyModalTitle" style="font-family:var(--font-display); font-size:22px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:#fff;">Edit Anchor</div>
+                </div>
                 
                 <input type="hidden" id="rhyEditSlotId" value="">
                 
-                <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; flex-direction:column; gap:16px;">
                   <div>
-                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Title</label>
-                    <input type="text" id="rhyEditTitle" class="wa-input" style="width:100%; margin-top:4px;" placeholder="e.g. Morning walk">
+                    <label style="font-size:11px; text-transform:uppercase; color:var(--lime); font-weight:800; letter-spacing:0.08em;">Title</label>
+                    <input type="text" id="rhyEditTitle" class="rhy-modal-input" placeholder="e.g. Morning walk">
                   </div>
                   
                   <div>
-                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Category (Domain)</label>
-                    <select id="rhyEditDomain" class="wa-input" style="width:100%; margin-top:4px; background:#0e1013;">
+                    <label style="font-size:11px; text-transform:uppercase; color:var(--lime); font-weight:800; letter-spacing:0.08em;">Category (Domain)</label>
+                    <select id="rhyEditDomain" class="rhy-modal-input" style="background:#121418;">
                       <option value="custom">Custom</option>
                       <option value="supplement">Supplement</option>
                       <option value="scripture">Scripture</option>
@@ -2637,42 +2683,76 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   </div>
                   
                   <div>
-                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Cue Type</label>
-                    <div style="display:flex; gap:8px; margin-top:4px;">
-                      <button id="rhyCueTypeTime" onclick="RHYTHM_BUILDER.setEditCueType('time')" style="flex:1; padding:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; font-weight:700; cursor:pointer;">Clock Time</button>
-                      <button id="rhyCueTypeStack" onclick="RHYTHM_BUILDER.setEditCueType('stack')" style="flex:1; padding:10px; border:1px solid rgba(255,255,255,0.1); background:none; color:rgba(255,255,255,0.5); border-radius:8px; font-weight:700; cursor:pointer;">Routine Stack</button>
+                    <label style="font-size:11px; text-transform:uppercase; color:var(--lime); font-weight:800; letter-spacing:0.08em;">Cue Type</label>
+                    <div style="display:flex; gap:8px; margin-top:6px;">
+                      <button id="rhyCueTypeTime" onclick="RHYTHM_BUILDER.setEditCueType('time')" style="flex:1; padding:12px; border:1.5px solid var(--lime); background:rgba(204,255,0,0.15); color:var(--lime); border-radius:12px; font-weight:800; cursor:pointer; font-size:13px; transition:all 0.2s;">🕒 Clock Time</button>
+                      <button id="rhyCueTypeStack" onclick="RHYTHM_BUILDER.setEditCueType('stack')" style="flex:1; padding:12px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.5); border-radius:12px; font-weight:800; cursor:pointer; font-size:13px; transition:all 0.2s;">⚓ Routine Stack</button>
                     </div>
                   </div>
 
                   <div>
-                    <label id="rhyEditCueValueLabel" style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">Cue Value</label>
-                    <input type="time" id="rhyEditCueValueTime" class="wa-input" style="width:100%; margin-top:4px;">
-                    <input type="text" id="rhyEditCueValueStack" class="wa-input" style="width:100%; margin-top:4px; display:none;" placeholder="e.g. after morning cup">
+                    <label id="rhyEditCueValueLabel" style="font-size:11px; text-transform:uppercase; color:var(--lime); font-weight:800; letter-spacing:0.08em;">Cue Value</label>
+                    <input type="time" id="rhyEditCueValueTime" class="rhy-modal-input">
+                    <input type="text" id="rhyEditCueValueStack" class="rhy-modal-input" style="display:none;" placeholder="e.g. after morning cup">
                   </div>
 
                   <div>
-                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700;">If-Then Plan</label>
-                    <textarea id="rhyEditIfThen" class="wa-input" style="width:100%; margin-top:4px; min-height:60px; line-height:1.5;" placeholder="When [cue], then I will [action]..."></textarea>
+                    <label style="font-size:11px; text-transform:uppercase; color:var(--lime); font-weight:800; letter-spacing:0.08em;">If-Then Plan</label>
+                    <textarea id="rhyEditIfThen" class="rhy-modal-input" style="min-height:75px; line-height:1.5;" placeholder="When [cue], then I will [action]..."></textarea>
                   </div>
 
                   <div>
-                    <label style="font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:700; display:block; margin-bottom:6px;">Active Days</label>
-                    <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center;">
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="1"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">M</div></label>
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="2"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">T</div></label>
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="4"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">W</div></label>
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="8"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">T</div></label>
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="16"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">F</div></label>
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="32"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">S</div></label>
-                      <label style="cursor:pointer;"><input type="checkbox" class="rhy-day-checkbox" value="64"><div style="font-size:9px; color:rgba(255,255,255,0.5); margin-top:4px; font-weight:700;">S</div></label>
+                    <label style="font-size:11px; text-transform:uppercase; color:var(--lime); font-weight:800; letter-spacing:0.08em; display:block; margin-bottom:8px;">Active Days</label>
+                    <div class="rhy-days-picker" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:8px;">
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="1" style="display:none;">
+                        <div class="rhy-day-chip">M</div>
+                      </label>
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="2" style="display:none;">
+                        <div class="rhy-day-chip">T</div>
+                      </label>
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="4" style="display:none;">
+                        <div class="rhy-day-chip">W</div>
+                      </label>
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="8" style="display:none;">
+                        <div class="rhy-day-chip">T</div>
+                      </label>
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="16" style="display:none;">
+                        <div class="rhy-day-chip">F</div>
+                      </label>
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="32" style="display:none;">
+                        <div class="rhy-day-chip">S</div>
+                      </label>
+                      <label class="rhy-day-chip-label">
+                        <input type="checkbox" class="rhy-day-checkbox" value="64" style="display:none;">
+                        <div class="rhy-day-chip">S</div>
+                      </label>
                     </div>
                   </div>
                 </div>
                 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;">
-                  <button id="rhyEditDeleteBtn" class="rhy-btn-ghost" onclick="RHYTHM_BUILDER.deleteSlot()" style="border-color:#ff6b6b; color:#ff6b6b; padding:10px; font-size:12px; height:auto; min-height:auto; width:auto;">Remove</button>
-                  <button class="rhy-btn-lime" onclick="RHYTHM_BUILDER.saveSlot()" style="flex:1; padding:12px; font-size:12px; height:auto; min-height:auto;">Save Anchor</button>
+                <div style="display:flex; flex-direction:column; margin-top:24px; gap:10px;">
+                  <button class="rhy-btn-save-anchor" onclick="RHYTHM_BUILDER.saveSlot()" style="width:100%; padding:16px; background:var(--lime); color:#080809; font-family:var(--font-display); font-weight:900; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; border-radius:14px; border:none; box-shadow:0 0 25px rgba(204,255,0,0.35); cursor:pointer; transition:all 0.2s;">Save Anchor</button>
+                  <button id="rhyEditDeleteBtn" onclick="RHYTHM_BUILDER.deleteSlot()" style="width:100%; padding:12px; background:rgba(255,77,77,0.08); border:1px solid rgba(255,77,77,0.3); color:#ff4d4d; font-weight:700; font-size:13px; border-radius:12px; cursor:pointer;">Remove Anchor</button>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Native Popup Modal (Replaces browser alert/confirm) -->
+          <div id="whNativeModal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(0,0,0,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); align-items:center; justify-content:center; padding:20px; transition:opacity 0.25s ease; opacity:0;">
+            <div class="wh-native-modal-card" style="background:linear-gradient(145deg, #15181e 0%, #0d0e12 100%); border:1.5px solid var(--lime); box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(204,255,0,0.2); border-radius:20px; max-width:440px; width:100%; padding:28px; transform:scale(0.92); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+              <div id="whModalIcon" style="font-size:36px; margin-bottom:12px; text-align:center;">🔒</div>
+              <h3 id="whModalTitle" style="font-family:var(--font-display); font-size:20px; font-weight:900; text-transform:uppercase; color:#fff; text-align:center; margin-bottom:10px; letter-spacing:0.04em;">Check-in Locked</h3>
+              <div id="whModalBody" style="font-size:14px; color:rgba(255,255,255,0.8); text-align:center; line-height:1.55; margin-bottom:24px;"></div>
+              <div id="whModalActions" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+                <button id="whModalCancelBtn" style="background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.85); border:1px solid rgba(255,255,255,0.2); font-weight:700; flex:1; min-width:120px; padding:12px 18px; border-radius:12px; font-family:var(--font-display); font-size:13px; text-transform:uppercase; cursor:pointer;">Cancel</button>
+                <button id="whModalConfirmBtn" style="background:var(--lime); color:#000; font-weight:900; border:none; flex:1; min-width:120px; padding:12px 18px; border-radius:12px; font-family:var(--font-display); font-size:13px; text-transform:uppercase; cursor:pointer; box-shadow:0 0 20px rgba(204,255,0,0.35);">Confirm</button>
               </div>
             </div>
           </div>
@@ -3199,13 +3279,33 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <style>
             .mybible-grid {
               display: grid;
-              grid-template-columns: 1.4fr 1fr;
+              grid-template-columns: 1fr 1fr;
               gap: 24px;
+              transition: all 0.3s ease;
+            }
+            .mybible-grid.chat-expanded {
+              grid-template-columns: 0.7fr 1.3fr;
             }
             @media (max-width: 1024px) {
-              .mybible-grid {
+              .mybible-grid, .mybible-grid.chat-expanded {
                 grid-template-columns: 1fr;
               }
+            }
+            .bible-chat-thread {
+              max-height: 480px;
+              min-height: 380px;
+              overflow-y: auto;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              padding-right: 4px;
+            }
+            .bible-chat-thread::-webkit-scrollbar {
+              width: 6px;
+            }
+            .bible-chat-thread::-webkit-scrollbar-thumb {
+              background: rgba(204,255,0,0.25);
+              border-radius: 4px;
             }
             .mybible-reader-card {
               min-width: 0;
@@ -3354,9 +3454,27 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <div class="mybible-sidebar">
               <!-- Governor AI study assistant -->
               <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">The Steward's Bible Buddy</h3>
-                  <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.08); padding:3px 6px; border-radius:4px; text-transform:uppercase; color:rgba(255,255,255,0.6);">Interactive</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <h3 style="font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">The Steward's Bible Buddy</h3>
+                    <span style="font-size:9px; font-weight:700; background:rgba(204,255,0,0.12); border:1px solid rgba(204,255,0,0.25); padding:2px 6px; border-radius:4px; text-transform:uppercase; color:var(--lime);">Personalized AI</span>
+                  </div>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="toggleBuddyChatHistoryDrawer()" class="btn-ghost" title="Chat History" style="padding:4px 8px; font-size:10px; font-weight:700; width:auto; height:auto; min-height:auto; border-color:rgba(204,255,0,0.3); color:var(--lime);">💬 History</button>
+                    <button onclick="startNewBuddyChatSession()" class="btn-lime" title="New Chat Session" style="padding:4px 8px; font-size:10px; font-weight:700; width:auto; height:auto; min-height:auto;">+ New Chat</button>
+                    <button onclick="toggleExpandBibleChat()" class="btn-ghost" title="Toggle Full Width" style="padding:4px 8px; font-size:10px; font-weight:700; width:auto; height:auto; min-height:auto;">⛶</button>
+                  </div>
+                </div>
+
+                <!-- Chat History Drawer Dropdown -->
+                <div id="buddyChatHistoryDrawer" style="display:none; background:rgba(18,20,24,0.95); border:1px solid rgba(204,255,0,0.25); border-radius:12px; padding:12px; margin-bottom:8px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:11px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em;">Saved Conversations</span>
+                    <button onclick="toggleBuddyChatHistoryDrawer()" style="background:none; border:none; color:rgba(255,255,255,0.4); font-size:14px; cursor:pointer;">&times;</button>
+                  </div>
+                  <div id="buddyChatHistoryList" style="display:flex; flex-direction:column; gap:6px; max-height:180px; overflow-y:auto;">
+                    <div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic;">Loading chat history...</div>
+                  </div>
                 </div>
                 
                 <div id="bibleChatThread" class="bible-chat-thread">
@@ -3369,6 +3487,20 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                 <div style="display:flex; gap:8px;">
                   <input type="text" id="bibleChatInput" placeholder="Ask about this chapter..." style="flex:1; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:10px 12px; color:#fff; font-size:13px; outline:none;" onkeydown="if(event.key==='Enter') sendBibleChatMessage()">
                   <button onclick="sendBibleChatMessage()" class="btn-lime" style="width:40px; height:40px; padding:0; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px;">&rarr;</button>
+                </div>
+              </div>
+
+              <!-- Steward Projects & Workspaces (IDE Style) -->
+              <div class="g-card" style="padding:20px; display:flex; flex-direction:column; gap:12px; border:1px solid rgba(204,255,0,0.2); background:rgba(14,16,19,0.95);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <h3 style="font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em; margin:0;">📁 My Projects Workspace</h3>
+                    <span id="stewardProjectsCountBadge" style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.15); border:1px solid rgba(204,255,0,0.3); padding:2px 6px; border-radius:10px; color:var(--lime);">0 Active</span>
+                  </div>
+                  <button onclick="promptCreateStewardProject()" class="btn-lime" style="padding:4px 10px; font-size:10px; font-weight:700; text-transform:uppercase; width:auto; height:auto; min-height:auto;">+ New Project</button>
+                </div>
+
+                <div id="stewardProjectsWorkspaceList" style="display:flex; flex-direction:column; gap:10px; max-height:280px; overflow-y:auto; padding-right:4px;">
                 </div>
               </div>
 
@@ -7935,8 +8067,12 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
                   <div>
                     <div style="font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px;">Invite Code</div>
                     <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--lime); letter-spacing:0.1em;">${data.invite_code}</div>
+                    <div style="font-size:11.5px; color:rgba(255,255,255,0.6); margin-top:4px;">Send your invite link. They land in your circle.</div>
                   </div>
-                  <button class="me-btn-action" onclick="window.copyInviteCode('${data.invite_code}', this)" style="padding:8px 16px; font-size:11.5px;">Copy Code</button>
+                  <div style="display:flex; gap:8px;">
+                    <button class="me-btn-action" onclick="window.copyInviteCode('${data.invite_code}', this)" style="padding:8px 14px; font-size:11.5px;">Copy Code</button>
+                    <button class="me-btn-action" onclick="shareInviteLink('Join my circle in the house. Code: ${data.invite_code}.')" style="padding:8px 14px; font-size:11.5px; background:var(--lime); color:#000;">Send Invite</button>
+                  </div>
                 </div>
 
                 <!-- Daily Disciplines Legend -->
@@ -8497,6 +8633,16 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <!-- Order cards render here -->
           <div id="ordersList"></div>
 
+          <!-- Subscription Governance Card -->
+          <div id="portalSubscriptionCard" class="g-card" style="margin-top:20px; display:none;">
+            <div style="padding:20px;">
+              <div style="font-family:var(--font-display); font-size:15px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">Subscription Governance</div>
+              <div id="portalSubStatusText" style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin-bottom:14px;"></div>
+              <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:14px; font-style:italic;">Subscriptions auto-renew every 30 days. Cancellations take effect at period end with no partial refunds.</div>
+              <div id="portalSubActions"></div>
+            </div>
+          </div>
+
           <!-- Billing portal link -->
           <div class="order-billing-link" id="orderBillingLink" style="display:none">
             <div class="order-billing-link__text">Manage subscriptions, payment methods, and delivery schedules</div>
@@ -8550,7 +8696,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           <div id="communityFeedContainer" style="display:none"></div>
           
           <!-- Static Promo (shown if feed is empty) -->
-          <div id="communityPromoCard" class="g-card" style="text-align:center;padding:36px 24px;">
+          <div id="communityPromoCard" class="g-card" style="display:none;text-align:center;padding:36px 24px;">
             <div style="font-size:40px;margin-bottom:12px">&#129309;</div>
             <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
             <p class="g-body" style="max-width:480px;margin:0 auto 24px;color:rgba(255,255,255,0.6);line-height:1.55;">Connect with fellow Stewards on Skool. Accountability partners, group challenges, and community support.</p>
@@ -10327,6 +10473,9 @@ function renderHero(){
     } else {
       streakDesc.textContent = `Excellent streak! You've achieved your milestone of ${milestone} days.`;
     }
+    if (streak === 7 || streak === 21 || streak === 40) {
+      streakDesc.innerHTML += '<div style="margin-top:6px; font-size:12px; color:rgba(255,255,255,0.75);">Your morning is holding. <a onclick="go(\'rhythm\', document.getElementById(\'navRhythm\'))" style="color:var(--lime); font-weight:700; text-decoration:underline; cursor:pointer;">See it in your Rhythm.</a></div>';
+    }
   }
 
   // Scroll gate
@@ -11362,81 +11511,347 @@ window.WALL_KEY = WALL_KEY;
               setTimeout(() => r.style.outline = 'none', 1500);
             }
           });
-        }, 300);
+        }, 100);
       });
-      this.saveState(verse);
     }
   };
 
-  window.BIBLE_READER = BIBLE_READER;
+     // ---- BIBLE BUDDY CHAT LOG & STEWARD PROJECT ENGINE ----
+  function renderBotMessageHtml(data) {
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+    let responseHtml = `
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:12px 14px; border-radius:12px; font-size:13px; line-height:1.45; max-width:85%;">
+        <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:6px;">Bible Buddy</div>
+        <div>${data.reply ? esc(data.reply).replace(/\n/g, '<br>') : ''}</div>
+    `;
 
-  window.onBookSelected = function() {
-    const book = document.getElementById("myBibleBookSelect").value;
-    BIBLE_READER.setBook(book);
-  };
+    // Render Steward Project Card if present
+    if (data.project) {
+      const proj = data.project;
+      const projId = 'proj-' + Math.random().toString(36).substr(2, 9);
+      responseHtml += `
+        <div id="${projId}" style="margin-top:12px; background:rgba(204,255,0,0.06); border:1px solid rgba(204,255,0,0.3); border-radius:12px; padding:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="font-family:var(--font-display); font-weight:700; font-size:13px; color:#fff;">📌 ${esc(proj.title)}</div>
+            <span style="font-size:10px; font-weight:700; color:var(--lime); background:rgba(0,0,0,0.4); padding:3px 8px; border-radius:12px;">${esc(proj.category || 'Stewardship')}</span>
+          </div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.7); margin-bottom:8px;">Project Goals & Directives:</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            ${(proj.goals || []).map((g) => `
+              <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:rgba(255,255,255,0.9); cursor:pointer;">
+                <input type="checkbox" style="accent-color:var(--lime); width:14px; height:14px;">
+                <span>${esc(g)}</span>
+              </label>
+            `).join('')}
+          </div>
+          <button onclick="saveProjectToStewardRhythm('${encodeURIComponent(JSON.stringify(proj))}')" class="btn-lime" style="margin-top:12px; width:100%; padding:8px; font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer;">🚀 Add to My Rhythm</button>
+        </div>
+      `;
+    }
 
-  window.navigateChapter = function(dir) {
-    BIBLE_READER.navigateChapter(dir);
-  };
+    // Render Verses
+    if (data.verses && data.verses.length > 0) {
+      responseHtml += `<div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">`;
+      for (const refObj of data.verses) {
+        const verseCardId = 'ref-' + Math.random().toString(36).substr(2, 9);
+        const refBook = refObj.reference.split(' ').slice(0, -1).join(' ');
+        const refCoords = refObj.reference.split(' ').pop().split(':');
+        const refChapter = parseInt(refCoords[0]) || 1;
+        const refVerse = parseInt(refCoords[1]) || 1;
+        responseHtml += `
+          <div id="${verseCardId}" style="background:rgba(0,0,0,0.35); border:1px solid rgba(204,255,0,0.25); padding:10px 12px; border-radius:10px; font-size:12px; line-height:1.4;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-weight:700; font-size:11px; color:var(--lime);">📖 ${esc(refObj.reference)}</span>
+              <button onclick="navigateToScripture('${refBook}', ${refChapter}, ${refVerse})" class="btn-lime" style="padding:4px 10px; font-size:10px; border-radius:6px; width:auto; height:auto; min-height:auto; text-transform:uppercase; font-weight:700; cursor:pointer;">Open in Word &rarr;</button>
+            </div>
+            <div class="ref-text" style="color:rgba(255,255,255,0.75); font-style:italic;">"${esc(refObj.text || 'Reference loaded')}"</div>
+          </div>
+        `;
+      }
+      responseHtml += `</div>`;
+    }
+    responseHtml += `</div>`;
+    return responseHtml;
+  }
 
-  window.resumeLastSpot = function() {
-    const banner = document.getElementById("myBibleResumeBanner");
-    if (banner) {
-      const book = banner.dataset.book;
-      const chapter = parseInt(banner.dataset.chapter);
-      const verse = parseInt(banner.dataset.verse);
-      BIBLE_READER.goToSpot(book, chapter, verse);
-      banner.style.display = 'none';
+  window.toggleExpandBibleChat = function() {
+    const grid = document.querySelector(".mybible-grid");
+    if (grid) {
+      grid.classList.toggle("chat-expanded");
     }
   };
 
-  window.toggleMarkupsView = function() {
-    const drawer = document.getElementById("markupsListView");
-    const btn = document.getElementById("btnToggleMarkupsView");
-    if (drawer && btn) {
-      const isHidden = drawer.style.display === 'none';
-      drawer.style.display = isHidden ? 'block' : 'none';
-      btn.textContent = isHidden ? "Hide Markups" : "Show Markups";
+  window.promptCreateStewardProject = function() {
+    const input = document.getElementById("bibleChatInput");
+    const pTitle = prompt("Enter a title or goal for your new Steward Project:", "Read Matthew Chapter 1");
+    if (pTitle && pTitle.trim()) {
+      if (input) {
+        input.value = `Create a project for ${pTitle.trim()}`;
+        sendBibleChatMessage();
+      }
     }
   };
 
-  window.switchBibleMode = function(mode) {
-    const is365 = mode === '365';
-    const t365 = document.getElementById('toggleBible365');
-    const tMy = document.getElementById('toggleMyBible');
-    if (t365) {
-      t365.style.background = is365 ? 'var(--lime)' : 'none';
-      t365.style.color = is365 ? '#000' : 'rgba(255,255,255,0.6)';
+  window.saveProjectToStewardRhythm = function(encodedProj) {
+    try {
+      const proj = JSON.parse(decodeURIComponent(encodedProj));
+      const projects = JSON.parse(localStorage.getItem("wh_steward_projects") || "[]");
+      projects.unshift({ ...proj, id: "proj-" + Date.now(), created_at: new Date().toISOString(), completed_goals: [] });
+      localStorage.setItem("wh_steward_projects", JSON.stringify(projects));
+      alert(`Project "${proj.title}" has been saved to your Steward Workspace!`);
+      if (typeof renderStewardProjectsWorkspace === 'function') renderStewardProjectsWorkspace();
+    } catch(e) {
+      console.error("Failed to save project:", e);
     }
-    if (tMy) {
-      tMy.style.background = !is365 ? 'var(--lime)' : 'none';
-      tMy.style.color = !is365 ? '#000' : 'rgba(255,255,255,0.6)';
-    }
-    const header = document.getElementById('bibleTitleHeader');
-    if (header) header.textContent = is365 ? 'Bible 365' : 'My Bible';
-    const howSum = document.getElementById('bibleHowSummary');
-    const how365 = document.getElementById('bibleHow365');
-    const howMy = document.getElementById('bibleHowMy');
-    if (howSum) howSum.textContent = is365 ? 'How Bible 365 works' : 'How My Bible works';
-    if (how365) how365.style.display = is365 ? 'block' : 'none';
-    if (howMy) howMy.style.display = is365 ? 'none' : 'block';
-    const wrapper365 = document.getElementById('bible365ContentWrapper');
-    const myBibleWrapper = document.getElementById('myBibleContentWrapper');
-    if (is365) {
-      if (wrapper365) wrapper365.style.display = 'block';
-      if (myBibleWrapper) myBibleWrapper.style.display = 'none';
-    } else {
-      if (wrapper365) wrapper365.style.display = 'none';
-      if (myBibleWrapper) myBibleWrapper.style.display = 'block';
-      initMyBibleReader();
-    }
-    BIBLE_READER.saveState();
   };
 
-  window.initMyBibleReader = function() {
-    if (!window._myBibleInited) {
-      window._myBibleInited = true;
-      BIBLE_READER.init();
+  window.renderStewardProjectsWorkspace = function() {
+    const listEl = document.getElementById("stewardProjectsWorkspaceList");
+    const badgeEl = document.getElementById("stewardProjectsCountBadge");
+    if (!listEl) return;
+
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+    const projects = JSON.parse(localStorage.getItem("wh_steward_projects") || "[]");
+    if (badgeEl) badgeEl.textContent = `${projects.length} Active`;
+
+    if (projects.length === 0) {
+      listEl.innerHTML = `
+        <div style="font-size:10px; color:rgba(255,255,255,0.35); margin-bottom:8px;">Stored locally on this device</div>
+        <div style="background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:10px; padding:14px; text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">
+          No active projects yet. Ask Bible Buddy to <strong>"Create a project to..."</strong> or click <strong>+ New Project</strong> above!
+        </div>
+      `;
+      return;
+    }
+
+    let html = `<div style="font-size:10px; color:rgba(255,255,255,0.35); margin-bottom:8px;">Stored locally on this device</div>`;
+    projects.forEach((proj, idx) => {
+      const completedGoals = (proj.completed_goals || []).length;
+      const totalGoals = (proj.goals || []).length;
+      const pct = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
+
+      html += `
+        <div style="background:rgba(0,0,0,0.3); border:1px solid ${proj.active ? 'var(--lime)' : 'rgba(255,255,255,0.08)'}; border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:700; font-size:12px; color:#fff;">📌 ${esc(proj.title)}</span>
+            <div style="display:flex; gap:4px; align-items:center;">
+              <span style="font-size:9px; font-weight:700; background:rgba(204,255,0,0.15); color:var(--lime); padding:2px 6px; border-radius:4px;">${pct}% Done</span>
+              <button onclick="deleteStewardProject('${proj.id || idx}')" style="background:none; border:none; color:rgba(255,77,77,0.6); font-size:12px; padding:4px; cursor:pointer;">✕</button>
+            </div>
+          </div>
+          
+          <div style="background:rgba(255,255,255,0.1); height:4px; border-radius:2px; overflow:hidden;">
+            <div style="background:var(--lime); height:100%; width:${pct}%;"></div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+            ${(proj.goals || []).map((g, gIdx) => {
+              const isChecked = (proj.completed_goals || []).includes(gIdx);
+              return `
+                <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:${isChecked ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.85)'}; text-decoration:${isChecked ? 'line-through' : 'none'}; cursor:pointer;">
+                  <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleStewardProjectGoal('${proj.id || idx}', ${gIdx})" style="accent-color:var(--lime); width:12px; height:12px;">
+                  <span>${esc(g)}</span>
+                </label>
+              `;
+            }).join('')}
+          </div>
+
+          <button onclick="openProjectInBibleBuddy('${esc(proj.title)}')" class="btn-ghost" style="margin-top:4px; padding:4px 8px; font-size:10px; font-weight:700; border-radius:4px; text-transform:uppercase; color:var(--lime); text-align:left; width:auto; height:auto; min-height:auto;">💬 Chat About This Project &rarr;</button>
+        </div>
+      `;
+    });
+
+    listEl.innerHTML = html;
+  };
+
+  window.deleteStewardProject = function(idOrIdx) {
+    if (confirm("Delete this project from your workspace?")) {
+      let projects = JSON.parse(localStorage.getItem("wh_steward_projects") || "[]");
+      projects = projects.filter((p, i) => (p.id !== idOrIdx && String(i) !== String(idOrIdx)));
+      localStorage.setItem("wh_steward_projects", JSON.stringify(projects));
+      renderStewardProjectsWorkspace();
+    }
+  };
+
+  window.toggleStewardProjectGoal = function(idOrIdx, gIdx) {
+    let projects = JSON.parse(localStorage.getItem("wh_steward_projects") || "[]");
+    const proj = projects.find((p, i) => (p.id === idOrIdx || String(i) === String(idOrIdx)));
+    if (proj) {
+      if (!proj.completed_goals) proj.completed_goals = [];
+      const pos = proj.completed_goals.indexOf(gIdx);
+      if (pos >= 0) proj.completed_goals.splice(pos, 1);
+      else proj.completed_goals.push(gIdx);
+      localStorage.setItem("wh_steward_projects", JSON.stringify(projects));
+      renderStewardProjectsWorkspace();
+    }
+  };
+
+  window.ACTIVE_BUDDY_CHAT_ID = null;
+
+  window.toggleBuddyChatHistoryDrawer = function() {
+    const drawer = document.getElementById('buddyChatHistoryDrawer');
+    if (!drawer) return;
+    const isHidden = drawer.style.display === 'none';
+    drawer.style.display = isHidden ? 'block' : 'none';
+    if (isHidden) {
+      window.fetchBuddyChats();
+    }
+  };
+
+  window.fetchBuddyChats = async function() {
+    const listEl = document.getElementById('buddyChatHistoryList');
+    if (!listEl) return;
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+    try {
+      const email = window.MEMBER_EMAIL || '';
+      const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
+      const token = await RHYTHM_BUILDER.getToken();
+
+      const res = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        body: JSON.stringify({ email, action: 'list' })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const chats = data.chats || [];
+
+      if (chats.length === 0) {
+        listEl.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic;">No saved chats yet. Start a conversation below!</div>';
+        return;
+      }
+
+      let html = '';
+      chats.forEach(c => {
+        const isActive = c.id === window.ACTIVE_BUDDY_CHAT_ID;
+        const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) : '';
+        html += `
+          <div onclick="selectBuddyChat('${c.id}')" style="display:flex; justify-content:space-between; align-items:center; background:${isActive ? 'rgba(204,255,0,0.12)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${isActive ? 'var(--lime)' : 'rgba(255,255,255,0.08)'}; border-radius:8px; padding:8px 10px; cursor:pointer; transition:all 0.2s;">
+            <div style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              <div style="font-size:12px; font-weight:700; color:${isActive ? 'var(--lime)' : '#fff'};">${esc(c.title || 'Untitled Study Chat')}</div>
+              <div style="font-size:10px; color:rgba(255,255,255,0.4);">${esc(c.book ? `${c.book} ${c.chapter || ''}` : 'General Study')} · ${dateStr}</div>
+            </div>
+            <button onclick="event.stopPropagation(); deleteBuddyChat('${c.id}')" style="background:none; border:none; color:rgba(255,77,77,0.6); font-size:12px; padding:4px; cursor:pointer;">🗑️</button>
+          </div>
+        `;
+      });
+      listEl.innerHTML = html;
+    } catch(e) {
+      console.warn('[BuddyChats] fetch failed:', e);
+      listEl.innerHTML = '<div style="font-size:12px; color:rgba(255,77,77,0.7);">Failed to load chat history.</div>';
+    }
+  };
+
+  window.selectBuddyChat = async function(chatId) {
+    window.ACTIVE_BUDDY_CHAT_ID = chatId;
+    window.toggleBuddyChatHistoryDrawer();
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+
+    const thread = document.getElementById('bibleChatThread');
+    if (thread) {
+      thread.innerHTML = '<div style="font-size:12px; color:var(--lime); font-style:italic; padding:10px;">Loading conversation history...</div>';
+    }
+
+    try {
+      const email = window.MEMBER_EMAIL || '';
+      const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
+      const token = await RHYTHM_BUILDER.getToken();
+
+      const res = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        body: JSON.stringify({ email, action: 'messages', chat_id: chatId })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const msgs = data.messages || [];
+
+      if (!thread) return;
+      if (msgs.length === 0) {
+        thread.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic;">No messages in this chat yet. Ask something below!</div>';
+        return;
+      }
+
+      let html = '';
+      msgs.forEach(m => {
+        if (m.role === 'user') {
+          html += `
+            <div style="background:rgba(204,255,0,0.05); border:1px solid rgba(204,255,0,0.15); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; align-self:flex-end; max-width:80%;">
+              <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px;">You</div>
+              ${esc(m.content)}
+            </div>
+          `;
+        } else {
+          html += renderBotMessageHtml({ reply: m.content, verses: m.verses || [] });
+        }
+      });
+      thread.innerHTML = html;
+      thread.scrollTop = thread.scrollHeight;
+    } catch(e) {
+      console.warn('[BuddyChats] load messages failed:', e);
+    }
+  };
+
+  window.startNewBuddyChatSession = async function() {
+    try {
+      const email = window.MEMBER_EMAIL || '';
+      const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
+      const token = await RHYTHM_BUILDER.getToken();
+
+      const res = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        body: JSON.stringify({
+          email,
+          action: 'create',
+          title: `Study on ${(typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentBook) || 'Scripture'} ${(typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentChapter) || 1}`,
+          book: (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentBook) || 'Matthew',
+          chapter: (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentChapter) || 1
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.chat && data.chat.id) {
+          window.ACTIVE_BUDDY_CHAT_ID = data.chat.id;
+        }
+      }
+    } catch(e){}
+
+    const thread = document.getElementById('bibleChatThread');
+    if (thread) {
+      thread.innerHTML = `
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
+          <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
+          New study chat started. Ask me anything about ${(typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentBook) || 'Scripture'} Chapter ${(typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentChapter) || 1}!
+        </div>
+      `;
+    }
+  };
+
+  window.deleteBuddyChat = async function(chatId) {
+    if (!confirm('Delete this chat session?')) return;
+    try {
+      const email = window.MEMBER_EMAIL || '';
+      const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
+      const token = await RHYTHM_BUILDER.getToken();
+
+      await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        body: JSON.stringify({ email, action: 'remove', chat_id: chatId })
+      });
+      if (window.ACTIVE_BUDDY_CHAT_ID === chatId) {
+        window.ACTIVE_BUDDY_CHAT_ID = null;
+      }
+      window.fetchBuddyChats();
+    } catch(e){}
+  };
+
+  window.openProjectInBibleBuddy = function(projTitle) {
+    const input = document.getElementById("bibleChatInput");
+    if (input) {
+      input.value = `How can I make progress on my "${projTitle}" project today?`;
+      sendBibleChatMessage();
     }
   };
 
@@ -11447,10 +11862,39 @@ window.WALL_KEY = WALL_KEY;
     input.value = '';
     const thread = document.getElementById("bibleChatThread");
     if (!thread) return;
+
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+
+    // If no active chat on server yet, create one first before sending
+    if (!window.ACTIVE_BUDDY_CHAT_ID) {
+      try {
+        const email = window.MEMBER_EMAIL || '';
+        const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
+        const token = await RHYTHM_BUILDER.getToken();
+        const cRes = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+          body: JSON.stringify({
+            email,
+            action: 'create',
+            title: text.slice(0, 50),
+            book: (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentBook) || 'Matthew',
+            chapter: (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentChapter) || 1
+          })
+        });
+        if (cRes.ok) {
+          const cData = await cRes.json();
+          if (cData.chat && cData.chat.id) {
+            window.ACTIVE_BUDDY_CHAT_ID = cData.chat.id;
+          }
+        }
+      } catch(e) {}
+    }
+
     thread.innerHTML += `
       <div style="background:rgba(204,255,0,0.05); border:1px solid rgba(204,255,0,0.15); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; align-self:flex-end; max-width:80%;">
         <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px;">You</div>
-        ${text}
+        ${esc(text)}
       </div>
     `;
     thread.scrollTop = thread.scrollHeight;
@@ -11463,12 +11907,12 @@ window.WALL_KEY = WALL_KEY;
     `;
     thread.scrollTop = thread.scrollHeight;
 
-    const activeChapterText = (BIBLE_READER.loadedVerses || [])
+    const activeChapterText = (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.loadedVerses || [])
       .map(v => `${v.verse}. ${v.text}`)
       .join(' ')
       .slice(0, 3500);
 
-    const activeMarks = (BIBLE_READER.marks || [])
+    const activeMarks = (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.marks || [])
       .filter(m => m.book === BIBLE_READER.currentBook && m.chapter === BIBLE_READER.currentChapter)
       .map(m => {
         const vObj = (BIBLE_READER.loadedVerses || []).find(v => v.verse === m.verse);
@@ -11476,18 +11920,32 @@ window.WALL_KEY = WALL_KEY;
         return `${m.book} ${m.chapter}:${m.verse} [${m.kind}] ${vTxt}${m.body ? ' (Note: ' + m.body + ')' : ''}`;
       });
 
+    // Compile Rich Steward Activity Profile
+    const memberName = window.MEMBER_NAME || (typeof MEMBER !== 'undefined' && MEMBER && MEMBER.name) || (MEMBER_EMAIL ? MEMBER_EMAIL.split('@')[0] : 'Steward');
+    const bStreak = (typeof whBibleState !== 'undefined' && whBibleState) ? (whBibleState.streak || 0) : 0;
+    const habitsDone = document.querySelectorAll('.habit-checkbox:checked').length;
+    const habitsTotal = document.querySelectorAll('.habit-checkbox').length;
+    const activeProjects = JSON.parse(localStorage.getItem('wh_steward_projects') || '[]');
+
     try {
       const res = await fetch(`${FN_BASE}/governor-ai`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
         body: JSON.stringify({
           task: 'bible_study',
+          chat_id: window.ACTIVE_BUDDY_CHAT_ID || undefined,
           prompt: text,
           context: {
-            book: BIBLE_READER.currentBook,
-            chapter: BIBLE_READER.currentChapter,
+            book: (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentBook) || 'Matthew',
+            chapter: (typeof BIBLE_READER !== 'undefined' && BIBLE_READER.currentChapter) || 1,
             active_text: activeChapterText,
-            highlights: activeMarks
+            highlights: activeMarks,
+            user_profile: {
+              name: memberName,
+              rhythm_streak: bStreak,
+              habits_logged: `${habitsDone}/${habitsTotal}`,
+              projects_count: activeProjects.length
+            }
           },
           email: MEMBER_EMAIL || window.MEMBER_EMAIL,
           wall_key: window.WALL_KEY
@@ -11495,52 +11953,54 @@ window.WALL_KEY = WALL_KEY;
       });
       const typingEl = document.getElementById(typingId);
       if (typingEl) typingEl.remove();
+
       if (res.status === 200) {
         const body = await res.json();
         if (body.ok && body.out) {
           const data = body.out;
-          let responseHtml = `
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
-              <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
-              <div>${data.reply}</div>
-          `;
-          if (data.verses && data.verses.length > 0) {
-            responseHtml += `<div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">`;
-            for (const refObj of data.verses) {
-              const verseCardId = 'ref-' + Math.random().toString(36).substr(2, 9);
-              const refBook = refObj.reference.split(' ').slice(0, -1).join(' ');
-              const refCoords = refObj.reference.split(' ').pop().split(':');
-              const refChapter = parseInt(refCoords[0]) || 1;
-              const refVerse = parseInt(refCoords[1]) || 1;
-              responseHtml += `
-                <div id="${verseCardId}" style="background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.08); padding:8px 10px; border-radius:8px; font-size:12px; line-height:1.4;">
-                  <div style="font-weight:700; font-size:10px; color:var(--lime); cursor:pointer;" onclick="BIBLE_READER.goToSpot('${refBook}', ${refChapter}, ${refVerse})">📖 ${refObj.reference}</div>
-                  <div class="ref-text" style="color:rgba(255,255,255,0.6); font-style:italic; margin-top:2px;">${refObj.text || 'Reference not found'}</div>
-                </div>
-              `;
-            }
-            responseHtml += `</div>`;
+          
+          // Auto-save generated project to Workspace & update UI immediately
+          if (data.project) {
+            try {
+              const proj = data.project;
+              const projects = JSON.parse(localStorage.getItem("wh_steward_projects") || "[]");
+              if (!projects.some(p => p.title === proj.title)) {
+                projects.unshift({ ...proj, id: "proj-" + Date.now(), created_at: new Date().toISOString(), completed_goals: [] });
+                localStorage.setItem("wh_steward_projects", JSON.stringify(projects));
+                if (typeof renderStewardProjectsWorkspace === 'function') renderStewardProjectsWorkspace();
+              }
+            } catch(e){}
           }
-          responseHtml += `</div>`;
+
+          const responseHtml = renderBotMessageHtml(data);
           thread.innerHTML += responseHtml;
+
+          // Auto-navigate if requested
+          if (data.navigate && data.navigate.book) {
+            setTimeout(() => {
+              navigateToScripture(data.navigate.book, data.navigate.chapter, data.navigate.verse);
+            }, 300);
+          }
         } else {
-          throw new Error("Invalid response format");
+          thread.innerHTML += `<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic; padding:8px 12px; text-align:center;">Bible Buddy could not respond just now. Give it a moment and ask again.</div>`;
         }
       } else {
-        thread.innerHTML += `
-          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(204,255,0,0.15); padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.4; max-width:80%;">
-            <div style="font-weight:700; font-size:11px; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">Bible Buddy</div>
-            That's a thoughtful question about this chapter. The main takeaway here is keeping our mindset governed and putting faith into action step by step each day. What specific part of this passage is speaking to your heart right now?
-          </div>
-        `;
+        thread.innerHTML += `<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic; padding:8px 12px; text-align:center;">Bible Buddy could not respond just now. Give it a moment and ask again.</div>`;
       }
       thread.scrollTop = thread.scrollHeight;
     } catch(e) {
       console.error(e);
       const typingEl = document.getElementById(typingId);
       if (typingEl) typingEl.remove();
+      thread.innerHTML += `<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic; padding:8px 12px; text-align:center;">Bible Buddy could not respond just now. Give it a moment and ask again.</div>`;
+      thread.scrollTop = thread.scrollHeight;
     }
   };
+
+  // Rehydrate Projects Workspace on Load
+  setTimeout(() => {
+    if (typeof renderStewardProjectsWorkspace === 'function') renderStewardProjectsWorkspace();
+  }, 500);
 
 
   const PRAYER = {
@@ -12025,6 +12485,9 @@ function waCloseGate(){
   const gate = waEl('loginGate');
   if (gate) {
     gate.classList.add('hidden');
+    setTimeout(function() {
+      if (gate.classList.contains('hidden')) gate.style.display = 'none';
+    }, 400);
   }
 }
 
@@ -13372,7 +13835,21 @@ window.submitCohortTestimony = async function() {
     
     const container = document.getElementById('cohortTestimonyContainer');
     if (container) {
-      container.innerHTML = '<div style="color:var(--lime); text-align:center; padding:16px; font-weight:700;">Testimony posted to the Prayer Wall!</div>';
+      const csTest = typeof commerceState === 'function' ? commerceState() : {};
+      let postMarkup = '<div style="color:var(--lime); text-align:center; padding:16px; font-weight:700;">Testimony posted to the Prayer Wall!</div>';
+      
+      // Section 6: Testimony Invite Share CTA
+      postMarkup += '<div style="background:rgba(204,255,0,0.04); border:1px solid rgba(204,255,0,0.2); border-radius:12px; padding:16px; margin-top:14px; text-align:center;">' +
+        '<div style="font-size:13px; color:#fff; font-weight:600; margin-bottom:10px;">Someone you know is carrying the same thing. Invite them to the house.</div>' +
+        '<button onclick="shareInviteLink(\'Join me in the Steward System.\')" class="btn-lime" style="font-size:12px; font-weight:800; padding:8px 18px; text-transform:uppercase; border-radius:8px; cursor:pointer;">Send an Invite</button>' +
+        '</div>';
+
+      // Section 8.3: Cohort completion re-entry link
+      if (csTest.tier === 'unequipped' || csTest.tier === 'canceled') {
+        postMarkup += '<div style="margin-top:12px; text-align:center; font-size:13px; color:rgba(255,255,255,0.7); font-weight:600;">You governed without it. <a onclick="go(\'claim\', document.getElementById(\'navAll5\'))" style="color:var(--lime); font-weight:700; text-decoration:underline; cursor:pointer;">Now govern with it.</a></div>';
+      }
+
+      container.innerHTML = postMarkup;
     }
   } catch (e) {
     alert("Error: " + e.message);
@@ -13919,6 +14396,9 @@ async function loadMemberOrders() {
   loading.style.display = 'block';
 
   try {
+    if (typeof fetchSubscriptionStatus === 'function') {
+      await fetchSubscriptionStatus();
+    }
     var res = await fetch(FN_BASE + '/member-orders?email=' + encodeURIComponent(email), { headers: { 'x-wall-key': window.WALL_KEY || '' } });
     var data = await res.json();
     loading.style.display = 'none';
@@ -13932,6 +14412,8 @@ async function loadMemberOrders() {
       empty.style.display = 'block';
       return;
     }
+
+    var cs = typeof commerceState === 'function' ? commerceState() : {};
 
     // Render order cards
     var html = '';
@@ -13985,6 +14467,10 @@ async function loadMemberOrders() {
           '</div>';
       }
 
+      var bundleKeyAttr = escOrderAttr(order.bundle_key || 'governance-system');
+      var showReorder = (cs.tier === 'unequipped' || cs.tier === 'canceled');
+      var reorderBtnHtml = showReorder ? '<button onclick="window._reorderKey=\'' + bundleKeyAttr + '\'; go(\'claim\', document.getElementById(\'navAll5\'));" style="background:rgba(204,255,0,0.12); border:1px solid rgba(204,255,0,0.3); color:var(--lime); font-size:12px; font-weight:800; padding:6px 14px; border-radius:8px; cursor:pointer;">Reorder</button>' : '';
+
       html += '<div class="order-card">' +
         '<div class="order-header">' +
           '<div class="order-number">' + escOrderHtml(order.order_number || '') + '</div>' +
@@ -13995,13 +14481,45 @@ async function loadMemberOrders() {
           '<span>Total</span>' +
           '<span class="order-total-amount">' + totalFormatted + '</span>' +
         '</div>' +
-        (orderedDate ? '<div class="order-meta">Ordered ' + orderedDate + '</div>' : '') +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">' +
+          '<div class="order-meta">' + (orderedDate ? 'Ordered ' + orderedDate : '') + '</div>' +
+          reorderBtnHtml +
+        '</div>' +
         trackingHtml +
         '</div>';
     });
 
+    // 3.2 Shipment status pill above order list
+    if (cs.tier === 'subscriber' && cs.activeUntil) {
+      const nextDateStr = new Date(cs.activeUntil + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      html = '<div style="background:rgba(204,255,0,0.04); border:1px solid rgba(204,255,0,0.15); border-radius:12px; padding:12px 16px; margin-bottom:16px; font-size:13px; color:rgba(255,255,255,0.85); font-weight:500;">Next shipment around ' + nextDateStr + '</div>' + html;
+    } else if (cs.tier === 'canceling' && cs.activeUntil) {
+      const stopDateStr = new Date(cs.activeUntil + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      html = '<div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; margin-bottom:16px; font-size:13px; color:rgba(255,255,255,0.7); font-weight:500;">Shipments continue through ' + stopDateStr + ', then stop.</div>' + html;
+    }
+
     list.innerHTML = html;
     if (billing) billing.style.display = 'block';
+
+    // 3.3 Render Cancel Subscription Control inside billing block
+    const sub = window.SUBSCRIPTION;
+    let cancelCtrlHtml = '';
+    if (sub && (sub.status === 'active' || sub.status === 'past_due')) {
+      if (cs.tier === 'canceling') {
+        const activeUntilText = cs.activeUntil ? new Date(cs.activeUntil + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : 'period end';
+        cancelCtrlHtml = '<div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.6);">Cancellation scheduled. Active through ' + activeUntilText + '. <a onclick="handlePortalResumeClick()" style="color:var(--lime); text-decoration:underline; font-weight:700; cursor:pointer; margin-left:6px;">Resume subscription</a></div>';
+      } else {
+        cancelCtrlHtml = '<div style="margin-top:12px;"><a onclick="handlePortalCancelClick()" style="color:rgba(255,255,255,0.45); font-size:12px; text-decoration:underline; cursor:pointer;">Cancel subscription</a></div>';
+      }
+    }
+    const billingTextEl = billing.querySelector('.order-billing-link__text');
+    if (billingTextEl) {
+      const existingCancelCtrl = billing.querySelector('#portalCancelCtrl');
+      if (existingCancelCtrl) existingCancelCtrl.remove();
+      if (cancelCtrlHtml) {
+        billingTextEl.insertAdjacentHTML('afterend', '<div id="portalCancelCtrl">' + cancelCtrlHtml + '</div>');
+      }
+    }
 
   } catch (e) {
     loading.style.display = 'none';
@@ -14094,6 +14612,8 @@ function go(view,el,label){
     document.getElementById('headerLine').textContent=labels[view]||'Module';
     if(view==='portal'){
       if(typeof loadMemberOrders==='function') loadMemberOrders();
+    } else if(view==='tryall'){
+      if(typeof window.applyMemberCodeToTryAllLinks==='function') window.applyMemberCodeToTryAllLinks();
     }
     if(view==='tryall'){
       try { loadMemberDiscount(MEMBER_EMAIL); } catch(e) {}
@@ -14304,16 +14824,20 @@ async function loadAdminRegistrations() {
   const tbody = document.getElementById('adminRegistrationsTableBody');
   if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading requests...</td></tr>`;
 
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/admin-registrations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       },
       body: JSON.stringify({
-        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        email: email,
+        wall_key: window.WALL_KEY || localStorage.getItem('wh_steward_wall_key'),
         action: 'list'
       })
     });
@@ -14335,29 +14859,33 @@ window.loadAdminRegistrations = loadAdminRegistrations;
 function renderAdminRegistrations(registrations) {
   const tbody = document.getElementById('adminRegistrationsTableBody');
   if (!tbody) return;
+
   if (!registrations || registrations.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">No pending registrations.</td></tr>`;
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4); padding:16px;">No registration requests found.</td></tr>';
     return;
   }
+
+  const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
   let html = '';
   registrations.forEach(r => {
-    const nameStr = r.name ? r.name : 'Unknown';
-    const emailStr = r.email || '';
-    const handleStr = r.skool_handle || 'N/A';
-    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString() : 'N/A';
+    const statusColor = r.status === 'approved' ? 'var(--lime)' : (r.status === 'rejected' ? '#ff6b6b' : '#ffb800');
+    const createdStr = r.created_at ? new Date(r.created_at).toLocaleDateString([], { month:'short', day:'numeric', year:'numeric' }) : '';
+
     html += `
-      <tr>
-        <td>
-          <div style="font-weight:700; color:#fff;">${nameStr}</div>
-          <div style="font-size:12px; color:rgba(255,255,255,0.5);">${emailStr}</div>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px; color:#fff; font-weight:600;">${esc(r.email)}</td>
+        <td style="padding:12px 16px; color:rgba(255,255,255,0.7);">${esc(r.name || r.full_name || 'Steward')}</td>
+        <td style="padding:12px 16px;">
+          <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:${statusColor}; background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">${esc(r.status || 'pending')}</span>
+          <div style="font-size:10px; color:rgba(255,255,255,0.4); margin-top:2px;">${createdStr}</div>
         </td>
-        <td style="color:rgba(255,255,255,0.85);">${handleStr}</td>
-        <td style="color:rgba(255,255,255,0.6);">${dateStr}</td>
-        <td>
-          <div style="display:flex; gap:8px;">
-            <button class="admin-action-btn btn-lime-small" onclick="handleRegistrationAction('${r.id}', 'approve', this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:4px; cursor:pointer;">Approve</button>
-            <button class="admin-action-btn btn-danger-small" onclick="handleRegistrationAction('${r.id}', 'reject', this)" style="padding:6px 12px; font-size:11px; font-weight:700; border-radius:4px; cursor:pointer; background:#e74c3c; border:none; color:#fff;">Reject</button>
-          </div>
+        <td style="padding:12px 16px; text-align:right;">
+          ${r.status === 'pending' ? `
+            <div style="display:flex; gap:6px; justify-content:flex-end;">
+              <button onclick="handleRegistrationAction('${r.id}', 'approve', this)" class="btn-lime" style="padding:4px 10px; font-size:10px; font-weight:700; text-transform:uppercase;">Approve</button>
+              <button onclick="handleRegistrationAction('${r.id}', 'reject', this)" class="btn-ghost" style="padding:4px 10px; font-size:10px; font-weight:700; text-transform:uppercase; color:#ff6b6b; border:1px solid rgba(255,107,107,0.3);">Reject</button>
+            </div>
+          ` : `<span style="font-size:11px; color:rgba(255,255,255,0.4);">${esc(r.status)}</span>`}
         </td>
       </tr>
     `;
@@ -14652,6 +15180,7 @@ async function loadAdminModeration() {
   const tbody = document.getElementById('adminModerationTableBody');
   if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading report queue...</td></tr>`;
   
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/wall-moderate', {
@@ -14659,7 +15188,8 @@ async function loadAdminModeration() {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
-        'x-admin-email': window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email')
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       }
     });
     const data = await res.json();
@@ -14697,16 +15227,20 @@ async function loadAdminModeration() {
 }
 
 async function moderateAction(postId, action, source) {
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/wall-moderate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       },
       body: JSON.stringify({
-        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        email: email,
+        wall_key: window.WALL_KEY || localStorage.getItem('wh_steward_wall_key'),
         post_id: postId,
         action,
         source
@@ -14728,16 +15262,20 @@ async function loadAdminSettings() {
   const tbody = document.getElementById('adminSettingsTableBody');
   if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:rgba(255,255,255,0.4);">Loading settings...</td></tr>`;
   
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/admin-settings', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       },
       body: JSON.stringify({
-        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        email: email,
+        wall_key: window.WALL_KEY || localStorage.getItem('wh_steward_wall_key'),
         action: 'list'
       })
     });
@@ -14780,16 +15318,20 @@ async function saveAdminSetting() {
     return;
   }
   
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/admin-settings', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       },
       body: JSON.stringify({
-        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        email: email,
+        wall_key: window.WALL_KEY || localStorage.getItem('wh_steward_wall_key'),
         action: 'set',
         key,
         value
@@ -14811,16 +15353,20 @@ async function saveAdminSetting() {
 
 async function deleteAdminSetting(key) {
   if (!confirm(`Are you sure you want to delete settings key: ${key}?`)) return;
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/admin-settings', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       },
       body: JSON.stringify({
-        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        email: email,
+        wall_key: window.WALL_KEY || localStorage.getItem('wh_steward_wall_key'),
         action: 'delete',
         key
       })
@@ -14841,16 +15387,20 @@ async function loadAdminAudit() {
   const tbody = document.getElementById('adminAuditTableBody');
   if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:rgba(255,255,255,0.4);">Loading audit log...</td></tr>`;
   
+  const email = window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email') || localStorage.getItem('wh_founder_email') || '';
   const token = await getAdminToken();
   try {
     const res = await fetch(FN_BASE + '/admin-members', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`
+        'Authorization': token ? `Bearer ${token}` : `Bearer ${SUPABASE_ANON}`,
+        'apikey': SUPABASE_ANON,
+        'x-admin-email': email
       },
       body: JSON.stringify({
-        email: window.MEMBER_EMAIL || localStorage.getItem('wh_steward_email'),
+        email: email,
+        wall_key: window.WALL_KEY || localStorage.getItem('wh_steward_wall_key'),
         action: 'audit'
       })
     });
@@ -16161,6 +16711,14 @@ function renderDash(){
   var d=activeFastDay();
   var h='<div class="fade">';
 
+  const csDashTop = typeof commerceState === 'function' ? commerceState() : {};
+  if (csDashTop.tier === 'past_due') {
+    h += '<div class="g-card" style="background:rgba(255,180,0,0.06); border:1px solid rgba(255,180,0,0.25); border-radius:14px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">' +
+      '<div style="font-size:13px; color:#fff; flex:1; min-width:240px; font-family:\'DM Sans\', sans-serif; line-height:1.45;">Your last payment did not go through, so shipments are paused. Update your billing and everything resumes where it left off.</div>' +
+      '<a href="https://whealthylabel.com/member" target="_blank" rel="noopener" class="btn-lime" style="font-size:12px; font-weight:800; padding:10px 18px; text-decoration:none; text-transform:uppercase; border-radius:8px; display:inline-block;">Update Billing &rarr;</a>' +
+      '</div>';
+  }
+
   /* ── YOUR BUNDLE (matching dashboard bundleCard) ── */
   h+='<div class="g-card">';
   h+='<div class="dash-card__head"><div class="dash-card__icon">&#128230;</div><div class="dash-card__title">Your Bundle</div></div>';
@@ -16497,6 +17055,7 @@ window.loadCommunityViewFeed = async function() {
     } catch (e) { return ''; }
   }
 
+  promo.style.display = 'none';
   container.style.display = 'block';
   container.innerHTML = `
     <div class="wall-skeleton-container">
@@ -17248,6 +17807,7 @@ function fallbackB(phases,weeks){
 /* Plan reveal: cascading (item 3) */
 function renderReveal(root){
   const F=S.fast,P=F.plan;
+  const csFast = typeof commerceState === 'function' ? commerceState() : {};
   const end=new Date(F.start_date+'T00:00:00');end.setDate(end.getDate()+F.duration-1);
   let h='<div>';
   h+='<div class="g-card casc casc-0"><div class="plan-name">'+P.fast_name.replace(/(\d+)/,'<em>$1</em>')+'</div>'+
@@ -17684,6 +18244,25 @@ window.startQuizFromOnboarding = function() {
 };
 
 async function checkClaimModal(){
+  const cs = typeof commerceState === 'function' ? commerceState() : {};
+  if (cs.tier === 'subscriber' || cs.tier === 'canceling' || cs.tier === 'past_due') return;
+
+  if (cs.tier === 'canceled') {
+    const lastRefire = localStorage.getItem('wh_cta_claim_refire');
+    const now = Date.now();
+    if (!lastRefire || (now - parseInt(lastRefire, 10)) > 7 * 864e5) {
+      localStorage.setItem('wh_cta_claim_refire', now.toString());
+      if (typeof openClaimModal === 'function') {
+        openClaimModal();
+        const modalMsg = document.getElementById('claimModalSubtitle') || document.getElementById('claimSubtitle');
+        if (modalMsg) {
+          modalMsg.textContent = 'Your subscription is closed. Restart it and the rhythm picks up where it left off.';
+        }
+      }
+      return;
+    }
+  }
+
   const dismissed = __lsGet('wh_claim_dismissed_month');
   const curMonth = new Date().toISOString().slice(0,7);
   if (dismissed === curMonth) return;
@@ -18801,11 +19380,17 @@ function updateClaimBadge(){
 
 /* ================== INIT ================== */
 async function loadAndInit(){
-  waLoadProfileMeta();
-  initSidebarUser();
-  updateClaimBadge();
-  checkClaimModal();
-  initSR();updateMeta();renderJournalContext();renderWall();renderMapDefault();updateNavBadge();restoreDraft();
+  try { waLoadProfileMeta(); } catch(e){}
+  try { initSidebarUser(); } catch(e){}
+  try { updateClaimBadge(); } catch(e){}
+  try { checkClaimModal(); } catch(e){}
+  try { if (typeof initSR === 'function') initSR(); } catch(e){}
+  try { if (typeof updateMeta === 'function') updateMeta(); } catch(e){}
+  try { if (typeof renderJournalContext === 'function') renderJournalContext(); } catch(e){}
+  try { if (typeof renderWall === 'function') renderWall(); } catch(e){}
+  try { if (typeof renderMapDefault === 'function') renderMapDefault(); } catch(e){}
+  try { if (typeof updateNavBadge === 'function') updateNavBadge(); } catch(e){}
+  try { if (typeof restoreDraft === 'function') restoreDraft(); } catch(e){}
 
   // Determine target view immediately from URL hash or query params
   const hash = window.location.hash.replace('#', '');
@@ -18816,7 +19401,12 @@ async function loadAndInit(){
   const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',rhythm:'rhythmView'};
   
   const targetView = (bootView && map[bootView]) ? bootView : ((hash && map[hash]) ? hash : 'dash');
-  go(targetView);
+  try {
+    go(targetView);
+  } catch(e) {
+    console.error('[loadAndInit] go failed:', e);
+    try { renderDash(); } catch(e2){}
+  }
 
   if(window.hideBootLoader)hideBootLoader();
 
@@ -20226,10 +20816,261 @@ async function loadAndInit(){
   var FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
   var rmeqAnswers = [0, 0, 0, 0, 0]; // Q1-Q5 answers
   var currentStep = 1;
-  var totalSteps = 8;
-  var isSubmitting = false;
+  window.SUBSCRIPTION = null;
+
+  window.fetchSubscriptionStatus = async function() {
+    try {
+      const email = window.MEMBER_EMAIL || '';
+      if (!email) return;
+      const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/governance-cancel-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-wall-key': window.WALL_KEY || ''
+        },
+        body: JSON.stringify({ action: 'status', email })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok && data.subscription) {
+          window.SUBSCRIPTION = data.subscription;
+          if (typeof window.renderPortalSubscriptionCard === 'function') {
+            window.renderPortalSubscriptionCard();
+          }
+        }
+      }
+    } catch(e) {
+      console.warn('[subscription] status check failed:', e);
+    }
+  };
+
+  window.renderPortalSubscriptionCard = function() {
+    const card = document.getElementById('portalSubscriptionCard');
+    const txtEl = document.getElementById('portalSubStatusText');
+    const actEl = document.getElementById('portalSubActions');
+    if (!card || !txtEl || !actEl) return;
+
+    const cs = typeof window.commerceState === 'function' ? window.commerceState() : {};
+    if (cs.tier !== 'subscriber' && cs.tier !== 'canceling') {
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = 'block';
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+    const dateStr = cs.nextShipmentDate ? new Date(cs.nextShipmentDate + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : 'next period end';
+
+    if (cs.tier === 'canceling' || cs.cancelAtPeriodEnd) {
+      txtEl.innerHTML = `Your Steward subscription is set to end on <strong style="color:#fff;">${esc(dateStr)}</strong>. Your products and rhythm remain active until then.`;
+      actEl.innerHTML = `<button onclick="handleSubscriptionAction('resume')" class="btn-lime" style="width:auto; padding:10px 18px; font-size:12px; font-weight:700; text-transform:uppercase;">Resume Subscription &rarr;</button>`;
+    } else {
+      txtEl.innerHTML = `Active Steward Protocol Subscription. Next shipment scheduled for <strong style="color:var(--lime);">${esc(dateStr)}</strong>.`;
+      actEl.innerHTML = `<button onclick="handleSubscriptionAction('cancel')" class="btn-ghost" style="width:auto; padding:8px 14px; font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,77,77,0.85); border:1px solid rgba(255,77,77,0.3);">Cancel Subscription</button>`;
+    }
+  };
+
+  window.handleSubscriptionAction = async function(action) {
+    const confirmMsg = action === 'cancel' 
+      ? 'Are you sure you want to cancel your Steward auto-renewing subscription? Cancellation takes effect at period end with no partial refunds.'
+      : 'Resume your Steward subscription auto-refill?';
+    if (!confirm(confirmMsg)) return;
+
+    const email = window.MEMBER_EMAIL || '';
+    try {
+      const res = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/governance-cancel-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-wall-key': window.WALL_KEY || ''
+        },
+        body: JSON.stringify({ action, email })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok && data.subscription) {
+          window.SUBSCRIPTION = data.subscription;
+          window.renderPortalSubscriptionCard();
+          if (typeof window.showNativeModal === 'function') {
+            window.showNativeModal({
+              icon: '✓',
+              title: action === 'cancel' ? 'SUBSCRIPTION CANCELED' : 'SUBSCRIPTION RESUMED',
+              body: action === 'cancel' ? 'Your subscription will end at the close of your current billing period.' : 'Your subscription is active!',
+              confirmText: 'OK'
+            });
+          }
+        }
+      }
+    } catch(e) {
+      console.error('[subscription] action failed:', e);
+    }
+  };
+
+  window.commerceState = function() {
+    const sub = window.SUBSCRIPTION || {};
+    let status = sub.status;
+    if (!status) {
+      status = (window.productState === 'equipped' || window._bundleClaimed) ? 'subscriber' : 'unequipped';
+    }
+    const nextDateStr = sub.next_shipment_date || window._nextEligible || null;
+    return {
+      tier: status, // subscriber | canceling | past_due | canceled | unequipped
+      nextShipmentDate: nextDateStr,
+      cancelAtPeriodEnd: !!sub.cancel_at_period_end
+    };
+  };
+
+  window.isSurfaceDismissed = function(surfaceKey) {
+    const ts = localStorage.getItem('wh_cta_dismiss_' + surfaceKey);
+    if (!ts) return false;
+    const elapsedDays = (Date.now() - parseInt(ts, 10)) / (1000 * 60 * 60 * 24);
+    return elapsedDays < 7;
+  };
+
+  window.dismissSurface = function(surfaceKey) {
+    localStorage.setItem('wh_cta_dismiss_' + surfaceKey, Date.now().toString());
+  };
+
+  window.getMemberInviteLink = function() {
+    const refId = window.AFFILIATE_REF_ID || (window.AFFILIATE_DATA && window.AFFILIATE_DATA.ref_id);
+    if (refId) {
+      return 'https://whealthylabel.com/gov?ref=' + encodeURIComponent(refId);
+    }
+    return 'https://whealthylabel.com/gov';
+  };
+
+  window.shareInviteLink = function(customText) {
+    const link = window.getMemberInviteLink();
+    const text = customText ? customText + ' ' + link : link;
+    if (navigator.share) {
+      navigator.share({ title: 'WHEALTHY - The Steward System', text: text, url: link }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        if (typeof window.showNativeModal === 'function') {
+          window.showNativeModal({ icon: '✓', title: 'LINK COPIED', body: 'Invite link copied to your clipboard!', confirmText: 'OK' });
+        }
+      });
+    }
+  };
+
+  window.drawSupplyTile = function() {
+    const cs = typeof window.commerceState === 'function' ? window.commerceState() : {};
+    if (cs.tier === 'unequipped') return '';
+    const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
+    if (cs.tier === 'subscriber') {
+      const bundleName = (window.BUNDLE && window.BUNDLE.title) || 'Steward Governance System';
+      const nextDate = cs.nextShipmentDate ? new Date(cs.nextShipmentDate + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' }) : 'Soon';
+      return '<div class="disc-card" style="background:rgba(204,255,0,0.03); border:1px solid rgba(204,255,0,0.2); border-radius:14px; padding:16px;">' +
+        '<div style="font-size:10px; font-weight:800; color:var(--lime); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">' + esc(bundleName) + '</div>' +
+        '<div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">Equipped</div>' +
+        '<div style="font-size:11px; color:rgba(255,255,255,0.6);">Next shipment around ' + esc(nextDate) + '</div>' +
+        '</div>';
+    }
+    if (cs.tier === 'canceling') {
+      const endDate = cs.nextShipmentDate ? new Date(cs.nextShipmentDate + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' }) : 'period end';
+      return '<div class="disc-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:16px;">' +
+        '<div style="font-size:10px; font-weight:800; color:rgba(255,180,0,0.9); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">Canceling</div>' +
+        '<div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">Active until ' + esc(endDate) + '</div>' +
+        '<a onclick="go(\'portal\')" style="font-size:11px; font-weight:700; color:var(--lime); text-decoration:underline; cursor:pointer;">Manage in Portal &rarr;</a>' +
+        '</div>';
+    }
+    if (cs.tier === 'past_due') {
+      return '';
+    }
+    if (cs.tier === 'canceled') {
+      return '<div class="disc-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:16px;">' +
+        '<div style="font-size:10px; font-weight:800; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">Governance Protocol</div>' +
+        '<div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:6px;">Subscription Ended</div>' +
+        '<a onclick="go(\'all5\')" style="font-size:12px; font-weight:800; color:var(--lime); text-decoration:underline; cursor:pointer;">Re-equip Protocol &rarr;</a>' +
+        '</div>';
+    }
+    return '';
+  };
+
+  window.applyMemberCodeToTryAllLinks = function() {
+    const code = (window.MEMBER_CODE || localStorage.getItem('wh_steward_code') || 'WHSBGN');
+    const tryAllView = document.getElementById('tryallView');
+    if (!tryAllView) return;
+    const links = tryAllView.querySelectorAll('a[href*="whealthylabel.com"]');
+    links.forEach(link => {
+      let href = link.getAttribute('href');
+      if (href && !href.includes('code=')) {
+        const sep = href.includes('?') ? '&' : '?';
+        link.setAttribute('href', href + sep + 'code=' + encodeURIComponent(code));
+      }
+    });
+  };
+
+  window.showNativeModal = function(options) {
+    const modal = document.getElementById('whNativeModal');
+    if (!modal) return;
+    const iconEl = document.getElementById('whModalIcon');
+    const titleEl = document.getElementById('whModalTitle');
+    const bodyEl = document.getElementById('whModalBody');
+    const confirmBtn = document.getElementById('whModalConfirmBtn');
+    const cancelBtn = document.getElementById('whModalCancelBtn');
+
+    if (iconEl) iconEl.innerHTML = options.icon || '✨';
+    if (titleEl) titleEl.textContent = options.title || 'Notice';
+    if (bodyEl) bodyEl.innerHTML = options.body || options.message || '';
+
+    if (options.confirmText && confirmBtn) {
+      confirmBtn.textContent = options.confirmText;
+      confirmBtn.style.display = 'inline-flex';
+      confirmBtn.style.alignItems = 'center';
+      confirmBtn.style.justifyContent = 'center';
+    } else if (confirmBtn) {
+      confirmBtn.style.display = 'none';
+    }
+
+    if (cancelBtn) {
+      cancelBtn.textContent = options.cancelText || 'Close';
+      cancelBtn.style.display = options.showCancel === false ? 'none' : 'inline-flex';
+      cancelBtn.style.alignItems = 'center';
+      cancelBtn.style.justifyContent = 'center';
+    }
+
+    confirmBtn.onclick = function() {
+      closeNativeModal();
+      if (typeof options.onConfirm === 'function') options.onConfirm();
+    };
+
+    cancelBtn.onclick = function() {
+      closeNativeModal();
+      if (typeof options.onCancel === 'function') options.onCancel();
+    };
+
+    modal.style.display = 'flex';
+    setTimeout(() => {
+      modal.style.opacity = '1';
+      const card = modal.querySelector('.wh-native-modal-card');
+      if (card) card.style.transform = 'scale(1)';
+    }, 10);
+  };
+
+  window.closeNativeModal = function() {
+    const modal = document.getElementById('whNativeModal');
+    if (!modal) return;
+    modal.style.opacity = '0';
+    const card = modal.querySelector('.wh-native-modal-card');
+    if (card) card.style.transform = 'scale(0.92)';
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 200);
+  };
 
   window.RHYTHM_BUILDER = {
+    _assessData: {
+      wake: '06:30',
+      sleep: '22:30',
+      workStart: '09:00',
+      workEnd: '17:00',
+      workRemote: true,
+      familyAnchor: true,
+      workoutOptIn: true,
+      workoutType: 'Weights',
+      workoutWindow: 'morning'
+    },
+
     state: {
       hasQuiz: false,
       activePlan: null,
@@ -20244,13 +21085,20 @@ async function loadAndInit(){
     async init() {
       this.showScreen('Loader');
       var _lt = document.getElementById('rhyLoaderText'); if(_lt) _lt.textContent = 'Loading your rhythm status...';
-      try { await this.fetchStatus(); } catch(e){ console.warn('[Rhythm] init', e); }
-      if (!document.querySelector('#rhythmView .rhy-screen.active')) this.startAssessment();
+      try {
+        await this.fetchStatus();
+      } catch(e) {
+        console.warn('[Rhythm] init fetchStatus error:', e);
+      }
+      if (!document.querySelector('#rhythmView .rhy-screen.active')) {
+        this.showScreen('Timeline');
+        try { this.renderTimeline(); } catch(err){}
+      }
     },
 
     async fetchStatus() {
       try {
-        const token = await RHYTHM_BUILDER.getToken();
+        const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
         const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' }
@@ -20258,9 +21106,9 @@ async function loadAndInit(){
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const d = await res.json();
         
-        this.state.hasQuiz = d.has_quiz;
-        this.state.activePlan = d.active_plan;
-        this.state.slots = d.slots || [];
+        this.state.hasQuiz = d.has_quiz !== false;
+        this.state.activePlan = d.active_plan || d.plan || null;
+        this.state.slots = d.slots || (d.active_plan && d.active_plan.slots) || [];
         this.state.pendingDraftId = d.pending_draft_id;
         this.state.consistencyDays = d.consistency_days || 0;
         this.state.adherencePct = d.adherence_pct || 0;
@@ -20268,25 +21116,27 @@ async function loadAndInit(){
         this.state.adherenceHistory = d.adherence_history || [];
         this.state.season = d.season || null;
         this.state.freshStart = d.fresh_start || null;
+        this.state.suggestions = d.suggestions || [];
 
-        // Check if there is any custom nudge
-        this.pollNudges();
+        try { this.pollNudges(); } catch(e){}
 
         if (!this.state.hasQuiz) {
           this.showScreen('Threshold');
-        } else if (this.state.activePlan) {
-          this.renderTimeline();
-          this.renderSeason();
-          this.renderFreshStart();
+        } else if (this.state.activePlan || this.state.slots.length > 0) {
           this.showScreen('Timeline');
+          try { this.renderTimeline(); } catch(e){ console.error('[Rhythm] renderTimeline failed:', e); }
+          try { this.renderSeason(); } catch(e){}
+          try { this.renderFreshStart(); } catch(e){}
         } else if (this.state.pendingDraftId) {
           await this.loadDraft();
         } else {
-          this.startAssessment();
+          this.showScreen('Timeline');
+          try { this.renderTimeline(); } catch(e){}
         }
       } catch (e) {
         console.error('[Rhythm] fetchStatus failed:', e);
-        this.showScreen('Threshold');
+        this.showScreen('Timeline');
+        try { this.renderTimeline(); } catch(err){}
       }
     },
 
@@ -20303,19 +21153,68 @@ async function loadAndInit(){
     showScreen(name) {
       document.querySelectorAll('#rhythmView .rhy-screen').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('rhyScreen' + name);
-      if (target) target.classList.add('active');
+      if (target) {
+        target.classList.add('active');
+      } else {
+        const fallback = document.getElementById('rhyScreenTimeline') || document.getElementById('rhyScreenAssess');
+        if (fallback) fallback.classList.add('active');
+      }
     },
 
     startAssessment() {
       currentStep = 1;
-      rmeqAnswers = [0, 0, 0, 0, 0];
-      this.renderStep();
       this.showScreen('Assess');
+      try { this.renderStep(); } catch(e){ console.error('[Rhythm] renderStep failed:', e); }
     },
 
     restartAssessment() {
-      if (confirm('Are you sure you want to retake the assessment? This will archive your active rhythm.')) {
+      if (typeof showNativeModal === 'function') {
+        showNativeModal({
+          icon: '🔄',
+          title: 'Retake Assessment',
+          body: 'Are you sure you want to retake your rhythm assessment? This will archive your active rhythm.',
+          confirmText: 'Retake Assessment',
+          cancelText: 'Cancel',
+          onConfirm: () => {
+            this.startAssessment();
+          }
+        });
+      } else if (confirm('Are you sure you want to retake the assessment? This will archive your active rhythm.')) {
         this.startAssessment();
+      }
+    },
+
+    setWorkoutType(type, btn) {
+      this._assessData.workoutType = type;
+      const el = document.getElementById('rhyWorkoutType');
+      if (el) el.value = type;
+      const chips = document.querySelectorAll('.rhy-workout-type-chip');
+      chips.forEach(c => {
+        c.style.background = 'rgba(255,255,255,0.05)';
+        c.style.color = '#fff';
+        c.style.borderColor = 'rgba(255,255,255,0.1)';
+      });
+      if (btn) {
+        btn.style.background = 'var(--lime)';
+        btn.style.color = '#000';
+        btn.style.borderColor = 'var(--lime)';
+      }
+    },
+
+    setWorkoutWindow(win, btn) {
+      this._assessData.workoutWindow = win;
+      const el = document.getElementById('rhyWorkoutWindow');
+      if (el) el.value = win;
+      const chips = document.querySelectorAll('.rhy-workout-win-chip');
+      chips.forEach(c => {
+        c.style.background = 'rgba(255,255,255,0.05)';
+        c.style.color = 'rgba(255,255,255,0.7)';
+        c.style.borderColor = 'rgba(255,255,255,0.1)';
+      });
+      if (btn) {
+        btn.style.background = 'rgba(204,255,0,0.15)';
+        btn.style.color = 'var(--lime)';
+        btn.style.borderColor = 'var(--lime)';
       }
     },
 
@@ -20325,138 +21224,146 @@ async function loadAndInit(){
       const indicator = document.getElementById('rhyStepIndicator');
       const btnPrev = document.getElementById('btnRhyPrev');
       
-      btnPrev.style.display = currentStep > 1 ? 'inline-flex' : 'none';
-      title.textContent = `Step ${currentStep} of ${totalSteps}`;
+      if (btnPrev) btnPrev.style.display = currentStep > 1 ? 'inline-flex' : 'none';
+      if (title) title.textContent = `Step ${currentStep} of ${totalSteps}`;
 
       let html = '';
       if (currentStep === 1) {
-        indicator.textContent = 'Wake Time Preference';
+        if (indicator) indicator.textContent = 'Wake Time';
         html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q1. Approximately what time would you get up if you were entirely free to plan your day?</h3>
-          <div class="rhy-options">
-            <div class="rhy-option ${rmeqAnswers[0]===5?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 5, this)">5:00 - 6:30 am</div>
-            <div class="rhy-option ${rmeqAnswers[0]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 4, this)">6:30 - 7:45 am</div>
-            <div class="rhy-option ${rmeqAnswers[0]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 3, this)">7:45 - 9:45 am</div>
-            <div class="rhy-option ${rmeqAnswers[0]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 2, this)">9:45 - 11:00 am</div>
-            <div class="rhy-option ${rmeqAnswers[0]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(0, 1, this)">11:00 am - 12:00 noon</div>
+          <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Wake Up Time</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:20px;">What time do you typically wake up to start your morning rhythm?</p>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; text-align:center;">
+            <label style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); display:block; margin-bottom:10px;">Typical Morning Wake</label>
+            <input type="time" id="rhyWakeTime" class="rhy-modal-input" value="${this._assessData.wake}" style="max-width:220px; margin:0 auto; font-size:22px; text-align:center; font-weight:800; font-family:monospace;">
           </div>
         `;
       } else if (currentStep === 2) {
-        indicator.textContent = 'Morning Fatigue';
+        if (indicator) indicator.textContent = 'Sleep Time';
         html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q2. During the first half hour after you wake up in the morning, how tired do you feel?</h3>
-          <div class="rhy-options">
-            <div class="rhy-option ${rmeqAnswers[1]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 1, this)">Very tired</div>
-            <div class="rhy-option ${rmeqAnswers[1]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 2, this)">Fairly tired</div>
-            <div class="rhy-option ${rmeqAnswers[1]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 3, this)">Fairly refreshed</div>
-            <div class="rhy-option ${rmeqAnswers[1]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(1, 4, this)">Very refreshed</div>
+          <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Sleep & Rest Time</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:20px;">What time do you typically wind down for evening sleep?</p>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; text-align:center;">
+            <label style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); display:block; margin-bottom:10px;">Typical Evening Bedtime</label>
+            <input type="time" id="rhySleepTime" class="rhy-modal-input" value="${this._assessData.sleep}" style="max-width:220px; margin:0 auto; font-size:22px; text-align:center; font-weight:800; font-family:monospace;">
           </div>
         `;
       } else if (currentStep === 3) {
-        indicator.textContent = 'Bedtime Preference';
+        if (indicator) indicator.textContent = 'Work Blocks';
         html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q3. At what time in the evening do you feel tired and, as a result, in need of sleep?</h3>
-          <div class="rhy-options">
-            <div class="rhy-option ${rmeqAnswers[2]===5?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 5, this)">8:00 - 9:00 pm</div>
-            <div class="rhy-option ${rmeqAnswers[2]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 4, this)">9:00 - 10:15 pm</div>
-            <div class="rhy-option ${rmeqAnswers[2]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 3, this)">10:15 pm - 12:45 am</div>
-            <div class="rhy-option ${rmeqAnswers[2]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 2, this)">12:45 - 2:00 am</div>
-            <div class="rhy-option ${rmeqAnswers[2]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(2, 1, this)">2:00 - 3:00 am</div>
+          <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Steward Work Hours</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:20px;">Protecting your work block allows the AI to avoid recommending tasks during deep focus.</p>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div>
+                <label style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); display:block; margin-bottom:6px;">Work Start</label>
+                <input type="time" id="rhyWorkStart" class="rhy-modal-input" value="${this._assessData.workStart}" style="font-family:monospace; font-weight:700;">
+              </div>
+              <div>
+                <label style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); display:block; margin-bottom:6px;">Work End</label>
+                <input type="time" id="rhyWorkEnd" class="rhy-modal-input" value="${this._assessData.workEnd}" style="font-family:monospace; font-weight:700;">
+              </div>
+            </div>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+              <input type="checkbox" id="rhyWorkRemote" style="width:18px; height:18px; accent-color:var(--lime);" ${this._assessData.workRemote ? 'checked' : ''}>
+              <span style="font-size:13px; color:rgba(255,255,255,0.85); font-weight:600;">I primarily work remotely / from home</span>
+            </label>
           </div>
         `;
       } else if (currentStep === 4) {
-        indicator.textContent = 'Peak Performance';
+        if (indicator) indicator.textContent = 'Family Anchors';
         html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q4. At what time of day do you feel your best?</h3>
-          <div class="rhy-options">
-            <div class="rhy-option ${rmeqAnswers[3]===5?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 5, this)">5:00 - 8:00 am</div>
-            <div class="rhy-option ${rmeqAnswers[3]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 4, this)">8:00 - 10:00 am</div>
-            <div class="rhy-option ${rmeqAnswers[3]===3?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 3, this)">10:00 am - 5:00 pm</div>
-            <div class="rhy-option ${rmeqAnswers[3]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 2, this)">5:00 - 10:00 pm</div>
-            <div class="rhy-option ${rmeqAnswers[3]===1?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(3, 1, this)">10:00 pm - 5:00 am</div>
+          <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Family & Relationship Anchors</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:20px;">Prioritizing family moments ensures work never crowds out the people you carry.</p>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px;">
+            <label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="rhyFamilyAnchor" style="width:20px; height:20px; accent-color:var(--lime);" ${this._assessData.familyAnchor ? 'checked' : ''}>
+              <div>
+                <div style="font-size:14px; font-weight:700; color:#fff;">Include Family / Kids Anchors</div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px;">Automatically adds dedicated family time into your daily rhythm timeline.</div>
+              </div>
+            </label>
           </div>
         `;
       } else if (currentStep === 5) {
-        indicator.textContent = 'Self Assessment';
+        if (indicator) indicator.textContent = 'Workout & Movement';
+        const wOpt = this._assessData.workoutOptIn;
+        const wType = this._assessData.workoutType;
+        const wWin = this._assessData.workoutWindow;
         html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Q5. One hears about "morning types" and "evening types." Which do you consider yourself to be?</h3>
-          <div class="rhy-options">
-            <div class="rhy-option ${rmeqAnswers[4]===6?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 6, this)">Definitely a morning type</div>
-            <div class="rhy-option ${rmeqAnswers[4]===4?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 4, this)">Rather more a morning type than an evening type</div>
-            <div class="rhy-option ${rmeqAnswers[4]===2?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 2, this)">Rather more an evening type than a morning type</div>
-            <div class="rhy-option ${rmeqAnswers[4]===0?'active':''}" onclick="RHYTHM_BUILDER.setRmeq(4, 0, this)">Definitely an evening type</div>
-          </div>
-        `;
-      } else if (currentStep === 6) {
-        indicator.textContent = 'Bedtime & Wake Bounds';
-        html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Clock Timing</h3>
-          <p class="g-body" style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">We use these clock times to map your product suggestions and schedule safety windows.</p>
-          <div class="rhy-form-grid">
-            <div class="rhy-form-label">Typical Wake</div>
-            <input type="time" id="rhyWakeTime" class="rhy-input-time" value="06:30">
+          <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Workout & Physical Movement</h3>
+          <p class="g-body" style="color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:20px;">Configuring movement allows Hydration and recovery slots to anchor near your active window.</p>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+            <label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="rhyWorkoutOptIn" style="width:20px; height:20px; accent-color:var(--lime);" ${wOpt ? 'checked' : ''} onchange="document.getElementById('rhyWorkoutDetails').style.display = this.checked ? 'block' : 'none'">
+              <span style="font-size:14px; font-weight:700; color:#fff;">I include regular workouts / physical movement</span>
+            </label>
             
-            <div class="rhy-form-label">Typical Sleep</div>
-            <input type="time" id="rhySleepTime" class="rhy-input-time" value="22:30">
-          </div>
-        `;
-      } else if (currentStep === 7) {
-        indicator.textContent = 'Work Blocks';
-        html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Steward Work Hours</h3>
-          <p class="g-body" style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Protecting your work block allows the AI to avoid recommending tasks during deep focus.</p>
-          <div class="rhy-form-grid">
-            <div class="rhy-form-label">Work Start</div>
-            <input type="time" id="rhyWorkStart" class="rhy-input-time" value="09:00">
-            
-            <div class="rhy-form-label">Work End</div>
-            <input type="time" id="rhyWorkEnd" class="rhy-input-time" value="17:00">
-          </div>
-          <div style="margin-top:16px; display:flex; gap:10px; align-items:center;">
-            <input type="checkbox" id="rhyWorkRemote" style="width:18px; height:18px; cursor:pointer;" checked>
-            <span style="font-size:13px; color:rgba(255,255,255,0.85);">I primarily work remotely / from home</span>
-          </div>
-        `;
-      } else if (currentStep === 8) {
-        indicator.textContent = 'Preferences & Fasting';
-        html = `
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Fasting Preference</h3>
-          <p class="g-body" style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:16px;">Opting in places fasting slots on your schedule to track adherence automatically.</p>
-          <div style="display:flex; gap:10px; align-items:center; margin-bottom:20px;">
-            <input type="checkbox" id="rhyFastingOptIn" style="width:18px; height:18px; cursor:pointer;">
-            <span style="font-size:13px; color:rgba(255,255,255,0.85);">Opt in to Fasting blocks on my rhythm</span>
-          </div>
-          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Family Anchors</h3>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <input type="checkbox" id="rhyFamilyAnchor" style="width:18px; height:18px; cursor:pointer;" checked>
-            <span style="font-size:13px; color:rgba(255,255,255,0.85);">Suggest family/kids focused anchors on my daily timeline</span>
+            <div id="rhyWorkoutDetails" style="display:${wOpt ? 'block' : 'none'}; border-top:1px dashed rgba(255,255,255,0.1); padding-top:16px;">
+              <label style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); display:block; margin-bottom:8px;">Workout Type</label>
+              <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+                ${['Weights', 'Cardio', 'Running', 'Walking', 'Biking', 'Crossfit'].map(t => `
+                  <button type="button" class="rhy-workout-type-chip" onclick="RHYTHM_BUILDER.setWorkoutType('${t}', this)" style="padding:8px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:${wType === t ? 'var(--lime)' : 'rgba(255,255,255,0.05)'}; color:${wType === t ? '#000' : '#fff'}; border:${wType === t ? '1px solid var(--lime)' : '1px solid rgba(255,255,255,0.1)'}; transition:all 0.2s;">${t}</button>
+                `).join('')}
+              </div>
+              <input type="hidden" id="rhyWorkoutType" value="${wType}">
+
+              <label style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); display:block; margin-bottom:8px;">Preferred Time Window</label>
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+                ${[
+                  { key: 'morning', label: 'Morning' },
+                  { key: 'midday', label: 'Midday' },
+                  { key: 'afternoon', label: 'Afternoon' },
+                  { key: 'evening', label: 'Evening' }
+                ].map(w => `
+                  <button type="button" class="rhy-workout-win-chip" onclick="RHYTHM_BUILDER.setWorkoutWindow('${w.key}', this)" style="padding:10px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:${wWin === w.key ? 'rgba(204,255,0,0.15)' : 'rgba(255,255,255,0.05)'}; color:${wWin === w.key ? 'var(--lime)' : 'rgba(255,255,255,0.7)'}; border:${wWin === w.key ? '1.5px solid var(--lime)' : '1px solid rgba(255,255,255,0.1)'}; transition:all 0.2s;">${w.label}</button>
+                `).join('')}
+              </div>
+              <input type="hidden" id="rhyWorkoutWindow" value="${wWin}">
+            </div>
           </div>
         `;
       }
-      content.innerHTML = html;
+      if (content) content.innerHTML = html;
     },
 
-    setRmeq(index, val, el) {
-      rmeqAnswers[index] = val;
-      const opts = el.parentNode.querySelectorAll('.rhy-option');
-      opts.forEach(o => o.classList.remove('active'));
-      el.classList.add('active');
+    saveCurrentStepData() {
+      if (currentStep === 1) {
+        const el = document.getElementById('rhyWakeTime');
+        if (el) this._assessData.wake = el.value;
+      } else if (currentStep === 2) {
+        const el = document.getElementById('rhySleepTime');
+        if (el) this._assessData.sleep = el.value;
+      } else if (currentStep === 3) {
+        const s = document.getElementById('rhyWorkStart');
+        const e = document.getElementById('rhyWorkEnd');
+        const r = document.getElementById('rhyWorkRemote');
+        if (s) this._assessData.workStart = s.value;
+        if (e) this._assessData.workEnd = e.value;
+        if (r) this._assessData.workRemote = r.checked;
+      } else if (currentStep === 4) {
+        const f = document.getElementById('rhyFamilyAnchor');
+        if (f) this._assessData.familyAnchor = f.checked;
+      } else if (currentStep === 5) {
+        const o = document.getElementById('rhyWorkoutOptIn');
+        const t = document.getElementById('rhyWorkoutType');
+        const w = document.getElementById('rhyWorkoutWindow');
+        if (o) this._assessData.workoutOptIn = o.checked;
+        if (t) this._assessData.workoutType = t.value;
+        if (w) this._assessData.workoutWindow = w.value;
+      }
     },
 
     prevStep() {
       if (currentStep > 1) {
+        this.saveCurrentStepData();
         currentStep--;
         this.renderStep();
       }
     },
 
     async nextStep() {
-      // Validate step answer before proceeding
-      if (currentStep <= 5 && rmeqAnswers[currentStep-1] === 0) {
-        alert('Please select an option to continue.');
-        return;
-      }
-
+      this.saveCurrentStepData();
       if (currentStep < totalSteps) {
         currentStep++;
         this.renderStep();
@@ -20468,40 +21375,34 @@ async function loadAndInit(){
     async submitAssessment() {
       if (isSubmitting) return;
       isSubmitting = true;
+      this.saveCurrentStepData();
 
       this.showScreen('Loader');
-      document.getElementById('rhyLoaderText').textContent = 'Analyzing your chronotype...';
-
-      const wake = document.getElementById('rhyWakeTime') ? document.getElementById('rhyWakeTime').value : '06:30';
-      const sleep = document.getElementById('rhySleepTime') ? document.getElementById('rhySleepTime').value : '22:30';
-      const workStart = document.getElementById('rhyWorkStart') ? document.getElementById('rhyWorkStart').value : '09:00';
-      const workEnd = document.getElementById('rhyWorkEnd') ? document.getElementById('rhyWorkEnd').value : '17:00';
-      const workRemote = document.getElementById('rhyWorkRemote') ? document.getElementById('rhyWorkRemote').checked : true;
-      const fastOpt = document.getElementById('rhyFastingOptIn') ? document.getElementById('rhyFastingOptIn').checked : false;
-      const familyAnchor = document.getElementById('rhyFamilyAnchor') ? document.getElementById('rhyFamilyAnchor').checked : true;
+      document.getElementById('rhyLoaderText').textContent = 'Drafting your personalized rhythm...';
 
       try {
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
 
-        // 1. Submit Assessment
+        // 1. Submit Assessment (POST v13 contract)
         const res = await fetch(`${FN_BASE}/rhythm-assess?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
-            rmeq_items: rmeqAnswers,
-            wake_time: wake,
-            sleep_time: sleep,
-            work_shape: { start: workStart, end: workEnd, remote: workRemote },
-            fasting_pref: { opt_in: fastOpt },
-            family_anchors: familyAnchor ? [{ type: 'kids', when: 'evening', cadence: 'daily' }] : []
+            wake_time: this._assessData.wake || '06:30',
+            sleep_time: this._assessData.sleep || '22:30',
+            work_shape: { start: this._assessData.workStart, end: this._assessData.workEnd, remote: this._assessData.workRemote },
+            family_anchors: this._assessData.familyAnchor ? [{ type: 'kids', when: 'evening', cadence: 'daily' }] : [],
+            workout_opt_in: this._assessData.workoutOptIn,
+            workout_type: this._assessData.workoutType,
+            workout_time_window: this._assessData.workoutWindow
           })
         });
         if (!res.ok) throw new Error('Assessment failed: ' + res.status);
         const assessData = await res.json();
 
         // 2. Trigger Build
-        document.getElementById('rhyLoaderText').textContent = 'Drafting your personalized rhythm...';
+        document.getElementById('rhyLoaderText').textContent = 'Generating your 5-product daily plan...';
         const buildRes = await fetch(`${FN_BASE}/rhythm-build?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
@@ -20521,46 +21422,34 @@ async function loadAndInit(){
 
     async loadDraft() {
       this.showScreen('Loader');
-      document.getElementById('rhyLoaderText').textContent = 'Loading draft plan...';
+      document.getElementById('rhyLoaderText').textContent = 'Loading your draft rhythm...';
       try {
         const token = await this.getToken();
         const anon = (typeof SUPABASE_ANON !== 'undefined') ? SUPABASE_ANON : '';
-        const res = await fetch(`${FN_BASE}/rhythm-status?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}`, {
+        const res = await fetch(`${FN_BASE}/rhythm-draft?email=${encodeURIComponent(window.MEMBER_EMAIL||'')}&draft_id=${this.state.pendingDraftId}`, {
           headers: { 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' }
         });
+        if (!res.ok) throw new Error('Draft load failed: ' + res.status);
         const d = await res.json();
         
-        // Update subhead invite text
-        const subheadEl = document.getElementById('rhyDraftSubhead');
-        if (subheadEl) {
-          subheadEl.textContent = d.invite || "The AI has drafted a daily timeline built around your chronotype. Adjust anchors before activating.";
-        }
-
         const container = document.getElementById('rhyDraftSlotsContainer');
-        container.innerHTML = '';
-
-        const slots = d.slots || [];
-        if (!slots.length) {
-          container.innerHTML = '<div style="color:rgba(255,255,255,0.4); text-align:center; padding:20px;">No draft slots found.</div>';
-        } else {
-          slots.forEach(s => {
-            const timeStr = s.cue_type === 'time' ? s.cue_value : s.time_window || 'daily';
-            const recLabel = s.product_key && !s.active ? ' <span style="font-size:10px; background:rgba(204,255,0,0.1); color:var(--lime); padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:700;">Suggested</span>' : '';
-            const whyHtml = s.why ? `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${s.why}</div>` : '';
+        if (container) {
+          container.innerHTML = '';
+          (d.slots || []).forEach(s => {
+            const whyText = s.why ? `<div style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:4px; font-style:italic;">${s.why}</div>` : '';
             container.innerHTML += `
-              <div class="rhy-slot">
-                <div class="rhy-slot-details">
-                  <div class="rhy-slot-time">${timeStr}${recLabel}</div>
-                  <div class="rhy-slot-title">${s.title}</div>
-                  <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
-                  ${whyHtml}
+              <div class="rhy-slot" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px; margin-bottom:8px;">
+                <div>
+                  <div style="font-size:10px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:2px;">${s.time_window || 'Daily'} Anchor</div>
+                  <div style="font-size:14px; font-weight:700; color:#fff;">${s.title}</div>
+                  <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-top:2px;">${s.if_then_text || ''}</div>
+                  ${whyText}
                 </div>
               </div>
             `;
           });
         }
 
-        // Render suggestions area
         const sugArea = document.getElementById('rhyDraftSuggestionsArea');
         const sugContainer = document.getElementById('rhyDraftSuggestionsContainer');
         if (sugArea && sugContainer) {
@@ -20571,7 +21460,7 @@ async function loadAndInit(){
             suggestions.forEach(sug => {
               const sugEscaped = JSON.stringify(sug).replace(/"/g, '&quot;');
               sugHtml += `
-                <div class="rhy-slot-suggestion" onclick="RHYTHM_BUILDER.addSuggestion(${sugEscaped}, '${d.pending_draft_id}')" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; cursor:pointer; transition:all 0.2s;">
+                <div class="rhy-slot-suggestion" onclick="RHYTHM_BUILDER.addSuggestion(${sugEscaped}, '${this.state.pendingDraftId}')" style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; cursor:pointer; transition:all 0.2s;">
                   <div style="flex:1;">
                     <div style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; margin-bottom:2px; letter-spacing:0.04em;">${sug.time_window || 'Daily'} suggestion</div>
                     <div style="font-size:14px; font-weight:700; color:#fff;">${sug.title}</div>
@@ -20590,7 +21479,7 @@ async function loadAndInit(){
         this.showScreen('Draft');
       } catch (e) {
         console.error('[Rhythm] loadDraft failed:', e);
-        this.showScreen('Threshold');
+        this.showScreen('Timeline');
       }
     },
 
@@ -20653,30 +21542,167 @@ async function loadAndInit(){
       }
     },
 
+    handleLockedCheckboxClick(title) {
+      if (typeof showNativeModal === 'function') {
+        showNativeModal({
+          icon: '🔒',
+          title: 'Check-in Locked',
+          body: `Daily check-in for <b style="color:var(--lime);">${title || 'this product'}</b> is locked until your $99 Complete Kit is ordered & delivered.<br><br>Claim your 5-product bundle now to unlock daily rhythm check-ins!`,
+          confirmText: 'Claim $99 Bundle →',
+          cancelText: 'Maybe Later',
+          onConfirm: () => {
+            go('all5');
+          }
+        });
+      } else if (confirm(`Check-in for ${title || 'this product'} is locked until your $99 bundle is delivered.\n\nWould you like to claim your supply now?`)) {
+        go('all5');
+      }
+    },
+
+    getProductFulfillmentInfo(s) {
+      const pKey = (s.product_key || '').toLowerCase();
+      const titleLower = (s.title || '').toLowerCase();
+      
+      const isProduct = (
+        pKey.includes('joe') || pKey.includes('boss') || pKey.includes('charge') || pKey.includes('guice') || pKey.includes('hydration') ||
+        titleLower.includes('joe') || titleLower.includes('boss') || titleLower.includes('charge') || titleLower.includes('guice') || titleLower.includes('hydration') ||
+        (s.id && s.id.startsWith('can-'))
+      );
+
+      if (!isProduct) {
+        return { isProduct: false, isLocked: false, ifThenText: s.if_then_text || '', ctaHtml: '' };
+      }
+
+      const bSub = this.state.bundleSubscription || {};
+      const status = bSub.status || (localStorage.getItem('wh_bundle_claimed') === 'true' ? 'delivered' : 'unclaimed');
+      
+      // If the kit is active/delivered, ALL 5 products in the kit are delivered together!
+      const isBundleDelivered = status === 'active' || status === 'delivered';
+      const isBundleInTransit = status === 'in_transit' || status === 'processing' || status === 'shipped';
+
+      const isDelivered = isBundleDelivered || (s.today_status === 'done') || (s.today_status === 'grace');
+      const isInTransit = !isDelivered && isBundleInTransit;
+
+      let ifThenText = s.if_then_text || '';
+      let ctaHtml = '';
+      let isLocked = !isDelivered;
+
+      if (isDelivered) {
+        if (pKey.includes('joe') || titleLower.includes('joe')) {
+          ifThenText = 'Open your kit and brew Genius Joe to start your morning focus.';
+        } else if (pKey.includes('boss') || titleLower.includes('boss')) {
+          ifThenText = 'Open your kit and take 2 Boss Capsules with your morning Joe.';
+        } else if (pKey.includes('charge') || titleLower.includes('charge')) {
+          ifThenText = 'Open your kit, grab your Charge powder at 2:00 PM, and get started.';
+        } else if (pKey.includes('guice') || titleLower.includes('guice')) {
+          ifThenText = 'Mix Genius Guice for afternoon cognitive recovery.';
+        } else if (pKey.includes('hydration') || titleLower.includes('hydration')) {
+          ifThenText = 'Sip electrolyte hydration continuously through your day.';
+        }
+        // NO Claim button when delivered! All products delivered together.
+        ctaHtml = '';
+      } else if (isInTransit) {
+        if (pKey.includes('joe') || titleLower.includes('joe')) {
+          ifThenText = 'Your bundle is being processed & shipped! Once received, brew Genius Joe to start your day.';
+        } else if (pKey.includes('boss') || titleLower.includes('boss')) {
+          ifThenText = 'Your bundle is in transit! Once received, take 2 Boss Capsules with your morning Joe.';
+        } else if (pKey.includes('charge') || titleLower.includes('charge')) {
+          ifThenText = 'Your order is on the way! Once delivered, open your kit and take Charge at 2:00 PM for afternoon energy.';
+        } else if (pKey.includes('guice') || titleLower.includes('guice')) {
+          ifThenText = 'Your bundle is shipping! Once received, drink Genius Guice for afternoon cognitive recovery.';
+        } else if (pKey.includes('hydration') || titleLower.includes('hydration')) {
+          ifThenText = 'Your hydration kit is shipping! Continuous sip tracking is ready for your daily rhythm.';
+        }
+        ctaHtml = `<button onclick="go('claim')" style="background:rgba(0,180,255,0.15); color:#00d4ff; font-family:var(--font-display); font-weight:800; font-size:10px; text-transform:uppercase; padding:6px 12px; border-radius:8px; border:1px solid rgba(0,212,255,0.4); cursor:pointer; white-space:nowrap;">🚚 In Transit · Track Kit</button>`;
+      } else {
+        if (pKey.includes('joe') || titleLower.includes('joe')) {
+          ifThenText = 'Once you order your $99 bundle, you will have Genius Joe to start your morning.';
+        } else if (pKey.includes('boss') || titleLower.includes('boss')) {
+          ifThenText = 'Once your bundle arrives, take 2 Boss Capsules with your morning Joe.';
+        } else if (pKey.includes('charge') || titleLower.includes('charge')) {
+          ifThenText = 'Once ordered, Charge will be your 2:00 PM Energy Governance Checkpoint for sustained afternoon clarity.';
+        } else if (pKey.includes('guice') || titleLower.includes('guice')) {
+          ifThenText = 'Once ordered, Genius Guice will refresh your 3:30 PM cognitive focus timed to clear 8 hours before bedtime.';
+        } else if (pKey.includes('hydration') || titleLower.includes('hydration')) {
+          ifThenText = 'Sip electrolyte hydration continuously. Order your bundle for full cellular electrolyte saturation.';
+        }
+        ctaHtml = `<button onclick="go('all5')" style="background:var(--lime); color:#000; font-family:var(--font-display); font-weight:900; font-size:10px; text-transform:uppercase; padding:6px 12px; border-radius:8px; border:none; box-shadow:0 0 12px rgba(204,255,0,0.3); cursor:pointer; letter-spacing:0.04em; white-space:nowrap; transition:all 0.2s;">Claim $99 Bundle &rarr;</button>`;
+      }
+
+      return { isProduct: true, isLocked, ifThenText, ctaHtml };
+    },
+
+    formatTime12Hour(timeStr) {
+      if (!timeStr) return '';
+      if (!timeStr.includes(':')) return timeStr;
+      const parts = timeStr.split(':');
+      let hour = parseInt(parts[0], 10);
+      const min = parts[1];
+      if (isNaN(hour)) return timeStr;
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      hour = hour % 12;
+      if (hour === 0) hour = 12;
+      return `${hour}:${min} ${ampm}`;
+    },
+
+    setHydrationSips(count, slotId) {
+      const today = new Date().toISOString().split('T')[0];
+      const key = 'wh_rhythm_hydration_sips_' + today;
+      const finalCount = Math.min(4, Math.max(0, count));
+      localStorage.setItem(key, finalCount.toString());
+
+      if (slotId && finalCount >= 4) {
+        this.toggleCheckin(slotId, 'none');
+      } else {
+        this.renderTimeline();
+      }
+    },
+
+    logHydrationSip(slotId) {
+      const today = new Date().toISOString().split('T')[0];
+      const key = 'wh_rhythm_hydration_sips_' + today;
+      let count = parseInt(localStorage.getItem(key) || '0', 10);
+      count = Math.min(4, count + 1);
+      this.setHydrationSips(count, slotId);
+    },
+
+    resetHydrationSips() {
+      const today = new Date().toISOString().split('T')[0];
+      const key = 'wh_rhythm_hydration_sips_' + today;
+      localStorage.setItem(key, '0');
+      this.renderTimeline();
+    },
+
     renderTimeline() {
       const container = document.getElementById('rhyTimelineGroups');
+      if (!container) return;
       container.innerHTML = '';
 
-      // Update consistency counter and progress badge
-      document.getElementById('rhyConsistencyText').textContent = `${this.state.consistencyDays} day${this.state.consistencyDays === 1 ? '' : 's'}`;
-      document.getElementById('rhyAdherenceText').textContent = `${this.state.adherencePct}%`;
-      document.getElementById('rhyTimelineProgressPct').textContent = `${this.state.adherencePct}%`;
+      const planStart = (this.state.season && this.state.season.start_date) || (this.state.activePlan && this.state.activePlan.created_at) || new Date().toISOString();
+      const daysRunning = Math.min(30, Math.max(1, Math.ceil((Date.now() - new Date(planStart).getTime()) / 86400000)));
+      
+      const adhTextEl = document.getElementById('rhyAdherenceText');
+      if (adhTextEl) adhTextEl.textContent = `${this.state.adherencePct || 0}% (${daysRunning}d)`;
+      
+      const consTextEl = document.getElementById('rhyConsistencyText');
+      if (consTextEl) consTextEl.textContent = `${this.state.consistencyDays || 0} day${(this.state.consistencyDays || 0) === 1 ? '' : 's'}`;
+      
+      const progPctEl = document.getElementById('rhyTimelineProgressPct');
+      if (progPctEl) progPctEl.textContent = `${this.state.adherencePct || 0}%`;
 
-      // Update progress rings
       const circle = document.getElementById('rhyTimelineProgressRing');
       if (circle) {
-        const pct = Math.min(100, Math.max(0, this.state.adherencePct));
+        const pct = Math.min(100, Math.max(0, this.state.adherencePct || 0));
         const offset = 175.9 - (175.9 * pct) / 100;
         circle.style.strokeDashoffset = offset;
       }
 
-      // Render 7-dot overview
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       days.forEach((day, index) => {
         const dot = document.getElementById('rhyDot' + day);
         if (dot) {
           dot.className = 'rhy-dot';
-          const h = this.state.adherenceHistory[index]; // object { status: 'done'|'grace'|'missed'|'none' }
+          const h = (this.state.adherenceHistory || [])[index];
           if (h) {
             if (h.status === 'done') dot.classList.add('done');
             else if (h.status === 'grace') dot.classList.add('graced');
@@ -20685,7 +21711,116 @@ async function loadAndInit(){
         }
       });
 
-      // Group slots by window
+      const slotsArr = Array.isArray(this.state.slots) ? this.state.slots : [];
+
+      // Multi-Sip Hydration Tracking (Continuous Float Bar)
+      const todayStr = new Date().toISOString().split('T')[0];
+      const hydrationKey = 'wh_rhythm_hydration_sips_' + todayStr;
+      const hydrationSlot = slotsArr.find(s => (s.product_key || '').toLowerCase().includes('hydration') || (s.title || '').toLowerCase().includes('hydration'));
+      const isHydratedToday = hydrationSlot ? (hydrationSlot.today_status === 'done') : false;
+      const sipCount = isHydratedToday ? 4 : parseInt(localStorage.getItem(hydrationKey) || '0', 10);
+
+      container.innerHTML += `
+        <div style="background:linear-gradient(135deg, rgba(0,180,255,0.08) 0%, rgba(0,212,255,0.02) 100%); border:1px solid rgba(0,212,255,0.3); border-radius:16px; padding:18px 20px; margin-bottom:20px; box-shadow:0 0 25px rgba(0,212,255,0.12);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:18px;">💧</span>
+                <span style="font-size:15px; font-weight:900; color:#fff; font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.04em;">All-Day Hydration</span>
+                <span style="font-size:9px; background:rgba(0,212,255,0.25); color:#00d4ff; padding:2px 8px; border-radius:4px; font-weight:800; letter-spacing:0.05em; text-transform:uppercase;">CONTINUOUS FLOAT</span>
+              </div>
+              <div style="font-size:12px; color:rgba(255,255,255,0.7); margin-top:4px;">Cellular electrolyte saturation running continuously through your day. Log sips as you go.</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:13px; font-weight:800; color:#00d4ff; font-family:monospace;">${sipCount} / 4 Sips</span>
+              <button onclick="RHYTHM_BUILDER.logHydrationSip('${hydrationSlot ? hydrationSlot.id : ''}')" style="background:${sipCount >= 4 ? 'rgba(0,212,255,0.2)' : '#00d4ff'}; color:${sipCount >= 4 ? '#00d4ff' : '#000'}; font-weight:900; font-size:12px; padding:10px 18px; border-radius:10px; border:${sipCount >= 4 ? '1px solid #00d4ff' : 'none'}; cursor:pointer; transition:all 0.2s; box-shadow:${sipCount >= 4 ? 'none' : '0 0 15px rgba(0,212,255,0.4)'};">
+                ${sipCount >= 4 ? '✓ Hydrated Today (4/4)' : `+ Log Sip (${sipCount + 1}/4)`}
+              </button>
+              ${sipCount > 0 ? `<button onclick="RHYTHM_BUILDER.resetHydrationSips()" title="Reset Sips" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:12px; cursor:pointer; padding:4px;">↺</button>` : ''}
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+            ${[1, 2, 3, 4].map(sNum => `
+              <div onclick="RHYTHM_BUILDER.setHydrationSips(${sNum}, '${hydrationSlot ? hydrationSlot.id : ''}')" style="background:${sNum <= sipCount ? 'rgba(0,212,255,0.25)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.08)'}; border-radius:10px; padding:8px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+                <span style="font-size:11px; font-weight:800; color:${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.4)'};">💧 Sip ${sNum}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // Canonical 5 Products guarantees EVERY steward sees Coffee (Genius Joe), Boss, Hydration, Charge Powder, and Genius Guice on their rhythm!
+      const canonicalDefaults = [
+        { id: 'can-joe', product_key: 'genius_joe', title: 'Genius Joe Coffee Anchor', time_window: 'morning', cue_type: 'time', cue_value: '07:30', if_then_text: 'When waking up, brew Genius Joe for clean morning focus.', why: 'Paired with Boss for a single, focused morning stack.', today_status: 'none' },
+        { id: 'can-boss', product_key: 'boss', title: 'Boss Performance Capsules', time_window: 'morning', cue_type: 'time', cue_value: '07:30', if_then_text: 'When drinking Genius Joe, take 2 Boss Capsules for focus.', why: 'Adaptogenic mushroom foundation taken with your morning Joe.', today_status: 'none' },
+        { id: 'can-hydration', product_key: 'hydration', title: 'All-Day Hydration Float', time_window: 'midday', cue_type: 'float', cue_value: 'Continuous', if_then_text: 'Sip electrolyte hydration continuously through your day.', why: 'Cellular electrolyte saturation running continuously.', today_status: 'none' },
+        { id: 'can-charge', product_key: 'charge', title: 'Charge Powder · 2PM Energy Governance', time_window: 'afternoon', cue_type: 'time', cue_value: '14:00', if_then_text: 'When 2:00 PM hits, take Charge powder for sustained afternoon clarity.', why: '2pm Energy Governance Checkpoint - timed to sustain afternoon clarity.', today_status: 'none' },
+        { id: 'can-guice', product_key: 'genius_guice', title: 'Genius Guice Think Drink', time_window: 'afternoon', cue_type: 'time', cue_value: '15:30', if_then_text: 'When afternoon focus dips, drink Genius Guice for cognitive recovery.', why: 'Hydration + cognitive support timed to clear 8 hours before bedtime.', today_status: 'none' }
+      ];
+
+      const regularSlots = [...slotsArr];
+      canonicalDefaults.forEach(def => {
+        const hasProd = regularSlots.some(s => {
+          const pk = (s.product_key || '').toLowerCase();
+          const tt = (s.title || '').toLowerCase();
+          if (def.product_key === 'charge') return pk.includes('charge') || tt.includes('charge');
+          if (def.product_key === 'genius_guice') return pk.includes('guice') || tt.includes('guice');
+          if (def.product_key === 'genius_joe') return pk.includes('joe') || tt.includes('joe') || tt.includes('coffee');
+          if (def.product_key === 'boss') return pk.includes('boss') || tt.includes('boss');
+          if (def.product_key === 'hydration') return pk.includes('hydration') || tt.includes('hydration');
+          return false;
+        });
+        if (!hasProd) {
+          regularSlots.push(def);
+        }
+      });
+
+      const now = new Date();
+      const currentMin = now.getHours() * 60 + now.getMinutes();
+
+      const getSlotMinutes = (s) => {
+        if (s.cue_type === 'time' && s.cue_value && s.cue_value.includes(':')) {
+          const parts = s.cue_value.split(':');
+          return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        }
+        const cueVal = (s.cue_value || '').toLowerCase();
+        const ifThenVal = (s.if_then_text || '').toLowerCase();
+        const titleVal = (s.title || '').toLowerCase();
+        
+        // Bedtime / before bed anchors belong at the very end of the day (e.g. 10:30 PM = 1350 min)
+        if (cueVal.includes('before bed') || cueVal.includes('bedtime') || cueVal.includes('sleep') || ifThenVal.includes('before bed') || titleVal.includes('prayer')) {
+          return 22 * 60 + 30; // 10:30 PM
+        }
+        if (cueVal.includes('after morning cup') || cueVal.includes('waking') || ifThenVal.includes('waking')) {
+          return 7 * 60 + 15; // 7:15 AM
+        }
+        const winMap = { morning: 8 * 60, midday: 12 * 60, afternoon: 14 * 60, evening: 19 * 60 };
+        return winMap[s.time_window] || 12 * 60;
+      };
+
+      let closestSlotId = null;
+      let minDiff = Infinity;
+      regularSlots.forEach(s => {
+        const slotMin = getSlotMinutes(s);
+        const diff = slotMin - currentMin;
+        if (diff >= -30 && diff < minDiff) {
+          minDiff = diff;
+          closestSlotId = s.id;
+        }
+      });
+
+      const getSlotWhy = (s) => {
+        if (s.why) return s.why;
+        const pKey = (s.product_key || '').toLowerCase();
+        if (pKey.includes('joe')) return 'Paired with Boss for a single, focused morning stack.';
+        if (pKey.includes('boss')) return 'Adaptogenic mushroom foundation taken with your morning Joe.';
+        if (pKey.includes('charge')) return '2pm Energy Governance Checkpoint - timed to sustain afternoon clarity.';
+        if (pKey.includes('guice')) return 'Timed to clear 8 hours before your bedtime.';
+        if (s.domain === 'prayer') return 'Anchored to keep your heart still before the day gets noisy.';
+        if (s.domain === 'scripture') return 'Scripture reflection to align your daily decisions.';
+        return 'Personalized to your daily rhythm.';
+      };
+
       const windows = {
         morning: [],
         midday: [],
@@ -20693,57 +21828,147 @@ async function loadAndInit(){
         evening: []
       };
 
-      this.state.slots.forEach(s => {
-        const win = s.time_window || 'morning';
-        if (windows[win]) windows[win].push(s);
+      regularSlots.forEach(s => {
+        let win = (s.time_window || 'morning').toLowerCase();
+        if (win.includes('morning')) win = 'morning';
+        else if (win.includes('midday')) win = 'midday';
+        else if (win.includes('afternoon')) win = 'afternoon';
+        else if (win.includes('evening')) win = 'evening';
+        else win = 'midday';
+
+        if (!windows[win]) windows[win] = [];
+        windows[win].push(s);
       });
 
+      // Sort slots within each window chronologically by getSlotMinutes so bedtime anchors are at the end of the day
       Object.keys(windows).forEach(winKey => {
         const arr = windows[winKey];
         if (!arr.length) return;
 
+        arr.sort((a, b) => getSlotMinutes(a) - getSlotMinutes(b));
+
         let slotHtml = '';
+
         arr.forEach(s => {
+          const pKey = (s.product_key || '').toLowerCase();
           const isDone = s.today_status === 'done';
           const isGrace = s.today_status === 'grace';
           const checkboxClass = isDone ? 'done' : isGrace ? 'grace' : '';
-          const timeStr = s.cue_type === 'time' ? s.cue_value : s.time_window || 'daily';
+          const isUpNext = (s.id === closestSlotId && !isDone);
+          const isCharge = pKey.includes('charge') || s.cue_value === '14:00';
 
-          // Suggestion alert for unclaimed products
-          const suggestAction = (s.product_key && s.today_status === 'none') ? `
-            <div style="font-size:12px; margin-top:8px; color:rgba(255,255,255,0.45);">
-              Your slot is open. <a href="#" onclick="go('claim'); return false;" style="color:var(--lime); font-weight:700;">Claim product supply &rarr;</a>
-            </div>
-          ` : '';
+          const formattedCue = (s.cue_type === 'time' && s.cue_value) ? RHYTHM_BUILDER.formatTime12Hour(s.cue_value) : (s.cue_value || s.time_window || 'Daily Anchor');
 
-          const whyHtml = s.why ? `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">${s.why}${s.origin === 'steward' ? ' <span style="font-size:9px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); padding:1px 4px; border-radius:3px; margin-left:4px; vertical-align:middle; text-transform:uppercase;">yours</span>' : ''}</div>` : '';
+          const timeBadgeHtml = s.cue_type === 'time' 
+            ? `<span style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.12); color:var(--lime); padding:2px 8px; border-radius:4px; font-family:monospace;">🕒 ${formattedCue}</span>`
+            : `<span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.7); padding:2px 8px; border-radius:4px;">⚓ ${formattedCue}</span>`;
+
+          const upNextBadgeHtml = isUpNext ? `<span style="font-size:9px; font-weight:800; background:var(--lime); color:#000; padding:2px 6px; border-radius:4px; margin-left:6px; letter-spacing:0.05em; text-transform:uppercase;">⚡ UP NEXT</span>` : '';
+
+          const fulfillment = RHYTHM_BUILDER.getProductFulfillmentInfo(s);
+          const ifThenDisplay = fulfillment.isProduct ? fulfillment.ifThenText : (s.if_then_text || '');
+          const ctaDisplay = fulfillment.isProduct ? fulfillment.ctaHtml : '';
+
+          let checkboxHtml = '';
+          if (fulfillment.isLocked) {
+            checkboxHtml = `<div class="rhy-slot-checkbox locked" title="Check-in locked until kit is delivered" onclick="RHYTHM_BUILDER.handleLockedCheckboxClick('${(s.title || '').replace(/'/g, "\\'")}')" style="opacity:0.4; cursor:pointer; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border:1px dashed rgba(255,255,255,0.2); border-radius:6px; width:26px; height:26px; font-size:12px;">🔒</div>`;
+          } else {
+            checkboxHtml = `<div class="rhy-slot-checkbox ${checkboxClass}" title="Check off taken today" onclick="RHYTHM_BUILDER.toggleCheckin('${s.id}', '${s.today_status}')"></div>`;
+          }
+
+          const csRhy = typeof commerceState === 'function' ? commerceState() : {};
+          const isNonOwner = (csRhy.tier === 'unequipped' || csRhy.tier === 'lapsed');
+          const isRecommended = (s.title || '').toLowerCase().includes('(recommended)');
+
+          if (isCharge) {
+            const chargeBadgeText = isNonOwner ? '⚡ 2:00 PM ENERGY GOVERNANCE CHECKPOINT' : '⚡ 2:00 PM ENERGY GOVERNANCE CHECKPOINT';
+            const nonOwnerChargeLine = isNonOwner ? `<div style="font-size:11px; color:var(--lime); margin-top:2px; font-weight:600;">The 2pm moment runs on Charge. <a onclick="go('claim', document.getElementById('navAll5'))" style="color:var(--lime); font-weight:800; text-decoration:underline; cursor:pointer;">It is in the $99 system.</a></div>` : '';
+
+            slotHtml += `
+              <div class="rhy-slot charge-hero-card" style="border:1.5px solid var(--lime); background:linear-gradient(135deg, rgba(204,255,0,0.08), rgba(204,255,0,0.02)); box-shadow:0 0 25px rgba(204,255,0,0.15); padding:16px; border-radius:14px; margin-bottom:10px; transition:all 0.2s;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                  <span style="font-size:9px; font-weight:900; background:var(--lime); color:#000; padding:3px 8px; border-radius:4px; letter-spacing:0.06em; text-transform:uppercase;">${chargeBadgeText}</span>
+                  ${timeBadgeHtml}
+                </div>
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:200px;">
+                    <div style="font-weight:800; font-size:15px; color:#fff; font-family:var(--font-display);">${s.title}</div>
+                    ${nonOwnerChargeLine}
+                    <div style="font-size:12px; color:rgba(255,255,255,0.7); margin-top:2px;">${ifThenDisplay}</div>
+                    <div class="rhy-slot-why" style="font-size:12px; color:var(--lime); margin-top:4px; font-style:italic;">${getSlotWhy(s)}</div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    ${ctaDisplay}
+                    ${checkboxHtml}
+                  </div>
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          let recommendedDoorHtml = '';
+          if (isNonOwner && isRecommended) {
+            recommendedDoorHtml = ` &middot; In your bundle &middot; <a onclick="go('claim', document.getElementById('navAll5'))" style="color:var(--lime); font-weight:700; text-decoration:underline; cursor:pointer;">claim it</a>`;
+          }
+
+          const whyText = getSlotWhy(s);
+          const whyHtml = `<div class="rhy-slot-why" style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:4px; font-style:italic;">${whyText}${recommendedDoorHtml}${s.origin === 'steward' ? ' <span style="font-size:9px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); padding:1px 4px; border-radius:3px; margin-left:4px; vertical-align:middle; text-transform:uppercase; font-style:normal;">yours</span>' : ''}</div>`;
 
           slotHtml += `
-            <div class="rhy-slot" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div class="rhy-slot ${isUpNext ? 'up-next-slot' : ''}" style="display:flex; align-items:center; justify-content:space-between; gap:12px; border: ${isUpNext ? '1px solid var(--lime)' : '1px solid rgba(255,255,255,0.05)'}; background: ${isUpNext ? 'rgba(204,255,0,0.04)' : 'rgba(255,255,255,0.02)'}; padding:14px; border-radius:12px; margin-bottom:8px; transition:all 0.2s;">
               <div class="rhy-slot-details" style="flex:1;">
-                <div class="rhy-slot-time">${timeStr}</div>
-                <div class="rhy-slot-title">${s.title}</div>
-                <div class="rhy-slot-ifthen">${s.if_then_text || ''}</div>
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                  ${timeBadgeHtml}
+                  ${upNextBadgeHtml}
+                </div>
+                <div class="rhy-slot-title" style="font-weight:700; font-size:14px; color:#fff;">${s.title}</div>
+                <div class="rhy-slot-ifthen" style="font-size:12px; color:rgba(255,255,255,0.7); margin-top:2px;">${ifThenDisplay}</div>
                 ${whyHtml}
-                ${suggestAction}
               </div>
-              <button class="rhy-slot-edit-btn" onclick="event.stopPropagation(); RHYTHM_BUILDER.openEditSlotModal('${s.id}')" style="background:none; border:none; color:rgba(255,255,255,0.45); padding:8px; font-size:14px; cursor:pointer; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">✏️</button>
-              <div style="display:flex; flex-direction:column; gap:2px; align-items:center; justify-content:center; width:30px;">
-                <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'up')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:20px; width:24px; display:flex; align-items:center; justify-content:center;">▲</button>
-                <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'down')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:20px; width:24px; display:flex; align-items:center; justify-content:center;">▼</button>
+              <div style="display:flex; align-items:center; gap:8px;">
+                ${ctaDisplay}
+                <button class="rhy-slot-edit-btn" onclick="event.stopPropagation(); RHYTHM_BUILDER.openEditSlotModal('${s.id}')" style="background:none; border:none; color:rgba(255,255,255,0.45); padding:8px; font-size:14px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">✏️</button>
+                <div style="display:flex; flex-direction:column; gap:2px; align-items:center; justify-content:center; width:20px;">
+                  <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'up')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:18px; width:20px; display:flex; align-items:center; justify-content:center;">▲</button>
+                  <button onclick="event.stopPropagation(); RHYTHM_BUILDER.moveSlot('${s.id}', 'down')" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:11px; cursor:pointer; padding:2px; height:18px; width:20px; display:flex; align-items:center; justify-content:center;">▼</button>
+                </div>
+                ${checkboxHtml}
               </div>
-              <div class="rhy-slot-checkbox ${checkboxClass}" onclick="RHYTHM_BUILDER.toggleCheckin('${s.id}', '${s.today_status}')"></div>
             </div>
           `;
         });
 
         container.innerHTML += `
-          <div>
-            <div class="rhy-window-title">${winKey}</div>
+          <div style="margin-bottom:16px;">
+            <div class="rhy-window-title" style="font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--lime); margin-bottom:8px;">${winKey}</div>
             <div class="rhy-slots">${slotHtml}</div>
           </div>
         `;
       });
+
+      // Item 8: Render Suggestions-to-Add Section (suggestions[])
+      if (this.state.suggestions && this.state.suggestions.length > 0) {
+        let sugHtml = `
+          <div style="margin-top:24px; padding-top:16px; border-top:1px dashed rgba(255,255,255,0.1);">
+            <div style="font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--lime); margin-bottom:10px;">Suggestions · Add When You're Ready</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+        `;
+        this.state.suggestions.forEach(sug => {
+          const sugEscaped = JSON.stringify(sug).replace(/"/g, '&quot;');
+          sugHtml += `
+            <div onclick="RHYTHM_BUILDER.addSuggestion(${sugEscaped}, '${this.state.activePlan ? this.state.activePlan.id : ''}')" style="display:flex; justify-content:space-between; align-items:center; background:rgba(204,255,0,0.03); border:1px dashed rgba(204,255,0,0.2); border-radius:10px; padding:10px 14px; cursor:pointer; transition:all 0.2s;">
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">+ ${sug.title}</div>
+                <div style="font-size:11px; color:rgba(255,255,255,0.5);">${sug.why || 'Progressive practice suggestion.'}</div>
+              </div>
+              <span style="font-size:16px; font-weight:700; color:var(--lime);">+ Add</span>
+            </div>
+          `;
+        });
+        sugHtml += `</div></div>`;
+        container.innerHTML += sugHtml;
+      }
     },
 
     async toggleCheckin(slotId, curStatus) {
@@ -20961,17 +22186,29 @@ async function loadAndInit(){
       const inputTime = document.getElementById('rhyEditCueValueTime');
       const inputStack = document.getElementById('rhyEditCueValueStack');
       if (type === 'time') {
-        btnTime.style.background = 'rgba(255,255,255,0.05)';
-        btnTime.style.color = '#fff';
-        btnStack.style.background = 'none';
+        btnTime.style.background = 'rgba(204,255,0,0.15)';
+        btnTime.style.borderColor = 'var(--lime)';
+        btnTime.style.color = 'var(--lime)';
+        btnTime.style.boxShadow = '0 0 12px rgba(204,255,0,0.25)';
+        
+        btnStack.style.background = 'rgba(255,255,255,0.04)';
+        btnStack.style.borderColor = 'rgba(255,255,255,0.1)';
         btnStack.style.color = 'rgba(255,255,255,0.5)';
+        btnStack.style.boxShadow = 'none';
+
         inputTime.style.display = 'block';
         inputStack.style.display = 'none';
       } else {
-        btnStack.style.background = 'rgba(255,255,255,0.05)';
-        btnStack.style.color = '#fff';
-        btnTime.style.background = 'none';
+        btnStack.style.background = 'rgba(204,255,0,0.15)';
+        btnStack.style.borderColor = 'var(--lime)';
+        btnStack.style.color = 'var(--lime)';
+        btnStack.style.boxShadow = '0 0 12px rgba(204,255,0,0.25)';
+
+        btnTime.style.background = 'rgba(255,255,255,0.04)';
+        btnTime.style.borderColor = 'rgba(255,255,255,0.1)';
         btnTime.style.color = 'rgba(255,255,255,0.5)';
+        btnTime.style.boxShadow = 'none';
+
         inputTime.style.display = 'none';
         inputStack.style.display = 'block';
       }

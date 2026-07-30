@@ -2312,7 +2312,7 @@ function unmuteExplainerVideo() {
 
   <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
     <a href="https://whealthylabel.com/gov" class="btn-primary btn-primary--arc" style="background: var(--lime); color: #080809; font-weight: 900; width: 100%; justify-content: center; padding: 22px 32px; font-size: 18px; box-shadow: 0 0 35px rgba(204,255,0,0.4);">Claim the Governance System | $99/mo &rarr;</a>
-    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">$9.95 U.S. shipping &middot; Cancel anytime &middot; VIP Steward Community + Rhythm App Included Free ($297 value)</p>
+    <p style="font-size: 13px; color: var(--text-muted); margin: 0; text-align: center;">$9.95 U.S. shipping &middot; Cancel anytime &middot; Governance System is your membership. Rhythm is how it runs, personalized to your day. VIP Steward Community included free for life.</p>
   </div>
 </div>
 </div>
@@ -2333,8 +2333,8 @@ function unmuteExplainerVideo() {
   <div class="category-column">
     <h3 style="font-family:var(--font-display); font-size:24px; color:var(--lime); margin-bottom:20px; text-transform:uppercase; border-bottom:1px solid rgba(204,255,0,0.2); padding-bottom:8px;">Focus</h3>
     <div style="display:flex; flex-direction:column; gap:20px;">
-      <div class="time-block reveal reveal-delay-2" onclick="this.classList.toggle('active')"><div class="time-block__card"><div class="time-block__image"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Performance Capsules" style="width:100%;height:100%;object-fit:contain"></div><div class="product-shipping-notice">Ships to U.S. Addresses Only</div><div class="time-block__body"><div class="time-block__time">Midday &#183; 11am-1pm</div><h3 class="time-block__title">Stay Stable</h3><p class="time-block__promise">A midday anchor that keeps your focus stable through the second half of the workday. Not dependent on the second cup, the energy drink, the vending machine. No crash. No dependency.</p><p class="time-block__replaces">Replaces: The second cup loop and the noon energy drink run.</p><span class="time-block__product-tag">Performance Capsules</span></div></div></div>
-      <div class="time-block reveal reveal-delay-3" onclick="this.classList.toggle('active')"><div class="time-block__card"><div class="time-block__image"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice Think Drink" style="width:100%;height:100%;object-fit:contain"></div><div class="product-shipping-notice">Ships to U.S. Addresses Only</div><div class="time-block__body"><div class="time-block__time">Afternoon &#183; 2-4pm</div><h3 class="time-block__title">Think Again</h3><p class="time-block__promise">Hydration plus cognitive support that brings your focus back without loading your system with caffeine that follows you into the evening. Recover your afternoon instead of surviving it.</p><p class="time-block__replaces">Replaces: The 2pm collapse, the fog, the "just get through it" window.</p><span class="time-block__product-tag">Genius Guice Think Drink</span></div></div></div>
+      <div class="time-block reveal reveal-delay-2" onclick="this.classList.toggle('active')"><div class="time-block__card"><div class="time-block__image"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/boss_pi-4175551.jpeg?format=webp" alt="Boss Performance Capsules" style="width:100%;height:100%;object-fit:contain"></div><div class="product-shipping-notice">Ships to U.S. Addresses Only</div><div class="time-block__body"><div class="time-block__time">Morning Block &#183; Paired with Joe</div><h3 class="time-block__title">Stay Stable</h3><p class="time-block__promise">A morning anchor paired with Joe that keeps your focus stable through the second half of the workday. Not dependent on the second cup, the energy drink, the vending machine. No crash. No dependency.</p><p class="time-block__replaces">Replaces: The second cup loop and the noon energy drink run.</p><span class="time-block__product-tag">Performance Capsules</span></div></div></div>
+      <div class="time-block reveal reveal-delay-3" onclick="this.classList.toggle('active')"><div class="time-block__card"><div class="time-block__image"><img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/gg2-4178551.jpeg?format=webp" alt="Genius Guice Think Drink" style="width:100%;height:100%;object-fit:contain"></div><div class="product-shipping-notice">Ships to U.S. Addresses Only</div><div class="time-block__body"><div class="time-block__time">Afternoon &#183; personalized to you</div><h3 class="time-block__title">Think Again</h3><p class="time-block__promise">Hydration plus cognitive support that brings your focus back without loading your system with caffeine that follows you into the evening. Recover your afternoon instead of surviving it.</p><p class="time-block__replaces">Replaces: The 2pm collapse, the fog, the "just get through it" window.</p><span class="time-block__product-tag">Genius Guice Think Drink</span></div></div></div>
     </div>
   </div>
 
@@ -4622,11 +4622,21 @@ function showFullResult(result, bundleKey){
   const bridgeSentence=primaryProduct+' '+(PRODUCT_ACTIONS[bundleKey]||'governs your energy');
 
   // Build bundle timeline (S6B)
-  const timelineSlots=bundle.products.map((p,i)=>{
-    const times=['Morning','Midday','Afternoon','Anytime','All Day','Evening'];
+  const getProductCanonicalTime = (pName) => {
+    const name = (pName || '').toLowerCase();
+    if (name.includes('joe')) return 'Morning';
+    if (name.includes('boss')) return 'Morning (paired with Joe)';
+    if (name.includes('charge')) return '2pm · Energy Governance';
+    if (name.includes('guice')) return 'Afternoon (personalized)';
+    if (name.includes('hydration')) return 'All Day';
+    return 'Daily';
+  };
+
+  const timelineSlots=bundle.products.map((p)=>{
+    const slotTime=getProductCanonicalTime(p.name);
     const isCaffeineFree=(p.name==='Boss Capsules'||p.name==='Hydration Powder');
     return `<div class="timeline-slot">
-      <div class="timeline-slot__time">${times[i]||''}</div>
+      <div class="timeline-slot__time">${slotTime}</div>
       <div class="timeline-slot__product">${p.name}</div>
       <div class="timeline-slot__role">${p.role}</div>
       ${isCaffeineFree?'<div class="timeline-slot__tag">Caffeine-free</div>':''}
