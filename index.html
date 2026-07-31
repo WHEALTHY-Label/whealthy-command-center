@@ -2153,7 +2153,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 24px; position: relative; overflow: visible; padding: 20px 24px; border: 1.5px solid var(--lime); background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 0 35px rgba(204,255,0,0.12);">
         <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
         
-        <!-- Top Row: Avatar, Time-of-Day Greeting & Tab Badge -->
+        <!-- Top Row: Avatar, Time-of-Day Greeting & Dynamic Page Action CTA / Badge -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 2; flex-wrap: wrap;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden; position:relative; margin: 0; flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; border: 2px solid var(--lime); box-shadow: 0 0 16px rgba(204,255,0,0.35); background: rgba(204,255,0,0.1); display: flex; align-items: center; justify-content: center;">
@@ -2165,8 +2165,8 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <p id="dashSubtitle" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; display: none;"></p>
             </div>
           </div>
-          <div id="tabViewHeaderBadge" style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:4px 12px; border-radius:99px;">
-            Steward Command Center
+          <div id="tabHeaderActionSlot">
+            <span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">COMMAND CENTER</span>
           </div>
         </div>
         
@@ -3542,13 +3542,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       </div><!-- /bibleView (closed here; was left open by 5f43c81) -->
 
 <div id="tryallView" style="display:none;">
-<div class="view-header-block">
-  <div class="view-header-icon-box">&#128300;</div>
-  <div>
-    <h1 class="view-header-title">Try All</h1>
-    <p class="view-header-subtitle">Every routine in the house, open to try. When your season changes, this is where you re-match.</p>
-  </div>
-</div>
 <style>
 
 /* Checkout Modal Overlay */
@@ -8609,14 +8602,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
       </div>
       <!-- ============ PRODUCT PORTAL ============ -->
       <div id="portalView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">&#128230;</div>
-          <div>
-            <h1 class="view-header-title" id="portalTitle">Product Portal</h1>
-            <p class="view-header-subtitle" id="portalSubtitle">Your orders, tracking, and billing in one place.</p>
-          </div>
-        </div>
-
         <!-- Your Orders Section -->
         <div class="orders-section" id="ordersSection">
           <div class="orders-section__title"><span>&#128666;</span> Your Orders</div>
@@ -8671,13 +8656,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ AFFILIATE LINKS ============ -->
       <div id="affiliateView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">&#128279;</div>
-          <div>
-            <h1 class="view-header-title" id="affiliateTitle">Affiliate Command</h1>
-            <p class="view-header-subtitle" id="affiliateSubtitle">Share your referral invite links and track your progress.</p>
-          </div>
-        </div>
         <div class="g-card">
           <div style="padding:24px">
             <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:24px;line-height:1.6">Generate your custom WHEALTHY funnel links and unlock rewards.</p>
@@ -8701,14 +8679,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ COMMUNITY ============ -->
       <div id="communityView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">👥</div>
-          <div>
-            <h1 class="view-header-title" id="communityTitle">Community</h1>
-            <p class="view-header-subtitle" id="communitySubtitle">Iron sharpens iron.</p>
-          </div>
-        </div>
-        
         <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
           <!-- Community Feed Container -->
           <div id="communityFeedContainer" style="display:none"></div>
@@ -8731,13 +8701,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ ENTER COMMUNITY (in-app room) ============ -->
       <div id="enterCommunityView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">&#129309;</div>
-          <div>
-            <h1 class="view-header-title">Enter Community</h1>
-            <p class="view-header-subtitle">The full house on Skool — one click away.</p>
-          </div>
-        </div>
         <div style="max-width:680px;margin:0 auto;padding:16px;">
           <div class="g-card" style="text-align:center;padding:36px 24px;">
             <h2 style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin-bottom:8px">Stewards Community</h2>
@@ -8752,13 +8715,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ CLAIM BUNDLE ============ -->
       <div id="claimView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">&#128230;</div>
-          <div>
-            <h1 class="view-header-title" id="claimTitle">Claim Bundle</h1>
-            <p class="view-header-subtitle" id="claimSubtitle">Redeem your Steward monthly supply or select custom blends.</p>
-          </div>
-        </div>
         <!-- Claimed Banner (populated by JS) -->
         <div id="claimedBanner" style="display:none"></div>
         <!-- Hype Message -->
@@ -8835,13 +8791,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             border-radius: 16px !important;
           }
         </style>
-        <div class="view-header-block">
-          <div class="view-header-icon-box" style="background:rgba(204,255,0,0.1);color:var(--lime);border:1px solid rgba(204,255,0,0.25);">&#128230;</div>
-          <div>
-            <h1 class="view-header-title" id="all5Title">$99 Complete 5-Product Bundle</h1>
-            <p class="view-header-subtitle" id="all5Subtitle">The full 24-hour Steward energy, focus, hydration, and recovery ecosystem.</p>
-          </div>
-        </div>
 
         <!-- Hero Banner -->
         <div style="text-align:center;padding:22px 20px;background:linear-gradient(135deg, rgba(204,255,0,0.05) 0%, rgba(204,255,0,0.01) 100%);border:1px solid rgba(204,255,0,0.2);border-radius:20px;margin-bottom:24px;position:relative;overflow:hidden">
@@ -9042,13 +8991,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ THE RECORD ============ -->
       <div id="recordView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">R</div>
-          <div>
-            <h1 class="view-header-title" id="recordTitle">Steward's Journal</h1>
-            <p class="view-header-subtitle" id="recordSubtitle">Your words, kept.</p>
-          </div>
-        </div>
         <div id="recordQuietStateContainer" style="margin-bottom: 20px;"></div>
 
         <div id="recordWallNudge" class="scribe-line" style="display:none; margin-bottom:24px;"></div>
@@ -9105,13 +9047,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ THE FAST ============ -->
       <div id="fastView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">F</div>
-          <div>
-            <h1 class="view-header-title" id="fastTitle">The Fast</h1>
-            <p class="view-header-subtitle" id="fastSubtitle">Scripture chooses the pattern. You carry it.</p>
-          </div>
-        </div>
         <div id="fast-chain-container"></div>
         <div id="fastQuietStateContainer" style="margin-bottom: 20px;"></div>
         <div id="fastRoot"></div>
@@ -9120,13 +9055,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ CIRCLES ============ -->
       <div id="circleView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">👥</div>
-          <div>
-            <h1 class="view-header-title">Circles</h1>
-            <p class="view-header-subtitle">Your Steward Circle. Bible, body, and business.</p>
-          </div>
-        </div>
         <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
           <div id="meCircleContent"></div>
         </div>
@@ -9134,13 +9062,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ COHORT CHALLENGE ============ -->
       <div id="cohortView" style="display:none">
-        <div class="view-header-block">
-          <div class="view-header-icon-box">🏆</div>
-          <div>
-            <h1 class="view-header-title">Cohort Challenge</h1>
-            <p class="view-header-subtitle">Fast together. Carry the weight beside your brothers.</p>
-          </div>
-        </div>
         <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
           <div id="cohortViewContent"></div>
         </div>
@@ -9262,14 +9183,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             color: #e74c3c;
           }
         </style>
-
-        <div class="view-header-block">
-          <div class="view-header-icon-box">🛡️</div>
-          <div>
-            <h1 class="view-header-title">Admin</h1>
-            <p class="view-header-subtitle">Tiered control roster, moderation, and system settings.</p>
-          </div>
-        </div>
 
         <div style="max-width: 1000px; margin: 0 auto; padding: 16px;">
 
@@ -9497,13 +9410,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         #adminAnalyticsView .wha-when{color:rgba(240,241,243,0.4)}
         @media(max-width:640px){#adminAnalyticsView .wha-wrap{padding:12px}#adminAnalyticsView .wha-kpi .v{font-size:22px}#adminAnalyticsView .wha-logrow{grid-template-columns:70px 1fr;row-gap:4px}#adminAnalyticsView .wha-prog,#adminAnalyticsView .wha-when{grid-column:2}}
         </style>
-        <div class="view-header-block">
-          <div class="view-header-icon-box">📊</div>
-          <div>
-            <h1 class="view-header-title">Control Panel</h1>
-            <p class="view-header-subtitle">Live analytics across members, quiz, fasts, bundles, and the record.</p>
-          </div>
-        </div>
         <div class="wha-wrap">
           <div class="wha-bar">
             <div class="wha-tabs" id="whaRangeTabs">
@@ -19719,31 +19625,40 @@ async function loadAndInit(){
       timeGreeting = "Welcome back";
     }
 
-    const viewLabels = {
-      dash: 'Steward Command Center',
-      rhythm: 'My Rhythm',
-      bible: 'My Bible',
-      fast: 'The Fast',
-      record: 'The Scribe',
-      wall: 'Prayer Wall',
-      testimony: 'Testimony Wall',
-      me: 'My Prayers',
-      circle: 'Circles',
-      cohort: 'Cohort Challenge',
-      community: 'Community',
-      communityEnter: 'Enter Community',
-      claim: 'Claim Bundle',
-      all5: '$99 Complete Bundle',
-      portal: 'Product Portal',
-      tryall: 'Try All',
-      affiliate: 'Affiliate Command',
-      admin: 'Surface',
-      adminAnalytics: 'Control Panel'
+    const viewActionConfig = {
+      community: { badge: 'COMMUNITY', ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>', directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.' },
+      communityEnter: { badge: 'ENTER COMMUNITY', ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>', directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.' },
+      claim: { badge: 'CLAIM BUNDLE', ctaHtml: '<button onclick="go(\'claim\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">CLAIM BUNDLE</button>', directive: 'Redeem your Steward monthly supply or select your personalized governance blends.' },
+      tryall: { badge: 'TRY ALL', ctaHtml: '<button onclick="go(\'tryall\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">TRY ALL</button>', directive: 'Every routine in the house, open to try. When your season changes, re-match here.' },
+      rhythm: { badge: 'MY RHYTHM', directive: 'Build and govern your daily anchors to maintain alignment throughout your season.' },
+      bible: { badge: 'MY BIBLE 365', directive: 'Anchor your mind in Scripture and track your daily 365-day reading journey.' },
+      fast: { badge: 'THE FAST', directive: 'Track your active fasting windows, physical sync status, and hydration directives.' },
+      record: { badge: 'THE SCRIBE', directive: 'Write your thoughts, log your daily rules, and keep your personal record.' },
+      wall: { badge: 'PRAYER WALL', directive: 'Post your petitions, carry the burden with fellow Stewards, and stand in faith.' },
+      testimony: { badge: 'TESTIMONY WALL', directive: 'Celebrate answered prayers, give glory, and share how God moved in your life.' },
+      portal: { badge: 'PRODUCT PORTAL', directive: 'Manage active subscriptions, delivery schedules, and Steward account settings.' },
+      affiliate: { badge: 'AFFILIATE COMMAND', directive: 'Share your referral invite links, track your impact, and earn free monthly months.' },
+      dash: { badge: 'COMMAND CENTER', directive: 'Govern your daily focus, complete your directives, and access your OS controls.' }
     };
 
-    var badgeEl = document.getElementById('tabViewHeaderBadge');
-    if (badgeEl) {
-      badgeEl.textContent = viewLabels[view] || 'Steward';
+    const cfg = viewActionConfig[view] || viewActionConfig.dash;
+
+    var actionSlot = document.getElementById('tabHeaderActionSlot');
+    if (actionSlot) {
+      if (cfg.ctaHtml) {
+        actionSlot.innerHTML = cfg.ctaHtml;
+      } else {
+        actionSlot.innerHTML = `<span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">${cfg.badge}</span>`;
+      }
+    }
+
+    var directiveEl = document.getElementById('dashDirectiveText');
+    if (directiveEl) {
+      if (window.aiPersonalizations && window.aiPersonalizations.dailyDirective) {
+        directiveEl.textContent = window.aiPersonalizations.dailyDirective;
+      } else {
+        directiveEl.textContent = cfg.directive;
+      }
     }
 
     var tEl = document.getElementById('dashTitle');
