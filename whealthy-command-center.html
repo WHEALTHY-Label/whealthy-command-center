@@ -2383,6 +2383,7 @@ let settingsOpen=false;
 let readerOpen=false;
 let scrollGateUnlocked=false; // true once user has scrolled to bottom of scripture
 const scriptureCache=new Map();
+let currentLoadedRef=null;
 
 // ══════════════════════════════════════
 // DOM REFS
@@ -2908,35 +2909,43 @@ async function fetchSingleChapter(book,chapter){
   };
 }
 
+const scriptureInFlight=new Map();
 async function fetchScripture(ref){
   // Check memory cache
   if(scriptureCache.has(ref))return scriptureCache.get(ref);
+  if(scriptureInFlight.has(ref))return scriptureInFlight.get(ref);
 
   const parsed=parseRef(ref);
   if(!parsed)throw new Error('Could not parse reference: '+ref);
 
-  // Fetch each chapter individually (kept for safety; the owned bible-verses endpoint also handles multi-chapter ranges in one call)
-  const chapterResults=await Promise.all(
-    parsed.chapters.map(ch=>fetchSingleChapter(parsed.book,ch))
-  );
+  const fetchPromise = (async () => {
+    // Fetch each chapter individually (kept for safety; the owned bible-verses endpoint also handles multi-chapter ranges in one call)
+    const chapterResults=await Promise.all(
+      parsed.chapters.map(ch=>fetchSingleChapter(parsed.book,ch))
+    );
 
-  // Combine all verses
-  const allVerses=[];
-  chapterResults.forEach(cr=>{
-    cr.verses.forEach(v=>{
-      allVerses.push({...v,chapter:v.chapter||cr.chapter});
+    // Combine all verses
+    const allVerses=[];
+    chapterResults.forEach(cr=>{
+      cr.verses.forEach(v=>{
+        allVerses.push({...v,chapter:v.chapter||cr.chapter});
+      });
     });
-  });
 
-  const result={
-    ref:ref,
-    verses:allVerses,
-    text:allVerses.map(v=>v.text).join(' ')
-  };
+    const result={
+      ref:ref,
+      verses:allVerses,
+      text:allVerses.map(v=>v.text).join(' ')
+    };
 
-  scriptureCache.set(ref,result);
-  saveScriptureCache();
-  return result;
+    scriptureCache.set(ref,result);
+    scriptureInFlight.delete(ref);
+    saveScriptureCache();
+    return result;
+  })();
+
+  scriptureInFlight.set(ref, fetchPromise);
+  return fetchPromise;
 }
 
 function formatScriptureHTML(data){
@@ -2965,28 +2974,38 @@ async function loadScripture(ref){
   const body=$('bible_scriptureBody');
   const refTitle=$('bible_scriptureRefTitle');
 
-  refTitle.textContent=ref;
+  if (refTitle) refTitle.textContent=ref;
 
-  // Close reader when navigating to a new day
-  if(readerOpen){
-    readerOpen=false;
-    reader.classList.remove('open');
-    const btn=$('bible_btnReadPassage');
-    btn.classList.remove('active');
-    $('bible_readPassageText').textContent='Read Passage';
+  // Guard against re-entrancy / unnecessary DOM wipes if same ref is already rendered
+  const isSameRef = (typeof currentLoadedRef !== 'undefined' && currentLoadedRef === ref);
+  if (isSameRef && body && body.children.length > 0 && !body.querySelector('.scripture-loading') && !body.querySelector('.scripture-error')) {
+    return;
   }
 
-  // Reset scroll-gate for the new day
-  scrollGateUnlocked=false;
-  const scrollFill=$('bible_scriptureScrollFill');
-  if(scrollFill) scrollFill.style.width='0%';
+  // Only close reader and reset scroll-gate if user is NAVIGATING TO A NEW DAY / DIFFERENT REF
+  if(!isSameRef){
+    if (typeof currentLoadedRef !== 'undefined') currentLoadedRef = ref;
+    if(readerOpen){
+      readerOpen=false;
+      if (reader) reader.classList.remove('open');
+      const btn=$('bible_btnReadPassage');
+      if (btn) btn.classList.remove('active');
+      const btnText = $('bible_readPassageText');
+      if (btnText) btnText.textContent='Read Passage';
+    }
+
+    // Reset scroll-gate for the new day
+    scrollGateUnlocked=false;
+    const scrollFill=$('bible_scriptureScrollFill');
+    if(scrollFill) scrollFill.style.width='0%';
+  }
 
   // Pre-load if it's cached (instant display when user opens)
   if(scriptureCache.has(ref)){
     const data=scriptureCache.get(ref);
-    body.innerHTML=formatScriptureHTML(data);
+    if (body) body.innerHTML=formatScriptureHTML(data);
   }else{
-    body.innerHTML='<div class="scripture-loading"><span class="spin"></span> Loading scripture...</div>';
+    if (body) body.innerHTML='<div class="scripture-loading"><span class="spin"></span> Loading scripture...</div>';
   }
 }
 
