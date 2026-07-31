@@ -7249,10 +7249,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
             switchTab: function(tab) {
               this.activeTab = tab;
-              document.getElementById('meTabBtnMine').classList.toggle('active', tab === 'mine');
-              document.getElementById('meTabBtnWatching').classList.toggle('active', tab === 'watching');
-              document.getElementById('mePanelMine').style.display = tab === 'mine' ? 'block' : 'none';
-              document.getElementById('mePanelWatching').style.display = tab === 'watching' ? 'block' : 'none';
+              const btnMine = document.getElementById('meTabBtnMine');
+              if (btnMine) btnMine.classList.toggle('active', tab === 'mine');
+              const btnWatching = document.getElementById('meTabBtnWatching');
+              if (btnWatching) btnWatching.classList.toggle('active', tab === 'watching');
+              const panelMine = document.getElementById('mePanelMine');
+              if (panelMine) panelMine.style.display = tab === 'mine' ? 'block' : 'none';
+              const panelWatching = document.getElementById('mePanelWatching');
+              if (panelWatching) panelWatching.style.display = tab === 'watching' ? 'block' : 'none';
 
               if (tab === 'mine' && this.mineOffset === 0) {
                 this.loadMine(0);
@@ -10918,6 +10922,7 @@ function formatScriptureHTML(data){
   return html;
 }
 
+let currentLoadedRef = null;
 async function loadScripture(ref){
   const reader=$('bible_scriptureReader');
   const body=$('bible_scriptureBody');
@@ -12164,11 +12169,11 @@ window.WALL_KEY = WALL_KEY;
       const nameInput = document.getElementById("hioNameInput");
       if (nameInput) nameInput.value = '';
 
-      document.getElementById("hioStepDoor").style.display = 'block';
-      document.getElementById("hioStepName").style.display = 'none';
-      document.getElementById("hioStepHand").style.display = 'none';
-      document.getElementById("hioStepLeave").style.display = 'none';
-      document.getElementById("hioStepConfirm").style.display = 'none';
+      const elDoor = document.getElementById("hioStepDoor"); if (elDoor) elDoor.style.display = 'block';
+      const elName = document.getElementById("hioStepName"); if (elName) elName.style.display = 'none';
+      const elHand = document.getElementById("hioStepHand"); if (elHand) elHand.style.display = 'none';
+      const elLeave = document.getElementById("hioStepLeave"); if (elLeave) elLeave.style.display = 'none';
+      const elConfirm = document.getElementById("hioStepConfirm"); if (elConfirm) elConfirm.style.display = 'none';
     },
 
     selectCategory(cat) {
