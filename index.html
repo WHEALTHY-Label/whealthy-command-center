@@ -7083,7 +7083,31 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       
 
-<script>
+      <script>
+        window.switchPrayerToolMode = function(mode) {
+          const modes = ['handover', 'mine', 'watching'];
+          modes.forEach(m => {
+            const btn = document.getElementById('ptTab_' + m);
+            const panel = document.getElementById('ptPanel_' + m);
+            const isActive = (m === mode);
+            if (btn) {
+              btn.classList.toggle('active', isActive);
+              btn.style.background = isActive ? 'rgba(204,255,0,0.12)' : 'transparent';
+              btn.style.borderColor = isActive ? 'rgba(204,255,0,0.3)' : 'transparent';
+              btn.style.color = isActive ? 'var(--lime)' : 'rgba(255,255,255,0.6)';
+            }
+            if (panel) {
+              panel.style.display = isActive ? 'block' : 'none';
+            }
+          });
+
+          if (mode === 'mine' && window.ME && typeof window.ME.switchTab === 'function') {
+            window.ME.switchTab('mine');
+          } else if (mode === 'watching' && window.ME && typeof window.ME.switchTab === 'function') {
+            window.ME.switchTab('watching');
+          }
+        };
+
         (function() {
           const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
           const ME = {
@@ -8414,165 +8438,170 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </style>
 
         <div class="hio-container">
-          <!-- Flow Wrapper -->
-          <div id="hioFlowWrapper" class="g-card" style="padding: 28px 24px; margin-bottom: 32px; position: relative;">
+          <!-- Master Unified Prayer Tool Card -->
+          <div id="unifiedPrayerToolCard" class="g-card" style="padding: 28px 24px; margin-bottom: 32px; position: relative;">
             
-            <!-- STEP 1: The Door / Hand It Over Input -->
-            <div id="hioStepDoor">
-              <div class="hio-kicker">PRAYER & THANKSGIVING</div>
-              <h2 class="hio-title" id="hioDoorHeadline">PRAYER, THANKS & WHAT YOU ARE CARRYING</h2>
-              <p style="font-size:14px; color:rgba(255,255,255,0.65); margin: 6px 0 16px 0; line-height:1.5;">Bring your prayers, thanksgiving, or whatever is on your heart today.</p>
-              
-              <!-- Direct Text Input & AI Analysis -->
-              <div style="position:relative; display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
-                <input type="text" id="hioNameInput" placeholder="Type your prayer, thanks, or what you are carrying..." style="flex:1; min-width:240px; background:rgba(0,0,0,0.35); border:1px solid rgba(204,255,0,0.25); border-radius:12px; padding:16px 18px; color:#fff; font-size:15px; font-family:var(--font-body); outline:none; transition:all 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(204,255,0,0.25)';" onkeydown="if(event.key==='Enter')PRAYER.submitName();">
-                <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
-                <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:0 24px; height:52px; font-size:13px; font-weight:800; text-transform:uppercase; border-radius:12px; white-space:nowrap; cursor:pointer;">Pray & Hand It Over &rarr;</button>
-              </div>
-
-              <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
-
-              <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:10px;">Or select a category focus:</div>
-              <div class="hio-chip-grid">
-                <button class="hio-chip" onclick="PRAYER.selectCategory('family')"><span>Family</span> <span>👥</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('work')"><span>Work</span> <span>💼</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('money')"><span>Money</span> <span>💵</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('health')"><span>Health</span> <span>❤️</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('head')"><span>My Own Head</span> <span>🧠</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('freeform')"><span>Say it your way...</span> <span>💬</span></button>
-              </div>
-
-              <!-- Subline message on door -->
-              <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-top:16px; margin-bottom:20px;"></p>
-
-              <div class="hio-footnote">
-                Everything you pray here is private by default and saved to My Prayers. Nothing goes on the community Prayer Wall unless you choose to put it there.
-              </div>
+            <!-- Segmented Mode Controller -->
+            <div class="prayer-tool-nav" style="display:flex; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:4px; margin-bottom:24px; gap:4px; flex-wrap:wrap;">
+              <button class="prayer-tool-tab active" id="ptTab_handover" onclick="switchPrayerToolMode('handover')" style="flex:1; min-width:140px; background:rgba(204,255,0,0.12); border:1px solid rgba(204,255,0,0.3); color:var(--lime); border-radius:10px; padding:12px 14px; font-family:var(--font-body); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>➕</span> Hand Over Weight</button>
+              <button class="prayer-tool-tab" id="ptTab_mine" onclick="switchPrayerToolMode('mine')" style="flex:1; min-width:140px; background:transparent; border:1px solid transparent; color:rgba(255,255,255,0.6); border-radius:10px; padding:12px 14px; font-family:var(--font-body); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>📖</span> My Prayers</button>
+              <button class="prayer-tool-tab" id="ptTab_watching" onclick="switchPrayerToolMode('watching')" style="flex:1; min-width:140px; background:transparent; border:1px solid transparent; color:rgba(255,255,255,0.6); border-radius:10px; padding:12px 14px; font-family:var(--font-body); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>🤝</span> Praying For Others</button>
             </div>
 
-            <!-- STEP 3: Hand It -->
-            <div id="hioStepHand" style="display:none;">
-              <div class="hio-kicker">Hand It</div>
-              
-              <!-- Led prayer voice block -->
-              <div style="background:rgba(255,255,255,0.02); border-left:3px solid var(--lime); padding:16px 20px; border-radius:0 12px 12px 0; margin-bottom:24px; font-size:16px; line-height:1.6; font-style:italic; color:rgba(255,255,255,0.95);" id="hioLedLineText">
-                "Father, this house is Yours before it's mine..."
-              </div>
-
-              <!-- Scripture Card -->
-              <div class="g-card" style="padding:20px; border-color:rgba(255,255,255,0.06); cursor:pointer; margin-bottom:20px;" onclick="PRAYER.toggleInlineReader()">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                  <span style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em;">Scripture Promise</span>
-                  <span id="hioPillReadMore" style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.15); border:1px solid rgba(204,255,0,0.3); color:var(--lime); padding:4px 8px; border-radius:100px; text-transform:uppercase;">📖 Read more · tap to open</span>
-                </div>
-                <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;" id="hioScriptureRef">Psalm 127:1</div>
-                <div style="font-size:14px; line-height:1.5; color:rgba(255,255,255,0.7);" id="hioScriptureText">"Unless the Lord builds the house..."</div>
+            <!-- MODE PANEL 1: HAND OVER WEIGHT -->
+            <div id="ptPanel_handover" style="display:block;">
+              <!-- STEP 1: The Door / Hand It Over Input -->
+              <div id="hioStepDoor">
+                <div class="hio-kicker">PRAYER & THANKSGIVING</div>
+                <h2 class="hio-title" id="hioDoorHeadline" style="font-size:clamp(20px, 4vw, 28px); margin-bottom:16px;">PRAYER, THANKS & WHAT YOU ARE CARRYING</h2>
+                <p style="font-size:14px; color:rgba(255,255,255,0.65); margin: 6px 0 16px 0; line-height:1.5;">Bring your prayers, thanksgiving, or whatever is on your heart today.</p>
                 
-                <!-- Inline expanded reader section -->
-                <div id="hioInlineReader" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
-                  <div id="hioInlineVerses" style="max-height:200px; overflow-y:auto; font-size:13px; line-height:1.6; color:rgba(255,255,255,0.6); margin-bottom:12px; padding-right:6px;">
+                <!-- Direct Text Input & AI Analysis -->
+                <div style="position:relative; display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
+                  <input type="text" id="hioNameInput" placeholder="Type your prayer, thanks, or what you are carrying..." style="flex:1; min-width:240px; background:rgba(0,0,0,0.35); border:1px solid rgba(204,255,0,0.25); border-radius:12px; padding:16px 18px; color:#fff; font-size:15px; font-family:var(--font-body); outline:none; transition:all 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(204,255,0,0.25)';" onkeydown="if(event.key==='Enter')PRAYER.submitName();">
+                  <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
+                  <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:0 24px; height:52px; font-size:13px; font-weight:800; text-transform:uppercase; border-radius:12px; white-space:nowrap; cursor:pointer;">Pray & Hand It Over &rarr;</button>
+                </div>
+
+                <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
+
+                <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:10px;">Or select a category focus:</div>
+                <div class="hio-chip-grid">
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('family')"><span>Family</span> <span>👥</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('work')"><span>Work</span> <span>💼</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('money')"><span>Money</span> <span>💵</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('health')"><span>Health</span> <span>❤️</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('head')"><span>My Own Head</span> <span>🧠</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('freeform')"><span>Say it your way...</span> <span>💬</span></button>
+                </div>
+
+                <!-- Subline message on door -->
+                <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-top:16px; margin-bottom:20px;"></p>
+
+                <div class="hio-footnote">
+                  Everything you pray here is private by default and saved to My Prayers. Nothing goes on the community Prayer Wall unless you choose to put it there.
+                </div>
+              </div>
+
+              <!-- STEP 3: Hand It -->
+              <div id="hioStepHand" style="display:none;">
+                <div class="hio-kicker">Hand It</div>
+                
+                <!-- Led prayer voice block -->
+                <div style="background:rgba(255,255,255,0.02); border-left:3px solid var(--lime); padding:16px 20px; border-radius:0 12px 12px 0; margin-bottom:24px; font-size:16px; line-height:1.6; font-style:italic; color:rgba(255,255,255,0.95);" id="hioLedLineText">
+                  "Father, this house is Yours before it's mine..."
+                </div>
+
+                <!-- Scripture Card -->
+                <div class="g-card" style="padding:20px; border-color:rgba(255,255,255,0.06); cursor:pointer; margin-bottom:20px;" onclick="PRAYER.toggleInlineReader()">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em;">Scripture Promise</span>
+                    <span id="hioPillReadMore" style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.15); border:1px solid rgba(204,255,0,0.3); color:var(--lime); padding:4px 8px; border-radius:100px; text-transform:uppercase;">📖 Read more · tap to open</span>
                   </div>
-                  <button class="btn-ghost" onclick="PRAYER.openFullScripture(event)" style="font-size:11px; font-weight:700; text-transform:uppercase; padding:6px 12px; height:auto; min-height:auto; width:auto; border-radius:100px;">Open Scripture · read the full chapter</button>
+                  <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;" id="hioScriptureRef">Psalm 127:1</div>
+                  <div style="font-size:14px; line-height:1.5; color:rgba(255,255,255,0.7);" id="hioScriptureText">"Unless the Lord builds the house..."</div>
+                  
+                  <!-- Inline expanded reader section -->
+                  <div id="hioInlineReader" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+                    <div id="hioInlineVerses" style="max-height:200px; overflow-y:auto; font-size:13px; line-height:1.6; color:rgba(255,255,255,0.6); margin-bottom:12px; padding-right:6px;">
+                    </div>
+                    <button class="btn-ghost" onclick="PRAYER.openFullScripture(event)" style="font-size:11px; font-weight:700; text-transform:uppercase; padding:6px 12px; height:auto; min-height:auto; width:auto; border-radius:100px;">Open Scripture · read the full chapter</button>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end;">
+                  <button class="btn-lime" onclick="PRAYER.goToLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Leave It Here</button>
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:flex-end;">
-                <button class="btn-lime" onclick="PRAYER.goToLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Leave It Here</button>
-              </div>
-            </div>
+              <!-- STEP 4: Leave It -->
+              <div id="hioStepLeave" style="display:none;">
+                <div class="hio-kicker">Leave It</div>
+                <h2 class="hio-title" style="font-size:24px; margin-bottom:20px;">Where do you want to place this weight?</h2>
 
-            <!-- STEP 4: Leave It -->
-            <div id="hioStepLeave" style="display:none;">
-              <div class="hio-kicker">Leave It</div>
-              <h2 class="hio-title" style="font-size:24px; margin-bottom:20px;">Where do you want to place this weight?</h2>
-
-              <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
-                <!-- Choice Private -->
-                <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('private')" id="cardLeavePrivate">
-                  <div class="hio-tag hio-tag-private">Private</div>
-                  <strong style="font-size:15px; color:#fff;">Leave it here</strong>
-                  <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Saved to My Prayers. Only you can ever see it. Nothing is posted anywhere.</p>
+                <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
+                  <!-- Choice Private -->
+                  <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('private')" id="cardLeavePrivate">
+                    <div class="hio-tag hio-tag-private">Private</div>
+                    <strong style="font-size:15px; color:#fff;">Leave it here</strong>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Saved to My Prayers. Only you can ever see it. Nothing is posted anywhere.</p>
+                  </div>
+                  <!-- Choice Shared -->
+                  <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('shared')" id="cardLeaveShared">
+                    <div class="hio-tag hio-tag-shared">Shared</div>
+                    <strong style="font-size:15px; color:#fff;">Lift it to the Prayer Wall</strong>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Posts this prayer to the community Prayer Wall. Other stewards will see it and can tap 'I prayed' for you. You can take it down anytime.</p>
+                  </div>
                 </div>
-                <!-- Choice Shared -->
-                <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('shared')" id="cardLeaveShared">
-                  <div class="hio-tag hio-tag-shared">Shared</div>
-                  <strong style="font-size:15px; color:#fff;">Lift it to the Prayer Wall</strong>
-                  <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Posts this prayer to the community Prayer Wall. Other stewards will see it and can tap 'I prayed' for you. You can take it down anytime.</p>
+
+                <!-- Shared Post options -->
+                <div id="hioSharedOptions" style="display:none; margin-bottom:20px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); padding:16px; border-radius:12px;">
+                  <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.4); display:block; margin-bottom:10px;">Post Anonymously?</span>
+                  <div style="display:flex; gap:12px;">
+                    <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="signed" checked> Post signed</label>
+                    <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="anonymous"> Post anonymously</label>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <button class="btn-ghost" onclick="PRAYER.goBackToHand()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
+                  <button class="btn-lime" onclick="PRAYER.commitLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Confirm</button>
                 </div>
               </div>
 
-              <!-- Shared Post options -->
-              <div id="hioSharedOptions" style="display:none; margin-bottom:20px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); padding:16px; border-radius:12px;">
-                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.4); display:block; margin-bottom:10px;">Post Anonymously?</span>
-                <div style="display:flex; gap:12px;">
-                  <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="signed" checked> Post signed</label>
-                  <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="anonymous"> Post anonymously</label>
+              <!-- STEP 5: Confirm -->
+              <div id="hioStepConfirm" style="display:none; text-align:center; padding:20px 10px;">
+                <div style="font-size:48px; margin-bottom:16px;">🕊️</div>
+                <h2 class="hio-title" style="font-size:24px; margin-bottom:12px;" id="hioConfirmHeadline">Saved Privately</h2>
+                <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:400px; margin:0 auto 24px; line-height:1.6;" id="hioConfirmText"></p>
+                
+                <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+                  <button class="btn-lime" onclick="PRAYER.resetFlow()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand Another Weight Over</button>
+                  <button class="btn-ghost" onclick="switchPrayerToolMode('mine')" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px; margin-top:4px;">View In My Prayers &rarr;</button>
+                  <a href="javascript:void(0)" id="hioKeepReadingLink" style="font-size:13px; color:var(--lime); text-decoration:none; margin-top:8px;" onclick="PRAYER.goToBibleRead()">Keep reading in My Bible &rarr;</a>
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <button class="btn-ghost" onclick="PRAYER.goBackToHand()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
-                <button class="btn-lime" onclick="PRAYER.commitLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Confirm</button>
+              <!-- THE LEDGER INSIDE HANDOVER MODE -->
+              <div style="margin-top:32px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.08);">
+                <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:16px;">THE WEIGHTS YOU'VE HANDED OVER</h3>
+                <div id="hioLedgerContent" style="display:flex; flex-direction:column; gap:4px;"></div>
               </div>
             </div>
 
-            <!-- STEP 5: Confirm -->
-            <div id="hioStepConfirm" style="display:none; text-align:center; padding:20px 10px;">
-              <div style="font-size:48px; margin-bottom:16px;">🕊️</div>
-              <h2 class="hio-title" style="font-size:24px; margin-bottom:12px;" id="hioConfirmHeadline">Saved Privately</h2>
-              <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:400px; margin:0 auto 24px; line-height:1.6;" id="hioConfirmText"></p>
-              
-              <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
-                <button class="btn-lime" onclick="PRAYER.resetFlow()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand Another Weight Over</button>
-                <a href="javascript:void(0)" id="hioKeepReadingLink" style="font-size:13px; color:var(--lime); text-decoration:none; margin-top:8px;" onclick="PRAYER.goToBibleRead()">Keep reading in My Bible &rarr;</a>
+            <!-- MODE PANEL 2: MY PRAYERS JOURNAL -->
+            <div id="ptPanel_mine" style="display:none;">
+              <div style="margin-bottom:20px;">
+                <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; text-transform:uppercase; color:#fff; margin:0 0 4px 0;">MY PRAYER JOURNAL</h3>
+                <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin:0;">What you brought. What you carried.</p>
+              </div>
+
+              <div id="mePanelMine">
+                <div id="meMineList"></div>
+                <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
+                  <div class="wall-skeleton-card"></div>
+                </div>
+                <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
               </div>
             </div>
 
-          </div>
+            <!-- MODE PANEL 3: PRAYING FOR OTHERS -->
+            <div id="ptPanel_watching" style="display:none;">
+              <div style="margin-bottom:20px;">
+                <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; text-transform:uppercase; color:#fff; margin:0 0 4px 0;">PRAYING FOR OTHERS</h3>
+                <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin:0;">Prayers from fellow stewards you are standing with in agreement.</p>
+              </div>
 
-          <!-- MY PRAYERS & INTERCESSIONS SECTION -->
-          <div class="g-card" style="padding: 24px; margin-bottom: 32px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
-              <div>
-                <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin:0 0 4px 0;">MY PRAYERS & INTERCESSIONS</h3>
-                <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">What you brought. What you carried.</p>
+              <div id="mePanelWatching">
+                <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
+                <div id="meWatchingList"></div>
+                <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
+                  <div class="wall-skeleton-card"></div>
+                </div>
+                <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
               </div>
             </div>
 
-            <!-- TABS -->
-            <div class="me-tabs">
-              <button class="me-tab-btn active" id="meTabBtnMine" onclick="ME.switchTab('mine')">My Prayers</button>
-              <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
-                Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
-              </button>
-            </div>
-
-            <!-- PANEL 1: MY PRAYERS -->
-            <div id="mePanelMine">
-              <div id="meMineList"></div>
-              <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
-                <div class="wall-skeleton-card"></div>
-              </div>
-              <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
-            </div>
-
-            <!-- PANEL 2: PRAYING FOR -->
-            <div id="mePanelWatching" style="display:none">
-              <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
-              <div id="meWatchingList"></div>
-              <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
-                <div class="wall-skeleton-card"></div>
-              </div>
-              <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
-            </div>
-          </div>
-
-          <!-- THE LEDGER -->
-          <div>
-            <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:16px;">THE WEIGHTS YOU'VE HANDED OVER</h3>
-            
-            <div id="hioLedgerContent" style="display:flex; flex-direction:column; gap:4px;">
-            </div>
           </div>
         </div>
 
