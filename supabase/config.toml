@@ -1,0 +1,5 @@
+[functions.governor-ai]
+verify_jwt = false
+
+[functions.bible-verses]
+verify_jwt = false

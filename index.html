@@ -178,6 +178,20 @@ textarea,input,select{font-size:16px}
 .view-title{font-family:var(--font-display);font-size:clamp(19px,4vw,24px);font-weight:700;color:#fff;line-height:1.2}
 .view-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-top:4px}
 
+@keyframes viewSmoothFadeIn {
+  from {
+    opacity: 0.25;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.view-fade-in {
+  animation: viewSmoothFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Cards & shared */
 .g-card{background:#0e1013;border:1px solid rgba(255,255,255,0.04);border-top:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.6);position:relative;overflow:hidden;margin-bottom:22px;transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
 .g-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(204,255,0,0.3),transparent);opacity:0;transition:opacity 0.3s}
@@ -2149,7 +2163,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     <div class="content-body">
 
       <!-- ============ UNIVERSAL PROFILE & PERSONALIZATION HEADER CARD ============ -->
-      <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 24px; position: relative; overflow: visible; padding: 20px 24px; border: 1.5px solid var(--lime); background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 0 35px rgba(204,255,0,0.12);">
+      <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 18px; position: relative; overflow: visible; padding: 20px 24px; border: 1.5px solid var(--lime); background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 0 35px rgba(204,255,0,0.12);">
         <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
         
         <!-- Top Row: Avatar, Time-of-Day Greeting & Dynamic Page Action CTA / Badge -->
@@ -2236,7 +2250,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           .rhy-wrap {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 16px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -4627,7 +4641,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           }
 
           #wallView {
-            padding: 24px;
+            padding: 0;
             background-color: var(--wall-bg);
             color: var(--wall-white);
             font-family: 'DM Sans', sans-serif;
@@ -6113,7 +6127,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           .tst-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 16px;
+            padding: 0;
             color: #fff;
           }
           .tst-header {
@@ -9135,14 +9149,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ CIRCLES ============ -->
       <div id="circleView" style="display:none">
-        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+        <div style="max-width: 680px; margin: 0 auto; padding: 0;">
           <div id="meCircleContent"></div>
         </div>
       </div>
 
       <!-- ============ COHORT CHALLENGE ============ -->
       <div id="cohortView" style="display:none">
-        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+        <div style="max-width: 680px; margin: 0 auto; padding: 0;">
           <div id="cohortViewContent"></div>
         </div>
       </div>
@@ -14674,9 +14688,20 @@ function go(view,el,label){
     window.speechSynthesis.cancel();
   }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{
+    const v=document.getElementById(id);
+    if(v) {
+      v.style.display='none';
+      v.classList.remove('view-fade-in');
+    }
+  });
   const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'prayerView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
-  document.getElementById(map[view]||'dashView').style.display='block';
+  const targetView = document.getElementById(map[view]||'dashView');
+  if (targetView) {
+    targetView.style.display='block';
+    void targetView.offsetWidth;
+    targetView.classList.add('view-fade-in');
+  }
   
   // Reset all active/expanded states first
   document.querySelectorAll('.sidebar-item, .sidebar-sub-item').forEach(b=>b.classList.remove('active', 'expanded-parent'));
