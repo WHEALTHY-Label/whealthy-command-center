@@ -2093,7 +2093,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <button class="sidebar-sub-item" id="navPrayer" onclick="go('prayer',this)">Prayer</button>
         <button class="sidebar-sub-item" id="navWall" data-nav="wall" onclick="go('wall',this)">Prayer Wall</button>
         <button class="sidebar-sub-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)">Testimony Wall</button>
-        <button class="sidebar-sub-item" id="navMe" data-nav="me" onclick="go('me',this)">My Prayers <span id="meBadge" style="display:none; width:6px; height:6px; background:var(--wall-lime); border-radius:50%; margin-left:6px; box-shadow:0 0 8px rgba(204,255,0,0.6);"></span></button>
       </div>
 
       <!-- Scripture (Plain, no subtabs) -->
@@ -6692,402 +6691,365 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         })();
       </script>
-      <!-- ============ MY PRAYERS (PROFILE SURFACE) ============ -->
-      <div id="meView" style="display:none">
-        <style>
-          .me-container {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: clamp(16px, 4vw, 32px) 16px;
-            color: #fff;
-          }
-          .me-header {
-            margin-bottom: 24px;
-          }
-          .me-title {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: clamp(24px, 5vw, 32px);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: #fff;
-            margin: 0 0 6px 0;
-          }
-          .me-subline {
-            font-family: var(--font-body);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.4);
-            margin: 0;
-          }
-          .me-tabs {
-            display: flex;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 24px;
-            min-height: 44px;
-          }
-          .me-tab-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.5);
-            font-family: var(--font-body);
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            min-height: 36px;
-          }
-          .me-tab-btn.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          }
-          .me-tab-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--wall-lime);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
-            display: inline-block;
-          }
-          .me-badge {
-            width: 8px;
-            height: 8px;
-            background: var(--wall-lime);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
-            display: inline-block;
-            margin-left: 6px;
-          }
-          /* Card layout overrides for quiet list */
-          .me-card {
-            background: var(--wall-card);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            position: relative;
-            transition: border-color 0.25s ease, box-shadow 0.25s ease;
-          }
-          .me-card.me-pulse-border {
-            animation: me-pulse-border-anim 1.5s ease-in-out;
-          }
-          .me-card.me-unseen-answered {
-            border-color: rgba(204, 255, 0, 0.4);
-          }
-          .me-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
-          }
-          .me-card-author {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-          .me-card-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-          }
-          .me-card-name {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: #fff;
-          }
-          .me-card-meta {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-          }
-          .me-card-time {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.35);
-          }
-          .me-card-body {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            margin: 0 0 16px 0;
-            white-space: pre-wrap;
-          }
-          .me-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 14px;
-          }
-          .me-card-count {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--wall-lime);
-          }
-          .me-btn-action {
-            background: rgba(204, 255, 0, 0.06);
-            border: 1px solid rgba(204, 255, 0, 0.25);
-            color: var(--wall-lime);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-family: var(--font-body);
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-height: 38px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-          }
-          .me-btn-action:hover {
-            background: var(--wall-lime);
-            color: #000;
-          }
-          .me-btn-secondary {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-          }
-          .me-btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-          }
-          .me-btn-sign {
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 11px;
-            text-decoration: underline;
-            cursor: pointer;
-            padding: 4px;
-            margin-left: 8px;
-          }
-          .me-btn-sign:hover {
-            color: var(--wall-lime);
-          }
-          .me-status-held {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 13.5px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 10px 14px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.01);
-          }
-          .me-unseen-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--wall-lime);
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 11px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-          }
-          .me-unseen-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--wall-lime);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
-          }
-          .me-empty-state {
-            text-align: center;
-            padding: 48px 16px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 14px;
-          }
-          .me-empty-state a {
-            color: var(--wall-lime);
-            text-decoration: underline;
-            cursor: pointer;
-          }
+      <!-- ============ MY PRAYERS (EMBEDDED STYLES & MODALS) ============ -->
+      <style>
+        .me-container {
+          max-width: 680px;
+          margin: 0 auto;
+          padding: 0;
+          color: #fff;
+        }
+        .me-header {
+          margin-bottom: 20px;
+        }
+        .me-title {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: clamp(20px, 4vw, 26px);
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #fff;
+          margin: 0 0 4px 0;
+        }
+        .me-subline {
+          font-family: var(--font-body);
+          font-size: 13.5px;
+          color: rgba(255, 255, 255, 0.4);
+          margin: 0;
+        }
+        .me-tabs {
+          display: flex;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 4px;
+          margin-bottom: 24px;
+          min-height: 44px;
+        }
+        .me-tab-btn {
+          flex: 1;
+          background: transparent;
+          border: none;
+          border-radius: 8px;
+          color: rgba(255, 255, 255, 0.5);
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.2s ease;
+          min-height: 36px;
+        }
+        .me-tab-btn.active {
+          background: rgba(255, 255, 255, 0.08);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .me-tab-dot {
+          width: 6px;
+          height: 6px;
+          background: var(--wall-lime);
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+          display: inline-block;
+        }
+        .me-badge {
+          width: 8px;
+          height: 8px;
+          background: var(--wall-lime);
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+          display: inline-block;
+          margin-left: 6px;
+        }
+        .me-card {
+          background: var(--wall-card);
+          border: 1px solid rgba(255, 255, 255, 0.03);
+          border-radius: 16px;
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+          position: relative;
+          transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .me-card.me-pulse-border {
+          animation: me-pulse-border-anim 1.5s ease-in-out;
+        }
+        .me-card.me-unseen-answered {
+          border-color: rgba(204, 255, 0, 0.4);
+        }
+        .me-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .me-card-author {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .me-card-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+        .me-card-name {
+          font-size: 13.5px;
+          font-weight: 600;
+          color: #fff;
+        }
+        .me-card-meta {
+          font-size: 11px;
+          color: rgba(255, 255, 255, 0.4);
+        }
+        .me-card-time {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.35);
+        }
+        .me-card-body {
+          font-size: 15px;
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 1.6;
+          margin: 0 0 16px 0;
+          white-space: pre-wrap;
+        }
+        .me-card-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          padding-top: 14px;
+        }
+        .me-card-count {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 13px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: var(--wall-lime);
+        }
+        .me-btn-action {
+          background: rgba(204, 255, 0, 0.06);
+          border: 1px solid rgba(204, 255, 0, 0.25);
+          color: var(--wall-lime);
+          border-radius: 8px;
+          padding: 8px 16px;
+          font-family: var(--font-body);
+          font-size: 12.5px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          min-height: 38px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+        }
+        .me-btn-action:hover {
+          background: var(--wall-lime);
+          color: #000;
+        }
+        .me-btn-secondary {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.7);
+        }
+        .me-btn-secondary:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+        }
+        .me-btn-sign {
+          background: transparent;
+          border: none;
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 11px;
+          text-decoration: underline;
+          cursor: pointer;
+          padding: 4px;
+          margin-left: 8px;
+        }
+        .me-btn-sign:hover {
+          color: var(--wall-lime);
+        }
+        .me-status-held {
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 13.5px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          padding: 10px 14px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.01);
+        }
+        .me-unseen-indicator {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--wall-lime);
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 11px;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+        .me-unseen-dot {
+          width: 6px;
+          height: 6px;
+          background: var(--wall-lime);
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
+        }
+        .me-empty-state {
+          text-align: center;
+          padding: 48px 16px;
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 14px;
+        }
+        .me-empty-state a {
+          color: var(--wall-lime);
+          text-decoration: underline;
+          cursor: pointer;
+        }
 
-          /* Modal styling overrides to be safe on iOS and landscape */
-          .me-modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9990;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-          }
-          .me-modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-          }
+        .me-modal-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 9990;
+          background: rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.25s ease;
+        }
+        .me-modal-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .me-modal {
+          background: #111215;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          width: 100%;
+          max-width: 440px;
+          padding: 24px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+          position: relative;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+        @media(max-height: 500px) and (orientation: landscape) {
           .me-modal {
-            background: #111215;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 440px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-height: 85vh;
+            padding: 16px;
           }
-          @media(max-height: 500px) and (orientation: landscape) {
-            .me-modal {
-              max-height: 85vh;
-              padding: 16px;
-            }
-          }
-          .me-modal-title {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 20px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-          }
-          .me-modal-desc {
-            font-size: 14.5px;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-            margin-bottom: 20px;
-          }
-          .me-modal-textarea {
-            width: 100%;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 12px;
-            color: #fff;
-            font-family: var(--font-body);
-            font-size: 16px; /* 16px to prevent iOS zoom */
-            outline: none;
-            resize: none;
-            margin-bottom: 8px;
-            box-sizing: border-box;
-          }
-          .me-modal-textarea:focus {
-            border-color: rgba(204, 255, 0, 0.4);
-          }
-          .me-modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 16px;
-          }
-          .me-modal-btn-submit {
-            width: 100%;
-            background: var(--wall-lime);
-            color: #000;
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-family: var(--font-body);
-            font-weight: 700;
-            font-size: 13.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .me-modal-btn-cancel {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            padding: 12px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .me-modal-btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-          }
+        }
+        .me-modal-title {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 20px;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+        .me-modal-desc {
+          font-size: 14.5px;
+          color: rgba(255, 255, 255, 0.6);
+          line-height: 1.5;
+          margin-bottom: 20px;
+        }
+        .me-modal-textarea {
+          width: 100%;
+          height: 120px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          padding: 12px;
+          color: #fff;
+          font-family: var(--font-body);
+          font-size: 16px;
+          outline: none;
+          resize: none;
+          margin-bottom: 8px;
+          box-sizing: border-box;
+        }
+        .me-modal-textarea:focus {
+          border-color: rgba(204, 255, 0, 0.4);
+        }
+        .me-modal-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-top: 16px;
+        }
+        .me-modal-btn-submit {
+          width: 100%;
+          background: var(--wall-lime);
+          color: #000;
+          border: none;
+          border-radius: 10px;
+          padding: 12px;
+          font-family: var(--font-body);
+          font-weight: 700;
+          font-size: 13.5px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .me-modal-btn-cancel {
+          width: 100%;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: rgba(255, 255, 255, 0.7);
+          border-radius: 10px;
+          padding: 12px;
+          font-family: var(--font-body);
+          font-weight: 600;
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .me-modal-btn-cancel:hover {
+          background: rgba(255, 255, 255, 0.08);
+          color: #fff;
+        }
 
-          @keyframes me-pulse-border-anim {
-            0% { box-shadow: 0 0 0px rgba(204,255,0,0); }
-            50% { box-shadow: 0 0 20px rgba(204,255,0,0.5); border-color: var(--wall-lime); }
-            100% { box-shadow: 0 0 0px rgba(204,255,0,0); }
-          }
-        </style>
-
-        <div class="me-container">
-          <div class="me-header">
-            <h1 class="me-title">MY PRAYERS</h1>
-            <p class="me-subline">What you brought. What you carried.</p>
-          </div>
-
-          <div class="me-tabs">
-            <button class="me-tab-btn active" id="meTabBtnMine" onclick="ME.switchTab('mine')">My Prayers</button>
-            <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
-              Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
-            </button>
-          </div>
-
-          <!-- PANEL 1: MY PRAYERS -->
-          <div id="mePanelMine">
-            <div id="meMineList"></div>
-            <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
-              <div class="wall-skeleton-card"></div>
-            </div>
-            <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
-          </div>
-
-          <!-- PANEL 2: PRAYING FOR -->
-          <div id="mePanelWatching" style="display:none">
-            <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
-            <div id="meWatchingList"></div>
-            <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
-              <div class="wall-skeleton-card"></div>
-            </div>
-            <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
-          </div>
-        </div>
-      </div>
+        @keyframes me-pulse-border-anim {
+          0% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+          50% { box-shadow: 0 0 20px rgba(204,255,0,0.5); border-color: var(--wall-lime); }
+          100% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+        }
+      </style>
 
       <!-- MARK ANSWERED FLOW MODAL -->
       <div class="me-modal-overlay" id="meAnswerModal">
@@ -8566,6 +8528,43 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               </div>
             </div>
 
+          </div>
+
+          <!-- MY PRAYERS & INTERCESSIONS SECTION -->
+          <div class="g-card" style="padding: 24px; margin-bottom: 32px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin:0 0 4px 0;">MY PRAYERS & INTERCESSIONS</h3>
+                <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">What you brought. What you carried.</p>
+              </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="me-tabs">
+              <button class="me-tab-btn active" id="meTabBtnMine" onclick="ME.switchTab('mine')">My Prayers</button>
+              <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
+                Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
+              </button>
+            </div>
+
+            <!-- PANEL 1: MY PRAYERS -->
+            <div id="mePanelMine">
+              <div id="meMineList"></div>
+              <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
+                <div class="wall-skeleton-card"></div>
+              </div>
+              <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
+            </div>
+
+            <!-- PANEL 2: PRAYING FOR -->
+            <div id="mePanelWatching" style="display:none">
+              <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
+              <div id="meWatchingList"></div>
+              <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
+                <div class="wall-skeleton-card"></div>
+              </div>
+              <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
+            </div>
           </div>
 
           <!-- THE LEDGER -->
@@ -14595,7 +14594,7 @@ function go(view,el,label){
   }
   window.location.hash = view;
   ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'prayerView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
   document.getElementById(map[view]||'dashView').style.display='block';
   
   // Reset all active/expanded states first
@@ -14667,8 +14666,9 @@ function go(view,el,label){
     document.getElementById('headerLine').textContent='Testimony Wall';
     if(typeof initTestimonyWall==='function') initTestimonyWall();
   }
-  if(view==='me'){
-    document.getElementById('headerLine').textContent='My Prayers';
+  if(view==='prayer' || view==='me'){
+    document.getElementById('headerLine').textContent='Prayer';
+    if(typeof initPrayerPillar==='function') initPrayerPillar();
     if(typeof initMe==='function') initMe();
   }
   if(view==='circle'){
@@ -14682,10 +14682,6 @@ function go(view,el,label){
   if(view==='community'){
     document.getElementById('headerLine').textContent='Community';
     if(typeof window.loadCommunityViewFeed==='function') window.loadCommunityViewFeed();
-  }
-  if(view==='prayer'){
-    document.getElementById('headerLine').textContent='Prayer';
-    if(typeof initPrayerPillar==='function') initPrayerPillar();
   }
   if(view==='dash'){
     try { fetchWallCommunityState(); } catch(e) {}
@@ -19634,6 +19630,8 @@ async function loadAndInit(){
       bible: { badge: 'MY BIBLE 365', directive: 'Anchor your mind in Scripture and track your daily 365-day reading journey.' },
       fast: { badge: 'THE FAST', directive: 'Track your active fasting windows, physical sync status, and hydration directives.' },
       record: { badge: 'THE SCRIBE', directive: 'Write your thoughts, log your daily rules, and keep your personal record.' },
+      prayer: { badge: 'PRAYER', directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.' },
+      me: { badge: 'PRAYER', directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.' },
       wall: { badge: 'PRAYER WALL', directive: 'Post your petitions, carry the burden with fellow Stewards, and stand in faith.' },
       testimony: { badge: 'TESTIMONY WALL', directive: 'Celebrate answered prayers, give glory, and share how God moved in your life.' },
       portal: { badge: 'PRODUCT PORTAL', directive: 'Manage active subscriptions, delivery schedules, and Steward account settings.' },
