@@ -11260,16 +11260,22 @@ window.WALL_KEY = WALL_KEY;
     chapterInFlight: new Map(),
 
     async init() {
-      const select = document.getElementById("myBibleBookSelect");
-      if (select && select.children.length === 0) {
-        select.innerHTML = BIBLE_BOOKS.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
-      }
-      await this.loadState();
-      await this.loadMarks();
-      this.syncUI();
-      if (!this.initialized) {
-        this.initialized = true;
-        await this.loadChapterContent();
+      if (this.initializing) return;
+      this.initializing = true;
+      try {
+        const select = document.getElementById("myBibleBookSelect");
+        if (select && select.children.length === 0) {
+          select.innerHTML = BIBLE_BOOKS.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+        }
+        await this.loadState();
+        await this.loadMarks();
+        this.syncUI();
+        if (!this.initialized) {
+          this.initialized = true;
+          await this.loadChapterContent();
+        }
+      } finally {
+        this.initializing = false;
       }
     },
 
@@ -11488,7 +11494,7 @@ window.WALL_KEY = WALL_KEY;
                 banner.style.display = 'flex';
               }
             }
-            if (data.mode && data.mode !== '365') {
+            if (data.mode && data.mode !== window._activeBibleMode) {
               switchBibleMode(data.mode);
             }
           }
@@ -11603,6 +11609,8 @@ window.WALL_KEY = WALL_KEY;
   };
 
   window.switchBibleMode = function(mode) {
+    if (window._activeBibleMode === mode) return;
+    window._activeBibleMode = mode;
     const btn365 = document.getElementById('toggleBible365');
     const btnMy = document.getElementById('toggleMyBible');
     const titleHeader = document.getElementById('bibleTitleHeader');
