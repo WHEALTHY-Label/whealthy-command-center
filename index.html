@@ -11234,6 +11234,10 @@ window.WALL_KEY = WALL_KEY;
     selectedVerse: null,
     marks: [],
     loadedVerses: [],
+    initialized: false,
+    loadedKey: null,
+    chapterCache: new Map(),
+    chapterInFlight: new Map(),
 
     async init() {
       const select = document.getElementById("myBibleBookSelect");
@@ -11243,7 +11247,10 @@ window.WALL_KEY = WALL_KEY;
       await this.loadState();
       await this.loadMarks();
       this.syncUI();
-      await this.loadChapterContent();
+      if (!this.initialized) {
+        this.initialized = true;
+        await this.loadChapterContent();
+      }
     },
 
     syncUI() {
@@ -11304,16 +11311,55 @@ window.WALL_KEY = WALL_KEY;
 
     async loadChapterContent() {
       const container = document.getElementById("myBibleVerseContainer");
-      if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,255,255,0.4);">Loading chapter...</div>';
-      try {
-        const url = `${FN_BASE}/bible-verses?ref=${encodeURIComponent(this.currentBook + ' ' + this.currentChapter)}`;
+      const key = `${this.currentBook} ${this.currentChapter}`;
+
+      // Guard: if this exact chapter is already loaded and rendered in DOM, do not re-fetch or clear HTML
+      if (this.loadedKey === key && container && container.children.length > 0 && !container.textContent.includes('Loading chapter...')) {
+        return;
+      }
+
+      // Check in-memory cache
+      if (this.chapterCache.has(key)) {
+        this.loadedKey = key;
+        this.loadedVerses = this.chapterCache.get(key);
+        this.renderVerses();
+        return;
+      }
+
+      // Check in-flight requests
+      if (this.chapterInFlight.has(key)) {
+        try {
+          const verses = await this.chapterInFlight.get(key);
+          this.loadedKey = key;
+          this.loadedVerses = verses;
+          this.renderVerses();
+        } catch (e) {}
+        return;
+      }
+
+      if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,255,255,0.4);"><span class="spin"></span> Loading chapter...</div>';
+      
+      const fetchPromise = (async () => {
+        const url = `${FN_BASE}/bible-verses?ref=${encodeURIComponent(key)}`;
         const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + SUPABASE_ANON, 'apikey': SUPABASE_ANON } });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
-        this.loadedVerses = data.verses || [];
+        const verses = data.verses || [];
+        this.chapterCache.set(key, verses);
+        this.chapterInFlight.delete(key);
+        return verses;
+      })();
+
+      this.chapterInFlight.set(key, fetchPromise);
+
+      try {
+        const verses = await fetchPromise;
+        this.loadedKey = key;
+        this.loadedVerses = verses;
         this.renderVerses();
       } catch (e) {
         console.error('[MyBible] chapter load failed:', e);
+        this.chapterInFlight.delete(key);
         if (container) container.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,100,100,0.8);">Failed to load chapter scripture. (' + ((e && e.message) || e) + ')</div>';
       }
     },
