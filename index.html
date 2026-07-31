@@ -2149,8 +2149,38 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
     <div class="content-body">
 
-      <!-- ============ RHYTHM BUILDER ============ -->
-      <div id="rhythmView" style="display:none">
+      <!-- ============ UNIVERSAL PROFILE & PERSONALIZATION HEADER CARD ============ -->
+      <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 24px; position: relative; overflow: visible; padding: 20px 24px; border: 1.5px solid var(--lime); background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 0 35px rgba(204,255,0,0.12);">
+        <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
+        
+        <!-- Top Row: Avatar, Time-of-Day Greeting & Tab Badge -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 2; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden; position:relative; margin: 0; flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; border: 2px solid var(--lime); box-shadow: 0 0 16px rgba(204,255,0,0.35); background: rgba(204,255,0,0.1); display: flex; align-items: center; justify-content: center;">
+              <span class="welcome-pulse"></span>
+              ❖
+            </div>
+            <div>
+              <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display); line-height: 1.2;">Good evening, Steward</h1>
+              <p id="dashSubtitle" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; display: none;"></p>
+            </div>
+          </div>
+          <div id="tabViewHeaderBadge" style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:4px 12px; border-radius:99px;">
+            Steward Command Center
+          </div>
+        </div>
+        
+        <!-- Bottom Row: Daily Directive -->
+        <div style="z-index: 2; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+          <div class="directive-banner__label" style="margin: 0; font-family:var(--font-display); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime);">DAILY DIRECTIVE</div>
+          <div class="directive-banner__text" id="dashDirectiveText" style="font-size: 13.5px; color: rgba(255,255,255,0.85); line-height: 1.5; margin: 0; font-weight: 500;">Pace the hydration. Do not chug.</div>
+        </div>
+      </div>
+
+      <!-- ============ DASHBOARD ============ -->
+      <div id="dashView">
+        <div id="dashRoot"></div>
+      </div>
         <style>
           .rhy-wrap {
             max-width: 1000px;
@@ -2787,25 +2817,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ DASHBOARD ============ -->
       <div id="dashView">
-        <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-bottom: 24px; position: relative; overflow: visible; padding: 20px 24px;">
-          <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
-          
-          <!-- Top Row: Avatar and Name (dashTitle) -->
-          <div style="display: flex; align-items: center; gap: 12px; z-index: 2;">
-            <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden;position:relative; margin: 0; flex-shrink: 0;">
-              <span class="welcome-pulse"></span>
-              &#9638;
-            </div>
-            <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display);">Steward Command Center</h1>
-            <p id="dashSubtitle" style="display: none;"></p>
-          </div>
-          
-          <!-- Bottom Row: Daily Directive -->
-          <div style="z-index: 2; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
-            <div class="directive-banner__label" style="margin: 0;">Daily Directive</div>
-            <div class="directive-banner__text" id="dashDirectiveText" style="font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.5; margin: 0; font-weight: 500;">Eliminate the 2 PM crash today by front-loading 30oz of water before 10 AM.</div>
-          </div>
-        </div>
         <div id="dashRoot"></div>
       </div>
 
@@ -19696,71 +19707,67 @@ async function loadAndInit(){
       archetype = archetype.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c){return c.toUpperCase();});
     }
 
-    var personalMap = {
-      dash: {
-        title: 'Welcome back, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">' + name + '</span>! 👋',
-        sub: archetype ? 'Your Command Center is active. Governing energy focus: ' + archetype + '.' : 'Your Command Center is active. Access your daily focus and OS controls.'
-      },
-      claim: {
-        title: name + '\'s Governance Bundle',
-        sub: archetype ? 'Your personal blend is ready. Matched to archetype: ' + archetype + '.' : 'Your personal blend is ready.'
-      },
-      record: {
-        title: name + '\'s Daily Scribe',
-        sub: 'Write your thoughts, log your rules, and keep the standard.'
-      },
-      fast: {
-        title: name + '\'s Fast Protocol',
-        sub: 'Track your fasting days, daily directives, and physical sync status.'
-      },
-      bible: {
-        title: name + '\'s Bible 365',
-        sub: 'Your daily scriptural study tracker and path of stewardship.'
-      },
-      portal: {
-        title: name + '\'s Product Portal',
-        sub: 'Manage subscriptions, update payment methods, and edit delivery cycles.'
-      },
-      affiliate: {
-        title: name + '\'s Affiliate Command',
-        sub: 'Spread your stewardship. Share invite links and unlock free months.'
-      },
-      community: {
-        title: name + '\'s Steward Circle',
-        sub: 'Discuss routines, share insights, and connect with fellow creators.'
-      },
+    const hours = new Date().getHours();
+    let timeGreeting = "Welcome back";
+    if (hours >= 5 && hours < 12) {
+      timeGreeting = "Good morning";
+    } else if (hours >= 12 && hours < 17) {
+      timeGreeting = "Good afternoon";
+    } else if (hours >= 17 && hours < 22) {
+      timeGreeting = "Good evening";
+    } else {
+      timeGreeting = "Welcome back";
+    }
+
+    const viewLabels = {
+      dash: 'Steward Command Center',
+      rhythm: 'My Rhythm',
+      bible: 'My Bible',
+      fast: 'The Fast',
+      record: 'The Scribe',
+      wall: 'Prayer Wall',
+      testimony: 'Testimony Wall',
+      me: 'My Prayers',
+      circle: 'Circles',
+      cohort: 'Cohort Challenge',
+      community: 'Community',
+      communityEnter: 'Enter Community',
+      claim: 'Claim Bundle',
+      all5: '$99 Complete Bundle',
+      portal: 'Product Portal',
+      tryall: 'Try All',
+      affiliate: 'Affiliate Command',
+      admin: 'Surface',
+      adminAnalytics: 'Control Panel'
     };
 
-
-    var data = personalMap[view] || personalMap.dash;
-    if (window.aiPersonalizations) {
-      const aiMap = {
-        dash: { title: window.aiPersonalizations.dashTitle, sub: window.aiPersonalizations.dashSubtitle },
-        claim: { title: window.aiPersonalizations.claimTitle || personalMap.claim.title, sub: window.aiPersonalizations.claimSubtitle || personalMap.claim.sub },
-        record: { title: window.aiPersonalizations.recordTitle || personalMap.record.title, sub: window.aiPersonalizations.recordSubtitle || personalMap.record.sub },
-        fast: { title: window.aiPersonalizations.fastTitle || personalMap.fast.title, sub: window.aiPersonalizations.fastSubtitle || personalMap.fast.sub },
-        bible: { title: window.aiPersonalizations.bibleTitle || personalMap.bible.title, sub: window.aiPersonalizations.bibleSubtitle || personalMap.bible.sub },
-        portal: { title: window.aiPersonalizations.portalTitle || personalMap.portal.title, sub: window.aiPersonalizations.portalSubtitle || personalMap.portal.sub },
-        affiliate: { title: window.aiPersonalizations.affiliateTitle || personalMap.affiliate.title, sub: window.aiPersonalizations.affiliateSubtitle || personalMap.affiliate.sub },
-        community: { title: window.aiPersonalizations.communityTitle || personalMap.community.title, sub: window.aiPersonalizations.communitySubtitle || personalMap.community.sub }
-      };
-      if (aiMap[view] && aiMap[view].title && aiMap[view].sub) {
-        data = aiMap[view];
-      }
+    var badgeEl = document.getElementById('tabViewHeaderBadge');
+    if (badgeEl) {
+      badgeEl.textContent = viewLabels[view] || 'Steward';
     }
-    var tId = view + 'Title';
-    var sId = view + 'Subtitle';
-    var tEl = document.getElementById(tId);
-    var sEl = document.getElementById(sId);
-    if (tEl) tEl.innerHTML = data.title;
-    if (sEl) sEl.textContent = data.sub;
+
+    var tEl = document.getElementById('dashTitle');
+    if (tEl) {
+      tEl.innerHTML = `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span>`;
+    }
+
+    const welcomeEl = document.getElementById('welcomeAvatarSlot');
+    if (welcomeEl && typeof waPaintWelcomeAvatar === 'function') {
+      const initials = name.charAt(0).toUpperCase();
+      waPaintWelcomeAvatar(welcomeEl, initials);
+    }
+
+    // Trigger celebratory confetti burst on tab navigation
+    if (typeof triggerWelcomeCelebration === 'function') {
+      triggerWelcomeCelebration(name, archetype);
+    }
   }
   window.personalizePageHeader = personalizePageHeader;
 
   function triggerWelcomeCelebration(memberName, archetype) {
     const titleEl = document.getElementById('dashTitle');
     const subtitleEl = document.getElementById('dashSubtitle');
-    if (!titleEl || !subtitleEl) return;
+    if (!titleEl) return;
 
     const hours = new Date().getHours();
     let timeGreeting = "Welcome back";
@@ -19774,30 +19781,10 @@ async function loadAndInit(){
       timeGreeting = "Welcome back";
     }
 
-    if (window.aiPersonalizations && window.aiPersonalizations.dashTitle && window.aiPersonalizations.dashSubtitle) {
-      titleEl.innerHTML = window.aiPersonalizations.dashTitle;
-      subtitleEl.textContent = window.aiPersonalizations.dashSubtitle;
-      const initials = (window.MEMBER_NAME || 'S').charAt(0).toUpperCase();
-      const welcomeEl = document.getElementById('welcomeAvatarSlot');
-      if (welcomeEl && typeof waPaintWelcomeAvatar === 'function') {
-        waPaintWelcomeAvatar(welcomeEl, initials);
-      }
-    } else {
-      var displayName = memberName;
-      if (!displayName) {
-        var email = window.MEMBER_EMAIL || '';
-        displayName = email.split('@')[0] || 'Steward';
-      }
-      displayName = displayName.split(' ')[0];
-      displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-      titleEl.innerHTML = `${timeGreeting}, <span style="color: var(--lime); font-weight: 800; text-shadow: 0 0 10px rgba(204,255,0,0.2);">${displayName}</span>! 👋`;
-
-      if (archetype) {
-        var archClean = archetype.replace(/[_-]/g, ' ').replace(/\b\w/g, function(c){return c.toUpperCase();});
-        subtitleEl.textContent = `Your Command Center is active. Governing energy focus: ${archClean}.`;
-      } else {
-        subtitleEl.textContent = "Your Command Center is active. Access your daily focus and OS controls.";
-      }
+    const welcomeEl = document.getElementById('welcomeAvatarSlot');
+    if (welcomeEl && typeof waPaintWelcomeAvatar === 'function') {
+      const initials = (memberName || 'S').charAt(0).toUpperCase();
+      waPaintWelcomeAvatar(welcomeEl, initials);
     }
 
     const canvas = document.getElementById('welcomeConfettiCanvas');
