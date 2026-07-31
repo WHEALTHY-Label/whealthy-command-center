@@ -12202,37 +12202,80 @@ window.WALL_KEY = WALL_KEY;
     },
 
     toggleVoice() {
+      const btn = document.getElementById('btnHioVoice');
+      const status = document.getElementById('hioVoiceStatus');
+      const input = document.getElementById("hioNameInput");
+
       if (this.isRecording) {
-        if (this.recognition) this.recognition.stop();
+        if (this.recognition) {
+          try { this.recognition.stop(); } catch(e) {}
+        }
         this.isRecording = false;
-        document.getElementById('btnHioVoice').textContent = '🎙️';
-        document.getElementById('hioVoiceStatus').style.display = 'none';
+        if (btn) btn.textContent = '🎙️';
+        if (status) status.style.display = 'none';
       } else {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-          alert("Speech recognition is not supported in this browser.");
+          alert("Voice recognition is not supported in this browser. You can type your prayer directly below.");
           return;
         }
+        const initialText = input ? input.value : '';
         if (!this.recognition) {
           this.recognition = new SpeechRecognition();
-          this.recognition.continuous = false;
-          this.recognition.interimResults = false;
-          this.recognition.lang = 'en-US';
-          this.recognition.onresult = (event) => {
-            const text = event.results[0][0].transcript;
-            const input = document.getElementById("hioNameInput");
-            if (input) input.value = text;
-          };
-          this.recognition.onend = () => {
-            this.isRecording = false;
-            document.getElementById('btnHioVoice').textContent = '🎙️';
-            document.getElementById('hioVoiceStatus').style.display = 'none';
-          };
         }
-        this.recognition.start();
-        this.isRecording = true;
-        document.getElementById('btnHioVoice').textContent = '⏹️';
-        document.getElementById('hioVoiceStatus').style.display = 'block';
+        this.recognition.continuous = true;
+        this.recognition.interimResults = true;
+        this.recognition.lang = 'en-US';
+
+        let accumulatedFinal = '';
+        this.recognition.onresult = (event) => {
+          let interim = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              accumulatedFinal += event.results[i][0].transcript + ' ';
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          if (input) {
+            const combined = (initialText + (initialText ? ' ' : '') + accumulatedFinal + interim).trim();
+            input.value = combined;
+          }
+        };
+
+        this.recognition.onerror = (err) => {
+          console.warn('[Prayer Voice Error]', err);
+          if (err && (err.error === 'no-speech' || err.error === 'aborted')) return;
+          this.isRecording = false;
+          if (btn) btn.textContent = '🎙️';
+          if (status) {
+            status.textContent = 'Voice error: ' + (err.error || 'try again');
+            setTimeout(() => { if (status) status.style.display = 'none'; }, 3000);
+          }
+        };
+
+        this.recognition.onend = () => {
+          if (this.isRecording) {
+            this.isRecording = false;
+            if (btn) btn.textContent = '🎙️';
+            if (status) status.style.display = 'none';
+          }
+        };
+
+        try {
+          this.recognition.start();
+          this.isRecording = true;
+          if (btn) btn.textContent = '⏹️';
+          if (status) {
+            status.textContent = 'Listening... Speak your prayer';
+            status.style.display = 'block';
+          }
+        } catch(e) {
+          console.error('[Prayer Voice Start Error]', e);
+          this.isRecording = false;
+          if (btn) btn.textContent = '🎙️';
+          if (status) status.style.display = 'none';
+        }
       }
     },
 
@@ -15720,6 +15763,9 @@ async function startWave(mode = 'record'){
   try{
     micStream=await navigator.mediaDevices.getUserMedia({audio:true});
     audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') {
+      try { await audioCtx.resume(); } catch(e){}
+    }
     const src=audioCtx.createMediaStreamSource(micStream);
     analyser=audioCtx.createAnalyser();analyser.fftSize=256;
     src.connect(analyser);
@@ -15739,7 +15785,7 @@ async function startWave(mode = 'record'){
       if (r2) { r2.style.transform='scale('+(1+amp*0.9)+')';r2.style.opacity=(0.18+amp*0.35); }
       rafId=requestAnimationFrame(loop);
     })();
-  }catch(e){/* permission denied: CSS pulse only */}
+  }catch(e){/* permission denied or fallback: CSS pulse animation */}
 }
 
 function stopWave(mode = 'record'){
@@ -15758,7 +15804,10 @@ function stopWave(mode = 'record'){
 }
 
 function toggleMic(mode = 'record'){
-  if(!SRec)return;
+  if(!SRec){
+    alert("Voice recording is not supported in this browser version. You can type your entry directly below.");
+    return;
+  }
   if(mode === true) mode = 'sheet';
   if(mode === false) mode = 'record';
   voiceMode = mode;
@@ -15766,29 +15815,55 @@ function toggleMic(mode = 'record'){
   vib(12);
   const ids = getVoiceIds(voiceMode);
   const ta = document.getElementById(ids.transcript);
-  finalText = ta.value ? ta.value + ' ' : '';
-  recog = new SRec();recog.continuous = true; recog.interimResults = true; recog.lang = 'en-US';
-  recog.onresult = ev => {
-    let interim = '';
-    for(let i = ev.resultIndex; i < ev.results.length; i++){
-      if(ev.results[i].isFinal) finalText += ev.results[i][0].transcript + ' ';
-      else interim += ev.results[i][0].transcript;
-    }
-    ta.classList.add('show');
-    ta.value = (finalText + interim).trim();
-    persistDraft();
-  };
-  recog.onerror = () => stopMic();
-  recog.onend = () => { if(recording) stopMic(); };
-  recog.start();
-  recording = true;
+  finalText = (ta && ta.value) ? ta.value + ' ' : '';
   
-  if (document.getElementById(ids.wrap)) document.getElementById(ids.wrap).classList.add('rec');
-  if (document.getElementById(ids.state)) document.getElementById(ids.state).textContent = 'Listening. Tap to stop.';
-  ta.classList.add('show');
-  if (document.getElementById(ids.btn)) document.getElementById(ids.btn).style.display = 'inline-flex';
-  
-  startWave(voiceMode);
+  try {
+    recog = new SRec();
+    recog.continuous = true; 
+    recog.interimResults = true; 
+    recog.lang = 'en-US';
+    
+    recog.onresult = ev => {
+      let interim = '';
+      for(let i = ev.resultIndex; i < ev.results.length; i++){
+        if(ev.results[i].isFinal) finalText += ev.results[i][0].transcript + ' ';
+        else interim += ev.results[i][0].transcript;
+      }
+      if (ta) {
+        ta.classList.add('show');
+        ta.value = (finalText + interim).trim();
+      }
+      persistDraft();
+    };
+    
+    recog.onerror = (err) => {
+      console.warn('[Mic Rec Error]', err);
+      if (err && (err.error === 'no-speech' || err.error === 'aborted')) return;
+      const stateEl = document.getElementById(ids.state);
+      if (stateEl) stateEl.textContent = 'Voice error. Tap to retry.';
+      stopMic(false);
+    };
+    
+    recog.onend = () => { 
+      if(recording) {
+        stopMic(voiceMode === 'sheet'); 
+      }
+    };
+    
+    recog.start();
+    recording = true;
+    
+    if (document.getElementById(ids.wrap)) document.getElementById(ids.wrap).classList.add('rec');
+    if (document.getElementById(ids.state)) document.getElementById(ids.state).textContent = 'Listening. Tap to stop.';
+    if (ta) ta.classList.add('show');
+    if (document.getElementById(ids.btn)) document.getElementById(ids.btn).style.display = 'inline-flex';
+    
+    startWave(voiceMode);
+  } catch(e) {
+    console.error('[Mic Start Failure]', e);
+    recording = false;
+    stopWave(voiceMode);
+  }
 }
 
 function stopMic(autoExec = true){
@@ -17447,39 +17522,66 @@ function toggleFastVoice(inputId, statusId, btnId) {
   const inputEl = document.getElementById(inputId);
   const statusEl = document.getElementById(statusId);
   const btnEl = document.getElementById(btnId);
+  const initialText = inputEl ? inputEl.value : '';
 
   if (isFastVoiceRecording) {
-    if (fastVoiceRec) fastVoiceRec.stop();
+    if (fastVoiceRec) { try { fastVoiceRec.stop(); } catch(e) {} }
     isFastVoiceRecording = false;
     if (btnEl) btnEl.textContent = '🎙️';
     if (statusEl) statusEl.style.display = 'none';
   } else {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Speech recognition is not supported in this browser.");
+      alert("Voice recognition is not supported in this browser. Please type directly.");
       return;
     }
-    fastVoiceRec = new SpeechRecognition();
-    fastVoiceRec.continuous = false;
-    fastVoiceRec.interimResults = false;
-    fastVoiceRec.lang = 'en-US';
-    fastVoiceRec.onresult = (event) => {
-      const text = event.results[0][0].transcript;
-      if (inputEl) {
-        inputEl.value = (inputEl.value ? inputEl.value + ' ' : '') + text;
-        if (typeof freeLay === 'function' && inputId === 'layFree') freeLay(inputEl);
-        if (typeof onAttachPrayerBodyInput === 'function' && inputId === 'newAttachPrayerBody') onAttachPrayerBodyInput(inputEl);
-      }
-    };
-    fastVoiceRec.onend = () => {
+    try {
+      fastVoiceRec = new SpeechRecognition();
+      fastVoiceRec.continuous = true;
+      fastVoiceRec.interimResults = true;
+      fastVoiceRec.lang = 'en-US';
+
+      let accumulatedFinal = '';
+      fastVoiceRec.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            accumulatedFinal += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        if (inputEl) {
+          inputEl.value = (initialText + (initialText ? ' ' : '') + accumulatedFinal + interim).trim();
+          if (typeof freeLay === 'function' && inputId === 'layFree') freeLay(inputEl);
+          if (typeof onAttachPrayerBodyInput === 'function' && inputId === 'newAttachPrayerBody') onAttachPrayerBodyInput(inputEl);
+        }
+      };
+
+      fastVoiceRec.onerror = (err) => {
+        console.warn('[Fast Voice Error]', err);
+        if (err && (err.error === 'no-speech' || err.error === 'aborted')) return;
+        isFastVoiceRecording = false;
+        if (btnEl) btnEl.textContent = '🎙️';
+        if (statusEl) statusEl.style.display = 'none';
+      };
+
+      fastVoiceRec.onend = () => {
+        isFastVoiceRecording = false;
+        if (btnEl) btnEl.textContent = '🎙️';
+        if (statusEl) statusEl.style.display = 'none';
+      };
+
+      fastVoiceRec.start();
+      isFastVoiceRecording = true;
+      if (btnEl) btnEl.textContent = '⏹️';
+      if (statusEl) statusEl.style.display = 'block';
+    } catch(e) {
+      console.error('[Fast Voice Exception]', e);
       isFastVoiceRecording = false;
       if (btnEl) btnEl.textContent = '🎙️';
       if (statusEl) statusEl.style.display = 'none';
-    };
-    fastVoiceRec.start();
-    isFastVoiceRecording = true;
-    if (btnEl) btnEl.textContent = '⏹️';
-    if (statusEl) statusEl.style.display = 'block';
+    }
   }
 }
 window.toggleFastVoice = toggleFastVoice;
