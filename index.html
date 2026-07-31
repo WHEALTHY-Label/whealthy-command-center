@@ -2171,40 +2171,42 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           }
           .rhy-btn-lime {
             font-family: var(--font-display);
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #0a0a0a;
+            letter-spacing: 0.08em;
+            color: #080809;
             background: var(--lime);
             border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
+            border-radius: 12px;
+            padding: 14px 28px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
+            box-shadow: 0 4px 20px rgba(204, 255, 0, 0.25);
           }
           .rhy-btn-lime:hover {
+            background: #d8ff33;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(204,255,0,0.2);
+            box-shadow: 0 8px 28px rgba(204, 255, 0, 0.45);
           }
           .rhy-btn-ghost {
             font-family: var(--font-display);
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: rgba(255,255,255,0.6);
-            background: none;
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 8px;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.75);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
             padding: 12px 24px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2213,7 +2215,9 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           }
           .rhy-btn-ghost:hover {
             color: #fff;
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.35);
+            transform: translateY(-1px);
           }
           .rhy-screen {
             display: none;
@@ -2498,7 +2502,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <h2 style="font-family:var(--font-display); font-size:22px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#f0f1f3; margin-bottom:12px;">First, your season</h2>
             <p class="g-body" style="max-width:480px; margin:0 auto 24px; color:rgba(255,255,255,0.6); line-height:1.6;">A rhythm that fits you has to be built on you. Take the 3-minute Genius Quiz so we know your season, then we build it together.</p>
             <div style="max-width:320px; margin:0 auto; width:100%;">
-              <button class="rhy-btn-lime" onclick="go('tryall')">Begin Assessment</button>
+              <button class="rhy-btn-lime" onclick="RHYTHM_BUILDER.startAssessment()">Begin Assessment</button>
             </div>
             <div style="margin-top:32px; font-size:12px; color:rgba(255,255,255,0.25); font-style:italic; font-family:var(--font-display);">
               "Let all things be done decently and in order." &mdash; 1 Corinthians 14:40
