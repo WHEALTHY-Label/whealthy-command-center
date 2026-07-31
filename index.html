@@ -14695,6 +14695,9 @@ window.loadMemberOrders = loadMemberOrders;
 
 /* ================== NAV ================== */
 function go(view,el,label){
+  window.scrollTo(0, 0);
+  const dashContent = document.querySelector('main.dash-content');
+  if (dashContent) dashContent.scrollTop = 0;
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
