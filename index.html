@@ -2184,7 +2184,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             </div>
           </div>
           <div id="tabHeaderActionSlot">
-            <span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">COMMAND CENTER</span>
+            <span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">STEWARD DASHBOARD</span>
           </div>
         </div>
         
@@ -14356,7 +14356,7 @@ async function saveEntry(entry_date, text, tone, fast_id, fast_day, scribe_line,
     });
     const d = await r.json();
     if (!d.ok && d.error === 'report_not_open') {
-      alert("The Command Center gate is closed. Reporting only opens after 8:45 PM local time.");
+      alert("The Steward Dashboard gate is closed. Reporting only opens after 8:45 PM local time.");
       throw new Error('report_not_open');
     }
     if (d.ok) {
@@ -18102,7 +18102,7 @@ function renderReveal(root){
        '<div class="g-actions" style="margin-top:14px"><button class="btn-lime" onclick="go(\'portal\',document.getElementById(\'navPortal\'))">Find What Fits</button><button class="btn-ghost" onclick="dismissEquip()">Not During This Fast</button></div></div>';
   }
   if(F.product_state==='lapsed'){
-    h+='<div class="g-card reveal"><p class="g-body" style="font-size:12.5px">Your next bundle is claimable in the Command Center whenever you are ready. Your fast needs nothing to begin.</p></div>';
+    h+='<div class="g-card reveal"><p class="g-body" style="font-size:12.5px">Your next bundle is claimable on your Dashboard whenever you are ready. Your fast needs nothing to begin.</p></div>';
   }
   h+='<div class="plan-footer reveal">This tool provides structure, not health or medical advice. We recommend consulting a healthcare professional before beginning any fast that changes how you eat or drink. Your fast is yours, and you may end it at any time.</div></div>';
   root.innerHTML=h;
@@ -19845,9 +19845,9 @@ async function loadAndInit(){
 
     const pageGuideData = {
       dash: {
-        title: "Command Center",
+        title: "Steward Dashboard",
         subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · House Operating System`,
-        badge: 'COMMAND CENTER',
+        badge: 'STEWARD DASHBOARD',
         ctaHtml: null,
         directive: 'Govern your daily focus, complete your directives, and access your OS controls.',
         purpose: 'Your central operating dashboard for tracking daily disciplines, archetype alignment, and house directives.',
@@ -20658,7 +20658,7 @@ async function loadAndInit(){
     steps.push({
       target: 'navDash', view: 'dash', group: null,
       title: 'Home',
-      body: 'Your command center. Every morning starts here: the Daily Directive, one line that governs the day, and your bundle at hand.',
+      body: 'Your Steward Dashboard. Every morning starts here: the Daily Directive, one line that governs the day, and your bundle at hand.',
       adminOnly: false
     });
 
@@ -23165,7 +23165,7 @@ async function loadAndInit(){
 </div>
 <script>
 (function(){
-  var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',all5View:'Claim Your Bundle',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
+  var TITLE={rhythmView:'My Rhythm',dashView:'Steward Dashboard',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',all5View:'Claim Your Bundle',portalView:'Product Portal',affiliateView:'Affiliate Center',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
   var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',all5View:'The full 5-product WHEALTHY energy, focus, and recovery ecosystem for $99/mo.',portalView:'Your order history with live tracking and billing.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
   var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',all5View:'The complete 5-product WHEALTHY ecosystem: Genius Guice, Genius Joe, Hydration, Charge, and Boss delivered to your door every month for $99/mo.',portalView:'Your orders from the label show up here automatically with live tracking. When something ships, you will see the carrier, tracking number, and a link to follow it. Billing and subscription management is at the bottom.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
