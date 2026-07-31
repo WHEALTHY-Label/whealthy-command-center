@@ -2154,14 +2154,19 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         
         <!-- Top Row: Avatar, Time-of-Day Greeting & Dynamic Page Action CTA / Badge -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 2; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
             <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden; position:relative; margin: 0; flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; border: 2px solid var(--lime); box-shadow: 0 0 16px rgba(204,255,0,0.35); background: rgba(204,255,0,0.1); display: flex; align-items: center; justify-content: center;">
               <span class="welcome-pulse"></span>
               ❖
             </div>
             <div>
-              <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display); line-height: 1.2;">Good evening, Steward</h1>
-              <p id="dashSubtitle" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; display: none;"></p>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display); line-height: 1.2;">Good evening, Steward</h1>
+                <button class="page-info-btn" id="pageInfoBtn" onclick="openPageGuideModal()" title="Page Guide & Insights" style="background: rgba(204,255,0,0.1); border: 1px solid rgba(204,255,0,0.3); color: var(--lime); border-radius: 99px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; font-weight: 800; transition: all 0.2s; box-shadow: 0 0 12px rgba(204,255,0,0.2);" onmouseover="this.style.background='var(--lime)'; this.style.color='#080809';" onmouseout="this.style.background='rgba(204,255,0,0.1)'; this.style.color='var(--lime)';">
+                  ❓
+                </button>
+              </div>
+              <p id="dashSubtitle" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 500;"></p>
             </div>
           </div>
           <div id="tabHeaderActionSlot">
@@ -2173,6 +2178,53 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div style="z-index: 2; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
           <div class="directive-banner__label" style="margin: 0; font-family:var(--font-display); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime);">DAILY DIRECTIVE</div>
           <div class="directive-banner__text" id="dashDirectiveText" style="font-size: 13.5px; color: rgba(255,255,255,0.85); line-height: 1.5; margin: 0; font-weight: 500;">Pace the hydration. Do not chug.</div>
+        </div>
+      </div>
+
+      <!-- ============ PAGE GUIDE & INSIGHTS MODAL ============ -->
+      <div id="pageGuideModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:9999; align-items:center; justify-content:center; padding:16px;">
+        <div class="g-card animate-fade-in" style="max-width:520px; width:100%; padding:28px; border:1.5px solid var(--lime); background:#121418; box-shadow:0 0 40px rgba(204,255,0,0.2); border-radius:20px; display:flex; flex-direction:column; gap:18px; position:relative;">
+          
+          <!-- Modal Header -->
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:22px;">💡</span>
+              <div>
+                <h3 id="pageGuideModalTitle" style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin:0;">Page Guide & Insights</h3>
+                <span id="pageGuideModalSub" style="font-size:11.5px; color:var(--lime); text-transform:uppercase; font-weight:700; letter-spacing:0.06em;">Steward Guidance</span>
+              </div>
+            </div>
+            <button onclick="closePageGuideModal()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; font-size:16px; transition:all 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.15)';" onmouseout="this.style.color='rgba(255,255,255,0.6)'; this.style.background='rgba(255,255,255,0.05)';">&times;</button>
+          </div>
+
+          <!-- Purpose -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px 16px;">
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime); margin-bottom:4px;">🎯 Purpose</div>
+            <div id="pageGuidePurpose" style="font-size:13.5px; color:rgba(255,255,255,0.9); line-height:1.5;">Overview of this module...</div>
+          </div>
+
+          <!-- How to use -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px 16px;">
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime); margin-bottom:6px;">🛠️ How to Use</div>
+            <ul id="pageGuideSteps" style="margin:0; padding-left:18px; font-size:13px; color:rgba(255,255,255,0.8); line-height:1.6;">
+              <li>Step 1...</li>
+            </ul>
+          </div>
+
+          <!-- Steward Pro Tip -->
+          <div style="background:rgba(204,255,0,0.04); border:1px solid rgba(204,255,0,0.2); border-radius:12px; padding:12px 16px; display:flex; align-items:flex-start; gap:10px;">
+            <span style="font-size:16px;">⚡</span>
+            <div>
+              <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime); margin-bottom:2px;">Steward Directive</div>
+              <div id="pageGuideTip" style="font-size:12.5px; color:rgba(255,255,255,0.85); line-height:1.45; font-style:italic;">Key tip for this routine...</div>
+            </div>
+          </div>
+
+          <!-- Footer Action -->
+          <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+            <button onclick="closePageGuideModal()" style="background:var(--lime); color:#080809; border:none; border-radius:99px; padding:10px 24px; font-family:var(--font-display); font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; cursor:pointer; box-shadow:0 0 16px rgba(204,255,0,0.3);">Understood &rarr;</button>
+          </div>
+
         </div>
       </div>
 
@@ -19650,32 +19702,266 @@ async function loadAndInit(){
       timeGreeting = "Welcome back";
     }
 
-    const viewActionConfig = {
-      community: { badge: 'COMMUNITY', ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>', directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.' },
-      communityEnter: { badge: 'ENTER COMMUNITY', ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>', directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.' },
-      claim: { badge: 'CLAIM BUNDLE', ctaHtml: '<button onclick="go(\'claim\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">CLAIM BUNDLE</button>', directive: 'Redeem your Steward monthly supply or select your personalized governance blends.' },
-      tryall: { badge: 'TRY ALL', ctaHtml: '<button onclick="go(\'tryall\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">TRY ALL</button>', directive: 'Every routine in the house, open to try. When your season changes, re-match here.' },
-      rhythm: { badge: 'MY RHYTHM', directive: 'Build and govern your daily anchors to maintain alignment throughout your season.' },
-      bible: { badge: 'MY BIBLE 365', directive: 'Anchor your mind in Scripture and track your daily 365-day reading journey.' },
-      fast: { badge: 'THE FAST', directive: 'Track your active fasting windows, physical sync status, and hydration directives.' },
-      record: { badge: 'THE SCRIBE', directive: 'Write your thoughts, log your daily rules, and keep your personal record.' },
-      prayer: { badge: 'PRAYER', directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.' },
-      me: { badge: 'PRAYER', directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.' },
-      wall: { badge: 'PRAYER WALL', directive: 'Post your petitions, carry the burden with fellow Stewards, and stand in faith.' },
-      testimony: { badge: 'TESTIMONY WALL', directive: 'Celebrate answered prayers, give glory, and share how God moved in your life.' },
-      portal: { badge: 'PRODUCT PORTAL', directive: 'Manage active subscriptions, delivery schedules, and Steward account settings.' },
-      affiliate: { badge: 'AFFILIATE COMMAND', directive: 'Share your referral invite links, track your impact, and earn free monthly months.' },
-      dash: { badge: 'COMMAND CENTER', directive: 'Govern your daily focus, complete your directives, and access your OS controls.' }
+    const pageGuideData = {
+      dash: {
+        title: "Command Center",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · House Operating System`,
+        badge: 'COMMAND CENTER',
+        ctaHtml: null,
+        directive: 'Govern your daily focus, complete your directives, and access your OS controls.',
+        purpose: 'Your central operating dashboard for tracking daily disciplines, archetype alignment, and house directives.',
+        steps: [
+          'Check in on your daily W/P/F/R matrix (Word, Prayer, Fast, Record).',
+          'Review your personal archetype governance plan.',
+          'Execute your daily anchor before evening.'
+        ],
+        tip: 'Small daily consistency builds unshakeable momentum. Log your anchors early.'
+      },
+      prayer: {
+        title: "Prayer & Intercession",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Unified Prayer Suite`,
+        badge: 'PRAYER',
+        ctaHtml: null,
+        directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.',
+        purpose: 'Your unified prayer suite for handing over daily weights, receiving scripture promises, and tracking private & circle prayers.',
+        steps: [
+          'Use "Hand Over Weight" to submit prayers via text or voice dictation.',
+          'Select a focus category or receive AI-anchored scripture promises.',
+          'Toggle to "My Prayers" to log answers, mark prayers carried, or lift them to the Prayer Wall.'
+        ],
+        tip: 'Anything you pray here is private by default. Nothing goes public unless you explicitly lift it to the wall.'
+      },
+      me: {
+        title: "Prayer & Intercession",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Unified Prayer Suite`,
+        badge: 'PRAYER',
+        ctaHtml: null,
+        directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.',
+        purpose: 'Your unified prayer suite for handing over daily weights, receiving scripture promises, and tracking private & circle prayers.',
+        steps: [
+          'Use "Hand Over Weight" to submit prayers via text or voice dictation.',
+          'Select a focus category or receive AI-anchored scripture promises.',
+          'Toggle to "My Prayers" to log answers, mark prayers carried, or lift them to the Prayer Wall.'
+        ],
+        tip: 'Anything you pray here is private by default. Nothing goes public unless you explicitly lift it to the wall.'
+      },
+      rhythm: {
+        title: "My Rhythm Anchors",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Daily Alignment`,
+        badge: 'MY RHYTHM',
+        ctaHtml: null,
+        directive: 'Build and govern your daily anchors to maintain alignment throughout your season.',
+        purpose: 'The anchor configuration engine for building and governing your daily non-negotiable routines.',
+        steps: [
+          'Take or retake the archetype assessment to fine-tune your rhythm.',
+          'Customize your anchor frequency and daily rules.',
+          'Review your weekly compliance score.'
+        ],
+        tip: 'Re-assess your rhythm whenever your life season or work load shifts.'
+      },
+      bible: {
+        title: "My Bible 365",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Scripture Reading Engine`,
+        badge: 'MY BIBLE 365',
+        ctaHtml: null,
+        directive: 'Anchor your mind in Scripture and track your daily 365-day reading journey.',
+        purpose: 'Your 365-day chronological Scripture reading engine and study companion.',
+        steps: [
+          'Open today assigned reading chapter.',
+          'Mark completed passages to update your 365-day progress.',
+          'Bookmark key promises to review during prayer.'
+        ],
+        tip: 'Anchor your mind in Scripture first thing in the morning before starting your day.'
+      },
+      fast: {
+        title: "The Fast & Hydration",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Active Fasting Window`,
+        badge: 'THE FAST',
+        ctaHtml: null,
+        directive: 'Track your active fasting windows, physical sync status, and hydration directives.',
+        purpose: 'Your active fasting timer, hydration log, and physical body sync tracker.',
+        steps: [
+          'Start your fasting timer for your target window (e.g. 16:8, 20:4, 24h).',
+          'Log water intake to ensure proper physical hydration.',
+          'Check off your daily Fast discipline in your W/P/F/R matrix.'
+        ],
+        tip: 'Pace hydration consistently throughout the window. Break your fast gently with whole nutrients.'
+      },
+      record: {
+        title: "The Scribe Journal",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Daily Records & Rules`,
+        badge: 'THE SCRIBE',
+        ctaHtml: null,
+        directive: 'Write your thoughts, log your daily rules, and keep your personal record.',
+        purpose: 'Your private journal for logging thoughts, daily reflections, and personal Steward rules.',
+        steps: [
+          'Write a new daily entry or capture quick reflections.',
+          'Tag entries by category (Faith, Work, Health, Governance).',
+          'Review your historical entries to track growth.'
+        ],
+        tip: 'Writing down your thoughts clarifies your spirit and solidifies learning.'
+      },
+      wall: {
+        title: "Community Prayer Wall",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Standing in Agreement`,
+        badge: 'PRAYER WALL',
+        ctaHtml: null,
+        directive: 'Post your petitions, carry the burden with fellow Stewards, and stand in faith.',
+        purpose: 'The shared intercession wall where Stewards post petitions and pray for one another.',
+        steps: [
+          'Read petitions submitted by fellow Stewards.',
+          'Tap "I Prayed" to stand in agreement with their request.',
+          'Post a request signed or anonymously to request community prayer.'
+        ],
+        tip: 'Interceding for others carries eternal weight and strengthens community unity.'
+      },
+      testimony: {
+        title: "Testimony Wall",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Victory & Breakthroughs`,
+        badge: 'TESTIMONY WALL',
+        ctaHtml: null,
+        directive: 'Celebrate answered prayers, give glory, and share how God moved in your life.',
+        purpose: 'The wall of answered prayers and divine breakthroughs across the Steward community.',
+        steps: [
+          'Browse victory stories and answered prayers from fellow Stewards.',
+          'Lift your own answered prayers from your ledger to the wall.',
+          'Leave words of praise and celebration.'
+        ],
+        tip: 'Expressing gratitude and sharing answered prayers builds faith for the whole community.'
+      },
+      community: {
+        title: "Steward Community",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Network & Skool Hub`,
+        badge: 'COMMUNITY',
+        ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>',
+        directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.',
+        purpose: 'The private Steward community space for discussion, events, and live cohort calls.',
+        steps: [
+          'Click "ENTER COMMUNITY →" to open the Skool community platform.',
+          'Participate in weekly steward discussions and live masterclasses.',
+          'Connect with stewards in your archetype track.'
+        ],
+        tip: 'Active community engagement accelerates personal discipline and growth.'
+      },
+      communityEnter: {
+        title: "Enter Community",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Network & Skool Hub`,
+        badge: 'ENTER COMMUNITY',
+        ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>',
+        directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.',
+        purpose: 'The private Steward community space for discussion, events, and live cohort calls.',
+        steps: [
+          'Click "ENTER COMMUNITY →" to open the Skool community platform.',
+          'Participate in weekly steward discussions and live masterclasses.'
+        ],
+        tip: 'Active community engagement accelerates personal discipline and growth.'
+      },
+      claim: {
+        title: "Claim Your Bundle",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Steward Supply Redemption`,
+        badge: 'CLAIM BUNDLE',
+        ctaHtml: '<button onclick="go(\'claim\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">CLAIM BUNDLE</button>',
+        directive: 'Redeem your Steward monthly supply or select your personalized governance blends.',
+        purpose: 'The Steward bundle claim portal for redeeming your monthly supply or custom governance packages.',
+        steps: [
+          'Select your active routine bundle or custom governance package.',
+          'Apply your active Steward member code at checkout.',
+          'Confirm shipping details for delivery.'
+        ],
+        tip: 'Ensure your checkout email matches your Steward account email for instant verification.'
+      },
+      tryall: {
+        title: "Try All Routines",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · House Governance Directory`,
+        badge: 'TRY ALL',
+        ctaHtml: '<button onclick="go(\'tryall\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">TRY ALL</button>',
+        directive: 'Every routine in the house, open to try. When your season changes, re-match here.',
+        purpose: 'The complete catalog of all WHEALTHY house governance routines and product formulations.',
+        steps: [
+          'Browse routines by health pillar or archetype focus.',
+          'Click any routine card to view full ingredients, dosage, and timing.',
+          'Use your member discount code to order samples or full supplies.'
+        ],
+        tip: 'Every routine in the house is formulated to work in synergy with your core daily disciplines.'
+      },
+      portal: {
+        title: "Product Portal",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Subscriptions & Delivery`,
+        badge: 'PRODUCT PORTAL',
+        ctaHtml: null,
+        directive: 'Manage active subscriptions, delivery schedules, and Steward account settings.',
+        purpose: 'Your Steward account dashboard for managing monthly supply subscriptions, shipments, and orders.',
+        steps: [
+          'View active product subscriptions and upcoming shipment dates.',
+          'Modify delivery frequencies or update shipping addresses.',
+          'Review order history and tracking links.'
+        ],
+        tip: 'Keep your monthly supplies synchronized so your physical routine never lapses.'
+      },
+      affiliate: {
+        title: "Affiliate Command",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Referral & Impact Hub`,
+        badge: 'AFFILIATE COMMAND',
+        ctaHtml: null,
+        directive: 'Share your referral invite links, track your impact, and earn free monthly months.',
+        purpose: 'Your referral link center for sharing WHEALTHY with friends and earning Steward credits.',
+        steps: [
+          'Copy your unique Steward referral link or code.',
+          'Share with friends, family, or accountability partners.',
+          'Track successful referrals and earned subscription credits.'
+        ],
+        tip: 'Inviting friends into a shared rhythm increases accountability for both of you.'
+      },
+      circle: {
+        title: "Steward Circles",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Small Group Accountability`,
+        badge: 'CIRCLES',
+        ctaHtml: null,
+        directive: 'Join or create a 7-member circle to share daily matrix accountability with trusted partners.',
+        purpose: 'Small group accountability circles (up to 7 members) for daily discipline tracking.',
+        steps: [
+          'Join a circle using an invite code from a friend.',
+          'Or create a new Prayer, Fast, or Accountability Circle.',
+          'Check in daily to light up your W/P/F/R matrix for your circle.'
+        ],
+        tip: 'Check in daily so your circle partners see your W/P/F/R matrix lights up green!'
+      },
+      cohort: {
+        title: "Cohort Challenge",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Sprint Governance`,
+        badge: 'COHORT',
+        ctaHtml: null,
+        directive: 'Participate in active community governance sprints and track cohort progress.',
+        purpose: 'Time-bound community sprints for collective governance and spiritual discipline challenges.',
+        steps: [
+          'View active cohort challenge rules and timelines.',
+          'Track your position on the cohort daily leaderboard.',
+          'Complete daily sprint directives together.'
+        ],
+        tip: 'Group sprints push you past personal limitations into high-performance discipline.'
+      }
     };
 
-    const cfg = viewActionConfig[view] || viewActionConfig.dash;
+    const activeGuide = pageGuideData[view] || pageGuideData.dash;
+    window._activePageGuide = activeGuide;
+
+    var tEl = document.getElementById('dashTitle');
+    if (tEl) {
+      tEl.innerHTML = activeGuide.title;
+    }
+
+    var subEl = document.getElementById('dashSubtitle');
+    if (subEl) {
+      subEl.style.display = 'block';
+      subEl.innerHTML = activeGuide.subtitle;
+    }
 
     var actionSlot = document.getElementById('tabHeaderActionSlot');
     if (actionSlot) {
-      if (cfg.ctaHtml) {
-        actionSlot.innerHTML = cfg.ctaHtml;
+      if (activeGuide.ctaHtml) {
+        actionSlot.innerHTML = activeGuide.ctaHtml;
       } else {
-        actionSlot.innerHTML = `<span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">${cfg.badge}</span>`;
+        actionSlot.innerHTML = `<span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">${activeGuide.badge}</span>`;
       }
     }
 
@@ -19684,13 +19970,8 @@ async function loadAndInit(){
       if (window.aiPersonalizations && window.aiPersonalizations.dailyDirective) {
         directiveEl.textContent = window.aiPersonalizations.dailyDirective;
       } else {
-        directiveEl.textContent = cfg.directive;
+        directiveEl.textContent = activeGuide.directive;
       }
-    }
-
-    var tEl = document.getElementById('dashTitle');
-    if (tEl) {
-      tEl.innerHTML = `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span>`;
     }
 
     const welcomeEl = document.getElementById('welcomeAvatarSlot');
@@ -19699,11 +19980,41 @@ async function loadAndInit(){
       waPaintWelcomeAvatar(welcomeEl, initials);
     }
 
-    // Trigger celebratory confetti burst on tab navigation
     if (typeof triggerWelcomeCelebration === 'function') {
       triggerWelcomeCelebration(name, archetype);
     }
   }
+
+  window.openPageGuideModal = function() {
+    const g = window._activePageGuide || {
+      title: "Page Guide",
+      purpose: "Overview of this module.",
+      steps: ["Explore the available tools on this page."],
+      tip: "Stay consistent in your daily steward rhythm."
+    };
+    const titleEl = document.getElementById('pageGuideModalTitle');
+    if (titleEl) titleEl.textContent = g.title + " Guide";
+    
+    const purpEl = document.getElementById('pageGuidePurpose');
+    if (purpEl) purpEl.textContent = g.purpose;
+    
+    const stepsList = document.getElementById('pageGuideSteps');
+    if (stepsList) {
+      stepsList.innerHTML = (g.steps || []).map(function(s){ return `<li style="margin-bottom:6px;">${s}</li>`; }).join('');
+    }
+    
+    const tipEl = document.getElementById('pageGuideTip');
+    if (tipEl) tipEl.textContent = g.tip;
+    
+    const modalEl = document.getElementById('pageGuideModal');
+    if (modalEl) modalEl.style.display = 'flex';
+  };
+
+  window.closePageGuideModal = function() {
+    const modalEl = document.getElementById('pageGuideModal');
+    if (modalEl) modalEl.style.display = 'none';
+  };
+
   window.personalizePageHeader = personalizePageHeader;
 
   function triggerWelcomeCelebration(memberName, archetype) {
