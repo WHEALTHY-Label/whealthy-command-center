@@ -18863,19 +18863,116 @@ var BUNDLE_PRICES = {
 };
 var money = function(val) { return '$' + val.toFixed(2); };
 
+var PROOF_MAP = {
+  'the-morning-dependency': { name: 'Marcus T.', role: 'Dallas, TX', emoji: '👨', quote: 'The second cup used to own 9:30 AM. Day 4 on Genius Joe, the urge just wasn\'t there.' },
+  'the-midday-fog': { name: 'David H.', role: 'Phoenix, AZ', emoji: '🙏', quote: '3 PM used to mean brain fog and staring at my inbox. Boss + Hydration fixed the baseline.' },
+  'the-emptied-out-father': { name: 'James F.', role: 'Columbus, OH', emoji: '⚡', quote: 'My family was getting whatever energy was left at 6 PM. Charge gave me back my evenings.' },
+  'the-physical-drain': { name: 'Paul A.', role: 'Raleigh, NC', emoji: '✝️', quote: 'Physical shifts take it out of your body first. Hydration + Charge keeps me steady.' },
+  'the-unfocused-builder': { name: 'Marcus T.', role: 'Dallas, TX', emoji: '👨', quote: 'Energy without aim is just anxiety. The daily rhythm gave my effort direction.' },
+  'the-low-floor': { name: 'David H.', role: 'Phoenix, AZ', emoji: '🙏', quote: 'Stop relying on willpower alone. The governance system catches you when energy drops.' }
+};
+
+var REVIEW_VIDEOS = {
+  'Charge Powder': 'https://www.youtube.com/embed/nPEV9WZCc2s'
+};
+
+function testimonialBand(archKey) {
+  var normKey = archKey === 'morning-dependency' ? 'the-morning-dependency' :
+                archKey === 'midday-fog' ? 'the-midday-fog' :
+                archKey === 'emptied-out-father' ? 'the-emptied-out-father' :
+                archKey === 'physical-drain' ? 'the-physical-drain' :
+                archKey === 'unfocused-builder' ? 'the-unfocused-builder' :
+                archKey === 'low-floor' ? 'the-low-floor' :
+                archKey;
+  var proof = PROOF_MAP[normKey] || PROOF_MAP['the-morning-dependency'];
+  return '<div class="testimonial-band" style="background:var(--lime); color:#080809; padding:24px 20px; border-radius:16px; margin:28px 0; text-align:center;">'
+  +   '<div class="testimonial-band__quote" style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; margin-bottom:6px;">"' + proof.quote + '"</div>'
+  +   '<div class="testimonial-band__attr" style="font-size:12px; font-weight:600; opacity:0.85;">' + proof.emoji + ' ' + proof.name + ' &#183; ' + proof.role + ' &#183; same pattern</div>'
+  + '</div>';
+}
+
+function priceAnchorBlock(bp, isSteward) {
+  var btnHtml = isSteward ? '<div class="price-anchor__btn-wrap" style="margin-top:10px;"><button class="btn-primary" onclick="joinStewards()" style="padding:10px 20px; font-size:12px;">Join Free &#183; Get 10% Off</button></div>' : '';
+  return '<div class="price-anchor" style="padding:14px 18px; background:rgba(204,255,0,0.04); border:1px dashed rgba(204,255,0,0.25); border-radius:12px; font-size:13.5px; text-align:center; margin:20px 0;">'
+  +   'Your governed routine, as a member: <strong style="color:var(--lime);">' + money(bp.member) + '/mo</strong> <span class="price-anchor__strike" style="text-decoration:line-through; color:rgba(255,255,255,0.4);">' + money(bp.tryPrice) + ' non-member</span>'
+  +   btnHtml
+  + '</div>';
+}
+
 function resultsPriceBlock(bundleKey){
   var bp = BUNDLE_PRICES[bundleKey] || BUNDLE_PRICES['charge'];
   return ''
   + '<div class="results-price">'
   +   '<div class="results-price__label">Your member price</div>'
   +   '<div class="results-price__hero"><span class="results-price__amount">' + money(bp.member) + '</span><span class="results-price__per">/mo</span></div>'
-  +   '<div class="results-price__unlock">Join the Stewards free to unlock your 10% code. Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>.</div>'
-  +   '<div class="results-price__rows">'
-  +     '<div class="results-price__row"><span>Both products, bought separately</span><span class="results-price__strike">' + money(bp.retail) + '/mo</span></div>'
-  +     '<div class="results-price__row"><span>The bundle (non-member)</span><span>' + money(bp.tryPrice) + '/mo</span></div>'
-  +     '<div class="results-price__row results-price__row--you"><span>Your price as a member</span><span>' + money(bp.member) + '/mo</span></div>'
+  +   '<div class="results-price__unlock">Non-members pay <span class="results-price__strike">' + money(bp.tryPrice) + '/mo</span>. Join the Stewards free to unlock your 10% code.</div>'
+  +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping &#183; billed monthly &#183; cancel anytime</div>'
+  + '</div>';
+}
+
+function reviewVideosSection(bundle) {
+  var gridHtml = bundle.products.map(function(p) {
+    var embedUrl = REVIEW_VIDEOS[p.name];
+    var frameHtml = '';
+    if (embedUrl) {
+      frameHtml = '<iframe src="' + embedUrl + '" allowfullscreen loading="lazy" style="width:100%; aspect-ratio:9/16; border-radius:12px; border:1px solid rgba(204,255,0,0.3);"></iframe>';
+    } else {
+      frameHtml = '<div class="review-videos__placeholder" style="aspect-ratio:9/16; border:1px dashed rgba(255,255,255,0.15); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; text-align:center; background:rgba(255,255,255,0.02);">'
+      +   '<div style="font-size:24px; color:var(--lime); margin-bottom:8px;">&#9654;</div>'
+      +   '<div style="font-weight:700; font-size:13px; color:#fff;">Video Placeholder</div>'
+      +   '<div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">Real member review video &#8212; to be added</div>'
+      + '</div>';
+    }
+    return '<div style="flex:1; min-width:200px;">'
+    +   '<div style="font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); margin-bottom:8px;">' + p.name + '</div>'
+    +   frameHtml
+    + '</div>';
+  }).join('');
+
+  return '<div style="margin:36px 0; padding:24px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:20px;">'
+  +   '<h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:#fff; margin-bottom:20px; text-align:center;">REAL STEWARDS. REAL REVIEWS.</h3>'
+  +   '<div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">' + gridHtml + '</div>'
+  + '</div>';
+}
+
+function valueStackSection(cfgName, bp) {
+  return '<div class="value-stack" style="margin:36px 0; padding:28px 24px; background:rgba(204,255,0,0.02); border:1px solid rgba(204,255,0,0.2); border-radius:20px; text-align:center;">'
+  +   '<div style="font-family:var(--font-display); font-size:20px; font-weight:700; text-transform:uppercase; color:var(--lime); margin-bottom:4px;">EVERYTHING YOU\'RE GETTING</div>'
+  +   '<div style="font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:20px;">MORE THAN A ROUTINE</div>'
+  +   '<div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; text-align:left; max-width:480px; margin:0 auto 24px;">'
+  +     '<div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Matched routine (' + cfgName + ') shipped monthly</span><span style="font-weight:700; color:#fff;">' + money(bp.retail) + '/mo</span></div>'
+  +     '<div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Governance system (archetype daily directives & app)</span><span style="color:var(--lime); font-weight:600;">Included</span></div>'
+  +     '<div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>The Stewards community</span><span style="color:var(--lime); font-weight:600;">Free forever</span></div>'
+  +     '<div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>The disciplines (Word, Prayer, Fast, Record)</span><span style="color:var(--lime); font-weight:600;">Included</span></div>'
+  +     '<div style="display:flex; justify-content:space-between; padding-top:4px; font-weight:700; font-size:15px; color:#fff;"><span>Total value / Member price</span><span><span style="text-decoration:line-through; font-size:13px; color:rgba(255,255,255,0.4); margin-right:8px;">' + money(bp.retail) + '</span><span style="color:var(--lime);">' + money(bp.member) + '/mo</span></span></div>'
   +   '</div>'
-  +   '<div class="results-price__foot">+ ' + money(9.95) + ' flat shipping · billed monthly · cancel anytime · ' + money(bp.retail - bp.member) + '/mo under buying them apart</div>'
+  +   '<div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; max-width:480px; margin:0 auto;">'
+  +     '<button class="btn-lime" onclick="confirmClaim()" style="flex:1; min-width:200px; padding:14px 20px; font-size:13px; font-weight:700; text-transform:uppercase;">Join Free &#183; ' + money(bp.member) + '/mo &#183; 10% Off</button>'
+  +   '</div>'
+  + '</div>';
+}
+
+function whoItsForSection() {
+  return '<div class="who-its-for" style="margin:36px 0; padding:28px 24px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:20px;">'
+  +   '<h3 style="font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:#fff; margin-bottom:20px; text-align:center;">BUILT FOR THE ONES WHO CARRY</h3>'
+  +   '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; text-align:left;">'
+  +     '<div style="background:rgba(204,255,0,0.03); border:1px solid rgba(204,255,0,0.15); border-radius:14px; padding:18px;">'
+  +       '<div style="font-weight:700; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime); margin-bottom:12px;">&#10004; THIS IS FOR YOU IF:</div>'
+  +       '<ul style="list-style:none; padding:0; margin:0; font-size:13px; color:rgba(255,255,255,0.8); display:flex; flex-direction:column; gap:10px;">'
+  +         '<li style="display:flex; gap:8px;"><span style="color:var(--lime);">&#10004;</span> You carry family, work, and faith at the same time and feel the load.</li>'
+  +         '<li style="display:flex; gap:8px;"><span style="color:var(--lime);">&#10004;</span> You want a daily system to govern your energy rather than borrowing it.</li>'
+  +         '<li style="display:flex; gap:8px;"><span style="color:var(--lime);">&#10004;</span> You want a community of high-character people sharing the weight.</li>'
+  +       '</ul>'
+  +     '</div>'
+  +     '<div style="background:rgba(255,100,100,0.03); border:1px solid rgba(255,100,100,0.15); border-radius:14px; padding:18px;">'
+  +       '<div style="font-weight:700; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,120,120,0.9); margin-bottom:12px;">&#10006; SKIP THIS IF:</div>'
+  +       '<ul style="list-style:none; padding:0; margin:0; font-size:13px; color:rgba(255,255,255,0.6); display:flex; flex-direction:column; gap:10px;">'
+  +         '<li style="display:flex; gap:8px;"><span style="color:rgba(255,120,120,0.9);">&#10006;</span> You are just looking for a caffeine pill or a cheap energy drink.</li>'
+  +         '<li style="display:flex; gap:8px;"><span style="color:rgba(255,120,120,0.9);">&#10006;</span> You prefer carrying your season\'s weight alone without a team.</li>'
+  +         '<li style="display:flex; gap:8px;"><span style="color:rgba(255,120,120,0.9);">&#10006;</span> You don\'t want to build long-term daily health disciplines.</li>'
+  +       '</ul>'
+  +     '</div>'
+  +   '</div>'
   + '</div>';
 }
 
@@ -19289,39 +19386,22 @@ function renderClaimPage(){
 
   var salesHtml = '';
 
-  // ===== VALUE STACK =====
-  salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:24px">';
-  salesHtml += '<div class="value-stack" style="margin-bottom:40px">';
-  salesHtml += '<div class="value-stack__title">What You\'re Probably Spending Now</div>';
-  salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Daily coffee habit</strong><br>2-3 cups, cafe or home brew beans</div><div class="value-stack__price value-stack__price--strike">$120/mo</div></div>';
-  salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Energy drinks</strong><br>The afternoon fix that crashes you by 4pm</div><div class="value-stack__price value-stack__price--strike">$75/mo</div></div>';
-  salesHtml += '<div class="value-stack__item"><div class="value-stack__name"><strong>Supplements that ghost you</strong><br>The ones you stopped buying after 60 days</div><div class="value-stack__price value-stack__price--strike">$45/mo</div></div>';
-  salesHtml += '<div class="value-stack__total"><div class="value-stack__total-label">Total Broken Pattern Cost</div><div class="value-stack__total-price">$240/mo</div></div>';
-  salesHtml += '<div class="value-stack__your-price">';
-  salesHtml += '<div class="value-stack__your-label">Member Price &middot; 10% Off The Try Price</div>';
-  salesHtml += '<div class="value-stack__your-amount"><span class="price-strike" style="font-size:20px;margin-right:10px">' + money(bp.tryPrice) + '</span>' + money(bp.member) + '<sub style="font-size:12px;font-weight:500;text-transform:none">&nbsp;/mo</sub></div>';
-  salesHtml += '<p class="value-stack__per-day">Non-members pay ' + money(bp.tryPrice) + '. You pay ' + money(bp.member) + ', that\'s ' + money(bp.retail - bp.member) + ' under the ' + money(bp.retail) + ' retail value. Use code WHSBGN at checkout.</p>';
-  salesHtml += '<div class="value-stack__savings">Less than what the broken pattern already costs you</div>';
-  salesHtml += '</div></div>';
+  // ===== DIGITAL DEGENS PERSUASION SKELETON =====
+  salesHtml += testimonialBand(archKey2);
+  salesHtml += priceAnchorBlock(bp, true);
+  salesHtml += valueStackSection(activeB.name, bp);
+  salesHtml += reviewVideosSection(activeB);
+  salesHtml += whoItsForSection();
 
   // ===== GUARANTEES =====
-  salesHtml += '<div class="guarantee-row">';
+  salesHtml += '<div class="guarantee-row" style="margin-top:24px;">';
   salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128666;</div><div class="guarantee-item__title">Ships for $9.95</div><div class="guarantee-item__desc">Flat $9.95 shipping on every monthly delivery. No surprises.</div></div>';
   salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#128260;</div><div class="guarantee-item__title">Cancel Anytime</div><div class="guarantee-item__desc">No commitments. Adjust, pause, or cancel whenever you need.</div></div>';
   salesHtml += '<div class="guarantee-item"><div class="guarantee-item__icon">&#9889;</div><div class="guarantee-item__title">Feel It In 14 Days</div><div class="guarantee-item__desc">Noticeable, stable clarity or your money back.</div></div>';
   salesHtml += '</div>';
-  salesHtml += '</div>'; // end bg section
-
-  // ===== SOCIAL PROOF =====
-  salesHtml += '<div style="padding:48px 0">';
-  salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:20px;text-align:center">Same Pattern. Real Result.</p>';
-  salesHtml += '<div class="result-proof"><div class="result-proof__card">';
-  salesHtml += '<p class="result-proof__quote">"'+proof.quote+'"</p>';
-  salesHtml += '<div class="result-proof__meta"><div class="result-proof__avatar">'+proof.emoji+'</div><div><div class="result-proof__name">'+proof.name+'</div><div class="result-proof__role">'+proof.role+'</div></div></div>';
-  salesHtml += '</div></div></div>';
 
   // ===== GOVERNED DAY (DAILY ROUTINE) =====
-  salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">';
+  salesHtml += '<div style="background:rgba(15,16,18,0.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:36px;">';
   salesHtml += '<div style="text-align:center;margin-bottom:32px;padding:0 24px">';
   salesHtml += '<p style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);margin-bottom:12px">Your Governed Day</p>';
   salesHtml += '<h2 style="font-family:var(--font-display);font-size:clamp(24px,4.5vw,40px);font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.0">Every Part of Your Day.<br><span style="color:var(--lime)">Protected.</span></h2>';
