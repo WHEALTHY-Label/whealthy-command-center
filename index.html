@@ -1994,12 +1994,12 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     <button class="claim-modal-close" onclick="closeClaimModal()">&times;</button>
     <div class="claim-modal-body">
       <div class="claim-modal-icon">&#128230;</div>
-      <div class="claim-modal-title">Your Monthly Bundle</div>
-      <div class="claim-modal-bundle" id="claimBundleName">Genius Guice + Hydration</div>
+      <div class="claim-modal-title">The Governance System</div>
+      <div class="claim-modal-bundle" id="claimBundleName">All 5 Products &middot; $99/mo</div>
       <div class="claim-modal-text" id="claimModalText">
-        Your bundle is ready to claim for this month. <strong>Consistent stewardship starts with consistent supply.</strong> Claim now so nothing interrupts your rhythm.
+        Genius Joe, Boss, Charge, Genius Guice, and Hydration &mdash; your full governed day, delivered monthly. <strong>Consistent stewardship starts with consistent supply.</strong> Claim now so nothing interrupts your rhythm.
       </div>
-      <button class="claim-modal-btn" onclick="claimBundle()">Claim My Bundle</button>
+      <button class="claim-modal-btn" onclick="claimBundle()">Claim the $99 Bundle</button>
       <button class="claim-modal-dismiss" onclick="closeClaimModal()">I'll claim later</button>
     </div>
   </div>
@@ -13741,8 +13741,22 @@ function dayKey(o){
   return `${year}-${month}-${day}`;
 }
 function realToday(){return dayKey(0);}
-function niceDate(iso){return new Date(iso+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
-function weeksAgo(iso){const days=Math.round((new Date(realToday())-new Date(iso))/86400000);if(days<=0)return 'today';if(days<7)return days+' days ago';const w=Math.round(days/7);return w+(w===1?' week ago':' weeks ago');}
+function niceDate(iso){
+  if(!iso) return '';
+  const str=String(iso);
+  const m=str.match(/^\d{4}-\d{2}-\d{2}/);
+  const d=m?new Date(m[0]+'T00:00:00'):new Date(str);
+  if(isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function weeksAgo(iso){
+  if(!iso) return '';
+  const m=String(iso).match(/^\d{4}-\d{2}-\d{2}/);
+  const base=m?m[0]:String(iso);
+  const t=new Date(base).getTime();
+  if(isNaN(t)) return '';
+  const days=Math.round((new Date(realToday())-t)/86400000);
+  if(days<=0)return 'today';if(days<7)return days+' days ago';const w=Math.round(days/7);return w+(w===1?' week ago':' weeks ago');}
 function vib(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
 function addDays(dateStr, days) {
@@ -18422,16 +18436,12 @@ function isClaimWindowOpen(){
 function openClaimModal(){
   const modal=document.getElementById('claimModal');
   if(!modal)return;
-  // Update bundle name
+  // $99 Governance System focus — always the full 5-product bundle, never the quiz 2-product bundle
   const nameEl=document.getElementById('claimBundleName');
-  if(nameEl && window._bundleName) nameEl.textContent=window._bundleName;
-  else if(nameEl && BUNDLE) nameEl.textContent=BUNDLE.name;
-  // Update text based on state
+  if(nameEl) nameEl.innerHTML='All 5 Products &middot; $99/mo';
   const textEl=document.getElementById('claimModalText');
   if(textEl){
-    const pct = window._discountPct || 10;
-    const code = window._discountCode || 'WHSBGN';
-    textEl.innerHTML = 'You have not set up your bundle yet. Claim it to get your monthly supply &mdash; with your ' + pct + '% member discount (' + code + ') &mdash; and unlock full stewardship features.';
+    textEl.innerHTML = 'Genius Joe, Boss, Charge, Genius Guice, and Hydration &mdash; your full governed day, delivered monthly for $99/mo. Claim it to get your supply and unlock full stewardship features, including daily rhythm check-ins.';
   }
   modal.classList.add('open');
 }
@@ -21118,7 +21128,20 @@ async function loadAndInit(){
       } catch (e3) {
         console.warn('Failed to load admin-rhythm-stats:', e3);
       }
-      
+
+      try {
+        var emRes = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-email-stats', {
+          method: 'POST',
+          headers: {'content-type':'application/json','Authorization':'Bearer '+token,'apikey':anon,'x-admin-email':email},
+          body: JSON.stringify({email:email})
+        });
+        if (emRes.ok) {
+          d.emailStats = await emRes.json();
+        }
+      } catch (e4) {
+        console.warn('Failed to load admin-email-stats:', e4);
+      }
+
       whaStatus('');
       return d;
     }catch(e){ whaStatus('Live data unavailable. Check connection, then Refresh.'); return null; }
@@ -21229,6 +21252,41 @@ async function loadAndInit(){
         kpi('Active Subs',fmt(gpath(bo,'subs.active',0)),'')
       ])+(top.name&&top.name!=='n/a'?'<div class="wha-spot">Top bundle &middot; <b>'+top.name+'</b> - '+(top.rate||0)+'% ('+fmt(top.purchased)+' of '+fmt(top.suggested)+')</div>':'')+
       '<div class="wha-grid" style="margin-top:16px">'+box('whaTryProducts')+box('whaOrderTrend')+'</div>');
+    });
+
+    /* ===== EMAIL & CARTS ===== */
+    S(function(){
+      var es=d.emailStats||{};
+      var ac=es.abandoned_carts||{open:[],recovered:0,total:0};
+      var seqs=es.sequences||{};
+      var seqNames={'abandoned-cart':'Abandoned Cart','lead-nurture':'Lead Nurture','skool-reengage':'Skool Re-engage','crm-reengage':'CRM Re-engage','thankyou':'Thank You (post-purchase)','other':'Other / transactional'};
+      function dstr(x){ if(!x) return '&mdash;'; var dd=new Date(x); return isNaN(dd.getTime())?'&mdash;':dd.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+dd.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+      var tblStyle='width:100%;border-collapse:collapse;font-size:12px;min-width:560px';
+      var thStyle='text-align:left;padding:8px 10px;color:rgba(240,241,243,0.5);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.06em;border-bottom:1px solid rgba(255,255,255,0.08)';
+      var tdStyle='padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(240,241,243,0.85)';
+      var seqRows=Object.keys(seqs).map(function(k){ var v=seqs[k];
+        return '<tr><td style="'+tdStyle+'"><b>'+(seqNames[k]||k)+'</b></td><td style="'+tdStyle+'">'+fmt(v.sent)+'</td><td style="'+tdStyle+'">'+fmt(v.delivered)+'</td><td style="'+tdStyle+'">'+fmt(v.opened)+'</td><td style="'+tdStyle+'">'+fmt(v.clicked)+'</td><td style="'+tdStyle+'">'+fmt(v.bounced)+'</td><td style="'+tdStyle+'">'+dstr(v.last_sent)+'</td></tr>';
+      }).join('');
+      var cartRows=(ac.open||[]).slice(0,25).map(function(c){
+        return '<tr><td style="'+tdStyle+'">'+(c.email||'')+'</td><td style="'+tdStyle+'">'+(c.bundle||'')+'</td><td style="'+tdStyle+'">'+dstr(c.started_at)+'</td><td style="'+tdStyle+'">'+((c.emails_sent||[]).join(', ')||'none yet')+'</td><td style="'+tdStyle+'">'+dstr(c.last_email_at)+'</td></tr>';
+      }).join('');
+      var emRows=(es.emails||[]).slice(0,30).map(function(x){
+        return '<tr><td style="'+tdStyle+'">'+(x.to_email||'')+'</td><td style="'+tdStyle+'">'+(x.template||'')+'</td><td style="'+tdStyle+'">'+dstr(x.sent_at)+'</td><td style="'+tdStyle+'">'+dstr(x.opened_at)+'</td><td style="'+tdStyle+'">'+dstr(x.clicked_at)+'</td></tr>';
+      }).join('');
+      var note=es.tracking_note?'<div class="wha-sub" style="margin:8px 0 0;color:#ffb300">'+es.tracking_note+'</div>':'';
+      return card('Email &amp; Abandoned Carts', grid([
+        kpi('Open Carts',fmt((ac.open||[]).length),'started checkout, not completed'),
+        kpi('Recovered',fmt(ac.recovered),'completed after starting'),
+        kpi('Emails (window)',fmt(Object.keys(seqs).reduce(function(a,k){return a+(seqs[k].sent||0);},0)),'last 1,000 sends'),
+        kpi('Opened',fmt(Object.keys(seqs).reduce(function(a,k){return a+(seqs[k].opened||0);},0)),'unique opens tracked'),
+        kpi('Clicked',fmt(Object.keys(seqs).reduce(function(a,k){return a+(seqs[k].clicked||0);},0)),'unique clicks tracked')
+      ])+note+
+      '<div class="wha-sub" style="margin:18px 0 6px;color:rgba(240,241,243,0.5)">SEQUENCES</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="'+tblStyle+'"><thead><tr><th style="'+thStyle+'">Sequence</th><th style="'+thStyle+'">Sent</th><th style="'+thStyle+'">Delivered</th><th style="'+thStyle+'">Opened</th><th style="'+thStyle+'">Clicked</th><th style="'+thStyle+'">Bounced</th><th style="'+thStyle+'">Last Send</th></tr></thead><tbody>'+(seqRows||'<tr><td style="'+tdStyle+'" colspan="7">No sends logged yet.</td></tr>')+'</tbody></table></div>'+
+      '<div class="wha-sub" style="margin:18px 0 6px;color:rgba(240,241,243,0.5)">OPEN ABANDONED CARTS</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="'+tblStyle+'"><thead><tr><th style="'+thStyle+'">Email</th><th style="'+thStyle+'">Bundle</th><th style="'+thStyle+'">Started</th><th style="'+thStyle+'">Cart Emails</th><th style="'+thStyle+'">Last Email</th></tr></thead><tbody>'+(cartRows||'<tr><td style="'+tdStyle+'" colspan="5">No abandoned carts right now.</td></tr>')+'</tbody></table></div>'+
+      '<div class="wha-sub" style="margin:18px 0 6px;color:rgba(240,241,243,0.5)">RECENT EMAILS (open / click dates)</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="'+tblStyle+'"><thead><tr><th style="'+thStyle+'">To</th><th style="'+thStyle+'">Template</th><th style="'+thStyle+'">Sent</th><th style="'+thStyle+'">Opened</th><th style="'+thStyle+'">Clicked</th></tr></thead><tbody>'+(emRows||'<tr><td style="'+tdStyle+'" colspan="5">No emails yet.</td></tr>')+'</tbody></table></div>');
     });
 
     /* ===== DISCIPLINES ===== */
@@ -22296,6 +22354,8 @@ async function loadAndInit(){
       const hydrationKey = 'wh_rhythm_hydration_sips_' + todayStr;
       const hydrationSlot = slotsArr.find(s => (s.product_key || '').toLowerCase().includes('hydration') || (s.title || '').toLowerCase().includes('hydration'));
       const isHydratedToday = hydrationSlot ? (hydrationSlot.today_status === 'done') : false;
+      const hydFulfillment = this.getProductFulfillmentInfo(hydrationSlot || { product_key: 'hydration', title: 'All-Day Hydration', today_status: 'none' });
+      const hydLocked = hydFulfillment.isLocked && !isHydratedToday;
       const sipCount = isHydratedToday ? 4 : parseInt(localStorage.getItem(hydrationKey) || '0', 10);
 
       container.innerHTML += `
@@ -22311,15 +22371,15 @@ async function loadAndInit(){
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
               <span style="font-size:13px; font-weight:800; color:#00d4ff; font-family:monospace;">${sipCount} / 4 Sips</span>
-              <button onclick="RHYTHM_BUILDER.logHydrationSip('${hydrationSlot ? hydrationSlot.id : ''}')" style="background:${sipCount >= 4 ? 'rgba(0,212,255,0.2)' : '#00d4ff'}; color:${sipCount >= 4 ? '#00d4ff' : '#000'}; font-weight:900; font-size:12px; padding:10px 18px; border-radius:10px; border:${sipCount >= 4 ? '1px solid #00d4ff' : 'none'}; cursor:pointer; transition:all 0.2s; box-shadow:${sipCount >= 4 ? 'none' : '0 0 15px rgba(0,212,255,0.4)'};">
-                ${sipCount >= 4 ? '✓ Hydrated Today (4/4)' : `+ Log Sip (${sipCount + 1}/4)`}
+              <button onclick="${hydLocked ? `RHYTHM_BUILDER.handleLockedCheckboxClick('All-Day Hydration')` : `RHYTHM_BUILDER.logHydrationSip('${hydrationSlot ? hydrationSlot.id : ''}')`}" style="background:${hydLocked ? 'rgba(255,255,255,0.06)' : sipCount >= 4 ? 'rgba(0,212,255,0.2)' : '#00d4ff'}; color:${hydLocked ? 'rgba(255,255,255,0.5)' : sipCount >= 4 ? '#00d4ff' : '#000'}; font-weight:900; font-size:12px; padding:10px 18px; border-radius:10px; border:${hydLocked ? '1px dashed rgba(255,255,255,0.25)' : sipCount >= 4 ? '1px solid #00d4ff' : 'none'}; cursor:pointer; transition:all 0.2s; box-shadow:${hydLocked || sipCount >= 4 ? 'none' : '0 0 15px rgba(0,212,255,0.4)'};">
+                ${hydLocked ? '🔒 Locked · Claim $99 Bundle' : sipCount >= 4 ? '✓ Hydrated Today (4/4)' : `+ Log Sip (${sipCount + 1}/4)`}
               </button>
               ${sipCount > 0 ? `<button onclick="RHYTHM_BUILDER.resetHydrationSips()" title="Reset Sips" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:12px; cursor:pointer; padding:4px;">↺</button>` : ''}
             </div>
           </div>
           <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
             ${[1, 2, 3, 4].map(sNum => `
-              <div onclick="RHYTHM_BUILDER.setHydrationSips(${sNum}, '${hydrationSlot ? hydrationSlot.id : ''}')" style="background:${sNum <= sipCount ? 'rgba(0,212,255,0.25)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.08)'}; border-radius:10px; padding:8px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+              <div onclick="${hydLocked ? `RHYTHM_BUILDER.handleLockedCheckboxClick('All-Day Hydration')` : `RHYTHM_BUILDER.setHydrationSips(${sNum}, '${hydrationSlot ? hydrationSlot.id : ''}')`}" style="background:${sNum <= sipCount ? 'rgba(0,212,255,0.25)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.08)'}; border-radius:10px; padding:8px 10px; text-align:center; cursor:pointer; transition:all 0.2s; opacity:${hydLocked ? '0.45' : '1'};">
                 <span style="font-size:11px; font-weight:800; color:${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.4)'};">💧 Sip ${sNum}</span>
               </div>
             `).join('')}
@@ -22550,6 +22610,16 @@ async function loadAndInit(){
     },
 
     async toggleCheckin(slotId, curStatus) {
+      // Hard guard: product slots stay un-checkable until the $99 bundle is delivered
+      const slotsArrGuard = Array.isArray(this.state.slots) ? this.state.slots : [];
+      const guardSlot = slotsArrGuard.find(s => s.id === slotId);
+      if (guardSlot) {
+        const gf = this.getProductFulfillmentInfo(guardSlot);
+        if (gf.isProduct && gf.isLocked) { this.handleLockedCheckboxClick(guardSlot.title || ''); return; }
+      } else if (typeof slotId === 'string' && slotId.startsWith('can-')) {
+        const gf = this.getProductFulfillmentInfo({ id: slotId, product_key: slotId.replace('can-',''), title: slotId.replace('can-',''), today_status: 'none' });
+        if (gf.isProduct && gf.isLocked) { this.handleLockedCheckboxClick(''); return; }
+      }
       const nextStatus = curStatus === 'done' ? 'skipped' : 'done';
       try {
         const token = await this.getToken();
