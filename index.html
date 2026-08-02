@@ -13769,7 +13769,8 @@ const KEY='record_fast_v2';
 let S={entries:[],fast:null,equipDismissed:false,
   draft:null, prefs:{scribeStyle:'full',missed:0,landed:0}, history:[], lastScribeLines:[], profile:null};
 window.S = S;
-let productState='equipped';
+let productState = (localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true') ? 'equipped' : 'equipped';
+if (localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true') window._bundleClaimed = true;
 let BUNDLE={key:'genius-guice',name:'Genius Guice + Hydration',afternoon:'Genius Guice',allday:'Hydration Powder'};
 
 function dayKey(o){
@@ -14369,7 +14370,17 @@ async function load(){
         localStorage.setItem('wh_book_intros', JSON.stringify(d.book_intros));
       }
 
-      productState = d.product_state || 'unequipped';
+      const isLocallyClaimed = (localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true');
+      if (d.product_state === 'equipped' || d.product_state === 'active' || isLocallyClaimed || window._bundleClaimed) {
+        productState = 'equipped';
+        window._bundleClaimed = true;
+        // Persist claim so it never glitches back
+        if (!isLocallyClaimed) {
+          try { localStorage.setItem('wh_bundle_claimed', 'true'); } catch(e){}
+        }
+      } else {
+        productState = d.product_state || 'unequipped';
+      }
       window._bundleName = d.bundle_name || null;
       window._nextEligible = d.next_eligible_date || null;
       if(d.bundle_key) {
@@ -14797,15 +14808,82 @@ function escOrderAttr(s) {
 
 window.loadMemberOrders = loadMemberOrders;
 
-/* ================== NAV ================== */
-function go(view,el,label){
+/* ================== NAV & ROUTER ================== */
+const ROUTE_TO_VIEW = {
+  '/dash': 'dash',
+  '/rhythm': 'rhythm',
+  '/claim': 'all5',
+  '/all5': 'all5',
+  '/journal': 'record',
+  '/journal/scribe': 'record',
+  '/journal/history': 'record',
+  '/community': 'community',
+  '/community/wall': 'community',
+  '/community/enter': 'communityEnter',
+  '/prayer': 'prayer',
+  '/prayer/hand-it-over': 'prayer',
+  '/prayer/wall': 'wall',
+  '/prayer/testimonies': 'testimony',
+  '/scripture': 'bible',
+  '/scripture/reader': 'bible',
+  '/scripture/plan': 'bible',
+  '/fasting': 'fast',
+  '/fasting/timer': 'fast',
+  '/fasting/cohort': 'cohort',
+  '/circles': 'circle',
+  '/circles/my-circles': 'circle',
+  '/circles/cohorts': 'cohort',
+  '/affiliate': 'affiliate',
+  '/portal': 'portal',
+  '/tryall': 'tryall',
+  '/admin': 'admin',
+  '/admin/analytics': 'adminAnalytics'
+};
+
+const VIEW_TO_ROUTE = {
+  dash: '/dash',
+  rhythm: '/rhythm',
+  all5: '/claim',
+  claim: '/claim',
+  record: '/journal',
+  community: '/community',
+  communityEnter: '/community/enter',
+  prayer: '/prayer',
+  wall: '/prayer/wall',
+  testimony: '/prayer/testimonies',
+  bible: '/scripture',
+  fast: '/fasting',
+  cohort: '/fasting/cohort',
+  circle: '/circles',
+  affiliate: '/affiliate',
+  portal: '/portal',
+  tryall: '/tryall',
+  admin: '/admin',
+  adminAnalytics: '/admin/analytics'
+};
+
+function go(view,el,label,skipPushState){
+  // Admin route guard: block non-admin users from admin views
+  if ((view === 'admin' || view === 'adminAnalytics') && !(window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin')) {
+    console.warn('Admin access denied: role=' + window.ADMIN_ROLE);
+    go('dash'); return;
+  }
   window.scrollTo(0, 0);
   const dashContent = document.querySelector('main.dash-content');
   if (dashContent) dashContent.scrollTop = 0;
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
+  const routePath = VIEW_TO_ROUTE[view] || ('/' + view);
+  if (!skipPushState && window.location.protocol !== 'file:') {
+    try {
+      if (window.location.pathname !== routePath) {
+        history.pushState({ view: view }, '', routePath);
+      }
+    } catch(e) { console.warn('pushState error:', e); }
+  }
   window.location.hash = view;
+
   ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{
     const v=document.getElementById(id);
     if(v) {
@@ -14826,8 +14904,7 @@ function go(view,el,label){
   document.querySelectorAll('.sidebar-sub-nav').forEach(nav=>nav.classList.remove('expanded'));
 
   if(!el && view) {
-    var btnId = 'nav' + view.charAt(0).toUpperCase() + view.slice(1);
-    el = document.getElementById(btnId);
+    el = getNavBtnEl(view);
   }
   if(el) {
     el.classList.add('active');
@@ -14929,6 +15006,57 @@ function go(view,el,label){
   window.scrollTo({top:0});
 }
 window.go=go;
+
+function getNavBtnEl(view) {
+  if (!view) return null;
+  var btnIdMap = {
+    dash: 'navDash',
+    rhythm: 'navRhythm',
+    all5: 'navAll5',
+    claim: 'navAll5',
+    record: 'navRecord',
+    community: 'navCommunity',
+    communityEnter: 'navEnterCommunity',
+    prayer: 'navPrayer',
+    wall: 'navWall',
+    testimony: 'navTestimony',
+    bible: 'navBible',
+    fast: 'navFast',
+    cohort: 'navCohort',
+    circle: 'navCircle',
+    affiliate: 'navAffiliate',
+    portal: 'navPortal',
+    tryall: 'navTryall',
+    admin: 'navAdmin',
+    adminAnalytics: 'navAdminAnalytics'
+  };
+  var id = btnIdMap[view] || ('nav' + view.charAt(0).toUpperCase() + view.slice(1));
+  return document.getElementById(id);
+}
+
+function handleUrlRouting() {
+  var path = (window.location.pathname || '').toLowerCase().replace(/\/$/, '');
+  var hash = (window.location.hash || '').replace('#', '').toLowerCase();
+
+  var view = ROUTE_TO_VIEW[path] || (hash ? (ROUTE_TO_VIEW['/' + hash] || hash) : null);
+  if (view) {
+    var el = getNavBtnEl(view);
+    go(view, el, null, true);
+  }
+}
+
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.view) {
+    var el = getNavBtnEl(e.state.view);
+    go(e.state.view, el, null, true);
+  } else {
+    handleUrlRouting();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(handleUrlRouting, 50);
+});
 function setHeaderFocus(view){
   const el=document.getElementById('headerLine');
   const d=activeFastDay();
@@ -17015,7 +17143,8 @@ function renderDash(){
   h+='<div style="flex:1.2;min-width:280px;display:flex;flex-direction:column;gap:16px">';
 
   // Start CTA (shown when no bundle claimed yet)
-  if(productState!=='equipped'&&!window._bundleClaimed){
+  var isEquipped = (productState==='equipped'||window._bundleClaimed);
+  if(!isEquipped){
     var memberName=(window.MEMBER_NAME||(window.MEMBER_EMAIL||'').split('@')[0]||'Steward').split(' ')[0];
     memberName=memberName.charAt(0).toUpperCase()+memberName.slice(1);
 
@@ -17025,34 +17154,44 @@ function renderDash(){
     h+='<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:16px;max-width:520px">The complete 24-hour Steward ecosystem ($195 MSRP value) locked at <strong style="color:var(--lime);font-weight:600">$99.00/mo</strong> at your member price. Includes all 5 core products. Nothing ships until you say so.</div>';
     h+='<div><button type="button" class="start-btn" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">See your 5-product plan &rarr;</button></div>';
     h+='</div>';
+  } else {
+    h+='<div style="background:rgba(204,255,0,0.04);border:1px solid rgba(204,255,0,0.22);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">';
+    h+='<div style="display:flex;align-items:center;gap:10px">';
+    h+='<div style="width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)"></div>';
+    h+='<div><div style="font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--lime)">24-Hour Governance System Active</div>';
+    h+='<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">Ordered July 31, 2026 &middot; 5 Core Formulas Active</div></div>';
+    h+='</div>';
+    h+='<button type="button" class="btn-lime" style="font-size:11px;font-weight:800;padding:6px 14px;border-radius:8px" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">MANAGE REFILLS &rarr;</button>';
+    h+='</div>';
   }
 
   // Bundle meta
   h+='<div class="bundle-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))!important;gap:12px!important;margin:0!important">';
   var bundleName2 = window._bundleName || 'The Complete Steward Governance System ($99/mo)';
-  var bundleStatus = productState==='equipped'?'Active':'Pending';
-  var statusColor = productState==='equipped'?'color:var(--lime)':'color:#ffb700;font-weight:700';
-  var autoColor = productState==='equipped'?'color:var(--lime)':'color:rgba(255,255,255,0.4)';
-  var nextDateColor = window._nextEligible ? 'color:#fff':'color:rgba(255,255,255,0.4)';
+  var bundleStatus = isEquipped?'Active':'Pending';
+  var statusColor = isEquipped?'color:var(--lime)':'color:#ffb700;font-weight:700';
+  var autoColor = isEquipped?'color:var(--lime)':'color:rgba(255,255,255,0.4)';
+  var nextDateColor = (window._nextEligible||isEquipped) ? 'color:#fff':'color:rgba(255,255,255,0.4)';
+  var nextRefillText = window._nextEligible || (isEquipped ? 'Aug 30, 2026' : 'Not scheduled');
 
-  h+='<div class="bundle-item" style="cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Next Auto-Refill</div><div class="bundle-item__value" style="'+nextDateColor+'">'+(window._nextEligible||(productState==='equipped'?'In 30 Days':'Not scheduled'))+'</div></div>';
+  h+='<div class="bundle-item" style="cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))"><div class="bundle-item__label">'+(isEquipped?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Next Auto-Refill</div><div class="bundle-item__value" style="'+nextDateColor+'">'+nextRefillText+'</div></div>';
   h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value" style="'+statusColor+'">'+bundleStatus+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(productState==='equipped'?'Active (Every 30 Days)':'Off')+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(isEquipped?'Active (Every 30 Days)':'Off')+'</div></div>';
   h+='</div>';
   h+='</div>'; // end left column
 
   // Right column: recommended product images
   h+='<div style="flex:1.2;min-width:300px">';
   h+='<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:24px;text-align:center;cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">';
-  h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">Recommended 5-Product Protocol</div>';
+  h+='<div style="font-size:11px;color:'+(isEquipped?'var(--lime)':'rgba(255,255,255,0.4)')+';font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">'+(isEquipped?'Active 5-Product Protocol':'Recommended 5-Product Protocol')+'</div>';
   h+='<div style="max-width:380px;width:100%;height:260px;border-radius:16px;overflow:hidden;margin:0 auto 16px;background:#ffffff;display:block;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.6));">';
   h+='<img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Complete Steward Governance System" style="width:100%;height:100%;object-fit:contain;padding:8px;box-sizing:border-box;border-radius:16px;display:block;">';
   h+='</div>';
   h+='<div style="font-size:18px;font-weight:800;font-family:var(--font-display);color:#fff;text-transform:uppercase;margin-bottom:4px">The Complete Steward Governance System</div>';
   h+='<div style="font-size:14px;color:var(--lime);font-weight:700;margin-bottom:6px">$99.00 / month (Save 49%)</div>';
   h+='<div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:16px">Includes Genius Guice, Genius Joe, Hydration, Charge & Boss</div>';
-  h+='<button type="button" class="btn-lime" style="width:100%;padding:14px 24px;font-size:14px;font-weight:800;letter-spacing:0.04em" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">SEE YOUR 5-PRODUCT BUNDLE &rarr;</button>';
+  h+='<button type="button" class="btn-lime" style="width:100%;padding:14px 24px;font-size:14px;font-weight:800;letter-spacing:0.04em" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">'+(isEquipped?'MANAGE YOUR BUNDLE &rarr;':'SEE YOUR 5-PRODUCT BUNDLE &rarr;')+'</button>';
   h+='</div>';
   h+='</div>'; // end right column
 
@@ -21852,6 +21991,9 @@ async function loadAndInit(){
       return '';
     },
 
+    currentStep: 1,
+    totalSteps: 9,
+
     showScreen(name) {
       document.querySelectorAll('#rhythmView .rhy-screen').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('rhyScreen' + name);
@@ -21864,7 +22006,7 @@ async function loadAndInit(){
     },
 
     startAssessment() {
-      currentStep = 1;
+      this.currentStep = 1;
       this.showScreen('Assess');
       try { this.renderStep(); } catch(e){ console.error('[Rhythm] renderStep failed:', e); }
     },
@@ -21886,17 +22028,38 @@ async function loadAndInit(){
       }
     },
 
+    setRmeq(val, btn) {
+      this._assessData = this._assessData || {};
+      this._assessData.rmeq = val;
+      const chips = document.querySelectorAll('.rhy-rmeq-chip');
+      chips.forEach(c => {
+        if (c && c.style) {
+          c.style.background = 'rgba(255,255,255,0.05)';
+          c.style.color = 'rgba(255,255,255,0.7)';
+          c.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
+      });
+      if (btn && btn.style) {
+        btn.style.background = 'rgba(204,255,0,0.15)';
+        btn.style.color = 'var(--lime)';
+        btn.style.borderColor = 'var(--lime)';
+      }
+    },
+
     setWorkoutType(type, btn) {
+      this._assessData = this._assessData || {};
       this._assessData.workoutType = type;
       const el = document.getElementById('rhyWorkoutType');
       if (el) el.value = type;
       const chips = document.querySelectorAll('.rhy-workout-type-chip');
       chips.forEach(c => {
-        c.style.background = 'rgba(255,255,255,0.05)';
-        c.style.color = '#fff';
-        c.style.borderColor = 'rgba(255,255,255,0.1)';
+        if (c && c.style) {
+          c.style.background = 'rgba(255,255,255,0.05)';
+          c.style.color = '#fff';
+          c.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
       });
-      if (btn) {
+      if (btn && btn.style) {
         btn.style.background = 'var(--lime)';
         btn.style.color = '#000';
         btn.style.borderColor = 'var(--lime)';
@@ -21904,16 +22067,19 @@ async function loadAndInit(){
     },
 
     setWorkoutWindow(win, btn) {
+      this._assessData = this._assessData || {};
       this._assessData.workoutWindow = win;
       const el = document.getElementById('rhyWorkoutWindow');
       if (el) el.value = win;
       const chips = document.querySelectorAll('.rhy-workout-win-chip');
       chips.forEach(c => {
-        c.style.background = 'rgba(255,255,255,0.05)';
-        c.style.color = 'rgba(255,255,255,0.7)';
-        c.style.borderColor = 'rgba(255,255,255,0.1)';
+        if (c && c.style) {
+          c.style.background = 'rgba(255,255,255,0.05)';
+          c.style.color = 'rgba(255,255,255,0.7)';
+          c.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
       });
-      if (btn) {
+      if (btn && btn.style) {
         btn.style.background = 'rgba(204,255,0,0.15)';
         btn.style.color = 'var(--lime)';
         btn.style.borderColor = 'var(--lime)';
@@ -21926,11 +22092,14 @@ async function loadAndInit(){
       const indicator = document.getElementById('rhyStepIndicator');
       const btnPrev = document.getElementById('btnRhyPrev');
       
-      if (btnPrev) btnPrev.style.display = currentStep > 1 ? 'inline-flex' : 'none';
-      if (title) title.textContent = `Step ${currentStep} of ${totalSteps}`;
+      const cStep = this.currentStep || 1;
+      const tSteps = this.totalSteps || 9;
+
+      if (btnPrev) btnPrev.style.display = cStep > 1 ? 'inline-flex' : 'none';
+      if (title) title.textContent = `Step ${cStep} of ${tSteps}`;
 
       let html = '';
-      if (currentStep === 1) {
+      if (cStep === 1) {
         if (indicator) indicator.textContent = 'Wake Time';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Wake Up Time</h3>
@@ -21940,7 +22109,7 @@ async function loadAndInit(){
             <input type="time" id="rhyWakeTime" class="rhy-modal-input" value="${this._assessData.wake}" style="max-width:220px; margin:0 auto; font-size:22px; text-align:center; font-weight:800; font-family:monospace;">
           </div>
         `;
-      } else if (currentStep === 2) {
+      } else if (cStep === 2) {
         if (indicator) indicator.textContent = 'Sleep Time';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Sleep & Rest Time</h3>
@@ -21950,7 +22119,7 @@ async function loadAndInit(){
             <input type="time" id="rhySleepTime" class="rhy-modal-input" value="${this._assessData.sleep}" style="max-width:220px; margin:0 auto; font-size:22px; text-align:center; font-weight:800; font-family:monospace;">
           </div>
         `;
-      } else if (currentStep === 3) {
+      } else if (cStep === 3) {
         if (indicator) indicator.textContent = 'Work Blocks';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Steward Work Hours</h3>
@@ -21972,7 +22141,7 @@ async function loadAndInit(){
             </label>
           </div>
         `;
-      } else if (currentStep === 4) {
+      } else if (cStep === 4) {
         if (indicator) indicator.textContent = 'Family Anchors';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Family & Relationship Anchors</h3>
@@ -21987,7 +22156,7 @@ async function loadAndInit(){
             </label>
           </div>
         `;
-      } else if (currentStep === 5) {
+      } else if (cStep === 5) {
         if (indicator) indicator.textContent = 'Workout & Movement';
         const wOpt = this._assessData.workoutOptIn;
         const wType = this._assessData.workoutType;
@@ -22030,23 +22199,24 @@ async function loadAndInit(){
     },
 
     saveCurrentStepData() {
-      if (currentStep === 1) {
+      const step = this.currentStep || 1;
+      if (step === 1) {
         const el = document.getElementById('rhyWakeTime');
         if (el) this._assessData.wake = el.value;
-      } else if (currentStep === 2) {
+      } else if (step === 2) {
         const el = document.getElementById('rhySleepTime');
         if (el) this._assessData.sleep = el.value;
-      } else if (currentStep === 3) {
+      } else if (step === 3) {
         const s = document.getElementById('rhyWorkStart');
         const e = document.getElementById('rhyWorkEnd');
         const r = document.getElementById('rhyWorkRemote');
         if (s) this._assessData.workStart = s.value;
         if (e) this._assessData.workEnd = e.value;
         if (r) this._assessData.workRemote = r.checked;
-      } else if (currentStep === 4) {
+      } else if (step === 4) {
         const f = document.getElementById('rhyFamilyAnchor');
         if (f) this._assessData.familyAnchor = f.checked;
-      } else if (currentStep === 5) {
+      } else if (step === 5) {
         const o = document.getElementById('rhyWorkoutOptIn');
         const t = document.getElementById('rhyWorkoutType');
         const w = document.getElementById('rhyWorkoutWindow');
@@ -22057,17 +22227,17 @@ async function loadAndInit(){
     },
 
     prevStep() {
-      if (currentStep > 1) {
+      if (this.currentStep > 1) {
         this.saveCurrentStepData();
-        currentStep--;
+        this.currentStep--;
         this.renderStep();
       }
     },
 
     async nextStep() {
       this.saveCurrentStepData();
-      if (currentStep < totalSteps) {
-        currentStep++;
+      if (this.currentStep < (this.totalSteps || 9)) {
+        this.currentStep++;
         this.renderStep();
       } else {
         await this.submitAssessment();
@@ -22075,8 +22245,8 @@ async function loadAndInit(){
     },
 
     async submitAssessment() {
-      if (isSubmitting) return;
-      isSubmitting = true;
+      if (this._isSubmitting) return;
+      this._isSubmitting = true;
       this.saveCurrentStepData();
 
       this.showScreen('Loader');
@@ -22275,11 +22445,12 @@ async function loadAndInit(){
         return { isProduct: false, isLocked: false, ifThenText: s.if_then_text || '', ctaHtml: '' };
       }
 
+      const isClaimedOrEquipped = !!(window._bundleClaimed || (typeof productState !== 'undefined' && (productState === 'equipped' || productState === 'active')) || localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true');
       const bSub = this.state.bundleSubscription || {};
-      const status = bSub.status || (localStorage.getItem('wh_bundle_claimed') === 'true' ? 'delivered' : 'unclaimed');
+      const status = bSub.status || (isClaimedOrEquipped ? 'delivered' : 'unclaimed');
       
-      // If the kit is active/delivered, ALL 5 products in the kit are delivered together!
-      const isBundleDelivered = status === 'active' || status === 'delivered';
+      // If the kit is active/delivered or claimed/equipped, ALL 5 products in the kit are delivered/unlocked together!
+      const isBundleDelivered = status === 'active' || status === 'delivered' || isClaimedOrEquipped;
       const isBundleInTransit = status === 'in_transit' || status === 'processing' || status === 'shipped';
 
       const isDelivered = isBundleDelivered || (s.today_status === 'done') || (s.today_status === 'grace');
@@ -23565,6 +23736,12 @@ async function loadAndInit(){
         if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
       } else if (result.paymentIntent && (result.paymentIntent.status === 'succeeded' || result.paymentIntent.status === 'processing')) {
         // Success!
+        window._bundleClaimed = true;
+        window.productState = 'equipped';
+        try {
+          localStorage.setItem('wh_bundle_claimed', 'true');
+          localStorage.setItem('wh_claimed', 'true');
+        } catch(e) {}
         if (window._claimTimerInterval) clearInterval(window._claimTimerInterval);
         var formEl = document.getElementById('claimPaymentForm');
         var successEl = document.getElementById('claimCheckoutSuccess');
@@ -23576,6 +23753,10 @@ async function loadAndInit(){
           var closeBtn = document.getElementById('claimSuccessClose');
           if (closeBtn) setTimeout(function(){ closeBtn.focus(); }, 100);
         }
+        if (typeof RHYTHM_BUILDER !== 'undefined' && RHYTHM_BUILDER.renderTimeline) {
+          RHYTHM_BUILDER.renderTimeline();
+        }
+        if (typeof renderDashboard === 'function') renderDashboard();
       } else {
         if (errEl) errEl.textContent = 'Something unexpected happened. Please try again.';
         if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }

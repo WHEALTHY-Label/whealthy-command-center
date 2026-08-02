@@ -178,6 +178,20 @@ textarea,input,select{font-size:16px}
 .view-title{font-family:var(--font-display);font-size:clamp(19px,4vw,24px);font-weight:700;color:#fff;line-height:1.2}
 .view-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-top:4px}
 
+@keyframes viewSmoothFadeIn {
+  from {
+    opacity: 0.25;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.view-fade-in {
+  animation: viewSmoothFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Cards & shared */
 .g-card{background:#0e1013;border:1px solid rgba(255,255,255,0.04);border-top:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.6);position:relative;overflow:hidden;margin-bottom:22px;transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
 .g-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(204,255,0,0.3),transparent);opacity:0;transition:opacity 0.3s}
@@ -213,17 +227,17 @@ textarea,input,select{font-size:16px}
 /* Record: mic with live waveform */
 .office-line{font-family:var(--font-display);font-size:clamp(13px,2.6vw,15px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin:18px 0 22px}
 .office-line b{color:rgba(240,241,243,0.7);font-weight:600}
-.recorder{display:flex;flex-direction:column;align-items:center;gap:20px;margin:24px 0}
-.mic-wrap{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
-.mic-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(204,255,0,0.35);opacity:0;transform:scale(1);pointer-events:none;transition:transform 0.1s ease, opacity 0.3s ease}
+.recorder{display:flex;flex-direction:column;align-items:center;gap:20px;margin:24px 0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.mic-wrap{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.mic-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(204,255,0,0.35);opacity:0;transform:scale(1);pointer-events:none;transition:transform 0.1s ease, opacity 0.3s ease;-webkit-user-select:none;user-select:none}
 .mic-wrap.rec .mic-ring{opacity:0.6}
-.mic-btn{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(204,255,0,0.06),rgba(0,0,0,0.95));border:2px solid rgba(204,255,0,0.35);color:var(--lime);display:flex;align-items:center;justify-content:center;transition:border-color .3s,box-shadow .3s,transform 0.15s cubic-bezier(0.23,1,0.32,1);position:relative;z-index:2;outline:none}
+.mic-btn{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(204,255,0,0.06),rgba(0,0,0,0.95));border:2px solid rgba(204,255,0,0.35);color:var(--lime);display:flex;align-items:center;justify-content:center;transition:border-color .3s,box-shadow .3s,transform 0.15s cubic-bezier(0.23,1,0.32,1);position:relative;z-index:2;outline:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .mic-btn:focus-visible{border-color:var(--lime);box-shadow:0 0 0 3px rgba(204,255,0,0.45);transform:scale(1.02)}
 .mic-btn:active{transform:scale(0.95)}
-.mic-btn svg{width:34px;height:34px;transition:color 0.3s}
+.mic-btn svg{width:34px;height:34px;transition:color 0.3s;pointer-events:none;-webkit-user-select:none;user-select:none}
 .mic-btn:hover{border-color:var(--lime);box-shadow:0 0 25px rgba(204,255,0,0.15)}
 .mic-wrap.rec .mic-btn{border-color:var(--lime);color:var(--lime);box-shadow:0 0 calc(25px + var(--amp,0)*40px) rgba(204,255,0,calc(0.3 + var(--amp,0)*0.5))}
-.mic-state{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);transition:color 0.3s}
+.mic-state{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);transition:color 0.3s;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .mic-wrap.rec + .mic-state{color:var(--lime)}
 .transcript{width:100%;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:var(--text);padding:14px 16px;font-family:var(--font-body);line-height:1.7;outline:none;resize:vertical;min-height:110px;margin-bottom:14px;display:none;transition:max-height 0.4s ease-out}
 .transcript:focus{border-color:rgba(204,255,0,0.4)}
@@ -1980,12 +1994,12 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     <button class="claim-modal-close" onclick="closeClaimModal()">&times;</button>
     <div class="claim-modal-body">
       <div class="claim-modal-icon">&#128230;</div>
-      <div class="claim-modal-title">Your Monthly Bundle</div>
-      <div class="claim-modal-bundle" id="claimBundleName">Genius Guice + Hydration</div>
+      <div class="claim-modal-title">The Governance System</div>
+      <div class="claim-modal-bundle" id="claimBundleName">All 5 Products &middot; $99/mo</div>
       <div class="claim-modal-text" id="claimModalText">
-        Your bundle is ready to claim for this month. <strong>Consistent stewardship starts with consistent supply.</strong> Claim now so nothing interrupts your rhythm.
+        Genius Joe, Boss, Charge, Genius Guice, and Hydration &mdash; your full governed day, delivered monthly. <strong>Consistent stewardship starts with consistent supply.</strong> Claim now so nothing interrupts your rhythm.
       </div>
-      <button class="claim-modal-btn" onclick="claimBundle()">Claim My Bundle</button>
+      <button class="claim-modal-btn" onclick="claimBundle()">Claim the $99 Bundle</button>
       <button class="claim-modal-dismiss" onclick="closeClaimModal()">I'll claim later</button>
     </div>
   </div>
@@ -2093,7 +2107,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <button class="sidebar-sub-item" id="navPrayer" onclick="go('prayer',this)">Prayer</button>
         <button class="sidebar-sub-item" id="navWall" data-nav="wall" onclick="go('wall',this)">Prayer Wall</button>
         <button class="sidebar-sub-item" id="navTestimony" data-nav="testimony" onclick="go('testimony',this)">Testimony Wall</button>
-        <button class="sidebar-sub-item" id="navMe" data-nav="me" onclick="go('me',this)">My Prayers <span id="meBadge" style="display:none; width:6px; height:6px; background:var(--wall-lime); border-radius:50%; margin-left:6px; box-shadow:0 0 8px rgba(204,255,0,0.6);"></span></button>
       </div>
 
       <!-- Scripture (Plain, no subtabs) -->
@@ -2150,23 +2163,28 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
     <div class="content-body">
 
       <!-- ============ UNIVERSAL PROFILE & PERSONALIZATION HEADER CARD ============ -->
-      <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 24px; position: relative; overflow: visible; padding: 20px 24px; border: 1.5px solid var(--lime); background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 0 35px rgba(204,255,0,0.12);">
+      <div class="dynamic-welcome-header directive-banner" id="dashWelcomeCard" style="display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 18px; position: relative; overflow: visible; padding: 20px 24px; border: 1.5px solid var(--lime); background: rgba(22,23,25,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; box-shadow: 0 0 35px rgba(204,255,0,0.12);">
         <canvas id="welcomeConfettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
         
         <!-- Top Row: Avatar, Time-of-Day Greeting & Dynamic Page Action CTA / Badge -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 2; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
             <div class="view-header-icon-box welcome-icon-wrapper" id="welcomeAvatarSlot" style="overflow:hidden; position:relative; margin: 0; flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; border: 2px solid var(--lime); box-shadow: 0 0 16px rgba(204,255,0,0.35); background: rgba(204,255,0,0.1); display: flex; align-items: center; justify-content: center;">
               <span class="welcome-pulse"></span>
               ❖
             </div>
             <div>
-              <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display); line-height: 1.2;">Good evening, Steward</h1>
-              <p id="dashSubtitle" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; display: none;"></p>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h1 class="view-header-title welcome-greeting-title" id="dashTitle" style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; font-family: var(--font-display); line-height: 1.2;">Good evening, Steward</h1>
+                <button class="page-info-btn" id="pageInfoBtn" onclick="openPageGuideModal()" title="Page Guide & Insights" style="background: rgba(204,255,0,0.1); border: 1px solid rgba(204,255,0,0.3); color: var(--lime); border-radius: 99px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; font-weight: 800; transition: all 0.2s; box-shadow: 0 0 12px rgba(204,255,0,0.2);" onmouseover="this.style.background='var(--lime)'; this.style.color='#080809';" onmouseout="this.style.background='rgba(204,255,0,0.1)'; this.style.color='var(--lime)';">
+                  ❓
+                </button>
+              </div>
+              <p id="dashSubtitle" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 500;"></p>
             </div>
           </div>
           <div id="tabHeaderActionSlot">
-            <span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">COMMAND CENTER</span>
+            <span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">STEWARD DASHBOARD</span>
           </div>
         </div>
         
@@ -2177,15 +2195,60 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </div>
       </div>
 
-      <!-- ============ DASHBOARD ============ -->
-      <div id="dashView">
-        <div id="dashRoot"></div>
+      <!-- ============ PAGE GUIDE & INSIGHTS MODAL ============ -->
+      <div id="pageGuideModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:9999; align-items:center; justify-content:center; padding:16px;">
+        <div class="g-card animate-fade-in" style="max-width:520px; width:100%; padding:28px; border:1.5px solid var(--lime); background:#121418; box-shadow:0 0 40px rgba(204,255,0,0.2); border-radius:20px; display:flex; flex-direction:column; gap:18px; position:relative;">
+          
+          <!-- Modal Header -->
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:22px;">💡</span>
+              <div>
+                <h3 id="pageGuideModalTitle" style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin:0;">Page Guide & Insights</h3>
+                <span id="pageGuideModalSub" style="font-size:11.5px; color:var(--lime); text-transform:uppercase; font-weight:700; letter-spacing:0.06em;">Steward Guidance</span>
+              </div>
+            </div>
+            <button onclick="closePageGuideModal()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; font-size:16px; transition:all 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.15)';" onmouseout="this.style.color='rgba(255,255,255,0.6)'; this.style.background='rgba(255,255,255,0.05)';">&times;</button>
+          </div>
+
+          <!-- Purpose -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px 16px;">
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime); margin-bottom:4px;">🎯 Purpose</div>
+            <div id="pageGuidePurpose" style="font-size:13.5px; color:rgba(255,255,255,0.9); line-height:1.5;">Overview of this module...</div>
+          </div>
+
+          <!-- How to use -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px 16px;">
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime); margin-bottom:6px;">🛠️ How to Use</div>
+            <ul id="pageGuideSteps" style="margin:0; padding-left:18px; font-size:13px; color:rgba(255,255,255,0.8); line-height:1.6;">
+              <li>Step 1...</li>
+            </ul>
+          </div>
+
+          <!-- Steward Pro Tip -->
+          <div style="background:rgba(204,255,0,0.04); border:1px solid rgba(204,255,0,0.2); border-radius:12px; padding:12px 16px; display:flex; align-items:flex-start; gap:10px;">
+            <span style="font-size:16px;">⚡</span>
+            <div>
+              <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime); margin-bottom:2px;">Steward Directive</div>
+              <div id="pageGuideTip" style="font-size:12.5px; color:rgba(255,255,255,0.85); line-height:1.45; font-style:italic;">Key tip for this routine...</div>
+            </div>
+          </div>
+
+          <!-- Footer Action -->
+          <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+            <button onclick="closePageGuideModal()" style="background:var(--lime); color:#080809; border:none; border-radius:99px; padding:10px 24px; font-family:var(--font-display); font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; cursor:pointer; box-shadow:0 0 16px rgba(204,255,0,0.3);">Understood &rarr;</button>
+          </div>
+
+        </div>
       </div>
+
+      <!-- ============ MY RHYTHM ============ -->
+      <div id="rhythmView" style="display:none">
         <style>
           .rhy-wrap {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 16px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -2813,7 +2876,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           </div>
 
         </div>
-      </div>
+      </div><!-- /rhythmView -->
 
       <!-- ============ DASHBOARD ============ -->
       <div id="dashView">
@@ -4576,7 +4639,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           }
 
           #wallView {
-            padding: 24px;
+            padding: 0;
             background-color: var(--wall-bg);
             color: var(--wall-white);
             font-family: 'DM Sans', sans-serif;
@@ -5356,7 +5419,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button class="wall-modal-btn-cancel" onclick="WALL.revealExit('cancel')">CANCEL</button>
           </div>
         </div>
-      </div>
 
       <script>
         (function() {
@@ -6056,13 +6118,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         })();
       </script>
+      </div><!-- /wallView -->
       <!-- ============ TESTIMONY WALL ============ -->
       <div id="testimonyView" style="display:none">
         <style>
           .tst-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 16px;
+            padding: 0;
             color: #fff;
           }
           .tst-header {
@@ -6237,7 +6300,6 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             <button id="tst-more-btn" class="wall-btn-more" style="display:none" onclick="TESTIMONY.loadMore()">Show more</button>
           </div>
         </div>
-      </div>
 
       <script>
         (function() {
@@ -6692,402 +6754,365 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
         })();
       </script>
-      <!-- ============ MY PRAYERS (PROFILE SURFACE) ============ -->
-      <div id="meView" style="display:none">
-        <style>
-          .me-container {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: clamp(16px, 4vw, 32px) 16px;
-            color: #fff;
-          }
-          .me-header {
-            margin-bottom: 24px;
-          }
-          .me-title {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: clamp(24px, 5vw, 32px);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: #fff;
-            margin: 0 0 6px 0;
-          }
-          .me-subline {
-            font-family: var(--font-body);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.4);
-            margin: 0;
-          }
-          .me-tabs {
-            display: flex;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 24px;
-            min-height: 44px;
-          }
-          .me-tab-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.5);
-            font-family: var(--font-body);
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            min-height: 36px;
-          }
-          .me-tab-btn.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          }
-          .me-tab-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--wall-lime);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
-            display: inline-block;
-          }
-          .me-badge {
-            width: 8px;
-            height: 8px;
-            background: var(--wall-lime);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
-            display: inline-block;
-            margin-left: 6px;
-          }
-          /* Card layout overrides for quiet list */
-          .me-card {
-            background: var(--wall-card);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            position: relative;
-            transition: border-color 0.25s ease, box-shadow 0.25s ease;
-          }
-          .me-card.me-pulse-border {
-            animation: me-pulse-border-anim 1.5s ease-in-out;
-          }
-          .me-card.me-unseen-answered {
-            border-color: rgba(204, 255, 0, 0.4);
-          }
-          .me-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
-          }
-          .me-card-author {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-          .me-card-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-          }
-          .me-card-name {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: #fff;
-          }
-          .me-card-meta {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-          }
-          .me-card-time {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.35);
-          }
-          .me-card-body {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            margin: 0 0 16px 0;
-            white-space: pre-wrap;
-          }
-          .me-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 14px;
-          }
-          .me-card-count {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--wall-lime);
-          }
-          .me-btn-action {
-            background: rgba(204, 255, 0, 0.06);
-            border: 1px solid rgba(204, 255, 0, 0.25);
-            color: var(--wall-lime);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-family: var(--font-body);
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-height: 38px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-          }
-          .me-btn-action:hover {
-            background: var(--wall-lime);
-            color: #000;
-          }
-          .me-btn-secondary {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-          }
-          .me-btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-          }
-          .me-btn-sign {
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 11px;
-            text-decoration: underline;
-            cursor: pointer;
-            padding: 4px;
-            margin-left: 8px;
-          }
-          .me-btn-sign:hover {
-            color: var(--wall-lime);
-          }
-          .me-status-held {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 13.5px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 10px 14px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.01);
-          }
-          .me-unseen-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--wall-lime);
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 11px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-          }
-          .me-unseen-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--wall-lime);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
-          }
-          .me-empty-state {
-            text-align: center;
-            padding: 48px 16px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 14px;
-          }
-          .me-empty-state a {
-            color: var(--wall-lime);
-            text-decoration: underline;
-            cursor: pointer;
-          }
+      <!-- ============ MY PRAYERS (EMBEDDED STYLES & MODALS) ============ -->
+      <style>
+        .me-container {
+          max-width: 680px;
+          margin: 0 auto;
+          padding: 0;
+          color: #fff;
+        }
+        .me-header {
+          margin-bottom: 20px;
+        }
+        .me-title {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: clamp(20px, 4vw, 26px);
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #fff;
+          margin: 0 0 4px 0;
+        }
+        .me-subline {
+          font-family: var(--font-body);
+          font-size: 13.5px;
+          color: rgba(255, 255, 255, 0.4);
+          margin: 0;
+        }
+        .me-tabs {
+          display: flex;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 4px;
+          margin-bottom: 24px;
+          min-height: 44px;
+        }
+        .me-tab-btn {
+          flex: 1;
+          background: transparent;
+          border: none;
+          border-radius: 8px;
+          color: rgba(255, 255, 255, 0.5);
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.2s ease;
+          min-height: 36px;
+        }
+        .me-tab-btn.active {
+          background: rgba(255, 255, 255, 0.08);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .me-tab-dot {
+          width: 6px;
+          height: 6px;
+          background: var(--wall-lime);
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+          display: inline-block;
+        }
+        .me-badge {
+          width: 8px;
+          height: 8px;
+          background: var(--wall-lime);
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(204, 255, 0, 0.6);
+          display: inline-block;
+          margin-left: 6px;
+        }
+        .me-card {
+          background: var(--wall-card);
+          border: 1px solid rgba(255, 255, 255, 0.03);
+          border-radius: 16px;
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+          position: relative;
+          transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .me-card.me-pulse-border {
+          animation: me-pulse-border-anim 1.5s ease-in-out;
+        }
+        .me-card.me-unseen-answered {
+          border-color: rgba(204, 255, 0, 0.4);
+        }
+        .me-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .me-card-author {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .me-card-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+        .me-card-name {
+          font-size: 13.5px;
+          font-weight: 600;
+          color: #fff;
+        }
+        .me-card-meta {
+          font-size: 11px;
+          color: rgba(255, 255, 255, 0.4);
+        }
+        .me-card-time {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.35);
+        }
+        .me-card-body {
+          font-size: 15px;
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 1.6;
+          margin: 0 0 16px 0;
+          white-space: pre-wrap;
+        }
+        .me-card-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          padding-top: 14px;
+        }
+        .me-card-count {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 13px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: var(--wall-lime);
+        }
+        .me-btn-action {
+          background: rgba(204, 255, 0, 0.06);
+          border: 1px solid rgba(204, 255, 0, 0.25);
+          color: var(--wall-lime);
+          border-radius: 8px;
+          padding: 8px 16px;
+          font-family: var(--font-body);
+          font-size: 12.5px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          min-height: 38px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+        }
+        .me-btn-action:hover {
+          background: var(--wall-lime);
+          color: #000;
+        }
+        .me-btn-secondary {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.7);
+        }
+        .me-btn-secondary:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+        }
+        .me-btn-sign {
+          background: transparent;
+          border: none;
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 11px;
+          text-decoration: underline;
+          cursor: pointer;
+          padding: 4px;
+          margin-left: 8px;
+        }
+        .me-btn-sign:hover {
+          color: var(--wall-lime);
+        }
+        .me-status-held {
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 13.5px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          padding: 10px 14px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.01);
+        }
+        .me-unseen-indicator {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--wall-lime);
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 11px;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+        .me-unseen-dot {
+          width: 6px;
+          height: 6px;
+          background: var(--wall-lime);
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
+        }
+        .me-empty-state {
+          text-align: center;
+          padding: 48px 16px;
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 14px;
+        }
+        .me-empty-state a {
+          color: var(--wall-lime);
+          text-decoration: underline;
+          cursor: pointer;
+        }
 
-          /* Modal styling overrides to be safe on iOS and landscape */
-          .me-modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9990;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-          }
-          .me-modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-          }
+        .me-modal-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 9990;
+          background: rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.25s ease;
+        }
+        .me-modal-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .me-modal {
+          background: #111215;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          width: 100%;
+          max-width: 440px;
+          padding: 24px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+          position: relative;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+        @media(max-height: 500px) and (orientation: landscape) {
           .me-modal {
-            background: #111215;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 440px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-height: 85vh;
+            padding: 16px;
           }
-          @media(max-height: 500px) and (orientation: landscape) {
-            .me-modal {
-              max-height: 85vh;
-              padding: 16px;
-            }
-          }
-          .me-modal-title {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 20px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-          }
-          .me-modal-desc {
-            font-size: 14.5px;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-            margin-bottom: 20px;
-          }
-          .me-modal-textarea {
-            width: 100%;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 12px;
-            color: #fff;
-            font-family: var(--font-body);
-            font-size: 16px; /* 16px to prevent iOS zoom */
-            outline: none;
-            resize: none;
-            margin-bottom: 8px;
-            box-sizing: border-box;
-          }
-          .me-modal-textarea:focus {
-            border-color: rgba(204, 255, 0, 0.4);
-          }
-          .me-modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 16px;
-          }
-          .me-modal-btn-submit {
-            width: 100%;
-            background: var(--wall-lime);
-            color: #000;
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-family: var(--font-body);
-            font-weight: 700;
-            font-size: 13.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .me-modal-btn-cancel {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            padding: 12px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .me-modal-btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-          }
+        }
+        .me-modal-title {
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 20px;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+        .me-modal-desc {
+          font-size: 14.5px;
+          color: rgba(255, 255, 255, 0.6);
+          line-height: 1.5;
+          margin-bottom: 20px;
+        }
+        .me-modal-textarea {
+          width: 100%;
+          height: 120px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          padding: 12px;
+          color: #fff;
+          font-family: var(--font-body);
+          font-size: 16px;
+          outline: none;
+          resize: none;
+          margin-bottom: 8px;
+          box-sizing: border-box;
+        }
+        .me-modal-textarea:focus {
+          border-color: rgba(204, 255, 0, 0.4);
+        }
+        .me-modal-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-top: 16px;
+        }
+        .me-modal-btn-submit {
+          width: 100%;
+          background: var(--wall-lime);
+          color: #000;
+          border: none;
+          border-radius: 10px;
+          padding: 12px;
+          font-family: var(--font-body);
+          font-weight: 700;
+          font-size: 13.5px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .me-modal-btn-cancel {
+          width: 100%;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: rgba(255, 255, 255, 0.7);
+          border-radius: 10px;
+          padding: 12px;
+          font-family: var(--font-body);
+          font-weight: 600;
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .me-modal-btn-cancel:hover {
+          background: rgba(255, 255, 255, 0.08);
+          color: #fff;
+        }
 
-          @keyframes me-pulse-border-anim {
-            0% { box-shadow: 0 0 0px rgba(204,255,0,0); }
-            50% { box-shadow: 0 0 20px rgba(204,255,0,0.5); border-color: var(--wall-lime); }
-            100% { box-shadow: 0 0 0px rgba(204,255,0,0); }
-          }
-        </style>
-
-        <div class="me-container">
-          <div class="me-header">
-            <h1 class="me-title">MY PRAYERS</h1>
-            <p class="me-subline">What you brought. What you carried.</p>
-          </div>
-
-          <div class="me-tabs">
-            <button class="me-tab-btn active" id="meTabBtnMine" onclick="ME.switchTab('mine')">My Prayers</button>
-            <button class="me-tab-btn" id="meTabBtnWatching" onclick="ME.switchTab('watching')">
-              Praying For <span id="meTabWatchingDot" class="me-tab-dot" style="display:none"></span>
-            </button>
-          </div>
-
-          <!-- PANEL 1: MY PRAYERS -->
-          <div id="mePanelMine">
-            <div id="meMineList"></div>
-            <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
-              <div class="wall-skeleton-card"></div>
-            </div>
-            <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
-          </div>
-
-          <!-- PANEL 2: PRAYING FOR -->
-          <div id="mePanelWatching" style="display:none">
-            <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
-            <div id="meWatchingList"></div>
-            <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
-              <div class="wall-skeleton-card"></div>
-            </div>
-            <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
-          </div>
-        </div>
-      </div>
+        @keyframes me-pulse-border-anim {
+          0% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+          50% { box-shadow: 0 0 20px rgba(204,255,0,0.5); border-color: var(--wall-lime); }
+          100% { box-shadow: 0 0 0px rgba(204,255,0,0); }
+        }
+      </style>
 
       <!-- MARK ANSWERED FLOW MODAL -->
       <div class="me-modal-overlay" id="meAnswerModal">
@@ -7121,7 +7146,31 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       
 
-<script>
+      <script>
+        window.switchPrayerToolMode = function(mode) {
+          const modes = ['handover', 'mine', 'watching'];
+          modes.forEach(m => {
+            const btn = document.getElementById('ptTab_' + m);
+            const panel = document.getElementById('ptPanel_' + m);
+            const isActive = (m === mode);
+            if (btn) {
+              btn.classList.toggle('active', isActive);
+              btn.style.background = isActive ? 'rgba(204,255,0,0.12)' : 'transparent';
+              btn.style.borderColor = isActive ? 'rgba(204,255,0,0.3)' : 'transparent';
+              btn.style.color = isActive ? 'var(--lime)' : 'rgba(255,255,255,0.6)';
+            }
+            if (panel) {
+              panel.style.display = isActive ? 'block' : 'none';
+            }
+          });
+
+          if (mode === 'mine' && window.ME && typeof window.ME.switchTab === 'function') {
+            window.ME.switchTab('mine');
+          } else if (mode === 'watching' && window.ME && typeof window.ME.switchTab === 'function') {
+            window.ME.switchTab('watching');
+          }
+        };
+
         (function() {
           const FN_BASE = 'https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1';
           const ME = {
@@ -7198,10 +7247,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
             switchTab: function(tab) {
               this.activeTab = tab;
-              document.getElementById('meTabBtnMine').classList.toggle('active', tab === 'mine');
-              document.getElementById('meTabBtnWatching').classList.toggle('active', tab === 'watching');
-              document.getElementById('mePanelMine').style.display = tab === 'mine' ? 'block' : 'none';
-              document.getElementById('mePanelWatching').style.display = tab === 'watching' ? 'block' : 'none';
+              const btnMine = document.getElementById('meTabBtnMine');
+              if (btnMine) btnMine.classList.toggle('active', tab === 'mine');
+              const btnWatching = document.getElementById('meTabBtnWatching');
+              if (btnWatching) btnWatching.classList.toggle('active', tab === 'watching');
+              const panelMine = document.getElementById('mePanelMine');
+              if (panelMine) panelMine.style.display = tab === 'mine' ? 'block' : 'none';
+              const panelWatching = document.getElementById('mePanelWatching');
+              if (panelWatching) panelWatching.style.display = tab === 'watching' ? 'block' : 'none';
 
               if (tab === 'mine' && this.mineOffset === 0) {
                 this.loadMine(0);
@@ -8327,6 +8380,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
           });
         };
       </script>
+      </div><!-- /testimonyView -->
 
       <!-- ============ PRAYER PILLAR ============ -->
       <div id="prayerView" style="display:none">
@@ -8452,128 +8506,170 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         </style>
 
         <div class="hio-container">
-          <!-- Flow Wrapper -->
-          <div id="hioFlowWrapper" class="g-card" style="padding: 28px 24px; margin-bottom: 32px; position: relative;">
+          <!-- Master Unified Prayer Tool Card -->
+          <div id="unifiedPrayerToolCard" class="g-card" style="padding: 28px 24px; margin-bottom: 32px; position: relative;">
             
-            <!-- STEP 1: The Door / Hand It Over Input -->
-            <div id="hioStepDoor">
-              <div class="hio-kicker">PRAYER & THANKSGIVING</div>
-              <h2 class="hio-title" id="hioDoorHeadline">PRAYER, THANKS & WHAT YOU ARE CARRYING</h2>
-              <p style="font-size:14px; color:rgba(255,255,255,0.65); margin: 6px 0 16px 0; line-height:1.5;">Bring your prayers, thanksgiving, or whatever is on your heart today.</p>
-              
-              <!-- Direct Text Input & AI Analysis -->
-              <div style="position:relative; display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
-                <input type="text" id="hioNameInput" placeholder="Type your prayer, thanks, or what you are carrying..." style="flex:1; min-width:240px; background:rgba(0,0,0,0.35); border:1px solid rgba(204,255,0,0.25); border-radius:12px; padding:16px 18px; color:#fff; font-size:15px; font-family:var(--font-body); outline:none; transition:all 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(204,255,0,0.25)';" onkeydown="if(event.key==='Enter')PRAYER.submitName();">
-                <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
-                <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:0 24px; height:52px; font-size:13px; font-weight:800; text-transform:uppercase; border-radius:12px; white-space:nowrap; cursor:pointer;">Pray & Hand It Over &rarr;</button>
-              </div>
-
-              <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
-
-              <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:10px;">Or select a category focus:</div>
-              <div class="hio-chip-grid">
-                <button class="hio-chip" onclick="PRAYER.selectCategory('family')"><span>Family</span> <span>👥</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('work')"><span>Work</span> <span>💼</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('money')"><span>Money</span> <span>💵</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('health')"><span>Health</span> <span>❤️</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('head')"><span>My Own Head</span> <span>🧠</span></button>
-                <button class="hio-chip" onclick="PRAYER.selectCategory('freeform')"><span>Say it your way...</span> <span>💬</span></button>
-              </div>
-
-              <!-- Subline message on door -->
-              <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-top:16px; margin-bottom:20px;"></p>
-
-              <div class="hio-footnote">
-                Everything you pray here is private by default and saved to My Prayers. Nothing goes on the community Prayer Wall unless you choose to put it there.
-              </div>
+            <!-- Segmented Mode Controller -->
+            <div class="prayer-tool-nav" style="display:flex; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:4px; margin-bottom:24px; gap:4px; flex-wrap:wrap;">
+              <button class="prayer-tool-tab active" id="ptTab_handover" onclick="switchPrayerToolMode('handover')" style="flex:1; min-width:140px; background:rgba(204,255,0,0.12); border:1px solid rgba(204,255,0,0.3); color:var(--lime); border-radius:10px; padding:12px 14px; font-family:var(--font-body); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>➕</span> Hand Over Weight</button>
+              <button class="prayer-tool-tab" id="ptTab_mine" onclick="switchPrayerToolMode('mine')" style="flex:1; min-width:140px; background:transparent; border:1px solid transparent; color:rgba(255,255,255,0.6); border-radius:10px; padding:12px 14px; font-family:var(--font-body); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>📖</span> My Prayers</button>
+              <button class="prayer-tool-tab" id="ptTab_watching" onclick="switchPrayerToolMode('watching')" style="flex:1; min-width:140px; background:transparent; border:1px solid transparent; color:rgba(255,255,255,0.6); border-radius:10px; padding:12px 14px; font-family:var(--font-body); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>🤝</span> Praying For Others</button>
             </div>
 
-            <!-- STEP 3: Hand It -->
-            <div id="hioStepHand" style="display:none;">
-              <div class="hio-kicker">Hand It</div>
-              
-              <!-- Led prayer voice block -->
-              <div style="background:rgba(255,255,255,0.02); border-left:3px solid var(--lime); padding:16px 20px; border-radius:0 12px 12px 0; margin-bottom:24px; font-size:16px; line-height:1.6; font-style:italic; color:rgba(255,255,255,0.95);" id="hioLedLineText">
-                "Father, this house is Yours before it's mine..."
-              </div>
-
-              <!-- Scripture Card -->
-              <div class="g-card" style="padding:20px; border-color:rgba(255,255,255,0.06); cursor:pointer; margin-bottom:20px;" onclick="PRAYER.toggleInlineReader()">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                  <span style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em;">Scripture Promise</span>
-                  <span id="hioPillReadMore" style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.15); border:1px solid rgba(204,255,0,0.3); color:var(--lime); padding:4px 8px; border-radius:100px; text-transform:uppercase;">📖 Read more · tap to open</span>
-                </div>
-                <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;" id="hioScriptureRef">Psalm 127:1</div>
-                <div style="font-size:14px; line-height:1.5; color:rgba(255,255,255,0.7);" id="hioScriptureText">"Unless the Lord builds the house..."</div>
+            <!-- MODE PANEL 1: HAND OVER WEIGHT -->
+            <div id="ptPanel_handover" style="display:block;">
+              <!-- STEP 1: The Door / Hand It Over Input -->
+              <div id="hioStepDoor">
+                <div class="hio-kicker">PRAYER & THANKSGIVING</div>
+                <h2 class="hio-title" id="hioDoorHeadline" style="font-size:clamp(20px, 4vw, 28px); margin-bottom:16px;">PRAYER, THANKS & WHAT YOU ARE CARRYING</h2>
+                <p style="font-size:14px; color:rgba(255,255,255,0.65); margin: 6px 0 16px 0; line-height:1.5;">Bring your prayers, thanksgiving, or whatever is on your heart today.</p>
                 
-                <!-- Inline expanded reader section -->
-                <div id="hioInlineReader" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
-                  <div id="hioInlineVerses" style="max-height:200px; overflow-y:auto; font-size:13px; line-height:1.6; color:rgba(255,255,255,0.6); margin-bottom:12px; padding-right:6px;">
+                <!-- Direct Text Input & AI Analysis -->
+                <div style="position:relative; display:flex; gap:10px; margin: 16px 0; flex-wrap:wrap;">
+                  <input type="text" id="hioNameInput" placeholder="Type your prayer, thanks, or what you are carrying..." style="flex:1; min-width:240px; background:rgba(0,0,0,0.35); border:1px solid rgba(204,255,0,0.25); border-radius:12px; padding:16px 18px; color:#fff; font-size:15px; font-family:var(--font-body); outline:none; transition:all 0.2s;" onfocus="this.style.borderColor='var(--lime)';" onblur="this.style.borderColor='rgba(204,255,0,0.25)';" onkeydown="if(event.key==='Enter')PRAYER.submitName();">
+                  <button class="btn-ghost" id="btnHioVoice" onclick="PRAYER.toggleVoice()" style="width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0; font-size:20px;">🎙️</button>
+                  <button class="btn-lime" onclick="PRAYER.submitName()" style="padding:0 24px; height:52px; font-size:13px; font-weight:800; text-transform:uppercase; border-radius:12px; white-space:nowrap; cursor:pointer;">Pray & Hand It Over &rarr;</button>
+                </div>
+
+                <div id="hioVoiceStatus" style="display:none; font-size:12px; color:var(--lime); text-align:center; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Listening...</div>
+
+                <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:10px;">Or select a category focus:</div>
+                <div class="hio-chip-grid">
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('family')"><span>Family</span> <span>👥</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('work')"><span>Work</span> <span>💼</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('money')"><span>Money</span> <span>💵</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('health')"><span>Health</span> <span>❤️</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('head')"><span>My Own Head</span> <span>🧠</span></button>
+                  <button class="hio-chip" onclick="PRAYER.selectCategory('freeform')"><span>Say it your way...</span> <span>💬</span></button>
+                </div>
+
+                <!-- Subline message on door -->
+                <p id="hioDoorSubline" style="font-size:14px; color:rgba(255,255,255,0.65); font-style:italic; margin-top:16px; margin-bottom:20px;"></p>
+
+                <div class="hio-footnote">
+                  Everything you pray here is private by default and saved to My Prayers. Nothing goes on the community Prayer Wall unless you choose to put it there.
+                </div>
+              </div>
+
+              <!-- STEP 3: Hand It -->
+              <div id="hioStepHand" style="display:none;">
+                <div class="hio-kicker">Hand It</div>
+                
+                <!-- Led prayer voice block -->
+                <div style="background:rgba(255,255,255,0.02); border-left:3px solid var(--lime); padding:16px 20px; border-radius:0 12px 12px 0; margin-bottom:24px; font-size:16px; line-height:1.6; font-style:italic; color:rgba(255,255,255,0.95);" id="hioLedLineText">
+                  "Father, this house is Yours before it's mine..."
+                </div>
+
+                <!-- Scripture Card -->
+                <div class="g-card" style="padding:20px; border-color:rgba(255,255,255,0.06); cursor:pointer; margin-bottom:20px;" onclick="PRAYER.toggleInlineReader()">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:11px; font-weight:700; color:var(--lime); text-transform:uppercase; letter-spacing:0.05em;">Scripture Promise</span>
+                    <span id="hioPillReadMore" style="font-size:10px; font-weight:700; background:rgba(204,255,0,0.15); border:1px solid rgba(204,255,0,0.3); color:var(--lime); padding:4px 8px; border-radius:100px; text-transform:uppercase;">📖 Read more · tap to open</span>
                   </div>
-                  <button class="btn-ghost" onclick="PRAYER.openFullScripture(event)" style="font-size:11px; font-weight:700; text-transform:uppercase; padding:6px 12px; height:auto; min-height:auto; width:auto; border-radius:100px;">Open Scripture · read the full chapter</button>
+                  <div style="font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;" id="hioScriptureRef">Psalm 127:1</div>
+                  <div style="font-size:14px; line-height:1.5; color:rgba(255,255,255,0.7);" id="hioScriptureText">"Unless the Lord builds the house..."</div>
+                  
+                  <!-- Inline expanded reader section -->
+                  <div id="hioInlineReader" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+                    <div id="hioInlineVerses" style="max-height:200px; overflow-y:auto; font-size:13px; line-height:1.6; color:rgba(255,255,255,0.6); margin-bottom:12px; padding-right:6px;">
+                    </div>
+                    <button class="btn-ghost" onclick="PRAYER.openFullScripture(event)" style="font-size:11px; font-weight:700; text-transform:uppercase; padding:6px 12px; height:auto; min-height:auto; width:auto; border-radius:100px;">Open Scripture · read the full chapter</button>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end;">
+                  <button class="btn-lime" onclick="PRAYER.goToLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Leave It Here</button>
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:flex-end;">
-                <button class="btn-lime" onclick="PRAYER.goToLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Leave It Here</button>
-              </div>
-            </div>
+              <!-- STEP 4: Leave It -->
+              <div id="hioStepLeave" style="display:none;">
+                <div class="hio-kicker">Leave It</div>
+                <h2 class="hio-title" style="font-size:24px; margin-bottom:20px;">Where do you want to place this weight?</h2>
 
-            <!-- STEP 4: Leave It -->
-            <div id="hioStepLeave" style="display:none;">
-              <div class="hio-kicker">Leave It</div>
-              <h2 class="hio-title" style="font-size:24px; margin-bottom:20px;">Where do you want to place this weight?</h2>
-
-              <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
-                <!-- Choice Private -->
-                <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('private')" id="cardLeavePrivate">
-                  <div class="hio-tag hio-tag-private">Private</div>
-                  <strong style="font-size:15px; color:#fff;">Leave it here</strong>
-                  <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Saved to My Prayers. Only you can ever see it. Nothing is posted anywhere.</p>
+                <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
+                  <!-- Choice Private -->
+                  <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('private')" id="cardLeavePrivate">
+                    <div class="hio-tag hio-tag-private">Private</div>
+                    <strong style="font-size:15px; color:#fff;">Leave it here</strong>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Saved to My Prayers. Only you can ever see it. Nothing is posted anywhere.</p>
+                  </div>
+                  <!-- Choice Shared -->
+                  <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('shared')" id="cardLeaveShared">
+                    <div class="hio-tag hio-tag-shared">Shared</div>
+                    <strong style="font-size:15px; color:#fff;">Lift it to the Prayer Wall</strong>
+                    <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Posts this prayer to the community Prayer Wall. Other stewards will see it and can tap 'I prayed' for you. You can take it down anytime.</p>
+                  </div>
                 </div>
-                <!-- Choice Shared -->
-                <div class="hio-card-choice" onclick="PRAYER.selectLeaveOption('shared')" id="cardLeaveShared">
-                  <div class="hio-tag hio-tag-shared">Shared</div>
-                  <strong style="font-size:15px; color:#fff;">Lift it to the Prayer Wall</strong>
-                  <p style="font-size:13px; color:rgba(255,255,255,0.5); margin:0;">Posts this prayer to the community Prayer Wall. Other stewards will see it and can tap 'I prayed' for you. You can take it down anytime.</p>
+
+                <!-- Shared Post options -->
+                <div id="hioSharedOptions" style="display:none; margin-bottom:20px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); padding:16px; border-radius:12px;">
+                  <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.4); display:block; margin-bottom:10px;">Post Anonymously?</span>
+                  <div style="display:flex; gap:12px;">
+                    <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="signed" checked> Post signed</label>
+                    <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="anonymous"> Post anonymously</label>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <button class="btn-ghost" onclick="PRAYER.goBackToHand()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
+                  <button class="btn-lime" onclick="PRAYER.commitLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Confirm</button>
                 </div>
               </div>
 
-              <!-- Shared Post options -->
-              <div id="hioSharedOptions" style="display:none; margin-bottom:20px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); padding:16px; border-radius:12px;">
-                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.4); display:block; margin-bottom:10px;">Post Anonymously?</span>
-                <div style="display:flex; gap:12px;">
-                  <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="signed" checked> Post signed</label>
-                  <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="radio" name="hioPostMode" value="anonymous"> Post anonymously</label>
+              <!-- STEP 5: Confirm -->
+              <div id="hioStepConfirm" style="display:none; text-align:center; padding:20px 10px;">
+                <div style="font-size:48px; margin-bottom:16px;">🕊️</div>
+                <h2 class="hio-title" style="font-size:24px; margin-bottom:12px;" id="hioConfirmHeadline">Saved Privately</h2>
+                <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:400px; margin:0 auto 24px; line-height:1.6;" id="hioConfirmText"></p>
+                
+                <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+                  <button class="btn-lime" onclick="PRAYER.resetFlow()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand Another Weight Over</button>
+                  <button class="btn-ghost" onclick="switchPrayerToolMode('mine')" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px; margin-top:4px;">View In My Prayers &rarr;</button>
+                  <a href="javascript:void(0)" id="hioKeepReadingLink" style="font-size:13px; color:var(--lime); text-decoration:none; margin-top:8px;" onclick="PRAYER.goToBibleRead()">Keep reading in My Bible &rarr;</a>
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <button class="btn-ghost" onclick="PRAYER.goBackToHand()" style="padding:10px 20px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Back</button>
-                <button class="btn-lime" onclick="PRAYER.commitLeave()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Confirm</button>
+              <!-- THE LEDGER INSIDE HANDOVER MODE -->
+              <div style="margin-top:32px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.08);">
+                <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:16px;">THE WEIGHTS YOU'VE HANDED OVER</h3>
+                <div id="hioLedgerContent" style="display:flex; flex-direction:column; gap:4px;"></div>
               </div>
             </div>
 
-            <!-- STEP 5: Confirm -->
-            <div id="hioStepConfirm" style="display:none; text-align:center; padding:20px 10px;">
-              <div style="font-size:48px; margin-bottom:16px;">🕊️</div>
-              <h2 class="hio-title" style="font-size:24px; margin-bottom:12px;" id="hioConfirmHeadline">Saved Privately</h2>
-              <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:400px; margin:0 auto 24px; line-height:1.6;" id="hioConfirmText"></p>
-              
-              <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
-                <button class="btn-lime" onclick="PRAYER.resetFlow()" style="padding:10px 24px; height:auto; min-height:auto; width:auto; font-size:13px; text-transform:uppercase; border-radius:8px;">Hand Another Weight Over</button>
-                <a href="javascript:void(0)" id="hioKeepReadingLink" style="font-size:13px; color:var(--lime); text-decoration:none; margin-top:8px;" onclick="PRAYER.goToBibleRead()">Keep reading in My Bible &rarr;</a>
+            <!-- MODE PANEL 2: MY PRAYERS JOURNAL -->
+            <div id="ptPanel_mine" style="display:none;">
+              <div style="margin-bottom:20px;">
+                <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; text-transform:uppercase; color:#fff; margin:0 0 4px 0;">MY PRAYER JOURNAL</h3>
+                <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin:0;">What you brought. What you carried.</p>
+              </div>
+
+              <div id="mePanelMine">
+                <div id="meMineList"></div>
+                <div id="meMineLoading" class="wall-skeleton-container" style="display:none">
+                  <div class="wall-skeleton-card"></div>
+                </div>
+                <button id="meMineMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadMineMore()">Show more</button>
               </div>
             </div>
 
-          </div>
+            <!-- MODE PANEL 3: PRAYING FOR OTHERS -->
+            <div id="ptPanel_watching" style="display:none;">
+              <div style="margin-bottom:20px;">
+                <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; text-transform:uppercase; color:#fff; margin:0 0 4px 0;">PRAYING FOR OTHERS</h3>
+                <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin:0;">Prayers from fellow stewards you are standing with in agreement.</p>
+              </div>
 
-          <!-- THE LEDGER -->
-          <div>
-            <h3 style="font-family:var(--font-display); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--lime); margin-bottom:16px;">THE WEIGHTS YOU'VE HANDED OVER</h3>
-            
-            <div id="hioLedgerContent" style="display:flex; flex-direction:column; gap:4px;">
+              <div id="mePanelWatching">
+                <div id="meWatchingSynthesis" class="scribe-line" style="display:none; margin-bottom:16px;"></div>
+                <div id="meWatchingList"></div>
+                <div id="meWatchingLoading" class="wall-skeleton-container" style="display:none">
+                  <div class="wall-skeleton-card"></div>
+                </div>
+                <button id="meWatchingMoreBtn" class="wall-btn-more" style="display:none" onclick="ME.loadWatchingMore()">Show more</button>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -8804,7 +8900,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
             The Complete Steward System — <span style="color:var(--lime);">$99 / Month</span>
           </h2>
           <div style="max-height:260px; max-width:380px; width:100%; height:245px; border-radius:16px; overflow:hidden; margin:12px auto; background:#ffffff; filter:drop-shadow(0 10px 24px rgba(0,0,0,0.7)); display:block;">
-            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" style="width:100%; height:100%; object-fit:contain; padding:8px; box-sizing:border-box; border-radius:16px; display:block;" alt="WHEALTHY 5-Product System">
+            <img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" style="width:100%; height:100%; object-fit:contain; padding:8px; box-sizing:border-radius:16px; display:block;" alt="WHEALTHY 5-Product System">
           </div>
           <p style="color:rgba(255,255,255,0.7);font-size:13.5px;line-height:1.45;max-width:580px;margin:0 auto 14px">
             Everything you need to govern your energy across all 24 hours. Includes <strong style="color:#fff">Genius Guice</strong>, <strong style="color:#fff">Genius Joe</strong>, <strong style="color:#fff">Hydration</strong>, <strong style="color:#fff">Charge</strong>, and <strong style="color:#fff">Boss</strong>.
@@ -9007,7 +9103,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <div class="mic-wrap" id="micWrap">
                 <div class="mic-ring" id="ring1"></div>
                 <div class="mic-ring" id="ring2"></div>
-                <button class="mic-btn" id="micBtn" onclick="toggleMic()" aria-label="Record entry">
+                <button class="mic-btn" id="micBtn" onclick="toggleMic()" oncontextmenu="return false;" aria-label="Record entry">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
                 </button>
               </div>
@@ -9055,14 +9151,14 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
 
       <!-- ============ CIRCLES ============ -->
       <div id="circleView" style="display:none">
-        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+        <div style="max-width: 680px; margin: 0 auto; padding: 0;">
           <div id="meCircleContent"></div>
         </div>
       </div>
 
       <!-- ============ COHORT CHALLENGE ============ -->
       <div id="cohortView" style="display:none">
-        <div style="max-width: 680px; margin: 0 auto; padding: 16px;">
+        <div style="max-width: 680px; margin: 0 auto; padding: 0;">
           <div id="cohortViewContent"></div>
         </div>
       </div>
@@ -9459,7 +9555,7 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         <div class="mic-wrap" id="sheetMicWrap">
           <div class="mic-ring" id="sheetRing1"></div>
           <div class="mic-ring" id="sheetRing2"></div>
-          <button class="mic-btn" id="sheetMicBtn" onclick="toggleMic(true)" aria-label="Record entry">
+          <button class="mic-btn" id="sheetMicBtn" onclick="toggleMic(true)" oncontextmenu="return false;" aria-label="Record entry">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
           </button>
         </div>
@@ -10840,6 +10936,7 @@ function formatScriptureHTML(data){
   return html;
 }
 
+let currentLoadedRef = null;
 async function loadScripture(ref){
   const reader=$('bible_scriptureReader');
   const body=$('bible_scriptureBody');
@@ -11177,16 +11274,22 @@ window.WALL_KEY = WALL_KEY;
     chapterInFlight: new Map(),
 
     async init() {
-      const select = document.getElementById("myBibleBookSelect");
-      if (select && select.children.length === 0) {
-        select.innerHTML = BIBLE_BOOKS.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
-      }
-      await this.loadState();
-      await this.loadMarks();
-      this.syncUI();
-      if (!this.initialized) {
-        this.initialized = true;
-        await this.loadChapterContent();
+      if (this.initializing) return;
+      this.initializing = true;
+      try {
+        const select = document.getElementById("myBibleBookSelect");
+        if (select && select.children.length === 0) {
+          select.innerHTML = BIBLE_BOOKS.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+        }
+        await this.loadState();
+        await this.loadMarks();
+        this.syncUI();
+        if (!this.initialized) {
+          this.initialized = true;
+          await this.loadChapterContent();
+        }
+      } finally {
+        this.initializing = false;
       }
     },
 
@@ -11405,7 +11508,7 @@ window.WALL_KEY = WALL_KEY;
                 banner.style.display = 'flex';
               }
             }
-            if (data.mode && data.mode !== '365') {
+            if (data.mode && data.mode !== window._activeBibleMode) {
               switchBibleMode(data.mode);
             }
           }
@@ -11520,6 +11623,8 @@ window.WALL_KEY = WALL_KEY;
   };
 
   window.switchBibleMode = function(mode) {
+    if (window._activeBibleMode === mode) return;
+    window._activeBibleMode = mode;
     const btn365 = document.getElementById('toggleBible365');
     const btnMy = document.getElementById('toggleMyBible');
     const titleHeader = document.getElementById('bibleTitleHeader');
@@ -12117,11 +12222,11 @@ window.WALL_KEY = WALL_KEY;
       const nameInput = document.getElementById("hioNameInput");
       if (nameInput) nameInput.value = '';
 
-      document.getElementById("hioStepDoor").style.display = 'block';
-      document.getElementById("hioStepName").style.display = 'none';
-      document.getElementById("hioStepHand").style.display = 'none';
-      document.getElementById("hioStepLeave").style.display = 'none';
-      document.getElementById("hioStepConfirm").style.display = 'none';
+      const elDoor = document.getElementById("hioStepDoor"); if (elDoor) elDoor.style.display = 'block';
+      const elName = document.getElementById("hioStepName"); if (elName) elName.style.display = 'none';
+      const elHand = document.getElementById("hioStepHand"); if (elHand) elHand.style.display = 'none';
+      const elLeave = document.getElementById("hioStepLeave"); if (elLeave) elLeave.style.display = 'none';
+      const elConfirm = document.getElementById("hioStepConfirm"); if (elConfirm) elConfirm.style.display = 'none';
     },
 
     selectCategory(cat) {
@@ -12144,37 +12249,80 @@ window.WALL_KEY = WALL_KEY;
     },
 
     toggleVoice() {
+      const btn = document.getElementById('btnHioVoice');
+      const status = document.getElementById('hioVoiceStatus');
+      const input = document.getElementById("hioNameInput");
+
       if (this.isRecording) {
-        if (this.recognition) this.recognition.stop();
+        if (this.recognition) {
+          try { this.recognition.stop(); } catch(e) {}
+        }
         this.isRecording = false;
-        document.getElementById('btnHioVoice').textContent = '🎙️';
-        document.getElementById('hioVoiceStatus').style.display = 'none';
+        if (btn) btn.textContent = '🎙️';
+        if (status) status.style.display = 'none';
       } else {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-          alert("Speech recognition is not supported in this browser.");
+          alert("Voice recognition is not supported in this browser. You can type your prayer directly below.");
           return;
         }
+        const initialText = input ? input.value : '';
         if (!this.recognition) {
           this.recognition = new SpeechRecognition();
-          this.recognition.continuous = false;
-          this.recognition.interimResults = false;
-          this.recognition.lang = 'en-US';
-          this.recognition.onresult = (event) => {
-            const text = event.results[0][0].transcript;
-            const input = document.getElementById("hioNameInput");
-            if (input) input.value = text;
-          };
-          this.recognition.onend = () => {
-            this.isRecording = false;
-            document.getElementById('btnHioVoice').textContent = '🎙️';
-            document.getElementById('hioVoiceStatus').style.display = 'none';
-          };
         }
-        this.recognition.start();
-        this.isRecording = true;
-        document.getElementById('btnHioVoice').textContent = '⏹️';
-        document.getElementById('hioVoiceStatus').style.display = 'block';
+        this.recognition.continuous = true;
+        this.recognition.interimResults = true;
+        this.recognition.lang = 'en-US';
+
+        let accumulatedFinal = '';
+        this.recognition.onresult = (event) => {
+          let interim = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              accumulatedFinal += event.results[i][0].transcript + ' ';
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          if (input) {
+            const combined = (initialText + (initialText ? ' ' : '') + accumulatedFinal + interim).trim();
+            input.value = combined;
+          }
+        };
+
+        this.recognition.onerror = (err) => {
+          console.warn('[Prayer Voice Error]', err);
+          if (err && (err.error === 'no-speech' || err.error === 'aborted')) return;
+          this.isRecording = false;
+          if (btn) btn.textContent = '🎙️';
+          if (status) {
+            status.textContent = 'Voice error: ' + (err.error || 'try again');
+            setTimeout(() => { if (status) status.style.display = 'none'; }, 3000);
+          }
+        };
+
+        this.recognition.onend = () => {
+          if (this.isRecording) {
+            this.isRecording = false;
+            if (btn) btn.textContent = '🎙️';
+            if (status) status.style.display = 'none';
+          }
+        };
+
+        try {
+          this.recognition.start();
+          this.isRecording = true;
+          if (btn) btn.textContent = '⏹️';
+          if (status) {
+            status.textContent = 'Listening... Speak your prayer';
+            status.style.display = 'block';
+          }
+        } catch(e) {
+          console.error('[Prayer Voice Start Error]', e);
+          this.isRecording = false;
+          if (btn) btn.textContent = '🎙️';
+          if (status) status.style.display = 'none';
+        }
       }
     },
 
@@ -13621,7 +13769,8 @@ const KEY='record_fast_v2';
 let S={entries:[],fast:null,equipDismissed:false,
   draft:null, prefs:{scribeStyle:'full',missed:0,landed:0}, history:[], lastScribeLines:[], profile:null};
 window.S = S;
-let productState='equipped';
+let productState = (localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true') ? 'equipped' : 'equipped';
+if (localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true') window._bundleClaimed = true;
 let BUNDLE={key:'genius-guice',name:'Genius Guice + Hydration',afternoon:'Genius Guice',allday:'Hydration Powder'};
 
 function dayKey(o){
@@ -13640,8 +13789,22 @@ function dayKey(o){
   return `${year}-${month}-${day}`;
 }
 function realToday(){return dayKey(0);}
-function niceDate(iso){return new Date(iso+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
-function weeksAgo(iso){const days=Math.round((new Date(realToday())-new Date(iso))/86400000);if(days<=0)return 'today';if(days<7)return days+' days ago';const w=Math.round(days/7);return w+(w===1?' week ago':' weeks ago');}
+function niceDate(iso){
+  if(!iso) return '';
+  const str=String(iso);
+  const m=str.match(/^\d{4}-\d{2}-\d{2}/);
+  const d=m?new Date(m[0]+'T00:00:00'):new Date(str);
+  if(isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function weeksAgo(iso){
+  if(!iso) return '';
+  const m=String(iso).match(/^\d{4}-\d{2}-\d{2}/);
+  const base=m?m[0]:String(iso);
+  const t=new Date(base).getTime();
+  if(isNaN(t)) return '';
+  const days=Math.round((new Date(realToday())-t)/86400000);
+  if(days<=0)return 'today';if(days<7)return days+' days ago';const w=Math.round(days/7);return w+(w===1?' week ago':' weeks ago');}
 function vib(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
 function addDays(dateStr, days) {
@@ -14207,7 +14370,17 @@ async function load(){
         localStorage.setItem('wh_book_intros', JSON.stringify(d.book_intros));
       }
 
-      productState = d.product_state || 'unequipped';
+      const isLocallyClaimed = (localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true');
+      if (d.product_state === 'equipped' || d.product_state === 'active' || isLocallyClaimed || window._bundleClaimed) {
+        productState = 'equipped';
+        window._bundleClaimed = true;
+        // Persist claim so it never glitches back
+        if (!isLocallyClaimed) {
+          try { localStorage.setItem('wh_bundle_claimed', 'true'); } catch(e){}
+        }
+      } else {
+        productState = d.product_state || 'unequipped';
+      }
       window._bundleName = d.bundle_name || null;
       window._nextEligible = d.next_eligible_date || null;
       if(d.bundle_key) {
@@ -14255,7 +14428,7 @@ async function saveEntry(entry_date, text, tone, fast_id, fast_day, scribe_line,
     });
     const d = await r.json();
     if (!d.ok && d.error === 'report_not_open') {
-      alert("The Command Center gate is closed. Reporting only opens after 8:45 PM local time.");
+      alert("The Steward Dashboard gate is closed. Reporting only opens after 8:45 PM local time.");
       throw new Error('report_not_open');
     }
     if (d.ok) {
@@ -14635,23 +14808,103 @@ function escOrderAttr(s) {
 
 window.loadMemberOrders = loadMemberOrders;
 
-/* ================== NAV ================== */
-function go(view,el,label){
+/* ================== NAV & ROUTER ================== */
+const ROUTE_TO_VIEW = {
+  '/dash': 'dash',
+  '/rhythm': 'rhythm',
+  '/claim': 'all5',
+  '/all5': 'all5',
+  '/journal': 'record',
+  '/journal/scribe': 'record',
+  '/journal/history': 'record',
+  '/community': 'community',
+  '/community/wall': 'community',
+  '/community/enter': 'communityEnter',
+  '/prayer': 'prayer',
+  '/prayer/hand-it-over': 'prayer',
+  '/prayer/wall': 'wall',
+  '/prayer/testimonies': 'testimony',
+  '/scripture': 'bible',
+  '/scripture/reader': 'bible',
+  '/scripture/plan': 'bible',
+  '/fasting': 'fast',
+  '/fasting/timer': 'fast',
+  '/fasting/cohort': 'cohort',
+  '/circles': 'circle',
+  '/circles/my-circles': 'circle',
+  '/circles/cohorts': 'cohort',
+  '/affiliate': 'affiliate',
+  '/portal': 'portal',
+  '/tryall': 'tryall',
+  '/admin': 'admin',
+  '/admin/analytics': 'adminAnalytics'
+};
+
+const VIEW_TO_ROUTE = {
+  dash: '/dash',
+  rhythm: '/rhythm',
+  all5: '/claim',
+  claim: '/claim',
+  record: '/journal',
+  community: '/community',
+  communityEnter: '/community/enter',
+  prayer: '/prayer',
+  wall: '/prayer/wall',
+  testimony: '/prayer/testimonies',
+  bible: '/scripture',
+  fast: '/fasting',
+  cohort: '/fasting/cohort',
+  circle: '/circles',
+  affiliate: '/affiliate',
+  portal: '/portal',
+  tryall: '/tryall',
+  admin: '/admin',
+  adminAnalytics: '/admin/analytics'
+};
+
+function go(view,el,label,skipPushState){
+  // Admin route guard: block non-admin users from admin views
+  if ((view === 'admin' || view === 'adminAnalytics') && !(window.ADMIN_ROLE === 'master' || window.ADMIN_ROLE === 'admin')) {
+    console.warn('Admin access denied: role=' + window.ADMIN_ROLE);
+    go('dash'); return;
+  }
+  window.scrollTo(0, 0);
+  const dashContent = document.querySelector('main.dash-content');
+  if (dashContent) dashContent.scrollTop = 0;
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
+  const routePath = VIEW_TO_ROUTE[view] || ('/' + view);
+  if (!skipPushState && window.location.protocol !== 'file:') {
+    try {
+      if (window.location.pathname !== routePath) {
+        history.pushState({ view: view }, '', routePath);
+      }
+    } catch(e) { console.warn('pushState error:', e); }
+  }
   window.location.hash = view;
-  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{const v=document.getElementById(id);if(v)v.style.display='none';});
-  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'meView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
-  document.getElementById(map[view]||'dashView').style.display='block';
+
+  ['dashView','recordView','fastView','bibleView','affiliateView','communityView','enterCommunityView','claimView','all5View','portalView','tryallView','wallView','testimonyView','meView','prayerView','circleView','cohortView','adminView','adminAnalyticsView','rhythmView'].forEach(id=>{
+    const v=document.getElementById(id);
+    if(v) {
+      v.style.display='none';
+      v.classList.remove('view-fade-in');
+    }
+  });
+  const map={dash:'dashView',record:'recordView',fast:'fastView',bible:'bibleView',affiliate:'affiliateView',community:'communityView',communityEnter:'enterCommunityView',claim:'claimView',all5:'all5View',portal:'portalView',tryall:'tryallView',wall:'wallView',testimony:'testimonyView',me:'prayerView',prayer:'prayerView',circle:'circleView',cohort:'cohortView',admin:'adminView',adminAnalytics:'adminAnalyticsView',rhythm:'rhythmView'};
+  const targetView = document.getElementById(map[view]||'dashView');
+  if (targetView) {
+    targetView.style.display='block';
+    void targetView.offsetWidth;
+    targetView.classList.add('view-fade-in');
+  }
   
   // Reset all active/expanded states first
   document.querySelectorAll('.sidebar-item, .sidebar-sub-item').forEach(b=>b.classList.remove('active', 'expanded-parent'));
   document.querySelectorAll('.sidebar-sub-nav').forEach(nav=>nav.classList.remove('expanded'));
 
   if(!el && view) {
-    var btnId = 'nav' + view.charAt(0).toUpperCase() + view.slice(1);
-    el = document.getElementById(btnId);
+    el = getNavBtnEl(view);
   }
   if(el) {
     el.classList.add('active');
@@ -14714,8 +14967,9 @@ function go(view,el,label){
     document.getElementById('headerLine').textContent='Testimony Wall';
     if(typeof initTestimonyWall==='function') initTestimonyWall();
   }
-  if(view==='me'){
-    document.getElementById('headerLine').textContent='My Prayers';
+  if(view==='prayer' || view==='me'){
+    document.getElementById('headerLine').textContent='Prayer';
+    if(typeof initPrayerPillar==='function') initPrayerPillar();
     if(typeof initMe==='function') initMe();
   }
   if(view==='circle'){
@@ -14729,10 +14983,6 @@ function go(view,el,label){
   if(view==='community'){
     document.getElementById('headerLine').textContent='Community';
     if(typeof window.loadCommunityViewFeed==='function') window.loadCommunityViewFeed();
-  }
-  if(view==='prayer'){
-    document.getElementById('headerLine').textContent='Prayer';
-    if(typeof initPrayerPillar==='function') initPrayerPillar();
   }
   if(view==='dash'){
     try { fetchWallCommunityState(); } catch(e) {}
@@ -14756,6 +15006,57 @@ function go(view,el,label){
   window.scrollTo({top:0});
 }
 window.go=go;
+
+function getNavBtnEl(view) {
+  if (!view) return null;
+  var btnIdMap = {
+    dash: 'navDash',
+    rhythm: 'navRhythm',
+    all5: 'navAll5',
+    claim: 'navAll5',
+    record: 'navRecord',
+    community: 'navCommunity',
+    communityEnter: 'navEnterCommunity',
+    prayer: 'navPrayer',
+    wall: 'navWall',
+    testimony: 'navTestimony',
+    bible: 'navBible',
+    fast: 'navFast',
+    cohort: 'navCohort',
+    circle: 'navCircle',
+    affiliate: 'navAffiliate',
+    portal: 'navPortal',
+    tryall: 'navTryall',
+    admin: 'navAdmin',
+    adminAnalytics: 'navAdminAnalytics'
+  };
+  var id = btnIdMap[view] || ('nav' + view.charAt(0).toUpperCase() + view.slice(1));
+  return document.getElementById(id);
+}
+
+function handleUrlRouting() {
+  var path = (window.location.pathname || '').toLowerCase().replace(/\/$/, '');
+  var hash = (window.location.hash || '').replace('#', '').toLowerCase();
+
+  var view = ROUTE_TO_VIEW[path] || (hash ? (ROUTE_TO_VIEW['/' + hash] || hash) : null);
+  if (view) {
+    var el = getNavBtnEl(view);
+    go(view, el, null, true);
+  }
+}
+
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.view) {
+    var el = getNavBtnEl(e.state.view);
+    go(e.state.view, el, null, true);
+  } else {
+    handleUrlRouting();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(handleUrlRouting, 50);
+});
 function setHeaderFocus(view){
   const el=document.getElementById('headerLine');
   const d=activeFastDay();
@@ -15651,6 +15952,9 @@ async function startWave(mode = 'record'){
   try{
     micStream=await navigator.mediaDevices.getUserMedia({audio:true});
     audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') {
+      try { await audioCtx.resume(); } catch(e){}
+    }
     const src=audioCtx.createMediaStreamSource(micStream);
     analyser=audioCtx.createAnalyser();analyser.fftSize=256;
     src.connect(analyser);
@@ -15670,7 +15974,7 @@ async function startWave(mode = 'record'){
       if (r2) { r2.style.transform='scale('+(1+amp*0.9)+')';r2.style.opacity=(0.18+amp*0.35); }
       rafId=requestAnimationFrame(loop);
     })();
-  }catch(e){/* permission denied: CSS pulse only */}
+  }catch(e){/* permission denied or fallback: CSS pulse animation */}
 }
 
 function stopWave(mode = 'record'){
@@ -15689,7 +15993,10 @@ function stopWave(mode = 'record'){
 }
 
 function toggleMic(mode = 'record'){
-  if(!SRec)return;
+  if(!SRec){
+    alert("Voice recording is not supported in this browser version. You can type your entry directly below.");
+    return;
+  }
   if(mode === true) mode = 'sheet';
   if(mode === false) mode = 'record';
   voiceMode = mode;
@@ -15697,29 +16004,55 @@ function toggleMic(mode = 'record'){
   vib(12);
   const ids = getVoiceIds(voiceMode);
   const ta = document.getElementById(ids.transcript);
-  finalText = ta.value ? ta.value + ' ' : '';
-  recog = new SRec();recog.continuous = true; recog.interimResults = true; recog.lang = 'en-US';
-  recog.onresult = ev => {
-    let interim = '';
-    for(let i = ev.resultIndex; i < ev.results.length; i++){
-      if(ev.results[i].isFinal) finalText += ev.results[i][0].transcript + ' ';
-      else interim += ev.results[i][0].transcript;
-    }
-    ta.classList.add('show');
-    ta.value = (finalText + interim).trim();
-    persistDraft();
-  };
-  recog.onerror = () => stopMic();
-  recog.onend = () => { if(recording) stopMic(); };
-  recog.start();
-  recording = true;
+  finalText = (ta && ta.value) ? ta.value + ' ' : '';
   
-  if (document.getElementById(ids.wrap)) document.getElementById(ids.wrap).classList.add('rec');
-  if (document.getElementById(ids.state)) document.getElementById(ids.state).textContent = 'Listening. Tap to stop.';
-  ta.classList.add('show');
-  if (document.getElementById(ids.btn)) document.getElementById(ids.btn).style.display = 'inline-flex';
-  
-  startWave(voiceMode);
+  try {
+    recog = new SRec();
+    recog.continuous = true; 
+    recog.interimResults = true; 
+    recog.lang = 'en-US';
+    
+    recog.onresult = ev => {
+      let interim = '';
+      for(let i = ev.resultIndex; i < ev.results.length; i++){
+        if(ev.results[i].isFinal) finalText += ev.results[i][0].transcript + ' ';
+        else interim += ev.results[i][0].transcript;
+      }
+      if (ta) {
+        ta.classList.add('show');
+        ta.value = (finalText + interim).trim();
+      }
+      persistDraft();
+    };
+    
+    recog.onerror = (err) => {
+      console.warn('[Mic Rec Error]', err);
+      if (err && (err.error === 'no-speech' || err.error === 'aborted')) return;
+      const stateEl = document.getElementById(ids.state);
+      if (stateEl) stateEl.textContent = 'Voice error. Tap to retry.';
+      stopMic(false);
+    };
+    
+    recog.onend = () => { 
+      if(recording) {
+        stopMic(voiceMode === 'sheet'); 
+      }
+    };
+    
+    recog.start();
+    recording = true;
+    
+    if (document.getElementById(ids.wrap)) document.getElementById(ids.wrap).classList.add('rec');
+    if (document.getElementById(ids.state)) document.getElementById(ids.state).textContent = 'Listening. Tap to stop.';
+    if (ta) ta.classList.add('show');
+    if (document.getElementById(ids.btn)) document.getElementById(ids.btn).style.display = 'inline-flex';
+    
+    startWave(voiceMode);
+  } catch(e) {
+    console.error('[Mic Start Failure]', e);
+    recording = false;
+    stopWave(voiceMode);
+  }
 }
 
 function stopMic(autoExec = true){
@@ -16810,7 +17143,8 @@ function renderDash(){
   h+='<div style="flex:1.2;min-width:280px;display:flex;flex-direction:column;gap:16px">';
 
   // Start CTA (shown when no bundle claimed yet)
-  if(productState!=='equipped'&&!window._bundleClaimed){
+  var isEquipped = (productState==='equipped'||window._bundleClaimed);
+  if(!isEquipped){
     var memberName=(window.MEMBER_NAME||(window.MEMBER_EMAIL||'').split('@')[0]||'Steward').split(' ')[0];
     memberName=memberName.charAt(0).toUpperCase()+memberName.slice(1);
 
@@ -16820,34 +17154,44 @@ function renderDash(){
     h+='<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:16px;max-width:520px">The complete 24-hour Steward ecosystem ($195 MSRP value) locked at <strong style="color:var(--lime);font-weight:600">$99.00/mo</strong> at your member price. Includes all 5 core products. Nothing ships until you say so.</div>';
     h+='<div><button type="button" class="start-btn" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">See your 5-product plan &rarr;</button></div>';
     h+='</div>';
+  } else {
+    h+='<div style="background:rgba(204,255,0,0.04);border:1px solid rgba(204,255,0,0.22);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">';
+    h+='<div style="display:flex;align-items:center;gap:10px">';
+    h+='<div style="width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)"></div>';
+    h+='<div><div style="font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--lime)">24-Hour Governance System Active</div>';
+    h+='<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">Ordered July 31, 2026 &middot; 5 Core Formulas Active</div></div>';
+    h+='</div>';
+    h+='<button type="button" class="btn-lime" style="font-size:11px;font-weight:800;padding:6px 14px;border-radius:8px" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">MANAGE REFILLS &rarr;</button>';
+    h+='</div>';
   }
 
   // Bundle meta
   h+='<div class="bundle-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))!important;gap:12px!important;margin:0!important">';
   var bundleName2 = window._bundleName || 'The Complete Steward Governance System ($99/mo)';
-  var bundleStatus = productState==='equipped'?'Active':'Pending';
-  var statusColor = productState==='equipped'?'color:var(--lime)':'color:#ffb700;font-weight:700';
-  var autoColor = productState==='equipped'?'color:var(--lime)':'color:rgba(255,255,255,0.4)';
-  var nextDateColor = window._nextEligible ? 'color:#fff':'color:rgba(255,255,255,0.4)';
+  var bundleStatus = isEquipped?'Active':'Pending';
+  var statusColor = isEquipped?'color:var(--lime)':'color:#ffb700;font-weight:700';
+  var autoColor = isEquipped?'color:var(--lime)':'color:rgba(255,255,255,0.4)';
+  var nextDateColor = (window._nextEligible||isEquipped) ? 'color:#fff':'color:rgba(255,255,255,0.4)';
+  var nextRefillText = window._nextEligible || (isEquipped ? 'Aug 30, 2026' : 'Not scheduled');
 
-  h+='<div class="bundle-item" style="cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))"><div class="bundle-item__label">'+(productState==='equipped'?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Next Auto-Refill</div><div class="bundle-item__value" style="'+nextDateColor+'">'+(window._nextEligible||(productState==='equipped'?'In 30 Days':'Not scheduled'))+'</div></div>';
+  h+='<div class="bundle-item" style="cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))"><div class="bundle-item__label">'+(isEquipped?'Current Bundle':'Recommended Bundle')+'</div><div class="bundle-item__value bundle-item__value--lime">'+bundleName2+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Next Auto-Refill</div><div class="bundle-item__value" style="'+nextDateColor+'">'+nextRefillText+'</div></div>';
   h+='<div class="bundle-item"><div class="bundle-item__label">Status</div><div class="bundle-item__value" style="'+statusColor+'">'+bundleStatus+'</div></div>';
-  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(productState==='equipped'?'Active (Every 30 Days)':'Off')+'</div></div>';
+  h+='<div class="bundle-item"><div class="bundle-item__label">Auto-Order</div><div class="bundle-item__value" style="'+autoColor+'">'+(isEquipped?'Active (Every 30 Days)':'Off')+'</div></div>';
   h+='</div>';
   h+='</div>'; // end left column
 
   // Right column: recommended product images
   h+='<div style="flex:1.2;min-width:300px">';
   h+='<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:24px;text-align:center;cursor:pointer" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">';
-  h+='<div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">Recommended 5-Product Protocol</div>';
+  h+='<div style="font-size:11px;color:'+(isEquipped?'var(--lime)':'rgba(255,255,255,0.4)')+';font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">'+(isEquipped?'Active 5-Product Protocol':'Recommended 5-Product Protocol')+'</div>';
   h+='<div style="max-width:380px;width:100%;height:260px;border-radius:16px;overflow:hidden;margin:0 auto 16px;background:#ffffff;display:block;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.6));">';
   h+='<img src="https://content.app-sources.com/s/07333876398906327/thumbnails/640x480/LEMON/bndl1-4179308.png?format=webp" alt="The Complete Steward Governance System" style="width:100%;height:100%;object-fit:contain;padding:8px;box-sizing:border-box;border-radius:16px;display:block;">';
   h+='</div>';
   h+='<div style="font-size:18px;font-weight:800;font-family:var(--font-display);color:#fff;text-transform:uppercase;margin-bottom:4px">The Complete Steward Governance System</div>';
   h+='<div style="font-size:14px;color:var(--lime);font-weight:700;margin-bottom:6px">$99.00 / month (Save 49%)</div>';
   h+='<div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:16px">Includes Genius Guice, Genius Joe, Hydration, Charge & Boss</div>';
-  h+='<button type="button" class="btn-lime" style="width:100%;padding:14px 24px;font-size:14px;font-weight:800;letter-spacing:0.04em" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">SEE YOUR 5-PRODUCT BUNDLE &rarr;</button>';
+  h+='<button type="button" class="btn-lime" style="width:100%;padding:14px 24px;font-size:14px;font-weight:800;letter-spacing:0.04em" onclick="go(\'all5\',document.getElementById(\'navAll5\'))">'+(isEquipped?'MANAGE YOUR BUNDLE &rarr;':'SEE YOUR 5-PRODUCT BUNDLE &rarr;')+'</button>';
   h+='</div>';
   h+='</div>'; // end right column
 
@@ -17377,39 +17721,66 @@ function toggleFastVoice(inputId, statusId, btnId) {
   const inputEl = document.getElementById(inputId);
   const statusEl = document.getElementById(statusId);
   const btnEl = document.getElementById(btnId);
+  const initialText = inputEl ? inputEl.value : '';
 
   if (isFastVoiceRecording) {
-    if (fastVoiceRec) fastVoiceRec.stop();
+    if (fastVoiceRec) { try { fastVoiceRec.stop(); } catch(e) {} }
     isFastVoiceRecording = false;
     if (btnEl) btnEl.textContent = '🎙️';
     if (statusEl) statusEl.style.display = 'none';
   } else {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Speech recognition is not supported in this browser.");
+      alert("Voice recognition is not supported in this browser. Please type directly.");
       return;
     }
-    fastVoiceRec = new SpeechRecognition();
-    fastVoiceRec.continuous = false;
-    fastVoiceRec.interimResults = false;
-    fastVoiceRec.lang = 'en-US';
-    fastVoiceRec.onresult = (event) => {
-      const text = event.results[0][0].transcript;
-      if (inputEl) {
-        inputEl.value = (inputEl.value ? inputEl.value + ' ' : '') + text;
-        if (typeof freeLay === 'function' && inputId === 'layFree') freeLay(inputEl);
-        if (typeof onAttachPrayerBodyInput === 'function' && inputId === 'newAttachPrayerBody') onAttachPrayerBodyInput(inputEl);
-      }
-    };
-    fastVoiceRec.onend = () => {
+    try {
+      fastVoiceRec = new SpeechRecognition();
+      fastVoiceRec.continuous = true;
+      fastVoiceRec.interimResults = true;
+      fastVoiceRec.lang = 'en-US';
+
+      let accumulatedFinal = '';
+      fastVoiceRec.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            accumulatedFinal += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        if (inputEl) {
+          inputEl.value = (initialText + (initialText ? ' ' : '') + accumulatedFinal + interim).trim();
+          if (typeof freeLay === 'function' && inputId === 'layFree') freeLay(inputEl);
+          if (typeof onAttachPrayerBodyInput === 'function' && inputId === 'newAttachPrayerBody') onAttachPrayerBodyInput(inputEl);
+        }
+      };
+
+      fastVoiceRec.onerror = (err) => {
+        console.warn('[Fast Voice Error]', err);
+        if (err && (err.error === 'no-speech' || err.error === 'aborted')) return;
+        isFastVoiceRecording = false;
+        if (btnEl) btnEl.textContent = '🎙️';
+        if (statusEl) statusEl.style.display = 'none';
+      };
+
+      fastVoiceRec.onend = () => {
+        isFastVoiceRecording = false;
+        if (btnEl) btnEl.textContent = '🎙️';
+        if (statusEl) statusEl.style.display = 'none';
+      };
+
+      fastVoiceRec.start();
+      isFastVoiceRecording = true;
+      if (btnEl) btnEl.textContent = '⏹️';
+      if (statusEl) statusEl.style.display = 'block';
+    } catch(e) {
+      console.error('[Fast Voice Exception]', e);
       isFastVoiceRecording = false;
       if (btnEl) btnEl.textContent = '🎙️';
       if (statusEl) statusEl.style.display = 'none';
-    };
-    fastVoiceRec.start();
-    isFastVoiceRecording = true;
-    if (btnEl) btnEl.textContent = '⏹️';
-    if (statusEl) statusEl.style.display = 'block';
+    }
   }
 }
 window.toggleFastVoice = toggleFastVoice;
@@ -17930,7 +18301,7 @@ function renderReveal(root){
        '<div class="g-actions" style="margin-top:14px"><button class="btn-lime" onclick="go(\'portal\',document.getElementById(\'navPortal\'))">Find What Fits</button><button class="btn-ghost" onclick="dismissEquip()">Not During This Fast</button></div></div>';
   }
   if(F.product_state==='lapsed'){
-    h+='<div class="g-card reveal"><p class="g-body" style="font-size:12.5px">Your next bundle is claimable in the Command Center whenever you are ready. Your fast needs nothing to begin.</p></div>';
+    h+='<div class="g-card reveal"><p class="g-body" style="font-size:12.5px">Your next bundle is claimable on your Dashboard whenever you are ready. Your fast needs nothing to begin.</p></div>';
   }
   h+='<div class="plan-footer reveal">This tool provides structure, not health or medical advice. We recommend consulting a healthcare professional before beginning any fast that changes how you eat or drink. Your fast is yours, and you may end it at any time.</div></div>';
   root.innerHTML=h;
@@ -18250,16 +18621,12 @@ function isClaimWindowOpen(){
 function openClaimModal(){
   const modal=document.getElementById('claimModal');
   if(!modal)return;
-  // Update bundle name
+  // $99 Governance System focus — always the full 5-product bundle, never the quiz 2-product bundle
   const nameEl=document.getElementById('claimBundleName');
-  if(nameEl && window._bundleName) nameEl.textContent=window._bundleName;
-  else if(nameEl && BUNDLE) nameEl.textContent=BUNDLE.name;
-  // Update text based on state
+  if(nameEl) nameEl.innerHTML='All 5 Products &middot; $99/mo';
   const textEl=document.getElementById('claimModalText');
   if(textEl){
-    const pct = window._discountPct || 10;
-    const code = window._discountCode || 'WHSBGN';
-    textEl.innerHTML = 'You have not set up your bundle yet. Claim it to get your monthly supply &mdash; with your ' + pct + '% member discount (' + code + ') &mdash; and unlock full stewardship features.';
+    textEl.innerHTML = 'Genius Joe, Boss, Charge, Genius Guice, and Hydration &mdash; your full governed day, delivered monthly for $99/mo. Claim it to get your supply and unlock full stewardship features, including daily rhythm check-ins.';
   }
   modal.classList.add('open');
 }
@@ -19671,30 +20038,266 @@ async function loadAndInit(){
       timeGreeting = "Welcome back";
     }
 
-    const viewActionConfig = {
-      community: { badge: 'COMMUNITY', ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>', directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.' },
-      communityEnter: { badge: 'ENTER COMMUNITY', ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>', directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.' },
-      claim: { badge: 'CLAIM BUNDLE', ctaHtml: '<button onclick="go(\'claim\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">CLAIM BUNDLE</button>', directive: 'Redeem your Steward monthly supply or select your personalized governance blends.' },
-      tryall: { badge: 'TRY ALL', ctaHtml: '<button onclick="go(\'tryall\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">TRY ALL</button>', directive: 'Every routine in the house, open to try. When your season changes, re-match here.' },
-      rhythm: { badge: 'MY RHYTHM', directive: 'Build and govern your daily anchors to maintain alignment throughout your season.' },
-      bible: { badge: 'MY BIBLE 365', directive: 'Anchor your mind in Scripture and track your daily 365-day reading journey.' },
-      fast: { badge: 'THE FAST', directive: 'Track your active fasting windows, physical sync status, and hydration directives.' },
-      record: { badge: 'THE SCRIBE', directive: 'Write your thoughts, log your daily rules, and keep your personal record.' },
-      wall: { badge: 'PRAYER WALL', directive: 'Post your petitions, carry the burden with fellow Stewards, and stand in faith.' },
-      testimony: { badge: 'TESTIMONY WALL', directive: 'Celebrate answered prayers, give glory, and share how God moved in your life.' },
-      portal: { badge: 'PRODUCT PORTAL', directive: 'Manage active subscriptions, delivery schedules, and Steward account settings.' },
-      affiliate: { badge: 'AFFILIATE COMMAND', directive: 'Share your referral invite links, track your impact, and earn free monthly months.' },
-      dash: { badge: 'COMMAND CENTER', directive: 'Govern your daily focus, complete your directives, and access your OS controls.' }
+    const pageGuideData = {
+      dash: {
+        title: "Steward Dashboard",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · House Operating System`,
+        badge: 'STEWARD DASHBOARD',
+        ctaHtml: null,
+        directive: 'Govern your daily focus, complete your directives, and access your OS controls.',
+        purpose: 'Your central operating dashboard for tracking daily disciplines, archetype alignment, and house directives.',
+        steps: [
+          'Check in on your daily W/P/F/R matrix (Word, Prayer, Fast, Record).',
+          'Review your personal archetype governance plan.',
+          'Execute your daily anchor before evening.'
+        ],
+        tip: 'Small daily consistency builds unshakeable momentum. Log your anchors early.'
+      },
+      prayer: {
+        title: "Prayer & Intercession",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Unified Prayer Suite`,
+        badge: 'PRAYER',
+        ctaHtml: null,
+        directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.',
+        purpose: 'Your unified prayer suite for handing over daily weights, receiving scripture promises, and tracking private & circle prayers.',
+        steps: [
+          'Use "Hand Over Weight" to submit prayers via text or voice dictation.',
+          'Select a focus category or receive AI-anchored scripture promises.',
+          'Toggle to "My Prayers" to log answers, mark prayers carried, or lift them to the Prayer Wall.'
+        ],
+        tip: 'Anything you pray here is private by default. Nothing goes public unless you explicitly lift it to the wall.'
+      },
+      me: {
+        title: "Prayer & Intercession",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Unified Prayer Suite`,
+        badge: 'PRAYER',
+        ctaHtml: null,
+        directive: 'Bring your prayers, thanks, or intercessions — track what you brought and what you carried in one tool.',
+        purpose: 'Your unified prayer suite for handing over daily weights, receiving scripture promises, and tracking private & circle prayers.',
+        steps: [
+          'Use "Hand Over Weight" to submit prayers via text or voice dictation.',
+          'Select a focus category or receive AI-anchored scripture promises.',
+          'Toggle to "My Prayers" to log answers, mark prayers carried, or lift them to the Prayer Wall.'
+        ],
+        tip: 'Anything you pray here is private by default. Nothing goes public unless you explicitly lift it to the wall.'
+      },
+      rhythm: {
+        title: "My Rhythm Anchors",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Daily Alignment`,
+        badge: 'MY RHYTHM',
+        ctaHtml: null,
+        directive: 'Build and govern your daily anchors to maintain alignment throughout your season.',
+        purpose: 'The anchor configuration engine for building and governing your daily non-negotiable routines.',
+        steps: [
+          'Take or retake the archetype assessment to fine-tune your rhythm.',
+          'Customize your anchor frequency and daily rules.',
+          'Review your weekly compliance score.'
+        ],
+        tip: 'Re-assess your rhythm whenever your life season or work load shifts.'
+      },
+      bible: {
+        title: "My Bible 365",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Scripture Reading Engine`,
+        badge: 'MY BIBLE 365',
+        ctaHtml: null,
+        directive: 'Anchor your mind in Scripture and track your daily 365-day reading journey.',
+        purpose: 'Your 365-day chronological Scripture reading engine and study companion.',
+        steps: [
+          'Open today assigned reading chapter.',
+          'Mark completed passages to update your 365-day progress.',
+          'Bookmark key promises to review during prayer.'
+        ],
+        tip: 'Anchor your mind in Scripture first thing in the morning before starting your day.'
+      },
+      fast: {
+        title: "The Fast & Hydration",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Active Fasting Window`,
+        badge: 'THE FAST',
+        ctaHtml: null,
+        directive: 'Track your active fasting windows, physical sync status, and hydration directives.',
+        purpose: 'Your active fasting timer, hydration log, and physical body sync tracker.',
+        steps: [
+          'Start your fasting timer for your target window (e.g. 16:8, 20:4, 24h).',
+          'Log water intake to ensure proper physical hydration.',
+          'Check off your daily Fast discipline in your W/P/F/R matrix.'
+        ],
+        tip: 'Pace hydration consistently throughout the window. Break your fast gently with whole nutrients.'
+      },
+      record: {
+        title: "The Scribe Journal",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Daily Records & Rules`,
+        badge: 'THE SCRIBE',
+        ctaHtml: null,
+        directive: 'Write your thoughts, log your daily rules, and keep your personal record.',
+        purpose: 'Your private journal for logging thoughts, daily reflections, and personal Steward rules.',
+        steps: [
+          'Write a new daily entry or capture quick reflections.',
+          'Tag entries by category (Faith, Work, Health, Governance).',
+          'Review your historical entries to track growth.'
+        ],
+        tip: 'Writing down your thoughts clarifies your spirit and solidifies learning.'
+      },
+      wall: {
+        title: "Community Prayer Wall",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Standing in Agreement`,
+        badge: 'PRAYER WALL',
+        ctaHtml: null,
+        directive: 'Post your petitions, carry the burden with fellow Stewards, and stand in faith.',
+        purpose: 'The shared intercession wall where Stewards post petitions and pray for one another.',
+        steps: [
+          'Read petitions submitted by fellow Stewards.',
+          'Tap "I Prayed" to stand in agreement with their request.',
+          'Post a request signed or anonymously to request community prayer.'
+        ],
+        tip: 'Interceding for others carries eternal weight and strengthens community unity.'
+      },
+      testimony: {
+        title: "Testimony Wall",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Victory & Breakthroughs`,
+        badge: 'TESTIMONY WALL',
+        ctaHtml: null,
+        directive: 'Celebrate answered prayers, give glory, and share how God moved in your life.',
+        purpose: 'The wall of answered prayers and divine breakthroughs across the Steward community.',
+        steps: [
+          'Browse victory stories and answered prayers from fellow Stewards.',
+          'Lift your own answered prayers from your ledger to the wall.',
+          'Leave words of praise and celebration.'
+        ],
+        tip: 'Expressing gratitude and sharing answered prayers builds faith for the whole community.'
+      },
+      community: {
+        title: "Steward Community",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Network & Skool Hub`,
+        badge: 'COMMUNITY',
+        ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>',
+        directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.',
+        purpose: 'The private Steward community space for discussion, events, and live cohort calls.',
+        steps: [
+          'Click "ENTER COMMUNITY →" to open the Skool community platform.',
+          'Participate in weekly steward discussions and live masterclasses.',
+          'Connect with stewards in your archetype track.'
+        ],
+        tip: 'Active community engagement accelerates personal discipline and growth.'
+      },
+      communityEnter: {
+        title: "Enter Community",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Network & Skool Hub`,
+        badge: 'ENTER COMMUNITY',
+        ctaHtml: '<a href="https://www.skool.com/bakndcreator" target="_blank" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(204,255,0,0.3);">ENTER COMMUNITY &rarr;</a>',
+        directive: 'Before the evening ends, log one directive that marks how you carried your responsibility today.',
+        purpose: 'The private Steward community space for discussion, events, and live cohort calls.',
+        steps: [
+          'Click "ENTER COMMUNITY →" to open the Skool community platform.',
+          'Participate in weekly steward discussions and live masterclasses.'
+        ],
+        tip: 'Active community engagement accelerates personal discipline and growth.'
+      },
+      claim: {
+        title: "Claim Your Bundle",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Steward Supply Redemption`,
+        badge: 'CLAIM BUNDLE',
+        ctaHtml: '<button onclick="go(\'claim\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">CLAIM BUNDLE</button>',
+        directive: 'Redeem your Steward monthly supply or select your personalized governance blends.',
+        purpose: 'The Steward bundle claim portal for redeeming your monthly supply or custom governance packages.',
+        steps: [
+          'Select your active routine bundle or custom governance package.',
+          'Apply your active Steward member code at checkout.',
+          'Confirm shipping details for delivery.'
+        ],
+        tip: 'Ensure your checkout email matches your Steward account email for instant verification.'
+      },
+      tryall: {
+        title: "Try All Routines",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · House Governance Directory`,
+        badge: 'TRY ALL',
+        ctaHtml: '<button onclick="go(\'tryall\')" style="background: var(--lime); color: #080809; border: none; border-radius: 99px; padding: 7px 18px; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; box-shadow: 0 0 16px rgba(204,255,0,0.3);">TRY ALL</button>',
+        directive: 'Every routine in the house, open to try. When your season changes, re-match here.',
+        purpose: 'The complete catalog of all WHEALTHY house governance routines and product formulations.',
+        steps: [
+          'Browse routines by health pillar or archetype focus.',
+          'Click any routine card to view full ingredients, dosage, and timing.',
+          'Use your member discount code to order samples or full supplies.'
+        ],
+        tip: 'Every routine in the house is formulated to work in synergy with your core daily disciplines.'
+      },
+      portal: {
+        title: "Product Portal",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Subscriptions & Delivery`,
+        badge: 'PRODUCT PORTAL',
+        ctaHtml: null,
+        directive: 'Manage active subscriptions, delivery schedules, and Steward account settings.',
+        purpose: 'Your Steward account dashboard for managing monthly supply subscriptions, shipments, and orders.',
+        steps: [
+          'View active product subscriptions and upcoming shipment dates.',
+          'Modify delivery frequencies or update shipping addresses.',
+          'Review order history and tracking links.'
+        ],
+        tip: 'Keep your monthly supplies synchronized so your physical routine never lapses.'
+      },
+      affiliate: {
+        title: "Affiliate Command",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Referral & Impact Hub`,
+        badge: 'AFFILIATE COMMAND',
+        ctaHtml: null,
+        directive: 'Share your referral invite links, track your impact, and earn free monthly months.',
+        purpose: 'Your referral link center for sharing WHEALTHY with friends and earning Steward credits.',
+        steps: [
+          'Copy your unique Steward referral link or code.',
+          'Share with friends, family, or accountability partners.',
+          'Track successful referrals and earned subscription credits.'
+        ],
+        tip: 'Inviting friends into a shared rhythm increases accountability for both of you.'
+      },
+      circle: {
+        title: "Steward Circles",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Small Group Accountability`,
+        badge: 'CIRCLES',
+        ctaHtml: null,
+        directive: 'Join or create a 7-member circle to share daily matrix accountability with trusted partners.',
+        purpose: 'Small group accountability circles (up to 7 members) for daily discipline tracking.',
+        steps: [
+          'Join a circle using an invite code from a friend.',
+          'Or create a new Prayer, Fast, or Accountability Circle.',
+          'Check in daily to light up your W/P/F/R matrix for your circle.'
+        ],
+        tip: 'Check in daily so your circle partners see your W/P/F/R matrix lights up green!'
+      },
+      cohort: {
+        title: "Cohort Challenge",
+        subtitle: `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span> · Sprint Governance`,
+        badge: 'COHORT',
+        ctaHtml: null,
+        directive: 'Participate in active community governance sprints and track cohort progress.',
+        purpose: 'Time-bound community sprints for collective governance and spiritual discipline challenges.',
+        steps: [
+          'View active cohort challenge rules and timelines.',
+          'Track your position on the cohort daily leaderboard.',
+          'Complete daily sprint directives together.'
+        ],
+        tip: 'Group sprints push you past personal limitations into high-performance discipline.'
+      }
     };
 
-    const cfg = viewActionConfig[view] || viewActionConfig.dash;
+    const activeGuide = pageGuideData[view] || pageGuideData.dash;
+    window._activePageGuide = activeGuide;
+
+    var tEl = document.getElementById('dashTitle');
+    if (tEl) {
+      tEl.innerHTML = activeGuide.title;
+    }
+
+    var subEl = document.getElementById('dashSubtitle');
+    if (subEl) {
+      subEl.style.display = 'block';
+      subEl.innerHTML = activeGuide.subtitle;
+    }
 
     var actionSlot = document.getElementById('tabHeaderActionSlot');
     if (actionSlot) {
-      if (cfg.ctaHtml) {
-        actionSlot.innerHTML = cfg.ctaHtml;
+      if (activeGuide.ctaHtml) {
+        actionSlot.innerHTML = activeGuide.ctaHtml;
       } else {
-        actionSlot.innerHTML = `<span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">${cfg.badge}</span>`;
+        actionSlot.innerHTML = `<span style="font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--lime); background:rgba(204,255,0,0.1); border:1px solid rgba(204,255,0,0.25); padding:6px 14px; border-radius:99px;">${activeGuide.badge}</span>`;
       }
     }
 
@@ -19703,13 +20306,8 @@ async function loadAndInit(){
       if (window.aiPersonalizations && window.aiPersonalizations.dailyDirective) {
         directiveEl.textContent = window.aiPersonalizations.dailyDirective;
       } else {
-        directiveEl.textContent = cfg.directive;
+        directiveEl.textContent = activeGuide.directive;
       }
-    }
-
-    var tEl = document.getElementById('dashTitle');
-    if (tEl) {
-      tEl.innerHTML = `${timeGreeting}, <span style="color:var(--lime);font-weight:800;text-shadow:0 0 10px rgba(204,255,0,0.2);">${name}</span>`;
     }
 
     const welcomeEl = document.getElementById('welcomeAvatarSlot');
@@ -19718,11 +20316,41 @@ async function loadAndInit(){
       waPaintWelcomeAvatar(welcomeEl, initials);
     }
 
-    // Trigger celebratory confetti burst on tab navigation
     if (typeof triggerWelcomeCelebration === 'function') {
       triggerWelcomeCelebration(name, archetype);
     }
   }
+
+  window.openPageGuideModal = function() {
+    const g = window._activePageGuide || {
+      title: "Page Guide",
+      purpose: "Overview of this module.",
+      steps: ["Explore the available tools on this page."],
+      tip: "Stay consistent in your daily steward rhythm."
+    };
+    const titleEl = document.getElementById('pageGuideModalTitle');
+    if (titleEl) titleEl.textContent = g.title + " Guide";
+    
+    const purpEl = document.getElementById('pageGuidePurpose');
+    if (purpEl) purpEl.textContent = g.purpose;
+    
+    const stepsList = document.getElementById('pageGuideSteps');
+    if (stepsList) {
+      stepsList.innerHTML = (g.steps || []).map(function(s){ return `<li style="margin-bottom:6px;">${s}</li>`; }).join('');
+    }
+    
+    const tipEl = document.getElementById('pageGuideTip');
+    if (tipEl) tipEl.textContent = g.tip;
+    
+    const modalEl = document.getElementById('pageGuideModal');
+    if (modalEl) modalEl.style.display = 'flex';
+  };
+
+  window.closePageGuideModal = function() {
+    const modalEl = document.getElementById('pageGuideModal');
+    if (modalEl) modalEl.style.display = 'none';
+  };
+
   window.personalizePageHeader = personalizePageHeader;
 
   function triggerWelcomeCelebration(memberName, archetype) {
@@ -20225,7 +20853,7 @@ async function loadAndInit(){
     steps.push({
       target: 'navDash', view: 'dash', group: null,
       title: 'Home',
-      body: 'Your command center. Every morning starts here: the Daily Directive, one line that governs the day, and your bundle at hand.',
+      body: 'Your Steward Dashboard. Every morning starts here: the Daily Directive, one line that governs the day, and your bundle at hand.',
       adminOnly: false
     });
 
@@ -20685,7 +21313,20 @@ async function loadAndInit(){
       } catch (e3) {
         console.warn('Failed to load admin-rhythm-stats:', e3);
       }
-      
+
+      try {
+        var emRes = await fetch('https://yzaxzmuuvozonhgwhlim.supabase.co/functions/v1/admin-email-stats', {
+          method: 'POST',
+          headers: {'content-type':'application/json','Authorization':'Bearer '+token,'apikey':anon,'x-admin-email':email},
+          body: JSON.stringify({email:email})
+        });
+        if (emRes.ok) {
+          d.emailStats = await emRes.json();
+        }
+      } catch (e4) {
+        console.warn('Failed to load admin-email-stats:', e4);
+      }
+
       whaStatus('');
       return d;
     }catch(e){ whaStatus('Live data unavailable. Check connection, then Refresh.'); return null; }
@@ -21350,6 +21991,9 @@ async function loadAndInit(){
       return '';
     },
 
+    currentStep: 1,
+    totalSteps: 9,
+
     showScreen(name) {
       document.querySelectorAll('#rhythmView .rhy-screen').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('rhyScreen' + name);
@@ -21362,7 +22006,7 @@ async function loadAndInit(){
     },
 
     startAssessment() {
-      currentStep = 1;
+      this.currentStep = 1;
       this.showScreen('Assess');
       try { this.renderStep(); } catch(e){ console.error('[Rhythm] renderStep failed:', e); }
     },
@@ -21384,17 +22028,38 @@ async function loadAndInit(){
       }
     },
 
+    setRmeq(val, btn) {
+      this._assessData = this._assessData || {};
+      this._assessData.rmeq = val;
+      const chips = document.querySelectorAll('.rhy-rmeq-chip');
+      chips.forEach(c => {
+        if (c && c.style) {
+          c.style.background = 'rgba(255,255,255,0.05)';
+          c.style.color = 'rgba(255,255,255,0.7)';
+          c.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
+      });
+      if (btn && btn.style) {
+        btn.style.background = 'rgba(204,255,0,0.15)';
+        btn.style.color = 'var(--lime)';
+        btn.style.borderColor = 'var(--lime)';
+      }
+    },
+
     setWorkoutType(type, btn) {
+      this._assessData = this._assessData || {};
       this._assessData.workoutType = type;
       const el = document.getElementById('rhyWorkoutType');
       if (el) el.value = type;
       const chips = document.querySelectorAll('.rhy-workout-type-chip');
       chips.forEach(c => {
-        c.style.background = 'rgba(255,255,255,0.05)';
-        c.style.color = '#fff';
-        c.style.borderColor = 'rgba(255,255,255,0.1)';
+        if (c && c.style) {
+          c.style.background = 'rgba(255,255,255,0.05)';
+          c.style.color = '#fff';
+          c.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
       });
-      if (btn) {
+      if (btn && btn.style) {
         btn.style.background = 'var(--lime)';
         btn.style.color = '#000';
         btn.style.borderColor = 'var(--lime)';
@@ -21402,16 +22067,19 @@ async function loadAndInit(){
     },
 
     setWorkoutWindow(win, btn) {
+      this._assessData = this._assessData || {};
       this._assessData.workoutWindow = win;
       const el = document.getElementById('rhyWorkoutWindow');
       if (el) el.value = win;
       const chips = document.querySelectorAll('.rhy-workout-win-chip');
       chips.forEach(c => {
-        c.style.background = 'rgba(255,255,255,0.05)';
-        c.style.color = 'rgba(255,255,255,0.7)';
-        c.style.borderColor = 'rgba(255,255,255,0.1)';
+        if (c && c.style) {
+          c.style.background = 'rgba(255,255,255,0.05)';
+          c.style.color = 'rgba(255,255,255,0.7)';
+          c.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
       });
-      if (btn) {
+      if (btn && btn.style) {
         btn.style.background = 'rgba(204,255,0,0.15)';
         btn.style.color = 'var(--lime)';
         btn.style.borderColor = 'var(--lime)';
@@ -21424,11 +22092,14 @@ async function loadAndInit(){
       const indicator = document.getElementById('rhyStepIndicator');
       const btnPrev = document.getElementById('btnRhyPrev');
       
-      if (btnPrev) btnPrev.style.display = currentStep > 1 ? 'inline-flex' : 'none';
-      if (title) title.textContent = `Step ${currentStep} of ${totalSteps}`;
+      const cStep = this.currentStep || 1;
+      const tSteps = this.totalSteps || 9;
+
+      if (btnPrev) btnPrev.style.display = cStep > 1 ? 'inline-flex' : 'none';
+      if (title) title.textContent = `Step ${cStep} of ${tSteps}`;
 
       let html = '';
-      if (currentStep === 1) {
+      if (cStep === 1) {
         if (indicator) indicator.textContent = 'Wake Time';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Wake Up Time</h3>
@@ -21438,7 +22109,7 @@ async function loadAndInit(){
             <input type="time" id="rhyWakeTime" class="rhy-modal-input" value="${this._assessData.wake}" style="max-width:220px; margin:0 auto; font-size:22px; text-align:center; font-weight:800; font-family:monospace;">
           </div>
         `;
-      } else if (currentStep === 2) {
+      } else if (cStep === 2) {
         if (indicator) indicator.textContent = 'Sleep Time';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Sleep & Rest Time</h3>
@@ -21448,7 +22119,7 @@ async function loadAndInit(){
             <input type="time" id="rhySleepTime" class="rhy-modal-input" value="${this._assessData.sleep}" style="max-width:220px; margin:0 auto; font-size:22px; text-align:center; font-weight:800; font-family:monospace;">
           </div>
         `;
-      } else if (currentStep === 3) {
+      } else if (cStep === 3) {
         if (indicator) indicator.textContent = 'Work Blocks';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Steward Work Hours</h3>
@@ -21470,7 +22141,7 @@ async function loadAndInit(){
             </label>
           </div>
         `;
-      } else if (currentStep === 4) {
+      } else if (cStep === 4) {
         if (indicator) indicator.textContent = 'Family Anchors';
         html = `
           <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; text-transform:uppercase; color:#fff; margin-bottom:8px;">Family & Relationship Anchors</h3>
@@ -21485,7 +22156,7 @@ async function loadAndInit(){
             </label>
           </div>
         `;
-      } else if (currentStep === 5) {
+      } else if (cStep === 5) {
         if (indicator) indicator.textContent = 'Workout & Movement';
         const wOpt = this._assessData.workoutOptIn;
         const wType = this._assessData.workoutType;
@@ -21528,23 +22199,24 @@ async function loadAndInit(){
     },
 
     saveCurrentStepData() {
-      if (currentStep === 1) {
+      const step = this.currentStep || 1;
+      if (step === 1) {
         const el = document.getElementById('rhyWakeTime');
         if (el) this._assessData.wake = el.value;
-      } else if (currentStep === 2) {
+      } else if (step === 2) {
         const el = document.getElementById('rhySleepTime');
         if (el) this._assessData.sleep = el.value;
-      } else if (currentStep === 3) {
+      } else if (step === 3) {
         const s = document.getElementById('rhyWorkStart');
         const e = document.getElementById('rhyWorkEnd');
         const r = document.getElementById('rhyWorkRemote');
         if (s) this._assessData.workStart = s.value;
         if (e) this._assessData.workEnd = e.value;
         if (r) this._assessData.workRemote = r.checked;
-      } else if (currentStep === 4) {
+      } else if (step === 4) {
         const f = document.getElementById('rhyFamilyAnchor');
         if (f) this._assessData.familyAnchor = f.checked;
-      } else if (currentStep === 5) {
+      } else if (step === 5) {
         const o = document.getElementById('rhyWorkoutOptIn');
         const t = document.getElementById('rhyWorkoutType');
         const w = document.getElementById('rhyWorkoutWindow');
@@ -21555,17 +22227,17 @@ async function loadAndInit(){
     },
 
     prevStep() {
-      if (currentStep > 1) {
+      if (this.currentStep > 1) {
         this.saveCurrentStepData();
-        currentStep--;
+        this.currentStep--;
         this.renderStep();
       }
     },
 
     async nextStep() {
       this.saveCurrentStepData();
-      if (currentStep < totalSteps) {
-        currentStep++;
+      if (this.currentStep < (this.totalSteps || 9)) {
+        this.currentStep++;
         this.renderStep();
       } else {
         await this.submitAssessment();
@@ -21573,8 +22245,8 @@ async function loadAndInit(){
     },
 
     async submitAssessment() {
-      if (isSubmitting) return;
-      isSubmitting = true;
+      if (this._isSubmitting) return;
+      this._isSubmitting = true;
       this.saveCurrentStepData();
 
       this.showScreen('Loader');
@@ -21773,11 +22445,12 @@ async function loadAndInit(){
         return { isProduct: false, isLocked: false, ifThenText: s.if_then_text || '', ctaHtml: '' };
       }
 
+      const isClaimedOrEquipped = !!(window._bundleClaimed || (typeof productState !== 'undefined' && (productState === 'equipped' || productState === 'active')) || localStorage.getItem('wh_bundle_claimed') === 'true' || localStorage.getItem('wh_claimed') === 'true');
       const bSub = this.state.bundleSubscription || {};
-      const status = bSub.status || (localStorage.getItem('wh_bundle_claimed') === 'true' ? 'delivered' : 'unclaimed');
+      const status = bSub.status || (isClaimedOrEquipped ? 'delivered' : 'unclaimed');
       
-      // If the kit is active/delivered, ALL 5 products in the kit are delivered together!
-      const isBundleDelivered = status === 'active' || status === 'delivered';
+      // If the kit is active/delivered or claimed/equipped, ALL 5 products in the kit are delivered/unlocked together!
+      const isBundleDelivered = status === 'active' || status === 'delivered' || isClaimedOrEquipped;
       const isBundleInTransit = status === 'in_transit' || status === 'processing' || status === 'shipped';
 
       const isDelivered = isBundleDelivered || (s.today_status === 'done') || (s.today_status === 'grace');
@@ -21918,6 +22591,8 @@ async function loadAndInit(){
       const hydrationKey = 'wh_rhythm_hydration_sips_' + todayStr;
       const hydrationSlot = slotsArr.find(s => (s.product_key || '').toLowerCase().includes('hydration') || (s.title || '').toLowerCase().includes('hydration'));
       const isHydratedToday = hydrationSlot ? (hydrationSlot.today_status === 'done') : false;
+      const hydFulfillment = this.getProductFulfillmentInfo(hydrationSlot || { product_key: 'hydration', title: 'All-Day Hydration', today_status: 'none' });
+      const hydLocked = hydFulfillment.isLocked && !isHydratedToday;
       const sipCount = isHydratedToday ? 4 : parseInt(localStorage.getItem(hydrationKey) || '0', 10);
 
       container.innerHTML += `
@@ -21933,15 +22608,15 @@ async function loadAndInit(){
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
               <span style="font-size:13px; font-weight:800; color:#00d4ff; font-family:monospace;">${sipCount} / 4 Sips</span>
-              <button onclick="RHYTHM_BUILDER.logHydrationSip('${hydrationSlot ? hydrationSlot.id : ''}')" style="background:${sipCount >= 4 ? 'rgba(0,212,255,0.2)' : '#00d4ff'}; color:${sipCount >= 4 ? '#00d4ff' : '#000'}; font-weight:900; font-size:12px; padding:10px 18px; border-radius:10px; border:${sipCount >= 4 ? '1px solid #00d4ff' : 'none'}; cursor:pointer; transition:all 0.2s; box-shadow:${sipCount >= 4 ? 'none' : '0 0 15px rgba(0,212,255,0.4)'};">
-                ${sipCount >= 4 ? '✓ Hydrated Today (4/4)' : `+ Log Sip (${sipCount + 1}/4)`}
+              <button onclick="${hydLocked ? `RHYTHM_BUILDER.handleLockedCheckboxClick('All-Day Hydration')` : `RHYTHM_BUILDER.logHydrationSip('${hydrationSlot ? hydrationSlot.id : ''}')`}" style="background:${hydLocked ? 'rgba(255,255,255,0.06)' : sipCount >= 4 ? 'rgba(0,212,255,0.2)' : '#00d4ff'}; color:${hydLocked ? 'rgba(255,255,255,0.5)' : sipCount >= 4 ? '#00d4ff' : '#000'}; font-weight:900; font-size:12px; padding:10px 18px; border-radius:10px; border:${hydLocked ? '1px dashed rgba(255,255,255,0.25)' : sipCount >= 4 ? '1px solid #00d4ff' : 'none'}; cursor:pointer; transition:all 0.2s; box-shadow:${hydLocked || sipCount >= 4 ? 'none' : '0 0 15px rgba(0,212,255,0.4)'};">
+                ${hydLocked ? '🔒 Locked · Claim $99 Bundle' : sipCount >= 4 ? '✓ Hydrated Today (4/4)' : `+ Log Sip (${sipCount + 1}/4)`}
               </button>
               ${sipCount > 0 ? `<button onclick="RHYTHM_BUILDER.resetHydrationSips()" title="Reset Sips" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:12px; cursor:pointer; padding:4px;">↺</button>` : ''}
             </div>
           </div>
           <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
             ${[1, 2, 3, 4].map(sNum => `
-              <div onclick="RHYTHM_BUILDER.setHydrationSips(${sNum}, '${hydrationSlot ? hydrationSlot.id : ''}')" style="background:${sNum <= sipCount ? 'rgba(0,212,255,0.25)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.08)'}; border-radius:10px; padding:8px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+              <div onclick="${hydLocked ? `RHYTHM_BUILDER.handleLockedCheckboxClick('All-Day Hydration')` : `RHYTHM_BUILDER.setHydrationSips(${sNum}, '${hydrationSlot ? hydrationSlot.id : ''}')`}" style="background:${sNum <= sipCount ? 'rgba(0,212,255,0.25)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.08)'}; border-radius:10px; padding:8px 10px; text-align:center; cursor:pointer; transition:all 0.2s; opacity:${hydLocked ? '0.45' : '1'};">
                 <span style="font-size:11px; font-weight:800; color:${sNum <= sipCount ? '#00d4ff' : 'rgba(255,255,255,0.4)'};">💧 Sip ${sNum}</span>
               </div>
             `).join('')}
@@ -22172,6 +22847,16 @@ async function loadAndInit(){
     },
 
     async toggleCheckin(slotId, curStatus) {
+      // Hard guard: product slots stay un-checkable until the $99 bundle is delivered
+      const slotsArrGuard = Array.isArray(this.state.slots) ? this.state.slots : [];
+      const guardSlot = slotsArrGuard.find(s => s.id === slotId);
+      if (guardSlot) {
+        const gf = this.getProductFulfillmentInfo(guardSlot);
+        if (gf.isProduct && gf.isLocked) { this.handleLockedCheckboxClick(guardSlot.title || ''); return; }
+      } else if (typeof slotId === 'string' && slotId.startsWith('can-')) {
+        const gf = this.getProductFulfillmentInfo({ id: slotId, product_key: slotId.replace('can-',''), title: slotId.replace('can-',''), today_status: 'none' });
+        if (gf.isProduct && gf.isLocked) { this.handleLockedCheckboxClick(''); return; }
+      }
       const nextStatus = curStatus === 'done' ? 'skipped' : 'done';
       try {
         const token = await this.getToken();
@@ -22787,7 +23472,7 @@ async function loadAndInit(){
 </div>
 <script>
 (function(){
-  var TITLE={rhythmView:'My Rhythm',dashView:'Command Center',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',all5View:'Claim Your Bundle',portalView:'Product Portal',affiliateView:'Affiliate Command',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
+  var TITLE={rhythmView:'My Rhythm',dashView:'Steward Dashboard',bibleView:'The Word',prayerView:'Hand It Over',wallView:'The Prayer Wall',testimonyView:'Testimonies',meView:'Me',recordView:'The Record',fastView:'The Fast',tryallView:'Try All',all5View:'Claim Your Bundle',portalView:'Product Portal',affiliateView:'Affiliate Center',communityView:'Community',enterCommunityView:'Enter Community',claimView:'Claim Bundle',circleView:'Circles',cohortView:'Cohort Challenge',adminView:'Surface',adminAnalyticsView:'Control Panel'};
   var DESC={tryallView:'Every routine in the house, open to try. Re-match when your season changes.',all5View:'The full 5-product WHEALTHY energy, focus, and recovery ecosystem for $99/mo.',portalView:'Your order history with live tracking and billing.',affiliateView:'Track your referrals and what you have earned.',communityView:'Step into the Stewards Community on Skool.',enterCommunityView:'Step into the Stewards Community on Skool.',recordView:'Write what today held. It stays private.',fastView:'Start a fast, follow the daily structure, and file each day.',circleView:'Your small circle of stewards praying for each other.',cohortView:'A season-long challenge you run together.'};
   var HELP={rhythmView:'This is your daily rhythm, built from your assessment. Green means done, a soft mark is a grace day, and nothing breaks if you miss one. New here? Start with the assessment and we build it with you.',dashView:'The tiles show what is active today. Use the left menu to move between your rhythm, prayer, the Word, and community.',bibleView:'Toggle Bible 365 vs My Bible up top. Tap a verse to highlight or add a note. Ask the Bible Buddy anything and it pulls the passage inline.',prayerView:'Pick a door: Family, Work, Money, Health, My Own Head, or Freeform. Keep it private, or lift it to the Wall so the community prays with you. Mark it answered when God moves.',wallView:'Tap Pray to stand with someone, and Amen to let them know they are not alone. Posts can be signed or anonymous.',testimonyView:'When you mark one of your prayers answered, you can lift it here as a testimony to encourage the house.',meView:'Everything you have logged lives here: your prayers, journal, reading, and rhythm. Tap any item to reopen it.',recordView:'Your entries are yours alone and help your rhythm learn how you are carrying the load. Journaling is optional, never required.',fastView:'Pick a fast and check in each day. Ending early is fine, the point is the practice, not a streak.',tryallView:'Browse each product, watch a real steward review, and add what fits your rhythm.',all5View:'The complete 5-product WHEALTHY ecosystem: Genius Guice, Genius Joe, Hydration, Charge, and Boss delivered to your door every month for $99/mo.',portalView:'Your orders from the label show up here automatically with live tracking. When something ships, you will see the carrier, tracking number, and a link to follow it. Billing and subscription management is at the bottom.',affiliateView:'Share your code, and every steward who joins through it shows up here.',communityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',enterCommunityView:'This is where the daily life of the house happens: discussion, encouragement, and your 10% member code.',claimView:'Your matched bundle, with your 10% member discount already applied. Claim it when you are ready.',circleView:'Join or start a circle, and pray for your people day by day.',cohortView:'Follow the cohort daily steps alongside everyone who started with you.',adminView:'Tabs across the top: Challenge, Members, Moderation, Settings, Audit. Master-only actions are gated.',adminAnalyticsView:'Pick a date range up top. Every card reads from live data. Hit Refresh to bypass the cache.'};
   window.openHelp=function(key){ var t=document.getElementById('vhPopTitle'),b=document.getElementById('vhPopBody'),bk=document.getElementById('vhPopBack'); if(!bk)return; t.textContent=TITLE[key]||'Help'; b.textContent=HELP[key]||''; bk.classList.add('open'); };
@@ -23051,6 +23736,12 @@ async function loadAndInit(){
         if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
       } else if (result.paymentIntent && (result.paymentIntent.status === 'succeeded' || result.paymentIntent.status === 'processing')) {
         // Success!
+        window._bundleClaimed = true;
+        window.productState = 'equipped';
+        try {
+          localStorage.setItem('wh_bundle_claimed', 'true');
+          localStorage.setItem('wh_claimed', 'true');
+        } catch(e) {}
         if (window._claimTimerInterval) clearInterval(window._claimTimerInterval);
         var formEl = document.getElementById('claimPaymentForm');
         var successEl = document.getElementById('claimCheckoutSuccess');
@@ -23062,6 +23753,10 @@ async function loadAndInit(){
           var closeBtn = document.getElementById('claimSuccessClose');
           if (closeBtn) setTimeout(function(){ closeBtn.focus(); }, 100);
         }
+        if (typeof RHYTHM_BUILDER !== 'undefined' && RHYTHM_BUILDER.renderTimeline) {
+          RHYTHM_BUILDER.renderTimeline();
+        }
+        if (typeof renderDashboard === 'function') renderDashboard();
       } else {
         if (errEl) errEl.textContent = 'Something unexpected happened. Please try again.';
         if (payBtn) { payBtn.disabled = false; payBtn.textContent = '⚡ COMPLETE ORDER & UNLOCK SYSTEM ($99/MO) →'; payBtn.style.opacity = '1'; }
