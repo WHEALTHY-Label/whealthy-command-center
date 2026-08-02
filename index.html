@@ -11654,6 +11654,28 @@ window.WALL_KEY = WALL_KEY;
     }
   };
 
+  window.navigateToScripture = function(book, chapter, verse) {
+    if (typeof go === 'function') {
+      go('bible');
+    }
+    if (typeof switchBibleMode === 'function') {
+      switchBibleMode('my');
+    }
+    if (typeof BIBLE_READER !== 'undefined') {
+      const ch = parseInt(chapter) || 1;
+      const v = parseInt(verse) || 1;
+      if (!BIBLE_READER.initialized && typeof BIBLE_READER.init === 'function') {
+        BIBLE_READER.init().then(() => {
+          if (typeof BIBLE_READER.goToSpot === 'function') {
+            BIBLE_READER.goToSpot(book, ch, v);
+          }
+        });
+      } else if (typeof BIBLE_READER.goToSpot === 'function') {
+        BIBLE_READER.goToSpot(book, ch, v);
+      }
+    }
+  };
+
      // ---- BIBLE BUDDY CHAT LOG & STEWARD PROJECT ENGINE ----
   function renderBotMessageHtml(data) {
     const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
@@ -11692,7 +11714,7 @@ window.WALL_KEY = WALL_KEY;
       responseHtml += `<div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">`;
       for (const refObj of data.verses) {
         const verseCardId = 'ref-' + Math.random().toString(36).substr(2, 9);
-        const refBook = refObj.reference.split(' ').slice(0, -1).join(' ');
+        const refBook = refObj.reference.split(' ').slice(0, -1).join(' ').replace(/'/g, "\\'");
         const refCoords = refObj.reference.split(' ').pop().split(':');
         const refChapter = parseInt(refCoords[0]) || 1;
         const refVerse = parseInt(refCoords[1]) || 1;
