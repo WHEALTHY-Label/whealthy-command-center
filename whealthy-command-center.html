@@ -9408,6 +9408,11 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
         #adminAnalyticsView .wha-fastname span{color:rgba(240,241,243,0.45);font-size:11px}
         #adminAnalyticsView .wha-prog{color:rgba(240,241,243,0.6)}
         #adminAnalyticsView .wha-when{color:rgba(240,241,243,0.4)}
+        #adminAnalyticsView .wha-subtabs{display:flex;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:5px;overflow-x:auto;width:100%;scrollbar-width:thin}
+        #adminAnalyticsView .wha-cat-btn{font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,0.55);padding:7px 13px;border-radius:8px;white-space:nowrap;border:1px solid transparent;background:none;cursor:pointer;transition:all 0.2s}
+        #adminAnalyticsView .wha-cat-btn:hover{color:#fff;background:rgba(255,255,255,0.06)}
+        #adminAnalyticsView .wha-cat-btn.active{background:var(--lime);color:#0a0a0a;border-color:var(--lime);box-shadow:0 0 10px rgba(204,255,0,0.2)}
+        #adminAnalyticsView .wha-cat-section{display:flex;flex-direction:column;gap:18px}
         @media(max-width:640px){#adminAnalyticsView .wha-wrap{padding:12px}#adminAnalyticsView .wha-kpi .v{font-size:22px}#adminAnalyticsView .wha-logrow{grid-template-columns:70px 1fr;row-gap:4px}#adminAnalyticsView .wha-prog,#adminAnalyticsView .wha-when{grid-column:2}}
         </style>
         <div class="wha-wrap">
@@ -9419,6 +9424,17 @@ small, .view-sub, .sidebar-brand-sub, .bundle-item__label, .alt-toggle, .claimed
               <button class="wha-tab" data-range="all" onclick="whaSetRange('all')">All Time</button>
             </div>
             <button class="wha-refresh" id="whaRefreshBtn" onclick="whaRefresh()">Refresh</button>
+          </div>
+          <div class="wha-bar" style="margin-top:2px;">
+            <div class="wha-subtabs" id="whaCategoryNav">
+              <button class="wha-cat-btn active" data-cat="all" onclick="whaSwitchCat('all')">🌐 All Metrics</button>
+              <button class="wha-cat-btn" data-cat="overview" onclick="whaSwitchCat('overview')">📊 Overview &amp; Growth</button>
+              <button class="wha-cat-btn" data-cat="members" onclick="whaSwitchCat('members')">👥 Members &amp; Funnel</button>
+              <button class="wha-cat-btn" data-cat="purchases" onclick="whaSwitchCat('purchases')">🛍️ Purchases &amp; Carts</button>
+              <button class="wha-cat-btn" data-cat="disciplines" onclick="whaSwitchCat('disciplines')">⚡ Disciplines &amp; Word</button>
+              <button class="wha-cat-btn" data-cat="journal" onclick="whaSwitchCat('journal')">📖 Journal &amp; Rhythm</button>
+              <button class="wha-cat-btn" data-cat="community" onclick="whaSwitchCat('community')">🤝 Community &amp; Logs</button>
+            </div>
           </div>
           <div class="wha-status" id="whaStatus" style="display:none"></div>
           <div class="wha-body" id="whaBody"><div class="wha-loading">Loading live analytics...</div></div>
@@ -20687,6 +20703,23 @@ async function loadAndInit(){
   window.whaSetRange=function(r){ whaRange=r; var ts=document.querySelectorAll('#whaRangeTabs .wha-tab'); ts.forEach(function(t){t.classList.toggle('active',t.dataset.range===r);}); whaLoad(r); };
   window.whaRefresh=async function(){ var b=el('whaRefreshBtn'); if(b){b.disabled=true;b.textContent='Refreshing...';} var d=await whaFetch(whaRange,true); if(d){whaData=d;whaRender(d);} if(b){b.disabled=false;b.textContent='Refresh';} };
 
+  window.CURRENT_WHA_CAT = 'all';
+  window.whaSwitchCat = function(cat) {
+    window.CURRENT_WHA_CAT = cat || 'all';
+    document.querySelectorAll('#whaCategoryNav .wha-cat-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-cat') === window.CURRENT_WHA_CAT);
+    });
+    document.querySelectorAll('#whaBody .wha-cat-section').forEach(function(sec) {
+      if (window.CURRENT_WHA_CAT === 'all') {
+        sec.style.display = 'flex';
+      } else {
+        var secCat = sec.getAttribute('data-cat');
+        sec.style.display = (secCat === window.CURRENT_WHA_CAT) ? 'flex' : 'none';
+      }
+    });
+    try { window.dispatchEvent(new Event('resize')); } catch(e){}
+  };
+
   function legend(items){ return '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px">'+items.map(function(i){return '<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:'+MUT+'"><i style="width:10px;height:10px;border-radius:3px;background:'+i[1]+';display:inline-block"></i>'+i[0]+'</span>';}).join('')+'</div>'; }
   function lineChart(e2,labels,series){
     if(!e2)return; var W=620,H=240,padL=44,padR=14,padT=12,padB=28,iw=W-padL-padR,ih=H-padT-padB;
@@ -20724,7 +20757,7 @@ async function loadAndInit(){
 
   function whaRender(d){
     var secs=[];
-    function S(fn){ try{ secs.push(fn()); }catch(e){} }
+    function S(fn, cat){ try{ var html=fn(); if(html){ secs.push('<div class="wha-cat-section" data-cat="'+(cat||'overview')+'">'+html+'</div>'); } }catch(e){} }
     var m=d.members||{},mh=d.memberHealth||{},act=d.activity||{},f=d.fasts||{},fx=d.fastsExtra||{},q=d.quiz||{},dm=d.demo||{},a=d.affiliates||{},e=d.engagement||{},r=d.record||{},b=d.bundles||{},bo=d.bundleOps||{},gr=d.growth||{labels:[]},tr=d.trends||{},pr=d.prayer||{},sc=d.scripture||{},cm=d.community||{},gg=d.groups||{},ob=d.onboarding||{},po=d.portal||{};
     var communityTotal=(m.free||0)+(m.paid||0);
 
@@ -20737,14 +20770,14 @@ async function loadAndInit(){
       kpi('Free to Premium',(m.conv==null?0:m.conv)+'%','upgrade conversion'),
       kpi('MRR','$'+fmt(mh.mrr),'premium price sum'),
       kpi('Lapsed',fmt(mh.churned),'active_through passed')
-    ]);});
-    S(function(){return card('Member Growth',box('whaMemberGrowth'));});
+    ]);}, 'overview');
+    S(function(){return card('Member Growth',box('whaMemberGrowth'));}, 'overview');
     S(function(){return card('App Activity', grid([
       kpi('Active Today',fmt(act.dau),'opened the app'),
       kpi('Active 7 Days',fmt(act.wau),''),
       kpi('Active 30 Days',fmt(act.mau),''),
       kpi('Opens This Range',fmt(act.opens),'')
-    ])+box('whaActivity')+'<div class="wha-sub" style="margin-top:8px;color:rgba(240,241,243,0.4)">Collecting since '+(act.collectingSince||'today')+'. History before that date was never recorded.</div>');});
+    ])+box('whaActivity')+'<div class="wha-sub" style="margin-top:8px;color:rgba(240,241,243,0.4)">Collecting since '+(act.collectingSince||'today')+'. History before that date was never recorded.</div>');}, 'overview');
 
     /* ===== MEMBERS: FREE & PAID ===== */
     S(function(){return card('Members: Free &amp; Paid','<div class="wha-grid">'+box('whaMemberStatus')+'</div>'+
@@ -20752,7 +20785,7 @@ async function loadAndInit(){
       kpi('Nurture Queued',fmt(gpath(mh,'nurture.queued',0)),''),
       kpi('Nurture Sent',fmt(gpath(mh,'nurture.sent',0)),''),
       kpi('Nurture Joined',fmt(gpath(mh,'nurture.joined',0)),'came back to Skool')
-    ])+'</div>');});
+    ])+'</div>');}, 'members');
     S(function(){
       var fsPairs=(ob.firstSteps||[]).map(function(p){return {name:p[0],value:communityTotal?Math.round(p[1]/communityTotal*100):0,color:LIME};});
       return card('Onboarding', grid([
@@ -20760,7 +20793,7 @@ async function loadAndInit(){
         kpi('Avg First Steps',(ob.avgSteps==null?0:ob.avgSteps)+' / 7',''),
         kpi('All 7 Done',fmt(ob.complete7),'')
       ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaFirstSteps')+'</div>');
-    });
+    }, 'members');
 
     /* ===== PRODUCT PURCHASES ===== */
     S(function(){
@@ -20781,7 +20814,42 @@ async function loadAndInit(){
         kpi('Active Subs',fmt(gpath(bo,'subs.active',0)),'')
       ])+(top.name&&top.name!=='n/a'?'<div class="wha-spot">Top bundle &middot; <b>'+top.name+'</b> - '+(top.rate||0)+'% ('+fmt(top.purchased)+' of '+fmt(top.suggested)+')</div>':'')+
       '<div class="wha-grid" style="margin-top:16px">'+box('whaTryProducts')+box('whaOrderTrend')+'</div>');
-    });
+    }, 'purchases');
+
+    /* ===== EMAIL & CARTS ===== */
+    S(function(){
+      var es=d.emailStats||{};
+      var ac=es.abandoned_carts||{open:[],recovered:0,total:0};
+      var seqs=es.sequences||{};
+      var seqNames={'abandoned-cart':'Abandoned Cart','lead-nurture':'Lead Nurture','skool-reengage':'Skool Re-engage','crm-reengage':'CRM Re-engage','thankyou':'Thank You (post-purchase)','other':'Other / transactional'};
+      function dstr(x){ if(!x) return '&mdash;'; var dd=new Date(x); return isNaN(dd.getTime())?'&mdash;':dd.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+dd.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+      var tblStyle='width:100%;border-collapse:collapse;font-size:12px;min-width:560px';
+      var thStyle='text-align:left;padding:8px 10px;color:rgba(240,241,243,0.5);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.06em;border-bottom:1px solid rgba(255,255,255,0.08)';
+      var tdStyle='padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(240,241,243,0.85)';
+      var seqRows=Object.keys(seqs).map(function(k){ var v=seqs[k];
+        return '<tr><td style="'+tdStyle+'"><b>'+(seqNames[k]||k)+'</b></td><td style="'+tdStyle+'">'+fmt(v.sent)+'</td><td style="'+tdStyle+'">'+fmt(v.delivered)+'</td><td style="'+tdStyle+'">'+fmt(v.opened)+'</td><td style="'+tdStyle+'">'+fmt(v.clicked)+'</td><td style="'+tdStyle+'">'+fmt(v.bounced)+'</td><td style="'+tdStyle+'">'+dstr(v.last_sent)+'</td></tr>';
+      }).join('');
+      var cartRows=(ac.open||[]).slice(0,25).map(function(c){
+        return '<tr><td style="'+tdStyle+'">'+(c.email||'')+'</td><td style="'+tdStyle+'">'+(c.bundle||'')+'</td><td style="'+tdStyle+'">'+dstr(c.started_at)+'</td><td style="'+tdStyle+'">'+((c.emails_sent||[]).join(', ')||'none yet')+'</td><td style="'+tdStyle+'">'+dstr(c.last_email_at)+'</td></tr>';
+      }).join('');
+      var emRows=(es.emails||[]).slice(0,30).map(function(x){
+        return '<tr><td style="'+tdStyle+'">'+(x.to_email||'')+'</td><td style="'+tdStyle+'">'+(x.template||'')+'</td><td style="'+tdStyle+'">'+dstr(x.sent_at)+'</td><td style="'+tdStyle+'">'+dstr(x.opened_at)+'</td><td style="'+tdStyle+'">'+dstr(x.clicked_at)+'</td></tr>';
+      }).join('');
+      var note=es.tracking_note?'<div class="wha-sub" style="margin:8px 0 0;color:#ffb300">'+es.tracking_note+'</div>':'';
+      return card('Email &amp; Abandoned Carts', grid([
+        kpi('Open Carts',fmt((ac.open||[]).length),'started checkout, not completed'),
+        kpi('Recovered',fmt(ac.recovered),'completed after starting'),
+        kpi('Emails (window)',fmt(Object.keys(seqs).reduce(function(a,k){return a+(seqs[k].sent||0);},0)),'last 1,000 sends'),
+        kpi('Opened',fmt(Object.keys(seqs).reduce(function(a,k){return a+(seqs[k].opened||0);},0)),'unique opens tracked'),
+        kpi('Clicked',fmt(Object.keys(seqs).reduce(function(a,k){return a+(seqs[k].clicked||0);},0)),'unique clicks tracked')
+      ])+note+
+      '<div class="wha-sub" style="margin:18px 0 6px;color:rgba(240,241,243,0.5)">SEQUENCES</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="'+tblStyle+'"><thead><tr><th style="'+thStyle+'">Sequence</th><th style="'+thStyle+'">Sent</th><th style="'+thStyle+'">Delivered</th><th style="'+thStyle+'">Opened</th><th style="'+thStyle+'">Clicked</th><th style="'+thStyle+'">Bounced</th><th style="'+thStyle+'">Last Send</th></tr></thead><tbody>'+(seqRows||'<tr><td style="'+tdStyle+'" colspan="7">No sends logged yet.</td></tr>')+'</tbody></table></div>'+
+      '<div class="wha-sub" style="margin:18px 0 6px;color:rgba(240,241,243,0.5)">OPEN ABANDONED CARTS</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="'+tblStyle+'"><thead><tr><th style="'+thStyle+'">Email</th><th style="'+thStyle+'">Bundle</th><th style="'+thStyle+'">Started</th><th style="'+thStyle+'">Cart Emails</th><th style="'+thStyle+'">Last Email</th></tr></thead><tbody>'+(cartRows||'<tr><td style="'+tdStyle+'" colspan="5">No abandoned carts right now.</td></tr>')+'</tbody></table></div>'+
+      '<div class="wha-sub" style="margin:18px 0 6px;color:rgba(240,241,243,0.5)">RECENT EMAILS (open / click dates)</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="'+tblStyle+'"><thead><tr><th style="'+thStyle+'">To</th><th style="'+thStyle+'">Template</th><th style="'+thStyle+'">Sent</th><th style="'+thStyle+'">Opened</th><th style="'+thStyle+'">Clicked</th></tr></thead><tbody>'+(emRows||'<tr><td style="'+tdStyle+'" colspan="5">No emails yet.</td></tr>')+'</tbody></table></div>');
+    }, 'purchases');
 
     /* ===== DISCIPLINES ===== */
     S(function(){
@@ -20795,7 +20863,7 @@ async function loadAndInit(){
         kpi('Day Adherence',(f.adherence==null?0:f.adherence)+'%','days filed vs elapsed'),
         kpi('Structure Only',(fx.structureOnlyPct==null?0:fx.structureOnlyPct)+'%','')
       ])+cards+'<div class="wha-grid" style="margin-top:16px">'+box('whaFastTrend')+box('whaDropoff')+box('whaPeople')+'</div>');
-    });
+    }, 'disciplines');
     S(function(){return card('Disciplines: Prayer', grid([
       kpi('Handed Over',fmt(pr.handedAll),'burdens, all time'),
       kpi('Kept Private',fmt(pr.privateCt),''),
@@ -20806,7 +20874,7 @@ async function loadAndInit(){
       kpi('Prayers Given',fmt(pr.praysGiven),'this range'),
       kpi('Amens',fmt(pr.amens),''),
       kpi('Open Reports',fmt(pr.reportsOpen),'moderation queue')
-    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaPrayerCats')+box('whaPrayerTrend')+'</div>');});
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaPrayerCats')+box('whaPrayerTrend')+'</div>');}, 'disciplines');
     S(function(){return card('Disciplines: Scripture', grid([
       kpi('Bible 365 Readers',fmt(sc.b365Users),''),
       kpi('Days Completed',fmt(sc.b365DaysCompleted),'all readers combined'),
@@ -20817,7 +20885,7 @@ async function loadAndInit(){
       kpi('Notes',fmt(sc.notes),''),
       kpi('Words Delivered',fmt(sc.wordDeliveriesAll),'daily word'),
       kpi('Scripture Engaged',(sc.engagedPct==null?0:sc.engagedPct)+'%','')
-    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaComfort')+'</div>');});
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaComfort')+'</div>');}, 'disciplines');
     S(function(){
       var cohortRows=(gg.cohorts||[]).map(function(c){return '<div class="wha-mrow"><span>'+c[0]+'</span><b>'+(c[1]||'')+'</b></div>';}).join('');
       return card('Disciplines: Circles &amp; Cohorts', grid([
@@ -20826,7 +20894,7 @@ async function loadAndInit(){
         kpi('Circle Prayers',fmt(gg.circlePraysAll),'all time'),
         kpi('Cohorts',fmt((gg.cohorts||[]).length),(gg.activeCohorts||0)+' active')
       ])+(cohortRows?'<div class="wha-mini">'+cohortRows+'</div>':''));
-    });
+    }, 'disciplines');
 
     /* ===== JOURNALS ===== */
     S(function(){
@@ -20845,7 +20913,7 @@ async function loadAndInit(){
       ])+'<div class="wha-tonebar"><i style="width:'+((r.heavy||0)/tot2*100)+'%;background:'+AMBER+'"></i><i style="width:'+((r.win||0)/tot2*100)+'%;background:'+LIME+'"></i><i style="width:'+((r.mixed||0)/tot2*100)+'%;background:rgba(240,241,243,0.3)"></i></div>'+
       '<div class="wha-grid" style="margin-top:16px">'+box('whaEntriesTrend')+'</div>'+
       (Array.isArray(e.leaderboard)&&e.leaderboard.length?'<div class="wha-mini" style="margin-top:12px">'+e.leaderboard.map(function(t,i){return '<div class="wha-mrow"><span><b style="color:'+LIME+';min-width:18px;display:inline-block">'+(i+1)+'</b> '+slab(t[0])+'</span><b>'+fmt(t[1])+' days</b></div>';}).join('')+'</div>':''));
-    });
+    }, 'journal');
 
     /* ===== RHYTHM ===== */
     S(function(){
@@ -20869,7 +20937,7 @@ async function loadAndInit(){
       ]) + '<div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.45)">' +
         'Checked: ' + fmt(checked) + ' &middot; Grace: ' + fmt(grace) + ' &middot; Missed: ' + fmt(missed) +
       '</div>');
-    });
+    }, 'journal');
 
     /* ===== QUIZ & FUNNEL ===== */
     S(function(){
@@ -20886,8 +20954,8 @@ async function loadAndInit(){
         kpi('CTA Clicks',fmt(q.ctaClicks),''),
         kpi('Avg Time on Page',fmt(q.avgTimeOnPage)+'s','')
       ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaQFunnel')+box('whaArch')+box('whaSeason')+'</div>');
-    });
-    S(function(){return card('Demographics','<div class="wha-grid">'+box('whaAge')+box('whaJob')+box('whaHours')+box('whaConsumption')+'</div>');});
+    }, 'community');
+    S(function(){return card('Demographics','<div class="wha-grid">'+box('whaAge')+box('whaJob')+box('whaHours')+box('whaConsumption')+'</div>');}, 'community');
 
     /* ===== COMMUNITY / SKOOL ===== */
     S(function(){return card('Community (Skool)', grid([
@@ -20897,7 +20965,7 @@ async function loadAndInit(){
       kpi('Likes',fmt(cm.likes),''),
       kpi('Comments',fmt(cm.comments),''),
       kpi('Last Sync',cm.lastSync||'never','')
-    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaSkoolTrend')+'</div>');});
+    ])+'<div class="wha-grid" style="margin-top:16px">'+box('whaSkoolTrend')+'</div>');}, 'community');
 
     /* ===== AFFILIATES ===== */
     S(function(){return card('Affiliates', grid([
@@ -20905,16 +20973,19 @@ async function loadAndInit(){
       kpi('Active',fmt(a.active),''),
       kpi('Referred Joins',fmt(a.referred),''),
       kpi('Try Referrals',fmt(a.tryRefs),'')
-])+(Array.isArray(a.top)&&a.top.length?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));});
+])+(Array.isArray(a.top)&&a.top.length?'<div class="wha-mini">'+a.top.map(function(t){return '<div class="wha-mrow"><span>'+t[0]+'</span><b>'+fmt(t[1])+' joins</b></div>';}).join('')+'</div>':''));}, 'community');
     /* ===== STEWARD LOG ===== */
     S(function(){
       var sl=d.stewardLog||[]; if(!sl.length) return '';
       var rows=[]; sl.forEach(function(s){(s.log||[]).forEach(function(x){var o=Object.assign({},x); o.who=slab(s.id); rows.push(o);});});
       rows.sort(function(a2,b2){return (b2.status==='active')-(a2.status==='active');});
       return card('Steward Log', '<div class="wha-log">'+rows.map(function(x){ var prog=x.status==='completed'?('finished '+x.total+' of '+x.total):x.status==='active'?('day '+x.day+' of '+x.total):('stopped day '+x.day+' of '+x.total); var lab=x.status==='active'?'Active':x.status==='completed'?'Completed':'Stopped'; return '<div class="wha-logrow"><span class="wha-chip '+x.status+'">'+lab+'</span><div class="wha-fastname"><b>'+(x.fast||'')+'</b><span>'+(x.figure||'')+' &middot; '+x.who+'</span></div><span class="wha-prog">'+prog+'</span><span class="wha-when">'+(x.date||'')+'</span></div>'; }).join('')+'</div>');
-    });
+    }, 'community');
 
     el('whaBody').innerHTML=secs.join('');
+    if (typeof window.whaSwitchCat === 'function') {
+      window.whaSwitchCat(window.CURRENT_WHA_CAT || 'all');
+    }
 
     var TC=[LIME,GREEN,AMBER,'rgba(240,241,243,0.45)'];
     try{ lineChart(el('whaMemberGrowth'),gr.labels||[],[{name:'Free Members',color:LIME,fill:'rgba(204,255,0,0.08)',values:gr.free||[]},{name:'Premium',color:GREEN,fill:'rgba(0,230,118,0.06)',values:gr.paid||[]}]); }catch(e2){}
