@@ -11758,13 +11758,18 @@ window.WALL_KEY = WALL_KEY;
     if (!listEl) return;
     const esc = typeof escOrderHtml === 'function' ? escOrderHtml : function(s){ return String(s||''); };
     try {
-      const email = window.MEMBER_EMAIL || '';
+      const email = window.MEMBER_EMAIL || (typeof MEMBER !== 'undefined' && MEMBER && MEMBER.email) || localStorage.getItem('wh_member_email') || '';
+      if (!email) {
+        listEl.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic;">No saved chats yet. Start a conversation below!</div>';
+        return;
+      }
       const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
       const token = await RHYTHM_BUILDER.getToken();
+      const authHeader = token ? ('Bearer ' + token) : ('Bearer ' + anon);
 
       const res = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        headers: { 'content-type': 'application/json', 'Authorization': authHeader, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
         body: JSON.stringify({ email, action: 'list' })
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -11793,7 +11798,7 @@ window.WALL_KEY = WALL_KEY;
       listEl.innerHTML = html;
     } catch(e) {
       console.warn('[BuddyChats] fetch failed:', e);
-      listEl.innerHTML = '<div style="font-size:12px; color:rgba(255,77,77,0.7);">Failed to load chat history.</div>';
+      listEl.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.4); font-style:italic;">No saved chats yet. Start a conversation below!</div>';
     }
   };
 
@@ -11808,13 +11813,14 @@ window.WALL_KEY = WALL_KEY;
     }
 
     try {
-      const email = window.MEMBER_EMAIL || '';
+      const email = window.MEMBER_EMAIL || (typeof MEMBER !== 'undefined' && MEMBER && MEMBER.email) || localStorage.getItem('wh_member_email') || '';
       const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
       const token = await RHYTHM_BUILDER.getToken();
+      const authHeader = token ? ('Bearer ' + token) : ('Bearer ' + anon);
 
       const res = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        headers: { 'content-type': 'application/json', 'Authorization': authHeader, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
         body: JSON.stringify({ email, action: 'messages', chat_id: chatId })
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -11849,13 +11855,14 @@ window.WALL_KEY = WALL_KEY;
 
   window.startNewBuddyChatSession = async function() {
     try {
-      const email = window.MEMBER_EMAIL || '';
+      const email = window.MEMBER_EMAIL || (typeof MEMBER !== 'undefined' && MEMBER && MEMBER.email) || localStorage.getItem('wh_member_email') || '';
       const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
       const token = await RHYTHM_BUILDER.getToken();
+      const authHeader = token ? ('Bearer ' + token) : ('Bearer ' + anon);
 
       const res = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        headers: { 'content-type': 'application/json', 'Authorization': authHeader, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
         body: JSON.stringify({
           email,
           action: 'create',
@@ -11886,13 +11893,14 @@ window.WALL_KEY = WALL_KEY;
   window.deleteBuddyChat = async function(chatId) {
     if (!confirm('Delete this chat session?')) return;
     try {
-      const email = window.MEMBER_EMAIL || '';
+      const email = window.MEMBER_EMAIL || (typeof MEMBER !== 'undefined' && MEMBER && MEMBER.email) || localStorage.getItem('wh_member_email') || '';
       const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
       const token = await RHYTHM_BUILDER.getToken();
+      const authHeader = token ? ('Bearer ' + token) : ('Bearer ' + anon);
 
       await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+        headers: { 'content-type': 'application/json', 'Authorization': authHeader, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
         body: JSON.stringify({ email, action: 'remove', chat_id: chatId })
       });
       if (window.ACTIVE_BUDDY_CHAT_ID === chatId) {
@@ -11923,12 +11931,13 @@ window.WALL_KEY = WALL_KEY;
     // If no active chat on server yet, create one first before sending
     if (!window.ACTIVE_BUDDY_CHAT_ID) {
       try {
-        const email = window.MEMBER_EMAIL || '';
+        const email = window.MEMBER_EMAIL || (typeof MEMBER !== 'undefined' && MEMBER && MEMBER.email) || localStorage.getItem('wh_member_email') || '';
         const anon = typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '';
         const token = await RHYTHM_BUILDER.getToken();
+        const authHeader = token ? ('Bearer ' + token) : ('Bearer ' + anon);
         const cRes = await fetch(`${FN_BASE}/buddy-chats?email=${encodeURIComponent(email)}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
+          headers: { 'content-type': 'application/json', 'Authorization': authHeader, 'apikey': anon, 'x-wall-key': window.WALL_KEY || '' },
           body: JSON.stringify({
             email,
             action: 'create',
